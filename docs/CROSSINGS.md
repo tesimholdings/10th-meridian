@@ -29,6 +29,18 @@ Crossings is reachable from:
 10. Reviewer tools → **Force Open House cookie** as guest: Crossings remains demonstration-only; mutations 403
 11. **Preview as admin** → Steward desk → **Crossings** weights (40 / 25 / 15 / 10 / 10)
 
+## Screenshots
+
+Captured at ~390px and desktop during preview-as-member walkthrough:
+
+- `docs/crossings-screenshots/mobile-landing.webp`
+- `docs/crossings-screenshots/desktop-landing.webp`
+- `docs/crossings-screenshots/journey-matches.webp`
+- `docs/crossings-screenshots/crossing-request-sheet.webp`
+- `docs/crossings-screenshots/table-detail.webp`
+- `docs/crossings-screenshots/city-notes.webp`
+- `docs/crossings-screenshots/city-hosts.webp`
+
 ## Privacy
 
 Never collected: flight numbers, hotel stays, room numbers, live coordinates, detailed itineraries.  

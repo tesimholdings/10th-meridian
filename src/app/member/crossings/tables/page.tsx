@@ -36,7 +36,15 @@ export default async function TablesPage() {
               </p>
               <p className="mt-2 font-serif text-2xl">{t.theme ?? "A shared table"}</p>
               <p className="mt-2 text-sm text-ivory-muted">
-                {t.dateTime} · {t.guests.filter((g) => g.status === "confirmed").length}/{t.maxGuests} confirmed
+                {new Date(t.dateTime).toLocaleString("en-GB", {
+                  timeZone: t.timezone,
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}{" "}
+                · {t.guests.filter((g) => g.status === "confirmed").length}/{t.maxGuests} confirmed
               </p>
               <p className="mt-2 text-sm text-ivory-dim">
                 {t.venuePrivate ? "Venue visible to you." : "Exact venue withheld until you are confirmed."}

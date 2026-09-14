@@ -30,7 +30,17 @@ export default async function TableDetailPage({ params }: { params: Promise<{ id
       </p>
       <h1 className="mt-2 font-serif text-4xl">{table.theme ?? "A shared table"}</h1>
       <p className="mt-3 text-ivory-muted">
-        {table.mealType} · {table.dateTime} · {table.timezone}
+        {table.mealType} ·{" "}
+        {new Date(table.dateTime).toLocaleString("en-GB", {
+          timeZone: table.timezone,
+          weekday: "short",
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        })}{" "}
+        · {table.timezone}
       </p>
       <p className="mt-3 text-sm text-ivory-muted">
         {confirmed.length}/{table.maxGuests} confirmed · {table.joinMode === "request" ? "request to join" : "invitation only"}
@@ -51,7 +61,12 @@ export default async function TableDetailPage({ params }: { params: Promise<{ id
       ) : (
         <p className="mt-4 text-sm text-ivory-dim">The private channel opens after you are confirmed.</p>
       )}
-      <TableActions table={raw} viewerId={viewer.id} canMutate={canMutate} />
+      <TableActions
+        table={raw}
+        viewerId={viewer.id}
+        canMutate={canMutate}
+        names={Object.fromEntries(store.profiles.map((p) => [p.id, p.displayName]))}
+      />
     </MemberShell>
   );
 }

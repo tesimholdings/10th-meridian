@@ -9,10 +9,12 @@ export function TableActions({
   table,
   viewerId,
   canMutate,
+  names,
 }: {
   table: GroupTableRecord;
   viewerId: string;
   canMutate: boolean;
+  names?: Record<string, string>;
 }) {
   const router = useRouter();
   const [note, setNote] = useState<string | null>(null);
@@ -53,7 +55,9 @@ export function TableActions({
             .filter((g) => g.status === "requested")
             .map((g) => (
               <div key={g.profileId} className="flex flex-wrap gap-2">
-                <Button onClick={() => void decide(g.profileId, true)}>Confirm {g.profileId}</Button>
+                <Button onClick={() => void decide(g.profileId, true)}>
+                  Confirm {names?.[g.profileId] ?? "guest"}
+                </Button>
                 <Button variant="ghost" onClick={() => void decide(g.profileId, false)}>
                   Decline
                 </Button>
