@@ -9,9 +9,9 @@ Runtime: Node 22, Next.js 16.3.5, preview mode (no live secrets)
 
 | Check | Result |
 | --- | --- |
-| `npm test` | Pending at first push — Index scoring, Ask parse→score, exclusions, Open House isolation, empty query, preview store, Crossings |
-| `npm run lint` | Pending at first push |
-| `npm run build` | Pending at first push |
+| `npm test` | Pass — 56 tests (Index scoring, Ask parse→score, exclusions, Open House isolation, empty query, preview store, Crossings) |
+| `npm run lint` | Pass |
+| `npm run build` | Pass |
 
 Ask coverage: parse of a Series A fintech NYC need; complementarity ranks helpers above unrelated members; empty query invents no one; hidden / paused / blocked / not-relevant / suspended exclusions; Open House never exposes non-demo profiles; human-curated label; store feedback.
 

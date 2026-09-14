@@ -24,6 +24,7 @@ import type {
   AskMatchWeights,
   HelpAskRecord,
   ParsedAsk,
+  ScoredAskMatch,
 } from "@/lib/matching/ask/types";
 import { DEFAULT_ASK_WEIGHTS } from "@/lib/matching/ask/types";
 import type { BlockRecord, MatchCuration, MatchFeedback, MatchingWeights, ScoredMatch } from "@/lib/matching/types";

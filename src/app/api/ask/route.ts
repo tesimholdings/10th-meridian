@@ -39,7 +39,6 @@ export async function GET() {
   if (!access.decision.allowed && !access.decision.isMemberAccess) {
     return Response.json({ ok: false }, { status: 403 });
   }
-  const store = getPreviewStore();
   const viewer = viewerProfile();
   const last = lastHelpAsk(viewer.id);
   if (!last) {

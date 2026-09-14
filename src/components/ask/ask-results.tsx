@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import type { IntroRequest } from "@/lib/data/types";
 import {
   memberMessagePath,
@@ -26,11 +26,17 @@ export function AskResults({
   const router = useRouter();
   const [pending, setPending] = useState<string | null>(null);
   const [note, setNote] = useState<string | null>(null);
-  const [rows, setRows] = useState(index?.people ?? []);
-
-  useEffect(() => {
-    setRows(index?.people ?? []);
-  }, [index]);
+  const [removedByAsk, setRemovedByAsk] = useState<Record<string, string[]>>({});
+  const [savedByAsk, setSavedByAsk] = useState<Record<string, string[]>>({});
+  const askKey = index?.ask.id ?? "";
+  const rows = useMemo(() => {
+    const people = index?.people ?? [];
+    const removed = new Set(removedByAsk[askKey] ?? []);
+    const saved = new Set(savedByAsk[askKey] ?? []);
+    return people
+      .filter((row) => !removed.has(row.target.id))
+      .map((row) => (saved.has(row.target.id) ? { ...row, saved: true } : row));
+  }, [index?.people, askKey, removedByAsk, savedByAsk]);
 
   if (loading) {
     return <LoadingState label="Reading the Index…" />;
@@ -77,12 +83,16 @@ export function AskResults({
     });
     setPending(null);
     if (signal === "hidden" || signal === "not_relevant") {
-      setRows((current) => current.filter((m) => m.target.id !== targetId));
+      setRemovedByAsk((current) => ({
+        ...current,
+        [index.ask.id]: [...new Set([...(current[index.ask.id] ?? []), targetId])],
+      }));
       setNote("Removed from the Index.");
     } else if (signal === "saved") {
-      setRows((current) =>
-        current.map((m) => (m.target.id === targetId ? { ...m, saved: true } : m)),
-      );
+      setSavedByAsk((current) => ({
+        ...current,
+        [index.ask.id]: [...new Set([...(current[index.ask.id] ?? []), targetId])],
+      }));
       setNote("Saved.");
     } else {
       setNote("Marked relevant.");
