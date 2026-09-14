@@ -1,27 +1,32 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-label="Original placeholder  concert energy">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-label="Original placeholder — concert energy">
   <defs>
     <linearGradient id="stage" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#070809"/>
-      <stop offset="70%" stop-color="#0b0d0f"/>
+      <stop offset="0%" stop-color="#111018"/>
+      <stop offset="55%" stop-color="#0b0d0f"/>
       <stop offset="100%" stop-color="#1a1410"/>
     </linearGradient>
     <linearGradient id="beam" x1="0.5" y1="0" x2="0.5" y2="1">
-      <stop offset="0%" stop-color="#efe6d4" stop-opacity="0.55"/>
-      <stop offset="60%" stop-color="#b08d4a" stop-opacity="0.12"/>
+      <stop offset="0%" stop-color="#f4efe4" stop-opacity="0.85"/>
+      <stop offset="45%" stop-color="#d4af6a" stop-opacity="0.42"/>
+      <stop offset="100%" stop-color="#070809" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="aquaBeam" x1="0.5" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#7ec8e3" stop-opacity="0.35"/>
       <stop offset="100%" stop-color="#070809" stop-opacity="0"/>
     </linearGradient>
   </defs>
   <rect width="1600" height="900" fill="url(#stage)"/>
-  <polygon points="800,40 1040,900 560,900" fill="url(#beam)"/>
-  <polygon points="520,80 700,900 360,900" fill="url(#beam)" opacity="0.55"/>
-  <polygon points="1080,80 1240,900 900,900" fill="url(#beam)" opacity="0.5"/>
-  <rect x="620" y="620" width="360" height="16" fill="#b08d4a" opacity="0.7"/>
-  <rect x="700" y="560" width="200" height="70" fill="#121518" stroke="#efe6d4" stroke-width="0.8"/>
-  <circle cx="800" cy="590" r="10" fill="#efe6d4"/>
-  <circle cx="760" cy="700" r="3" fill="#efe6d4" opacity="0.5"/>
-  <circle cx="840" cy="720" r="3" fill="#b08d4a" opacity="0.6"/>
-  <circle cx="900" cy="740" r="2.5" fill="#efe6d4" opacity="0.4"/>
-  <circle cx="700" cy="730" r="2.5" fill="#b08d4a" opacity="0.45"/>
-  <line x1="800" y1="20" x2="800" y2="860" stroke="#b08d4a" stroke-width="0.7" opacity="0.35"/>
-  <text x="48" y="860" fill="#8f8774" font-size="16" font-family="Georgia, serif">ORIGINAL PLACEHOLDER  concert energy</text>
+  <polygon points="800,20 1120,900 480,900" fill="url(#beam)"/>
+  <polygon points="480,60 720,900 280,900" fill="url(#beam)" opacity="0.75"/>
+  <polygon points="1120,60 1320,900 900,900" fill="url(#beam)" opacity="0.7"/>
+  <polygon points="300,40 420,900 180,900" fill="url(#aquaBeam)"/>
+  <polygon points="1300,40 1420,900 1160,900" fill="url(#aquaBeam)"/>
+  <rect x="560" y="560" width="480" height="22" fill="#d4af6a"/>
+  <rect x="680" y="470" width="240" height="90" fill="#121518" stroke="#f4efe4" stroke-width="1.5"/>
+  <circle cx="800" cy="510" r="14" fill="#f4efe4"/>
+  <circle cx="460" cy="720" r="5" fill="#f4efe4" opacity="0.7"/>
+  <circle cx="620" cy="760" r="4" fill="#d4af6a"/>
+  <circle cx="980" cy="740" r="5" fill="#f4efe4" opacity="0.65"/>
+  <circle cx="1140" cy="780" r="4" fill="#7ec8e3" opacity="0.7"/>
+  <line x1="800" y1="20" x2="800" y2="860" stroke="#d4af6a" stroke-width="1" opacity="0.5"/>
 </svg>

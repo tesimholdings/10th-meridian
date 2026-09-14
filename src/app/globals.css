@@ -334,11 +334,11 @@ body {
 
 .gold-chrome {
   position: relative;
-  border: 1px solid rgba(212, 175, 106, 0.42);
+  border: 1px solid rgba(212, 175, 106, 0.72);
   background:
-    linear-gradient(180deg, rgba(20, 18, 14, 0.72), rgba(7, 8, 9, 0.88));
+    linear-gradient(180deg, rgba(24, 20, 14, 0.82), rgba(7, 8, 9, 0.92));
   box-shadow:
-    inset 0 0 0 1px rgba(239, 230, 212, 0.06),
+    inset 0 0 0 1px rgba(239, 230, 212, 0.12),
     0 18px 40px rgba(0, 0, 0, 0.35);
 }
 
@@ -414,8 +414,7 @@ body {
 
 .scene-band-veil {
   background:
-    linear-gradient(180deg, rgba(7, 8, 9, 0.15), rgba(7, 8, 9, 0.72)),
-    linear-gradient(90deg, rgba(7, 8, 9, 0.35), transparent 40%, rgba(7, 8, 9, 0.45));
+    linear-gradient(180deg, rgba(7, 8, 9, 0.08), rgba(7, 8, 9, 0.28) 70%, rgba(7, 8, 9, 0.5));
 }
 
 .scene-band-shine {

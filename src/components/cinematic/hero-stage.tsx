@@ -49,7 +49,7 @@ export function HeroStage({
         <img
           src="/media/scene-water.svg"
           alt=""
-          className={`h-full w-full object-cover opacity-70 ${reduce || paused ? "" : "slow-drift"}`}
+          className={`h-full w-full object-cover object-center opacity-90 ${reduce || paused ? "" : "slow-drift"}`}
         />
       </div>
       <div className="absolute inset-0 opacity-55" aria-hidden>
@@ -73,7 +73,7 @@ export function HeroStage({
         aria-hidden
         style={{
           background:
-            "radial-gradient(80% 70% at 50% 38%, rgba(7,8,9,0.08), rgba(7,8,9,0.48) 72%, #070809 100%)",
+            "radial-gradient(80% 70% at 50% 38%, rgba(7,8,9,0.04), rgba(7,8,9,0.28) 78%, #070809 100%)",
         }}
       />
       <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-void to-transparent" />

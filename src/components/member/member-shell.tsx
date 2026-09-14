@@ -58,7 +58,7 @@ export function MemberShell({
         </p>
       ) : null}
       {scene ? (
-        <SceneBand scene={scene} height="sm" className="border-b-0">
+        <SceneBand scene={scene} height="md" className="border-b-0">
           <SceneChip scene={scene} />
         </SceneBand>
       ) : null}

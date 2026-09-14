@@ -18,9 +18,9 @@ const SCENES: Record<SceneKind, { src: string; label: string }> = {
 };
 
 const HEIGHTS = {
-  sm: "min-h-[140px]",
-  md: "min-h-[220px] md:min-h-[280px]",
-  lg: "min-h-[320px] md:min-h-[420px]",
+  sm: "min-h-[200px]",
+  md: "min-h-[280px] md:min-h-[360px]",
+  lg: "min-h-[360px] md:min-h-[460px]",
 } as const;
 
 export function SceneBand({
@@ -43,7 +43,7 @@ export function SceneBand({
       <img
         src={meta.src}
         alt={meta.label}
-        className="scene-band-art absolute inset-0 h-full w-full object-cover"
+        className="scene-band-art absolute inset-0 h-full w-full object-cover object-center"
       />
       {overlay ? (
         <div className="scene-band-veil pointer-events-none absolute inset-0" aria-hidden />
