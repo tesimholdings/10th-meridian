@@ -20,94 +20,164 @@ export function MatchBoard({
   const [pending, setPending] = useState<string | null>(null);
   const [note, setNote] = useState<string | null>(null);
 
-  async function feedback(targetId: string, signal: "relevant" | "not_relevant" | "declined" | "hidden") {
+  async function feedback(
+    targetId: string,
+    signal: "relevant" | "not_relevant" | "declined" | "hidden",
+  ) {
     setPending(targetId + signal);
-    await fetch("/api/matching/feedback", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ targetId, signal }),
-    });
-    setPending(null);
-    setNote(signal === "relevant" ? "Marked relevant." : "Removed from this ranking.");
-    router.refresh();
+    try {
+      const res = await fetch("/api/matching/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ targetId, signal }),
+      });
+      if (!res.ok) throw new Error("feedback");
+      setNote(
+        signal === "relevant"
+          ? "Marked relevant."
+          : "Removed from this ranking.",
+      );
+      router.refresh();
+    } catch {
+      setNote("Your preference couldn’t be saved. Please try again.");
+    } finally {
+      setPending(null);
+    }
   }
 
   async function introduce(targetId: string) {
     setPending(targetId + "intro");
-    const res = await fetch("/api/introductions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ targetId }),
-    });
-    const json = (await res.json()) as { ok?: boolean };
-    setPending(null);
-    setNote(json.ok ? "Introduction requested." : "Could not request that introduction.");
-    router.refresh();
+    try {
+      const res = await fetch("/api/introductions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ targetId }),
+      });
+      const json = (await res.json()) as { ok?: boolean };
+      setPending(null);
+      setNote(
+        res.ok && json.ok
+          ? "Introduction requested."
+          : "Could not request that introduction.",
+      );
+      router.refresh();
+    } catch {
+      setNote("The introduction couldn’t be requested. Please try again.");
+    } finally {
+      setPending(null);
+    }
   }
 
   const rest = compact ? [] : index.meridian100.slice(10);
 
   return (
     <div className="grid gap-10">
-      {note ? <p className="text-sm text-gold">{note}</p> : null}
+      {note ? (
+        <p role="status" className="text-sm text-gold">
+          {note}
+        </p>
+      ) : null}
       <section>
         <p className="label">The Meridian 10</p>
-        <h2 className="mt-2 font-serif text-3xl md:text-4xl">{brand.meridian10}</h2>
-        <ol className="mt-6 grid gap-4">
-          {index.meridian10.map((row, i) => {
-            const intro = intros.find((x) => x.targetId === row.target.id);
-            return (
-              <li key={row.target.id} className="border border-[var(--line)] p-4">
-                <div className="grid grid-cols-[auto_1fr] gap-4">
-                  <Link
-                    href={`/member/members/${row.target.id}`}
-                    className="flex h-16 w-16 items-center justify-center font-serif text-xl"
-                    style={{ background: row.target.accent }}
-                  >
-                    {row.target.initials}
-                  </Link>
-                  <div>
-                    <div className="flex flex-wrap items-baseline justify-between gap-2">
-                      <Link href={`/member/members/${row.target.id}`} className="font-serif text-2xl">
-                        {row.target.displayName}
-                      </Link>
-                      <p className="text-[11px] tracking-[0.18em] uppercase text-gold">
-                        {String(i + 1).padStart(2, "0")} · {Math.round(row.weighted * 100)}
+        <h2 className="mt-2 font-serif text-3xl md:text-4xl">
+          {brand.meridian10}
+        </h2>
+        {index.meridian10.length === 0 ? (
+          <div className="empty-state">
+            <p className="font-serif text-3xl">
+              Your next connection is taking shape.
+            </p>
+            <p className="mt-3 text-sm text-ivory-muted">
+              Add more about your goals and what you can offer to help the Index
+              find relevant people.
+            </p>
+            <Link href="/member/profile" className="quiet-link text-gold">
+              Refine your profile →
+            </Link>
+          </div>
+        ) : null}
+        <ol className="match-list mt-6 grid gap-4">
+          {(compact ? index.meridian10.slice(0, 3) : index.meridian10).map(
+            (row, i) => {
+              const intro = intros.find((x) => x.targetId === row.target.id);
+              return (
+                <li key={row.target.id} className="match-row" data-reveal>
+                  <div className="grid grid-cols-[auto_1fr] gap-4">
+                    <Link
+                      href={`/member/members/${row.target.id}`}
+                      className="member-avatar flex h-16 w-16 items-center justify-center font-serif text-xl"
+                      style={{ background: row.target.accent }}
+                    >
+                      {row.target.initials}
+                    </Link>
+                    <div className="match-content">
+                      <div className="flex flex-wrap items-baseline justify-between gap-2">
+                        <Link
+                          href={`/member/members/${row.target.id}`}
+                          className="font-serif text-2xl"
+                        >
+                          {row.target.displayName}
+                        </Link>
+                        <p className="text-[11px] tracking-[0.18em] uppercase text-gold">
+                          {String(i + 1).padStart(2, "0")} · Relevance{" "}
+                          {Math.round(row.weighted * 100)}/100
+                        </p>
+                      </div>
+                      <p className="text-sm text-ivory-muted">
+                        {row.target.headline}
                       </p>
-                    </div>
-                    <p className="text-sm text-ivory-muted">{row.target.headline}</p>
-                    <p className="mt-2 text-[11px] tracking-[0.14em] uppercase text-ivory-dim">
-                      {row.source === "human_curated" ? "Human-curated" : "Algorithmic signal"}
-                      {row.target.isDemo ? " · SYNTHETIC DEMO" : ""}
-                      {intro ? ` · Intro ${intro.status}` : ""}
-                    </p>
-                    <p className="label mt-4">Why you should meet</p>
-                    <ul className="mt-2 grid gap-1 text-sm text-ivory-muted">
-                      {row.explanations.map((e) => (
-                        <li key={e.pillar}>
-                          <span className="text-gold">{e.pillar}.</span> {e.text}
-                        </li>
-                      ))}
-                    </ul>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      <Action disabled={pending !== null} onClick={() => void feedback(row.target.id, "relevant")}>
-                        Relevant
-                      </Action>
-                      <Action disabled={pending !== null} onClick={() => void feedback(row.target.id, "not_relevant")}>
-                        Not relevant
-                      </Action>
-                      <Action disabled={pending !== null} onClick={() => void feedback(row.target.id, "hidden")}>
-                        Hide
-                      </Action>
-                      <Action disabled={pending !== null} onClick={() => void introduce(row.target.id)}>
-                        {intro ? "Requested" : "Request introduction"}
-                      </Action>
+                      <p className="mt-2 text-[11px] tracking-[0.14em] uppercase text-ivory-dim">
+                        {row.source === "human_curated"
+                          ? "Human-curated"
+                          : "Algorithmic signal"}
+                        {row.target.isDemo ? " · SYNTHETIC DEMO" : ""}
+                        {intro ? ` · Intro ${intro.status}` : ""}
+                      </p>
+                      <p className="label mt-4">Why you should meet</p>
+                      <ul className="mt-2 grid gap-1 text-sm text-ivory-muted">
+                        {row.explanations.map((e) => (
+                          <li key={e.pillar}>
+                            <span className="text-gold">{e.pillar}.</span>{" "}
+                            {e.text}
+                          </li>
+                        ))}
+                      </ul>
+                      <div className="match-actions mt-4 flex flex-wrap gap-2">
+                        <Action
+                          disabled={pending !== null}
+                          onClick={() =>
+                            void feedback(row.target.id, "relevant")
+                          }
+                        >
+                          Relevant
+                        </Action>
+                        <Action
+                          disabled={pending !== null}
+                          onClick={() =>
+                            void feedback(row.target.id, "not_relevant")
+                          }
+                        >
+                          Not relevant
+                        </Action>
+                        <Action
+                          disabled={pending !== null}
+                          onClick={() => void feedback(row.target.id, "hidden")}
+                        >
+                          Hide
+                        </Action>
+                        <Action
+                          disabled={pending !== null || Boolean(intro)}
+                          onClick={() => void introduce(row.target.id)}
+                        >
+                          {intro ? "Requested" : "Request introduction"}
+                        </Action>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </li>
-            );
-          })}
+                </li>
+              );
+            },
+          )}
         </ol>
       </section>
 
@@ -120,24 +190,40 @@ export function MatchBoard({
           </p>
           <ol className="mt-6 grid gap-3">
             {rest.map((row, i) => (
-              <li key={row.target.id} className="border-b border-[var(--line)] py-3">
+              <li
+                key={row.target.id}
+                className="border-b border-[var(--line)] py-3"
+              >
                 <div className="flex items-center justify-between gap-3">
                   <Link href={`/member/members/${row.target.id}`}>
-                    <p className="font-serif text-xl">{row.target.displayName}</p>
-                    <p className="text-sm text-ivory-muted">{row.target.headline}</p>
+                    <p className="font-serif text-xl">
+                      {row.target.displayName}
+                    </p>
+                    <p className="text-sm text-ivory-muted">
+                      {row.target.headline}
+                    </p>
                   </Link>
                   <p className="text-[11px] tracking-[0.16em] uppercase text-gold">
                     {String(i + 11).padStart(2, "0")}
                   </p>
                 </div>
                 <div className="mt-2 flex flex-wrap gap-2">
-                  <Action disabled={pending !== null} onClick={() => void feedback(row.target.id, "relevant")}>
+                  <Action
+                    disabled={pending !== null}
+                    onClick={() => void feedback(row.target.id, "relevant")}
+                  >
                     Relevant
                   </Action>
-                  <Action disabled={pending !== null} onClick={() => void feedback(row.target.id, "hidden")}>
+                  <Action
+                    disabled={pending !== null}
+                    onClick={() => void feedback(row.target.id, "hidden")}
+                  >
                     Hide
                   </Action>
-                  <Action disabled={pending !== null} onClick={() => void introduce(row.target.id)}>
+                  <Action
+                    disabled={pending !== null}
+                    onClick={() => void introduce(row.target.id)}
+                  >
                     Introduce
                   </Action>
                 </div>

@@ -38,14 +38,21 @@ export function Countdown({
           [minutes, "Min"],
           [seconds, "Sec"],
         ].map(([value, unit]) => (
-          <div key={String(unit)} className="border border-[var(--line)] px-2 py-3 text-center">
-            <div className="font-serif text-2xl md:text-4xl tabular-nums">{value}</div>
-            <div className="label !text-[0.55rem] mt-1 !text-ivory-muted">{unit}</div>
+          <div
+            key={String(unit)}
+            className="countdown-unit px-2 py-1 text-left"
+          >
+            <div className="font-serif text-4xl md:text-5xl tabular-nums">
+              {String(value).padStart(2, "0")}
+            </div>
+            <div className="label !text-[0.55rem] mt-1 !text-ivory-muted">
+              {unit}
+            </div>
           </div>
         ))}
       </div>
       <p className="mt-3 text-[11px] tracking-wide text-ivory-muted/70">
-        Display only. Access is decided on the server, never by this clock.
+        Your next chance to enter the house.
       </p>
     </div>
   );

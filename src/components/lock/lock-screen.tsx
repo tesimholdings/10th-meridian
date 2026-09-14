@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MotionControl } from "@/components/ui/motion-system";
 import { Wordmark } from "@/components/brand/logo";
 import { HeroStage } from "@/components/cinematic/hero-stage";
 import { Countdown } from "@/components/cinematic/countdown";
@@ -15,71 +16,79 @@ export function LockScreen({
 }) {
   return (
     <HeroStage>
-      <div className="safe-pad mx-auto flex min-h-dvh max-w-6xl flex-col justify-between py-7 md:py-16">
-        <header className="flex items-start justify-between gap-6">
+      <div className="threshold safe-pad mx-auto flex min-h-dvh max-w-7xl flex-col">
+        <header className="flex items-center justify-between gap-4 py-7 md:py-10">
           <Wordmark compact />
-          <p className="hidden max-w-[12rem] text-right text-[11px] leading-relaxed tracking-[0.16em] uppercase text-ivory-muted md:block">
-            Invitation only
-          </p>
+          <div className="flex items-center gap-3">
+            <MotionControl />
+            <Link href="/sign-in" className="threshold-signin">
+              Member sign in <span aria-hidden="true">↗</span>
+            </Link>
+          </div>
         </header>
-
-        <main className="mt-8 grid gap-8 md:mt-24 md:grid-cols-[1.2fr_0.8fr] md:items-end">
-          <div>
-            <p className="label">A private threshold</p>
-            <h1 className="mt-3 max-w-xl font-serif text-[2.65rem] leading-[0.95] md:text-7xl">
-              {brand.lockLine}
+        <main className="threshold-main">
+          <div data-reveal>
+            <p className="label flex items-center gap-3">
+              <span className="signal-dot" /> A private threshold
+            </p>
+            <h1 className="threshold-title">
+              The doors open
+              <br />
+              on <em>the tenth.</em>
             </h1>
-            <p className="mt-4 max-w-md text-base leading-relaxed text-ivory-muted md:mt-6 md:text-lg">
-              {brand.idea} The house is not a directory. It is a room that opens once a month.
+            <p className="threshold-copy">
+              {brand.idea}
+              <br />A private house. A world of possibility.
             </p>
             {referralEarly ? (
-              <p className="mt-4 max-w-md text-sm text-gold">
-                Referral holders may enter from 9:00 a.m. {decision.config.timeZone}. General
-                doors open at 10:00 a.m.
+              <p className="mt-5 max-w-md text-sm text-gold">
+                Referral holders may enter from 9:00 a.m.{" "}
+                {decision.config.timeZone}. General doors open at 10:00 a.m.
               </p>
             ) : null}
-            <div className="mt-6 md:mt-10">
+            <div className="mt-8 md:mt-12">
               <Countdown
                 targetIso={decision.nextOpenAt}
                 serverNowIso={decision.serverNowIso}
                 label={
-                  referralEarly
-                    ? "Until general doors"
-                    : "Until the next tenth"
+                  referralEarly ? "Until general doors" : "The next opening"
                 }
               />
             </div>
           </div>
-
-          <div className="border border-[var(--line)] bg-black/25 p-5 backdrop-blur-sm md:p-6">
-            <p className="label">Enter</p>
-            <div className="mt-5 grid gap-3">
-              <Button href="/sign-in" variant="gold">
-                Member Sign In
-              </Button>
-              <Button href="/referral" variant="ghost">
-                Enter Referral Code
-              </Button>
-              <Button href="/referral?scan=1" variant="ghost">
-                Scan Referral QR
-              </Button>
-              <Button href="/remind" variant="ivory">
-                Remind Me When the Doors Open
-              </Button>
-            </div>
-            <p className="mt-6 text-sm leading-relaxed text-ivory-muted">
+          <div className="threshold-entry" data-reveal>
+            <p className="label">An invitation to something rare</p>
+            <h2 className="mt-3 font-serif text-3xl md:text-4xl">
+              Good things are
+              <br className="hidden md:block" /> worth waiting for.
+            </h2>
+            <p className="mt-4 max-w-sm text-sm leading-relaxed text-ivory-muted">
               {brand.scarcity}
             </p>
-            <p className="mt-3 text-[11px] leading-relaxed text-ivory-dim">
-              Outside this window the full house is not shown. Selection is human.
-              A referral is not a promise.
+            <Button href="/remind" variant="ivory" className="mt-6 w-full">
+              Remind me when doors open{" "}
+              <span aria-hidden="true" className="ml-3">
+                ↗
+              </span>
+            </Button>
+            <div className="mt-3 flex flex-wrap items-center justify-between gap-1">
+              <Link href="/referral" className="quiet-link">
+                Have a referral? <span aria-hidden="true">→</span>
+              </Link>
+              <Link href="/referral?scan=1" className="quiet-link">
+                Scan QR <span aria-hidden="true">⌗</span>
+              </Link>
+            </div>
+            <p className="mt-3 text-xs leading-relaxed text-ivory-muted">
+              Selection is human. A referral is not a promise.
             </p>
           </div>
         </main>
-
-        <footer className="mt-16 flex flex-wrap items-center justify-between gap-4 text-[11px] tracking-[0.16em] uppercase text-ivory-dim">
-          <p>{brand.name}</p>
-          <div className="flex gap-4">
+        <footer className="threshold-footer flex flex-wrap items-center justify-between gap-3">
+          <p className="label !text-ivory-muted">
+            10° · A world of uncommon connection
+          </p>
+          <div className="flex gap-4 text-xs text-ivory-muted">
             <Link href="/legal/privacy">Privacy</Link>
             <Link href="/legal/terms">Terms</Link>
             <Link href="/legal/community">Community</Link>

@@ -2,14 +2,16 @@
   "name": "tenth-meridian",
   "version": "0.1.0",
   "private": true,
-  "description": "10th Meridian — a private network built around relevance, trust, and contribution.",
+  "description": "10th Meridian \u2014 a private network built around relevance, trust, and contribution.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "test": "tsx --test src/lib/matching/score.test.ts src/lib/access/open-house.test.ts src/lib/preview/store.test.ts src/lib/crossings/dates.test.ts src/lib/crossings/matching.test.ts src/lib/crossings/service.test.ts",
-    "test:matching": "tsx --test src/lib/matching/score.test.ts src/lib/preview/store.test.ts"
+    "test:matching": "tsx --test src/lib/matching/score.test.ts src/lib/preview/store.test.ts",
+    "test:ui": "playwright test",
+    "review:screenshots": "node scripts/capture-design.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.8.0",
@@ -19,11 +21,13 @@
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "resend": "^6.9.1",
-    "stripe": "^20.4.0",
     "stream-chat": "^9.35.1",
+    "stripe": "^20.4.0",
     "zod": "^4.3.5"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/qrcode": "^1.5.6",

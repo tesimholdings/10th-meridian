@@ -8,10 +8,7 @@ export function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-[var(--line)] bg-[rgba(7,8,9,0.92)] backdrop-blur-md"
-      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
-    >
+    <nav aria-label="Member navigation" className="floating-nav fixed z-40">
       <ul className="mx-auto grid max-w-lg grid-cols-5">
         {memberNav.map((item) => {
           const active = pathname?.startsWith(item.href);
@@ -19,7 +16,8 @@ export function BottomNav() {
             <li key={item.id}>
               <Link
                 href={item.href}
-                className={`flex min-h-14 flex-col items-center justify-center gap-1 text-[10px] tracking-[0.16em] uppercase ${
+                aria-current={active ? "page" : undefined}
+                className={`nav-item flex min-h-14 flex-col items-center justify-center gap-1 text-[10px] tracking-[0.16em] uppercase ${
                   active ? "text-gold" : "text-ivory-muted"
                 }`}
               >
@@ -54,7 +52,11 @@ function NavIcon({ id, active }: { id: string; active: boolean }) {
         <>
           <circle cx="7" cy="7" r="2.2" fill="none" stroke={stroke} />
           <circle cx="12" cy="8" r="1.8" fill="none" stroke={stroke} />
-          <path d="M3.5 14 C4 11.5 10 11.5 10.5 14" fill="none" stroke={stroke} />
+          <path
+            d="M3.5 14 C4 11.5 10 11.5 10.5 14"
+            fill="none"
+            stroke={stroke}
+          />
         </>
       ) : null}
       {id === "profile" ? (

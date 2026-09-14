@@ -10,9 +10,15 @@ export default async function EventsPage() {
   const events = getPreviewStore().events;
   return (
     <MemberShell user={access.user} demo title="Experiences">
-      <p className="text-sm text-ivory-muted">
-        Curated dinners, salons, retreats, and member-hosted evenings. Every listing
-        below is a DEMO concept or a planned date — never a completed real-world event.
+      <h1 className="font-serif">
+        Be part of
+        <br />
+        <em className="text-gold">something memorable.</em>
+      </h1>
+      <p className="mt-5 text-sm text-ivory-muted">
+        Curated dinners, salons, retreats, and member-hosted evenings. Every
+        listing below is a DEMO concept or a planned date — never a completed
+        real-world event.
       </p>
       <ul className="mt-8 grid gap-4">
         {events.map((e, i) => (
@@ -21,19 +27,34 @@ export default async function EventsPage() {
               href={`/member/events/${e.id}`}
               className={
                 i === 0
-                  ? "water relative block min-h-[42vh] overflow-hidden border border-[var(--line)] p-6 md:p-10"
-                  : "block border border-[var(--line)] p-5"
+                  ? "experience-feature relative block min-h-[42vh] overflow-hidden p-6 md:p-10"
+                  : "editorial-row block"
               }
             >
-              <p className="label">{e.kind} · {e.listingState}</p>
-              <h2 className={i === 0 ? "mt-4 font-serif text-4xl leading-tight md:text-5xl" : "mt-2 font-serif text-3xl"}>
+              <p className="label">
+                {e.kind} · {e.listingState}
+              </p>
+              <h2
+                className={
+                  i === 0
+                    ? "mt-4 font-serif text-4xl leading-tight md:text-5xl"
+                    : "mt-2 font-serif text-3xl"
+                }
+              >
                 {e.title}
               </h2>
-              <p className={i === 0 ? "mt-4 max-w-lg text-ivory-muted" : "mt-2 text-sm text-ivory-muted"}>
+              <p
+                className={
+                  i === 0
+                    ? "mt-4 max-w-lg text-ivory-muted"
+                    : "mt-2 text-sm text-ivory-muted"
+                }
+              >
                 {e.summary}
               </p>
               <p className="mt-4 text-[11px] tracking-[0.16em] uppercase text-gold">
-                Capacity {e.capacity} · {e.registered} listed · {e.waitlist} waitlist · {e.city}
+                Capacity {e.capacity} · {e.registered} listed · {e.waitlist}{" "}
+                waitlist · {e.city}
               </p>
             </Link>
           </li>
