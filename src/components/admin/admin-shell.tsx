@@ -27,10 +27,22 @@ export function AdminShell({
         </Link>
       </header>
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-8 md:grid-cols-[220px_1fr]">
-        <nav className="grid content-start gap-1">
+        <details className="md:hidden">
+          <summary className="flex min-h-11 cursor-pointer list-none items-center tracking-[0.18em] uppercase text-[11px] text-gold">
+            Steward desk
+          </summary>
+          <nav className="mt-2 grid gap-1">
+            {links.map((l) => (
+              <Link key={l.href} href={l.href} className="flex min-h-11 items-center text-sm text-ivory-muted">
+                {l.label}
+              </Link>
+            ))}
+          </nav>
+        </details>
+        <nav className="hidden content-start gap-1 md:grid">
           <p className="label mb-3">Steward desk</p>
           {links.map((l) => (
-            <Link key={l.href} href={l.href} className="flex min-h-11 items-center text-sm text-ivory-muted">
+            <Link key={`desk-${l.href}`} href={l.href} className="flex min-h-11 items-center text-sm text-ivory-muted">
               {l.label}
             </Link>
           ))}

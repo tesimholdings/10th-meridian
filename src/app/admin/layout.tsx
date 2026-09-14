@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { resolveAccessContext } from "@/lib/access/context";
+import { PreviewTools } from "@/components/preview/preview-tools";
 
 export const dynamic = "force-dynamic";
 
@@ -8,5 +9,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   if (access.user?.role !== "administrator" && access.user?.role !== "moderator") {
     redirect("/sign-in");
   }
-  return children;
+  return (
+    <>
+      <PreviewTools access={access} placement="app" />
+      {children}
+    </>
+  );
 }

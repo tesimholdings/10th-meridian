@@ -1,11 +1,23 @@
 import { env } from "@/lib/env";
 import type { AccessContext } from "@/lib/access/context";
 
-export function PreviewTools({ access }: { access: AccessContext }) {
+export function PreviewTools({
+  access,
+  placement = "lock",
+}: {
+  access: AccessContext;
+  placement?: "lock" | "app";
+}) {
   if (!env.previewTools) return null;
 
   return (
-    <details className="fixed right-3 top-3 z-50 max-w-[16rem] border border-[var(--line)] bg-void/90 p-3 text-[11px] text-ivory-muted backdrop-blur">
+    <details
+      className={
+        placement === "app"
+          ? "fixed left-3 bottom-[5.75rem] z-50 max-w-[16rem] border border-[var(--line)] bg-void/90 p-3 text-[11px] text-ivory-muted backdrop-blur"
+          : "fixed right-3 top-3 z-50 max-w-[16rem] border border-[var(--line)] bg-void/90 p-3 text-[11px] text-ivory-muted backdrop-blur"
+      }
+    >
       <summary className="cursor-pointer tracking-[0.18em] uppercase text-gold">
         Reviewer tools
       </summary>

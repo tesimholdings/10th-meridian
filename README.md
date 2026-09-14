@@ -26,7 +26,7 @@ npm run dev
 
 No live secrets are required. Preview mode uses labeled SYNTHETIC DEMO data.
 
-The lock screen is the default outside the monthly Open House window (the 10th, America/Chicago). Use the discreet **Reviewer tools** (shown only when `NEXT_PUBLIC_PREVIEW_TOOLS=true`) to:
+The lock screen is the default outside the monthly Open House window (the 10th, America/Chicago). Use the discreet **Reviewer tools** (shown only when `NEXT_PUBLIC_PREVIEW_TOOLS=true`, including on member/admin surfaces) to:
 
 - Preview as member / steward / approved-unpaid
 - Force Open House open for a walkthrough
