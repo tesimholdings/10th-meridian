@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PrivacyNotice } from "@/components/crossings/states";
 import {
@@ -36,12 +36,13 @@ type Draft = {
   openToGroupTable: boolean;
   needsLocalRecommendation: boolean;
   willingCityHost: boolean;
+  selectedChannelIds: string[];
 };
 
 const empty: Draft = {
   destinationCity: "",
   destinationCountry: "",
-  timezone: "Europe/Paris",
+  timezone: "",
   arrivalDate: "",
   departureDate: "",
   flexibleDates: false,
@@ -53,16 +54,23 @@ const empty: Draft = {
   openToGroupTable: false,
   needsLocalRecommendation: false,
   willingCityHost: false,
+  selectedChannelIds: [],
 };
 
 export function CoordinatesForm({
   initial,
   journeyId,
+  channels = [],
 }: {
   initial?: JourneyRecord;
   journeyId?: string;
+  channels?: { id: string; name: string }[];
 }) {
   const router = useRouter();
+  const [busy, setBusy] = useState(false);
+  const saving = useRef(false);
+  const heading = useRef<HTMLParagraphElement>(null);
+  const previousStep = useRef(0);
   const [step, setStep] = useState(0);
   const [draft, setDraft] = useState<Draft>(
     initial
@@ -81,59 +89,119 @@ export function CoordinatesForm({
           openToGroupTable: initial.openToGroupTable,
           needsLocalRecommendation: initial.needsLocalRecommendation,
           willingCityHost: initial.willingCityHost,
+          selectedChannelIds: initial.selectedChannelIds,
         }
       : empty,
   );
+  useEffect(() => {
+    if (previousStep.current !== step) heading.current?.focus();
+    previousStep.current = step;
+  }, [step]);
   const [status, setStatus] = useState<string | null>(null);
   const progress = useMemo(() => ((step + 1) / steps.length) * 100, [step]);
 
   function toggle<T extends string>(key: "availability" | "intents", value: T) {
     setDraft((d) => {
       const list = d[key] as T[];
-      const next = list.includes(value) ? list.filter((x) => x !== value) : [...list, value];
+      const next = list.includes(value)
+        ? list.filter((x) => x !== value)
+        : [...list, value];
       return { ...d, [key]: next };
     });
   }
 
   async function save() {
-    setStatus(null);
-    const payload = {
-      ...draft,
-      privateNote: draft.privateNote || undefined,
-    };
-    const res = await fetch("/api/crossings/journeys", {
-      method: journeyId ? "PATCH" : "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(
-        journeyId ? { id: journeyId, action: "update", patch: payload } : payload,
-      ),
-    });
-    const json = (await res.json()) as { ok?: boolean; message?: string; journey?: JourneyRecord };
-    if (!json.ok) {
-      setStatus(json.message ?? "Could not save your coordinates.");
+    if (saving.current) return;
+    if (
+      draft.visibility === "selected_channels" &&
+      !draft.selectedChannelIds.length
+    ) {
+      setStatus(
+        "Choose at least one channel, or select another visibility option.",
+      );
       return;
     }
-    router.push(json.journey ? `/member/crossings/${json.journey.id}` : "/member/crossings");
-    router.refresh();
+    saving.current = true;
+    setBusy(true);
+    setStatus(null);
+    try {
+      const payload = {
+        ...draft,
+        privateNote: draft.privateNote || undefined,
+      };
+      const res = await fetch("/api/crossings/journeys", {
+        method: journeyId ? "PATCH" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(
+          journeyId
+            ? { id: journeyId, action: "update", patch: payload }
+            : payload,
+        ),
+      });
+      const json = (await res.json()) as {
+        ok?: boolean;
+        message?: string;
+        journey?: JourneyRecord;
+      };
+      if (!res.ok || !json.ok) {
+        setStatus(json.message ?? "Could not save your coordinates.");
+        return;
+      }
+      router.push(
+        json.journey
+          ? `/member/crossings/${json.journey.id}`
+          : "/member/crossings",
+      );
+      router.refresh();
+    } catch {
+      setStatus(
+        "Your coordinates couldn’t be saved. Your details are still here—please try again.",
+      );
+    } finally {
+      saving.current = false;
+      setBusy(false);
+    }
   }
 
   return (
-    <div>
-      <p className="label">
-        Set Your Coordinates · Step {step + 1} of {steps.length} · {steps[step].title}
+    <form
+      aria-busy={busy}
+      onSubmit={(event) => {
+        event.preventDefault();
+        if (
+          step === 2 &&
+          (!draft.availability.length || !draft.intents.length)
+        ) {
+          setStatus("Choose at least one meeting format and one intention.");
+          return;
+        }
+        if (step < steps.length - 1) {
+          setStatus(null);
+          setStep((s) => s + 1);
+        } else void save();
+      }}
+    >
+      <p ref={heading} tabIndex={-1} className="form-step-title label">
+        Set Your Coordinates · Step {step + 1} of {steps.length} ·{" "}
+        {steps[step].title}
       </p>
       <div className="mt-3 h-px bg-[var(--line)]">
-        <div className="h-px bg-[var(--gold)]" style={{ width: `${progress}%` }} />
+        <div
+          className="form-progress bg-[var(--gold)]"
+          style={{ width: `${progress}%` }}
+        />
       </div>
 
-      <div className="mt-8 grid gap-4">
+      <div key={step} className="form-step mt-8 grid gap-5">
         {step === 0 ? (
           <>
             <label className="grid gap-2">
               <span className="label">Destination city</span>
               <input
                 value={draft.destinationCity}
-                onChange={(e) => setDraft({ ...draft, destinationCity: e.target.value })}
+                onChange={(e) =>
+                  setDraft({ ...draft, destinationCity: e.target.value })
+                }
                 placeholder="Paris"
                 required
               />
@@ -142,7 +210,9 @@ export function CoordinatesForm({
               <span className="label">Country</span>
               <input
                 value={draft.destinationCountry}
-                onChange={(e) => setDraft({ ...draft, destinationCountry: e.target.value })}
+                onChange={(e) =>
+                  setDraft({ ...draft, destinationCountry: e.target.value })
+                }
                 placeholder="France"
                 required
               />
@@ -150,8 +220,11 @@ export function CoordinatesForm({
             <label className="grid gap-2">
               <span className="label">Timezone</span>
               <input
+                required
                 value={draft.timezone}
-                onChange={(e) => setDraft({ ...draft, timezone: e.target.value })}
+                onChange={(e) =>
+                  setDraft({ ...draft, timezone: e.target.value })
+                }
                 placeholder="Europe/Paris"
               />
             </label>
@@ -162,17 +235,24 @@ export function CoordinatesForm({
             <label className="grid gap-2">
               <span className="label">Arrival</span>
               <input
+                required
                 type="date"
                 value={draft.arrivalDate}
-                onChange={(e) => setDraft({ ...draft, arrivalDate: e.target.value })}
+                onChange={(e) =>
+                  setDraft({ ...draft, arrivalDate: e.target.value })
+                }
               />
             </label>
             <label className="grid gap-2">
               <span className="label">Departure</span>
               <input
+                required
                 type="date"
+                min={draft.arrivalDate}
                 value={draft.departureDate}
-                onChange={(e) => setDraft({ ...draft, departureDate: e.target.value })}
+                onChange={(e) =>
+                  setDraft({ ...draft, departureDate: e.target.value })
+                }
               />
             </label>
             <label className="flex min-h-12 items-center gap-3 text-sm text-ivory-muted">
@@ -180,7 +260,9 @@ export function CoordinatesForm({
                 type="checkbox"
                 className="h-5 w-5"
                 checked={draft.flexibleDates}
-                onChange={(e) => setDraft({ ...draft, flexibleDates: e.target.checked })}
+                onChange={(e) =>
+                  setDraft({ ...draft, flexibleDates: e.target.checked })
+                }
               />
               Flexible dates (three days on either side)
             </label>
@@ -203,7 +285,11 @@ export function CoordinatesForm({
             <p className="label mt-4">Intent</p>
             <div className="flex flex-wrap gap-2">
               {TRAVEL_INTENTS.map((f) => (
-                <Chip key={f} on={draft.intents.includes(f)} onClick={() => toggle("intents", f)}>
+                <Chip
+                  key={f}
+                  on={draft.intents.includes(f)}
+                  onClick={() => toggle("intents", f)}
+                >
                   {f}
                 </Chip>
               ))}
@@ -212,7 +298,9 @@ export function CoordinatesForm({
               <span className="label">Private note (optional)</span>
               <textarea
                 value={draft.privateNote}
-                onChange={(e) => setDraft({ ...draft, privateNote: e.target.value })}
+                onChange={(e) =>
+                  setDraft({ ...draft, privateNote: e.target.value })
+                }
                 placeholder="A short note. Never a flight number or a hotel stay."
               />
             </label>
@@ -225,7 +313,10 @@ export function CoordinatesForm({
               <select
                 value={draft.visibility}
                 onChange={(e) =>
-                  setDraft({ ...draft, visibility: e.target.value as JourneyVisibility })
+                  setDraft({
+                    ...draft,
+                    visibility: e.target.value as JourneyVisibility,
+                  })
                 }
               >
                 {JOURNEY_VISIBILITY.map((v) => (
@@ -235,6 +326,34 @@ export function CoordinatesForm({
                 ))}
               </select>
             </label>
+            {draft.visibility === "selected_channels" ? (
+              <fieldset className="grid gap-2">
+                <legend className="label mb-2">Choose channels</legend>
+                {channels.map((channel) => (
+                  <label
+                    key={channel.id}
+                    className="flex min-h-12 items-center gap-3 text-sm text-ivory-muted"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={draft.selectedChannelIds.includes(channel.id)}
+                      onChange={() =>
+                        setDraft((previous) => ({
+                          ...previous,
+                          selectedChannelIds:
+                            previous.selectedChannelIds.includes(channel.id)
+                              ? previous.selectedChannelIds.filter(
+                                  (id) => id !== channel.id,
+                                )
+                              : [...previous.selectedChannelIds, channel.id],
+                        }))
+                      }
+                    />
+                    {channel.name}
+                  </label>
+                ))}
+              </fieldset>
+            ) : null}
             <Toggle
               label="Open to one-to-one meetings"
               checked={draft.openToOneToOne}
@@ -248,7 +367,9 @@ export function CoordinatesForm({
             <Toggle
               label="Needs a local recommendation"
               checked={draft.needsLocalRecommendation}
-              onChange={(v) => setDraft({ ...draft, needsLocalRecommendation: v })}
+              onChange={(v) =>
+                setDraft({ ...draft, needsLocalRecommendation: v })
+              }
             />
             <Toggle
               label="Willing to act as a City Host"
@@ -256,29 +377,48 @@ export function CoordinatesForm({
               onChange={(v) => setDraft({ ...draft, willingCityHost: v })}
             />
             <p className="text-sm text-ivory-dim">
-              City Hosts welcome visitors as members — never as professional concierges.
+              City Hosts welcome visitors as members — never as professional
+              concierges.
             </p>
           </>
         ) : null}
       </div>
 
-      <PrivacyNotice />
+      <div className="mt-6">
+        <PrivacyNotice />
+      </div>
 
-      {status ? <p className="mt-4 text-sm text-gold">{status}</p> : null}
+      {status ? (
+        <p role="status" className="status-message mt-4 text-sm text-gold">
+          {status}
+        </p>
+      ) : null}
 
       <div className="mt-8 flex flex-wrap gap-3">
         {step > 0 ? (
-          <Button variant="ghost" onClick={() => setStep((s) => s - 1)}>
+          <Button
+            disabled={busy}
+            variant="ghost"
+            onClick={() => setStep((s) => s - 1)}
+          >
             Back
           </Button>
         ) : null}
         {step < steps.length - 1 ? (
-          <Button onClick={() => setStep((s) => s + 1)}>Continue</Button>
+          <Button type="submit" disabled={busy}>
+            Continue
+          </Button>
         ) : (
-          <Button onClick={() => void save()}>{journeyId ? "Save journey" : "Set Your Coordinates"}</Button>
+          <Button type="submit" disabled={busy}>
+            {busy
+              ? "Saving coordinates…"
+              : journeyId
+                ? "Save journey"
+                : "Set Your Coordinates"}
+          </Button>
         )}
       </div>
-    </div>
+    </form>
   );
 }
 
@@ -295,8 +435,11 @@ function Chip({
     <button
       type="button"
       onClick={onClick}
-      className={`min-h-11 px-3 text-[10px] tracking-[0.16em] uppercase ${
-        on ? "border border-[var(--gold)] text-gold" : "border border-[var(--line)] text-ivory-muted"
+      aria-pressed={on}
+      className={`choice-chip min-h-11 px-3 text-[10px] tracking-[0.16em] uppercase ${
+        on
+          ? "border border-[var(--gold)] text-gold"
+          : "border border-[var(--line)] text-ivory-muted"
       }`}
     >
       {children}

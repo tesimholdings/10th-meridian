@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { friendlyTableTime } from "@/components/crossings/local-time";
 import { resolveAccessContext } from "@/lib/access/context";
 import { MemberShell } from "@/components/member/member-shell";
 import { publicTableView } from "@/lib/crossings/service";
@@ -14,12 +15,20 @@ export default async function TablesPage() {
   const store = getPreviewStore();
   const viewer = viewerProfile();
   const canMutate = canMutateCrossings(access.user?.role);
-  const tables = store.crossings.tables.map((t) => publicTableView(t, viewer.id, access.user?.role ?? null));
+  const tables = store.crossings.tables.map((t) =>
+    publicTableView(t, viewer.id, access.user?.role ?? null),
+  );
 
   return (
     <MemberShell user={access.user} demo title={CROSSINGS_COPY.table}>
-      <p className="max-w-xl text-ivory-muted">
-        A private group meal when paths overlap. Neighborhood in public; exact venue only after confirmation.
+      <h1 className="font-serif">
+        A few seats.
+        <br />
+        <em className="text-gold">Endless possibility.</em>
+      </h1>
+      <p className="mt-5 max-w-xl text-ivory-muted">
+        A private group meal when paths overlap. Neighborhood in public; exact
+        venue only after confirmation.
       </p>
       {canMutate ? (
         <div className="mt-6">
@@ -29,17 +38,26 @@ export default async function TablesPage() {
       <ul className="mt-8 grid gap-4">
         {tables.map((t) => (
           <li key={t.id}>
-            <Link href={`/member/crossings/tables/${t.id}`} className="block border border-[var(--line)] p-4">
+            <Link
+              href={`/member/crossings/tables/${t.id}`}
+              className="editorial-row block"
+            >
               <p className="label">
                 {t.city} · {t.neighborhood} · {t.mealType}
                 {t.isDemo ? " · SYNTHETIC DEMO" : ""}
               </p>
-              <p className="mt-2 font-serif text-2xl">{t.theme ?? "A shared table"}</p>
+              <p className="mt-2 font-serif text-2xl">
+                {t.theme ?? "A shared table"}
+              </p>
               <p className="mt-2 text-sm text-ivory-muted">
-                {t.dateTime} · {t.guests.filter((g) => g.status === "confirmed").length}/{t.maxGuests} confirmed
+                {friendlyTableTime(t.dateTime, t.timezone)} ·{" "}
+                {t.guests.filter((g) => g.status === "confirmed").length}/
+                {t.maxGuests} confirmed
               </p>
               <p className="mt-2 text-sm text-ivory-dim">
-                {t.venuePrivate ? "Venue visible to you." : "Exact venue withheld until you are confirmed."}
+                {t.venuePrivate
+                  ? "Venue visible to you."
+                  : "Exact venue withheld until you are confirmed."}
               </p>
             </Link>
           </li>

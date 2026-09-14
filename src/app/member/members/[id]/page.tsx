@@ -21,17 +21,22 @@ export default async function MemberProfilePage({
   return (
     <MemberShell user={access.user} demo title="Profile">
       <div
-        className="flex h-20 w-20 items-center justify-center font-serif text-2xl"
+        className="member-avatar flex h-20 w-20 items-center justify-center font-serif text-2xl"
         style={{ background: profile.accent }}
       >
         {profile.initials}
       </div>
       <h1 className="mt-6 font-serif text-4xl">{profile.displayName}</h1>
       <p className="mt-2 text-ivory-muted">{profile.headline}</p>
-      <p className="mt-2 text-[11px] tracking-[0.16em] uppercase text-gold">SYNTHETIC DEMO</p>
+      <p className="mt-2 text-[11px] tracking-[0.16em] uppercase text-gold">
+        SYNTHETIC DEMO
+      </p>
       <p className="mt-6 leading-relaxed text-ivory-muted">{profile.bio}</p>
-      <dl className="mt-8 grid gap-5">
-        <Item label="Role" value={`${profile.roleTitle} · ${profile.company}`} />
+      <dl className="profile-details mt-8 grid gap-5">
+        <Item
+          label="Role"
+          value={`${profile.roleTitle} · ${profile.company}`}
+        />
         <Item label="City" value={`${profile.city}, ${profile.country}`} />
         <Item label="Offers" value={profile.offers.join(" · ")} />
         <Item label="Needs" value={profile.needs.join(" · ")} />

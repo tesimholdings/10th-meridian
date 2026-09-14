@@ -12,12 +12,14 @@ export default async function ApplyPage() {
     redirect("/remind");
   }
   return (
-    <div className="safe-pad mx-auto min-h-dvh max-w-lg py-12">
+    <div className="form-page safe-pad mx-auto min-h-dvh max-w-lg py-12">
       <Wordmark compact />
-      <h1 className="mt-10 font-serif text-4xl">An application, not a form letter</h1>
+      <h1 className="mt-10 font-serif text-4xl">
+        An application, not a form letter
+      </h1>
       <p className="mt-3 text-sm text-ivory-muted">
-        Selection is discretionary. Completeness helps. Nothing here guarantees a
-        place. No more than ten new members are hand-selected each month.
+        Selection is discretionary. Completeness helps. Nothing here guarantees
+        a place. No more than ten new members are hand-selected each month.
       </p>
       <div className="mt-10">
         <ApplyWizard referralCode={access.referralCode} />

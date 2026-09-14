@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { resolveAccessContext } from "@/lib/access/context";
 import { MemberShell } from "@/components/member/member-shell";
 import { NotificationPrefsForm } from "@/components/crossings/notification-prefs";
@@ -15,12 +16,24 @@ export default async function SettingsPage() {
     ...DEFAULT_NOTIFICATION_PREFS,
   };
   return (
-    <MemberShell user={access.user} demo={!access.decision.isMemberAccess} title="Settings">
-      <ul className="grid gap-4 text-ivory-muted">
-        <li>Privacy — members / matches only / hidden. Crossings visibility is set per journey.</li>
+    <MemberShell
+      user={access.user}
+      demo={!access.decision.isMemberAccess}
+      title="Settings"
+    >
+      <h1 className="font-serif">On your terms.</h1>
+      <p className="mt-5 max-w-xl text-ivory-muted">
+        Choose when to connect and which Crossings updates you receive.
+        Travel visibility is set separately for each journey.
+      </p>
+      <Link className="quiet-link mt-4 text-gold" href="/member/profile">
+        Manage your profile →
+      </Link>
+      <ul className="mt-8 grid gap-4 text-ivory-muted">
+        <li>Crossings — city-level presence, never live location.</li>
+        <li>Privacy — visibility controls are not yet available here.</li>
         <li>Availability — open, selective, limited, paused.</li>
-        <li>Blocks and reports — server-enforced, including travel matching.</li>
-        <li>Crossings is not real-time location sharing. City-level presence only.</li>
+        <li>Crossings block and report actions are available in travel recommendations.</li>
       </ul>
       <section className="mt-10">
         <p className="label">Crossings notifications</p>

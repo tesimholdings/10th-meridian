@@ -8,7 +8,7 @@ export function EmptyState({
   action?: React.ReactNode;
 }) {
   return (
-    <div className="border border-[var(--line)] p-6">
+    <div className="empty-state">
       <p className="font-serif text-2xl">{title}</p>
       <p className="mt-2 max-w-md text-sm text-ivory-muted">{body}</p>
       {action ? <div className="mt-4">{action}</div> : null}
@@ -16,9 +16,16 @@ export function EmptyState({
   );
 }
 
-export function LoadingState({ label = "Finding where paths may cross…" }: { label?: string }) {
+export function LoadingState({
+  label = "Finding where paths may cross…",
+}: {
+  label?: string;
+}) {
   return (
-    <p className="text-sm tracking-[0.16em] uppercase text-ivory-dim" role="status">
+    <p
+      className="text-sm tracking-[0.16em] uppercase text-ivory-dim"
+      role="status"
+    >
       {label}
     </p>
   );
@@ -26,7 +33,10 @@ export function LoadingState({ label = "Finding where paths may cross…" }: { l
 
 export function ErrorState({ message }: { message: string }) {
   return (
-    <p className="border border-[var(--danger)] p-4 text-sm text-ivory-muted" role="alert">
+    <p
+      className="border border-[var(--danger)] p-4 text-sm text-ivory-muted"
+      role="alert"
+    >
       {message}
     </p>
   );
@@ -44,8 +54,8 @@ export function OfflineState() {
 export function PrivacyNotice() {
   return (
     <p className="text-[11px] leading-relaxed tracking-[0.04em] text-ivory-dim">
-      City-level presence only. Crossings is not real-time location sharing. Flight numbers, hotel
-      stays, room numbers, and detailed itineraries are never collected. SYNTHETIC DEMO.
+      City-level presence, never live location. Choose who can see each journey.
+      SYNTHETIC DEMO.
     </p>
   );
 }

@@ -5,18 +5,15 @@ export const brand = {
   positioning:
     "A private network built around relevance, trust, contribution, and the belief that the right relationship can change everything.",
   lockLine: "The doors open on the tenth.",
-  scarcity:
-    "No more than ten new members are hand-selected each month.",
+  scarcity: "No more than ten new members are hand-selected each month.",
   referralTone:
     "A referral opens the door earlier. What happens next is still earned.",
   matchingLine:
     "Intelligence finds the signal. People decide what happens next.",
   crossingsLine: "The people you should know, wherever you land.",
   crossingsSupport: "When your paths cross, you’ll know.",
-  meridian10:
-    "Ten people. Chosen for where you are—and where you are going.",
-  meridian100:
-    "A wider field of relevance — ranked, never invented.",
+  meridian10: "Ten people. Chosen for where you are—and where you are going.",
+  meridian100: "A wider field of relevance — ranked, never invented.",
 } as const;
 
 export const publicNav = [
@@ -29,11 +26,12 @@ export const memberNav = [
   { href: "/member/home", label: "Home", id: "home" },
   { href: "/member/matches", label: "Matches", id: "matches" },
   { href: "/member/channels", label: "Channels", id: "channels" },
-  { href: "/member/members", label: "Members", id: "members" },
+  { href: "/member/crossings", label: "Crossings", id: "crossings" },
   { href: "/member/profile", label: "Profile", id: "profile" },
 ] as const;
 
 export const memberSecondary = [
+  { href: "/member/members", label: "Member directory" },
   { href: "/member/crossings", label: "Crossings" },
   { href: "/onboarding", label: "Onboarding" },
   { href: "/member/events", label: "Events" },

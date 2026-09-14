@@ -14,23 +14,28 @@ export function QrScanner() {
   const [status, setStatus] = useState("");
   const [running, setRunning] = useState(false);
 
-  const submit = useCallback(async (raw: string) => {
-    const code = raw.includes("/referral/") ? raw.split("/referral/").pop() ?? raw : raw;
-    const res = await fetch("/api/referrals/validate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code }),
-    });
-    const json = (await res.json()) as { ok?: boolean; message?: string };
-    setStatus(
-      json.message ??
-        (json.ok
-          ? "A referral opens the door earlier. What happens next is still earned."
-          : "That code cannot be used."),
-    );
-    setRunning(false);
-    if (json.ok) router.push("/open-house");
-  }, [router]);
+  const submit = useCallback(
+    async (raw: string) => {
+      const code = raw.includes("/referral/")
+        ? (raw.split("/referral/").pop() ?? raw)
+        : raw;
+      const res = await fetch("/api/referrals/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code }),
+      });
+      const json = (await res.json()) as { ok?: boolean; message?: string };
+      setStatus(
+        json.message ??
+          (json.ok
+            ? "A referral opens the door earlier. What happens next is still earned."
+            : "That code cannot be used."),
+      );
+      setRunning(false);
+      if (json.ok) router.push("/open-house");
+    },
+    [router],
+  );
 
   useEffect(() => {
     if (!running) return;
@@ -44,7 +49,10 @@ export function QrScanner() {
           video: { facingMode: "environment" },
           audio: false,
         });
-        if (!videoRef.current || cancelled) return;
+        if (!videoRef.current || cancelled) {
+          stream.getTracks().forEach((track) => track.stop());
+          return;
+        }
         videoRef.current.srcObject = stream;
         await videoRef.current.play();
         const Detector = (
@@ -53,7 +61,10 @@ export function QrScanner() {
           }
         ).BarcodeDetector;
         if (!Detector) {
-          setStatus("This browser cannot decode a live QR. Paste the code below.");
+          setStatus(
+            "This browser cannot decode a live QR. Paste the code below.",
+          );
+          setRunning(false);
           return;
         }
         const detector = new Detector({ formats: ["qr_code"] });
@@ -73,7 +84,9 @@ export function QrScanner() {
         };
         void tick();
       } catch {
-        setStatus("Camera permission was declined. Paste the code or open the secure link.");
+        setStatus(
+          "Camera permission was declined. Paste the code or open the secure link.",
+        );
         setRunning(false);
       }
     }
@@ -100,7 +113,10 @@ export function QrScanner() {
           className="mt-4 min-h-12 border border-[var(--gold)] px-4 text-[11px] tracking-[0.18em] uppercase text-gold"
           onClick={() => {
             if (!("BarcodeDetector" in window) || !navigator.mediaDevices) {
-              setStatus("This browser cannot decode a live QR. Paste the code below.");
+              setStatus(
+                "This browser cannot decode a live QR. Paste the code below.",
+              );
+              setRunning(false);
               return;
             }
             setRunning((r) => !r);
@@ -109,7 +125,12 @@ export function QrScanner() {
           {running ? "Stop camera" : "Open camera"}
         </button>
         {running ? (
-          <video ref={videoRef} className="mt-4 aspect-[3/4] w-full bg-black object-cover" muted playsInline />
+          <video
+            ref={videoRef}
+            className="mt-4 aspect-[3/4] w-full bg-black object-cover"
+            muted
+            playsInline
+          />
         ) : null}
         {status ? <p className="mt-3 text-sm text-gold">{status}</p> : null}
       </div>

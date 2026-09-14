@@ -70,32 +70,57 @@ export function Directory({ profiles }: { profiles: ProfileRecord[] }) {
       <button
         type="button"
         className="mt-3 min-h-11 text-[11px] tracking-[0.16em] uppercase text-gold"
+        aria-expanded={refine}
         onClick={() => setRefine((v) => !v)}
       >
         {refine ? "Hide filters" : "Refine filters"}
       </button>
       {refine ? (
-      <div className="mt-3 grid gap-3 sm:grid-cols-2">
-        {filters.map((f) => (
-          <label key={f.key} className="grid gap-1">
-            <span className="label">{f.label}</span>
-            <input
-              value={query[f.key] ?? ""}
-              onChange={(e) => setQuery((q) => ({ ...q, [f.key]: e.target.value }))}
-              placeholder="Filter"
-            />
-          </label>
-        ))}
-      </div>
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          {filters.map((f) => (
+            <label key={f.key} className="grid gap-1">
+              <span className="label">{f.label}</span>
+              <input
+                value={query[f.key] ?? ""}
+                onChange={(e) =>
+                  setQuery((q) => ({ ...q, [f.key]: e.target.value }))
+                }
+                placeholder="Filter"
+              />
+            </label>
+          ))}
+        </div>
       ) : null}
       <p className="mt-4 text-[11px] tracking-[0.16em] uppercase text-ivory-dim">
         {filtered.length} SYNTHETIC DEMO · never invented
       </p>
+      {filtered.length === 0 ? (
+        <div className="empty-state">
+          <h2 className="font-serif text-3xl">
+            A little more room to explore.
+          </h2>
+          <p className="mt-3 text-sm text-ivory-muted">
+            No members match these filters. Try a broader search.
+          </p>
+          <button
+            className="quiet-link text-gold"
+            onClick={() => {
+              setQuery({});
+              setSearch("");
+            }}
+          >
+            Clear all filters →
+          </button>
+        </div>
+      ) : null}
       <ul className="mt-6 grid gap-4">
         {filtered.map((p) => (
-          <li key={p.id} className="grid grid-cols-[auto_1fr] gap-4 border border-[var(--line)] p-4">
+          <li
+            key={p.id}
+            className="editorial-row grid grid-cols-[auto_minmax(0,1fr)] gap-4"
+          >
             <div
-              className="flex h-16 w-16 items-center justify-center font-serif text-xl"
+              className="member-avatar flex h-16 w-16 items-center justify-center font-serif text-xl"
               style={{ background: p.accent }}
             >
               {p.initials}
