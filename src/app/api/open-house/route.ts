@@ -13,6 +13,7 @@ export async function GET() {
     windowClosesAt: access.decision.windowClosesAt,
     serverNowIso: access.decision.serverNowIso,
     timezone: access.decision.config.timeZone,
+    visitorTimeZone: access.decision.config.timeZone,
     referralValid: access.referralValid,
   });
 }

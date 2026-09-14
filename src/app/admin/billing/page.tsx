@@ -7,8 +7,8 @@ export default function AdminBillingPage() {
   return (
     <AdminShell title="Pricing configuration">
       <p className="text-ivory-muted">
-        Do not invent amounts. Labels stay as approved-price placeholders until
-        finance signs off and Stripe Price IDs are pasted into env / site_config.
+        Lifetime membership is approved at $10,000. Monthly billing is not offered
+        yet. Paste a Stripe Price ID for the lifetime product when checkout goes live.
       </p>
       <ul className="mt-8 grid gap-3">
         {Object.values(membershipProducts).map((p) => (

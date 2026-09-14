@@ -18,6 +18,7 @@ export default async function ApplyPage() {
       <p className="mt-3 text-sm text-ivory-muted">
         Selection is discretionary. Completeness helps. Nothing here guarantees a
         place. No more than ten new members are hand-selected each month.
+        Lifetime membership is $10,000. Absolutely no soliciting. Ban with no refund.
       </p>
       <div className="mt-10">
         <ApplyWizard referralCode={access.referralCode} />

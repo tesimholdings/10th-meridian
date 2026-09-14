@@ -191,7 +191,11 @@ export function ChannelApp({
         <input
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
-          placeholder={threadOf ? "Reply in thread — DEMO" : "Write to the house — DEMO compose"}
+          placeholder={
+            threadOf
+              ? "Reply in thread — DEMO. No soliciting."
+              : "Write to the house — DEMO compose. Absolutely no soliciting."
+          }
           aria-label="Message"
         />
         <button type="submit" className="min-h-12 px-4 text-[11px] tracking-[0.18em] uppercase text-gold">
@@ -199,7 +203,7 @@ export function ChannelApp({
         </button>
       </form>
       <p className="px-4 pb-3 text-[11px] text-ivory-dim">
-        {streamNote ?? "Private member communication, not end-to-end encryption."}
+        {streamNote ?? "Private member communication, not end-to-end encryption. Absolutely no soliciting. Ban with no refund."}
       </p>
     </div>
   );

@@ -1,27 +1,20 @@
 import { env } from "@/lib/env";
+import { LIFETIME_PRICE_LABEL } from "@/lib/copy/community";
 
 /**
- * Membership products. Amounts are NEVER invented.
- * Display copy stays as approved-price placeholders until finance signs off.
+ * Membership products. Lifetime $10,000 is approved.
+ * Monthly billing is deferred — do not build or display a monthly price.
  */
 export const membershipProducts = {
-  founding: {
-    id: "founding",
-    name: "Founding Membership",
+  lifetime: {
+    id: "lifetime",
+    name: "Lifetime Membership",
     summary:
-      "A limited founding cohort, with a preferential annual rate while continuously active.",
-    priceLabel: env.foundingPriceLabel,
-    stripePriceId: env.stripeFoundingPriceId || null,
+      "One payment. The house, the Index, Channels, and Crossings — for as long as the house stands. Monthly billing is not offered yet.",
+    priceLabel: env.lifetimePriceLabel || LIFETIME_PRICE_LABEL,
+    stripePriceId: env.stripeLifetimePriceId || null,
     checkoutEligible: true,
-  },
-  standard: {
-    id: "standard",
-    name: "Standard Membership",
-    summary:
-      "Full platform access: The Meridian 10 and 100, directory, channels and DMs, introductions, gatherings, and resources.",
-    priceLabel: env.standardPriceLabel,
-    stripePriceId: env.stripeStandardPriceId || null,
-    checkoutEligible: true,
+    interval: "lifetime" as const,
   },
   organization: {
     id: "organization",
@@ -30,7 +23,10 @@ export const membershipProducts = {
     priceLabel: "By application",
     stripePriceId: null,
     checkoutEligible: false,
+    interval: "application" as const,
   },
 } as const;
 
 export type MembershipProductId = keyof typeof membershipProducts;
+
+export const customerFacingProducts = [membershipProducts.lifetime, membershipProducts.organization];

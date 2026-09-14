@@ -246,6 +246,22 @@ body {
   50% { opacity: 0.45; }
 }
 
+@keyframes gold-sheen {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+@keyframes aurora {
+  0% { transform: translate3d(-4%, 2%, 0) scale(1); opacity: 0.28; }
+  50% { transform: translate3d(3%, -2%, 0) scale(1.08); opacity: 0.5; }
+  100% { transform: translate3d(-4%, 2%, 0) scale(1); opacity: 0.28; }
+}
+
+@keyframes title-in {
+  from { opacity: 0; letter-spacing: -0.04em; transform: translate3d(0, 18px, 0); }
+  to { opacity: 1; letter-spacing: 0; transform: translate3d(0, 0, 0); }
+}
+
 .slow-drift {
   animation: drift 28s ease-in-out infinite;
 }
@@ -262,6 +278,29 @@ body {
   animation: breath 7s ease-in-out infinite;
 }
 
+.oh-title {
+  animation: title-in 1.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.oh-card {
+  transition: border-color 0.4s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.oh-card:hover {
+  border-color: var(--gold-dim);
+  transform: translate3d(0, -3px, 0);
+}
+
+.oh-aurora {
+  pointer-events: none;
+  position: absolute;
+  inset: -20% -10%;
+  background:
+    radial-gradient(50% 40% at 20% 40%, rgba(20, 52, 60, 0.55), transparent 60%),
+    radial-gradient(40% 35% at 80% 30%, rgba(176, 141, 74, 0.12), transparent 55%);
+  animation: aurora 16s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .slow-drift,
   .pulse-gold,
@@ -270,8 +309,14 @@ body {
   .breath,
   .meridian-pulse,
   .crossings-sheet,
-  .crossings-sheet-panel {
+  .crossings-sheet-panel,
+  .oh-title,
+  .oh-aurora {
     animation: none !important;
+  }
+
+  .oh-card:hover {
+    transform: none;
   }
 }
 

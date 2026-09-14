@@ -44,7 +44,7 @@ function NavIcon({ id, active }: { id: string; active: boolean }) {
       {id === "home" ? (
         <path d="M3 9 L9 3 L15 9 V15 H3 Z" fill="none" stroke={stroke} />
       ) : null}
-      {id === "matches" ? (
+      {id === "index" ? (
         <>
           <circle cx="9" cy="9" r="6" fill="none" stroke={stroke} />
           <path d="M9 3 V15 M3 9 H15" stroke={stroke} />

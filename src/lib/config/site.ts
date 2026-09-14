@@ -1,3 +1,13 @@
+import { PREPARED_DOMAIN } from "@/lib/copy/community";
+import {
+  NAV_CHANNELS,
+  NAV_HOME,
+  NAV_INDEX,
+  NAV_MEMBERS,
+  NAV_PROFILE,
+  YOUR_CIRCLE,
+} from "@/lib/copy/ui";
+
 export const brand = {
   name: "10th Meridian",
   shortName: "10°M",
@@ -17,6 +27,10 @@ export const brand = {
     "Ten people. Chosen for where you are—and where you are going.",
   meridian100:
     "A wider field of relevance — ranked, never invented.",
+  askLine: "Ask the Meridian. Who can help — and who you should know next.",
+  circleLine: "Your Circle is chosen by you. The Index is suggested. Introductions are human.",
+  solicitingLine: "Absolutely no soliciting. Ban with no refund.",
+  preparedDomain: PREPARED_DOMAIN,
 } as const;
 
 export const publicNav = [
@@ -26,14 +40,16 @@ export const publicNav = [
 ] as const;
 
 export const memberNav = [
-  { href: "/member/home", label: "Home", id: "home" },
-  { href: "/member/matches", label: "Matches", id: "matches" },
-  { href: "/member/channels", label: "Channels", id: "channels" },
-  { href: "/member/members", label: "Members", id: "members" },
-  { href: "/member/profile", label: "Profile", id: "profile" },
+  { href: "/member/home", label: NAV_HOME, id: "home" },
+  { href: "/member/index", label: NAV_INDEX, id: "index" },
+  { href: "/member/channels", label: NAV_CHANNELS, id: "channels" },
+  { href: "/member/members", label: NAV_MEMBERS, id: "members" },
+  { href: "/member/profile", label: NAV_PROFILE, id: "profile" },
 ] as const;
 
 export const memberSecondary = [
+  { href: "/member/notifications", label: "Notifications" },
+  { href: "/member/index#circle", label: YOUR_CIRCLE },
   { href: "/member/crossings", label: "Crossings" },
   { href: "/onboarding", label: "Onboarding" },
   { href: "/member/events", label: "Events" },

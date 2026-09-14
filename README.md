@@ -4,17 +4,17 @@
 
 A private, invitation-only network built around relevance, trust, contribution, and the belief that the right relationship can change everything.
 
-This repository is a **reviewable foundation** — not a production launch. Do not deploy or publish live membership prices.
+This repository is a **reviewable foundation** — not a production launch. Do not deploy or publish live membership except the approved lifetime amount.
 
-Wave 3 adds **Crossings**: member travel connections (city-level only). Bottom nav is unchanged; enter from Home or `/member/crossings`.
+This wave adds **rich profiles**, **Your Circle**, a full **Open House** site, **visitor-local Open House hours**, a **notifications center**, and **direct messages**. Bottom nav: Home · **Index** · Channels · Members · Profile.
 
 ## Stack
 
 - Next.js 16 (App Router) + TypeScript, mobile-first
 - Vercel-ready (this PR does **not** deploy)
 - Supabase (Auth, Postgres, Storage) — schema + stubs
-- Stripe Billing — hosted Checkout / Portal stubs, webhook handler
-- Stream Chat — token + member Channels UI scaffolding
+- Stripe Billing — hosted Checkout / Portal stubs, webhook handler (lifetime, one-time)
+- Stream Chat — token + member Channels / DM scaffolding
 - Resend — transactional templates
 - Hybrid **Meridian Index** matching in TypeScript + Postgres functions
 
@@ -28,7 +28,7 @@ npm run dev
 
 No live secrets are required. Preview mode uses labeled SYNTHETIC DEMO data.
 
-The lock screen is the default outside the monthly Open House window (the 10th, America/Chicago). Use the discreet **Reviewer tools** (shown only when `NEXT_PUBLIC_PREVIEW_TOOLS=true`) to:
+The lock screen is the default outside the monthly Open House window (the 10th, **visitor local timezone**, fallback `America/Chicago`). Use the discreet **Reviewer tools** (shown only when `NEXT_PUBLIC_PREVIEW_TOOLS=true`) to:
 
 - Preview as member / steward / approved-unpaid
 - Force Open House open for a walkthrough
@@ -37,45 +37,41 @@ Or set `OPEN_HOUSE_FORCE=open` in `.env.local`.
 
 ```bash
 npm run build    # production build
-npm test         # matching, Open House clock, preview store
+npm test         # Index, Open House TZ, Circle, privacy, notifications, copy
 ```
 
 ## What this PR includes
 
 1. Original 10th Meridian identity and cinematic lock / Open House surfaces
-2. Server-side Open House gating (never the client clock)
+2. Server-side Open House gating in the **visitor IANA timezone** (10:00–22:00 local; referral 09:00)
 3. Application wizard, reminders, referral codes + camera QR with paste fallback
-4. Member product: Home, Matches (feedback + intros), directory filters + profiles, onboarding, Channels (DEMO compose/threads/reactions), Events register/waitlist, Billing CTA
-5. Meridian 10 / 100 hybrid matching (structured + complementarity + diversity + feedback + curation; embeddings pluggable)
+4. Member product: Home, **Index** (never “Matches”), Your Circle, Ask the Meridian, directory + rich profiles, Channels, DMs, Events, Billing
+5. Meridian 10 / 100 hybrid matching (structured + complementarity + diversity + feedback + curation)
 6. Actionable admin: admissions cap + override log, live weights, Open House schedule, referral issue/revoke, curated promote/suppress
-7. SQL migrations, `.env.example`, `SETUP.md`, `TEST_REPORT.md`
-8. **Crossings** — Set Your Coordinates, A Crossing, Open a Table, City Hosts, City Notes (SYNTHETIC DEMO; Open House isolation)
+7. SQL migrations through `0007_profiles_network.sql`, `.env.example`, `SETUP.md`, `TEST_REPORT.md`
+8. **Crossings** — Set Your Coordinates, A Crossing, Open a Table, City Hosts, City Notes
+9. Notifications center + preferences; community standard: absolutely no soliciting
+10. Approved **lifetime $10,000**. Monthly later — not built. Domain prep **tenmeridian.com** (not purchased)
 
-## Reviewer click-through (Wave 2)
+## Reviewer click-through (Stefan / Astra)
 
-1. `/` lock screen (only public face outside the tenth)
-2. Reviewer tools → **Force Open House** → read philosophy / Index / scarcity / placeholders → **Walk the DEMO house**
-3. Matches: Relevant / Not relevant, Request introduction
-4. Members: filter, open a profile, Message / Introduce
-5. Channels: drawer, thread, react, compose
-6. Events: open a listing, register (still labeled planned/concept)
-7. Reviewer tools → **Approved — payment pending** → Billing CTA (501 without price IDs)
-8. Reviewer tools → **Preview as admin** → approve against the cap, edit weights, issue/revoke a code, curate a match
-
-## Reviewer click-through (Crossings)
-
-See [docs/CROSSINGS.md](docs/CROSSINGS.md). Short path:
-
-1. Reviewer tools → **Preview as member** → Home → **Crossings**
-2. Upcoming Paris journey → match carousel → **A Crossing**
-3. Open a Table / City Notes / City Hosts (all SYNTHETIC DEMO)
-4. Guest + Force Open House: view-only demonstration data, no mutations
+1. `/` lock screen (only public face outside the tenth). Countdown uses the same visitor-local rules.
+2. Reviewer tools → **Force Open House** → read philosophy / who belongs / Index / Ask the Meridian / Crossings / experiences / admissions (10/month) / **$10,000 lifetime** / anti-soliciting → **Walk the DEMO house**
+3. Index: Meridian 10 / 100, **Your Circle**, **Ask the Meridian / Who can help**, Relevant / Hide / Request introduction / Message / Add to Circle / Remove from Index
+4. Members: filter, open a profile — gallery, bio, city, website/LinkedIn (if visible), in-common, upcoming events, Message / Request introduction / Circle
+5. Profile (own): edit, gallery Storage stub, privacy toggles
+6. Channels + DM from a profile (Stream stub / DEMO compose). Hint: no soliciting
+7. Menu → Notifications → mark read; Settings → house notification prefs
+8. Reviewer tools → **Approved — payment pending** → Billing shows **$10,000 lifetime**
+9. Legal → Community: **Absolutely no soliciting. Ban with no refund.**
+10. Reviewer tools → **Preview as admin** → approve against the cap, edit weights, issue/revoke a code, curate the Index
 
 ## Do not
 
-- Invent membership prices
+- Invent monthly membership prices
 - Copy another network’s name, copy, photographs, or logo
 - Present DEMO people or events as real
 - Deploy this branch to production from the PR
+- Call the Index “Matches”
 
 See [SETUP.md](./SETUP.md) for remaining credentials, prices, assets, and policy decisions.

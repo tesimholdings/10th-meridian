@@ -8,6 +8,8 @@ import type {
   ProfileRecord,
   ReferralRecord,
 } from "@/lib/data/types";
+import { DEFAULT_PROFILE_PRIVACY } from "@/lib/network/types";
+import { demoGalleryFor } from "@/lib/storage/gallery";
 
 /**
  * Clearly labeled SYNTHETIC DEMO content.
@@ -15,7 +17,7 @@ import type {
  */
 
 export const DEMO_DISCLAIMER =
-  "DEMO ENVIRONMENT — synthetic profiles, channels, events, and matches. Not real members. Private messages, payment records, and admin data are never shown here.";
+  "DEMO ENVIRONMENT — synthetic profiles, channels, events, and Index. Not real members. Private messages, payment records, and admin data are never shown here.";
 
 const accent = [
   "#1a3a44",
@@ -33,15 +35,29 @@ const accent = [
 ];
 
 function p(
-  partial: Omit<ProfileRecord, "isDemo" | "completion" | "visibility"> & {
+  partial: Omit<ProfileRecord, "isDemo" | "completion" | "visibility" | "gallery" | "privacy" | "attendingEventIds"> & {
     completion?: number;
+    gallery?: ProfileRecord["gallery"];
+    privacy?: ProfileRecord["privacy"];
+    attendingEventIds?: string[];
+    visibility?: ProfileRecord["visibility"];
   },
 ): ProfileRecord {
-  return {
-    visibility: "members",
+  const base = {
+    visibility: partial.visibility ?? "members",
     completion: partial.completion ?? 78,
-    isDemo: true,
+    isDemo: true as const,
+    gallery: partial.gallery ?? demoGalleryFor(partial.id, partial.accent),
+    privacy: { ...DEFAULT_PROFILE_PRIVACY, ...partial.privacy },
+    attendingEventIds: partial.attendingEventIds ?? [],
+  };
+  return {
     ...partial,
+    ...base,
+    gallery: partial.gallery ?? base.gallery,
+    privacy: { ...DEFAULT_PROFILE_PRIVACY, ...partial.privacy },
+    attendingEventIds: partial.attendingEventIds ?? [],
+    isDemo: true,
   };
 }
 
@@ -57,6 +73,9 @@ export const demoProfiles: ProfileRecord[] = [
     country: "United States",
     timezone: "America/Chicago",
     bio: "Builds durable systems for people who prefer substance to spectacle.",
+    website: "https://example.test/northline",
+    linkedin: "https://www.linkedin.com/in/demo-voss",
+    attendingEventIds: ["evt-demo-1", "evt-demo-2"],
     industries: ["infrastructure", "software"],
     interests: ["long-form travel", "architecture", "field notes"],
     values: ["discretion", "craft", "reciprocity"],
@@ -88,6 +107,9 @@ export const demoProfiles: ProfileRecord[] = [
     country: "Nigeria",
     timezone: "Africa/Lagos",
     bio: "Looks for founders who treat capital as a tool, not a personality.",
+    website: "https://example.test/latitude",
+    attendingEventIds: ["evt-demo-1"],
+    privacy: { website: true, linkedin: false, gallery: true, offers: true, needs: true, strengths: true, events: true },
     industries: ["venture", "climate"],
     interests: ["cartography", "night swimming", "archives"],
     values: ["patience", "clarity"],
@@ -119,6 +141,8 @@ export const demoProfiles: ProfileRecord[] = [
     country: "United Kingdom",
     timezone: "Europe/London",
     bio: "Helps families and companies keep taste when scale arrives.",
+    linkedin: "https://www.linkedin.com/in/demo-ellison",
+    attendingEventIds: ["evt-demo-2"],
     industries: ["family office", "culture"],
     interests: ["printmaking", "islands", "slow food"],
     values: ["stewardship", "elegance"],
@@ -305,6 +329,8 @@ export const demoProfiles: ProfileRecord[] = [
     country: "France",
     timezone: "Europe/Paris",
     bio: "Programs evenings that do not need a recap.",
+    attendingEventIds: ["evt-demo-2"],
+    privacy: { website: false, linkedin: false, gallery: true, offers: true, needs: false, strengths: true, events: true },
     industries: ["culture", "fashion"],
     interests: ["perfume", "archives", "piano"],
     values: ["mystery", "manners"],
@@ -399,6 +425,8 @@ export const demoProfiles: ProfileRecord[] = [
     country: "United States",
     timezone: "America/New_York",
     bio: "Treats introductions as a craft with a duty of care.",
+    website: "https://example.test/adler",
+    attendingEventIds: ["evt-demo-1", "evt-demo-3"],
     industries: ["media", "philanthropy"],
     interests: ["night trains", "jazz", "tide tables"],
     values: ["trust", "follow-through"],
@@ -796,6 +824,101 @@ export const demoAnnouncements = [
     id: "ann-1",
     title: "The tenth is a threshold, not a campaign.",
     body: "DEMO notice. Selection remains human. A referral is not a promise.",
+    isDemo: true,
+  },
+];
+
+export const demoCircle = [
+  { ownerId: "demo-01", memberId: "demo-12", addedAt: "2026-09-08T12:00:00.000Z" },
+  { ownerId: "demo-01", memberId: "demo-03", addedAt: "2026-09-09T09:00:00.000Z" },
+  { ownerId: "demo-12", memberId: "demo-03", addedAt: "2026-09-08T13:00:00.000Z" },
+  { ownerId: "demo-03", memberId: "demo-12", addedAt: "2026-09-08T13:10:00.000Z" },
+  { ownerId: "demo-12", memberId: "demo-01", addedAt: "2026-09-08T12:05:00.000Z" },
+];
+
+export const demoChannelMembers: Record<string, string[]> = {
+  "ch-introductions": ["demo-01", "demo-12", "demo-09"],
+  "ch-ask": ["demo-01", "demo-02", "demo-06"],
+  "ch-chapter-chicago": ["demo-01", "demo-12", "demo-10"],
+  "ch-events": ["demo-01", "demo-03", "demo-09"],
+};
+
+export const demoHouseNotifications = [
+  {
+    id: "hn-1",
+    recipientId: "demo-01",
+    kind: "circle_add" as const,
+    title: "P. Adler added you to Your Circle",
+    body: "A manual addition — not an Index suggestion. SYNTHETIC DEMO.",
+    href: "/member/members/demo-12",
+    read: false,
+    createdAt: "2026-09-08T12:06:00.000Z",
+    isDemo: true,
+  },
+  {
+    id: "hn-2",
+    recipientId: "demo-01",
+    kind: "index_add" as const,
+    title: "Someone new entered your Meridian 10",
+    body: "The Index refreshed. Relevance first. SYNTHETIC DEMO.",
+    href: "/member/index",
+    read: false,
+    createdAt: "2026-09-10T16:00:00.000Z",
+    isDemo: true,
+  },
+  {
+    id: "hn-3",
+    recipientId: "demo-01",
+    kind: "channel_join" as const,
+    title: "A new person in Introductions",
+    body: "C. Moreau arrived in the channel. SYNTHETIC DEMO.",
+    href: "/member/channels?channel=ch-introductions",
+    read: true,
+    createdAt: "2026-09-10T16:06:00.000Z",
+    isDemo: true,
+  },
+  {
+    id: "hn-4",
+    recipientId: "demo-01",
+    kind: "intro" as const,
+    title: "An introduction was requested",
+    body: "You asked to meet P. Adler. SYNTHETIC DEMO.",
+    href: "/member/index",
+    read: true,
+    createdAt: "2026-09-10T15:50:00.000Z",
+    isDemo: true,
+  },
+  {
+    id: "hn-5",
+    recipientId: "demo-01",
+    kind: "event" as const,
+    title: "A planned salon is listed",
+    body: "A table for ten — DEMO listing. It has not occurred.",
+    href: "/member/events/evt-demo-2",
+    read: false,
+    createdAt: "2026-09-10T16:40:00.000Z",
+    isDemo: true,
+  },
+  {
+    id: "hn-6",
+    recipientId: "demo-01",
+    kind: "announcement" as const,
+    title: "The tenth is a threshold, not a campaign.",
+    body: "Selection remains human. A referral is not a promise.",
+    href: "/member/home",
+    read: true,
+    createdAt: "2026-09-10T14:00:00.000Z",
+    isDemo: true,
+  },
+  {
+    id: "hn-7",
+    recipientId: "demo-01",
+    kind: "crossing" as const,
+    title: "A Crossing request is waiting",
+    body: "Accept, decline, or suggest another time. SYNTHETIC DEMO.",
+    href: "/member/crossings",
+    read: false,
+    createdAt: "2026-09-13T09:00:00.000Z",
     isDemo: true,
   },
 ];

@@ -2,8 +2,11 @@ import {
   demoAnnouncements,
   demoApplications,
   demoAudit,
+  demoChannelMembers,
   demoChannels,
+  demoCircle,
   demoEvents,
+  demoHouseNotifications,
   demoIntros,
   demoMessages,
   demoProfiles,
@@ -37,6 +40,20 @@ import { env } from "@/lib/env";
 import type { MatchCuration, MatchFeedback, MatchingWeights } from "@/lib/matching/types";
 import { DEFAULT_WEIGHTS } from "@/lib/matching/types";
 import { profileCompletion } from "@/lib/profile/completion";
+import {
+  addToCircle,
+  removeFromCircle,
+  removeFromIndex,
+  restoreToIndex,
+} from "@/lib/network/circle";
+import type {
+  CircleEdge,
+  HouseNotification,
+  HouseNotificationPrefs,
+  IndexRemoval,
+} from "@/lib/network/types";
+import { DEFAULT_HOUSE_NOTIFICATION_PREFS } from "@/lib/network/types";
+import { stubGalleryUpload, type GalleryUpload } from "@/lib/storage/gallery";
 
 export interface PreviewState {
   weights: MatchingWeights;
@@ -58,6 +75,11 @@ export interface PreviewState {
   audit: AuditEvent[];
   announcements: typeof demoAnnouncements;
   crossings: CrossingsState;
+  circle: CircleEdge[];
+  indexRemovals: IndexRemoval[];
+  houseNotifications: HouseNotification[];
+  houseNotificationPrefs: HouseNotificationPrefs[];
+  channelMembers: Record<string, string[]>;
 }
 
 function seed(): PreviewState {
@@ -156,6 +178,13 @@ function seed(): PreviewState {
       standings: {},
       travelWeights: { ...DEFAULT_TRAVEL_WEIGHTS },
     },
+    circle: structuredClone(demoCircle),
+    indexRemovals: [],
+    houseNotifications: structuredClone(demoHouseNotifications),
+    houseNotificationPrefs: [
+      { profileId: viewerDemoProfile.id, ...DEFAULT_HOUSE_NOTIFICATION_PREFS },
+    ],
+    channelMembers: structuredClone(demoChannelMembers),
   };
 }
 
@@ -345,6 +374,13 @@ export function requestIntro(input: {
     targetId: input.targetId,
     signal: "accepted",
   });
+  pushHouseNotification({
+    recipientId: input.targetId,
+    kind: "intro",
+    title: "An introduction was requested",
+    body: `${input.fromName} asked to meet ${input.toName}. SYNTHETIC DEMO.`,
+    href: `/member/members/${input.fromId}`,
+  });
   audit(input.fromName, "intro.requested", "introduction", row.id);
   return row;
 }
@@ -431,4 +467,151 @@ export function unreadTotal(): number {
 
 export function crossingsState(): CrossingsState {
   return state().crossings;
+}
+
+export function circleFor(ownerId: string): CircleEdge[] {
+  return state().circle.filter((e) => e.ownerId === ownerId);
+}
+
+export function addMemberToCircle(ownerId: string, memberId: string) {
+  const s = state();
+  const next = addToCircle(s.circle, ownerId, memberId);
+  s.circle = next.edges;
+  if (next.added) {
+    const owner = s.profiles.find((p) => p.id === ownerId);
+    pushHouseNotification({
+      recipientId: memberId,
+      kind: "circle_add",
+      title: `${owner?.displayName ?? "A member"} added you to Your Circle`,
+      body: "A manual addition — not an Index suggestion. SYNTHETIC DEMO.",
+      href: `/member/members/${ownerId}`,
+    });
+    audit(ownerId, "circle.added", "circle", memberId);
+  }
+  return next;
+}
+
+export function removeMemberFromCircle(ownerId: string, memberId: string) {
+  const next = removeFromCircle(state().circle, ownerId, memberId);
+  state().circle = next.edges;
+  if (next.removed) audit(ownerId, "circle.removed", "circle", memberId);
+  return next;
+}
+
+export function hideFromIndex(viewerId: string, targetId: string) {
+  const next = removeFromIndex(state().indexRemovals, viewerId, targetId);
+  state().indexRemovals = next.removals;
+  if (next.removed) {
+    recordFeedback({ viewerId, targetId, signal: "hidden" });
+    audit(viewerId, "index.removed", "index", targetId);
+  }
+  return next;
+}
+
+export function unhideFromIndex(viewerId: string, targetId: string) {
+  const next = restoreToIndex(state().indexRemovals, viewerId, targetId);
+  state().indexRemovals = next.removals;
+  if (next.restored) audit(viewerId, "index.restored", "index", targetId);
+  return next;
+}
+
+export function pushHouseNotification(
+  input: Omit<HouseNotification, "id" | "createdAt" | "read" | "isDemo" | "recipientId"> & {
+    recipientId: string;
+  },
+) {
+  const prefs = housePrefsFor(input.recipientId);
+  const kindKey =
+    input.kind === "channel_join"
+      ? "channelJoin"
+      : input.kind === "circle_add"
+        ? "circle"
+        : input.kind === "index_add"
+          ? "index"
+          : input.kind === "intro"
+            ? "intros"
+            : input.kind === "event"
+              ? "events"
+              : input.kind === "announcement"
+                ? "announcements"
+                : "circle";
+  const channel = prefs[kindKey as keyof HouseNotificationPrefs];
+  if (channel && typeof channel === "object" && "inApp" in channel && !channel.inApp) {
+    return null;
+  }
+  const row: HouseNotification = {
+    id: `hn-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+    createdAt: new Date().toISOString(),
+    read: false,
+    isDemo: true,
+    ...input,
+  };
+  state().houseNotifications.unshift(row);
+  return row;
+}
+
+export function housePrefsFor(profileId: string): HouseNotificationPrefs {
+  const s = state();
+  const existing = s.houseNotificationPrefs.find((p) => p.profileId === profileId);
+  if (existing) return existing;
+  const created: HouseNotificationPrefs = { profileId, ...DEFAULT_HOUSE_NOTIFICATION_PREFS };
+  s.houseNotificationPrefs.push(created);
+  return created;
+}
+
+export function setHouseNotificationPrefs(
+  profileId: string,
+  patch: Partial<Omit<HouseNotificationPrefs, "profileId">>,
+) {
+  const prefs = housePrefsFor(profileId);
+  Object.assign(prefs, patch);
+  audit(profileId, "notifications.prefs_updated", "notification_prefs");
+  return prefs;
+}
+
+export function markHouseNotificationsRead(recipientId: string, ids?: string[]) {
+  for (const n of state().houseNotifications) {
+    if (n.recipientId !== recipientId) continue;
+    if (!ids || ids.includes(n.id)) n.read = true;
+  }
+}
+
+export function unreadHouseNotifications(recipientId: string): number {
+  return state().houseNotifications.filter((n) => n.recipientId === recipientId && !n.read).length;
+}
+
+export function addGalleryPhoto(profileId: string, input: { caption: string; kind?: "work" | "portfolio" }) {
+  const profile = state().profiles.find((p) => p.id === profileId);
+  if (!profile) return null;
+  const photo: GalleryUpload = stubGalleryUpload(input);
+  profile.gallery = [...(profile.gallery ?? []), photo];
+  profile.isDemo = true;
+  audit(profileId, "profile.gallery_added", "profile", profileId);
+  return photo;
+}
+
+export function openDirectMessage(fromId: string, toId: string) {
+  const s = state();
+  const existing = s.channels.find(
+    (c) =>
+      c.kind === "dm" &&
+      (s.channelMembers[c.id] ?? []).includes(fromId) &&
+      (s.channelMembers[c.id] ?? []).includes(toId),
+  );
+  if (existing) return existing;
+  const from = s.profiles.find((p) => p.id === fromId);
+  const to = s.profiles.find((p) => p.id === toId);
+  const channel: ChannelRecord = {
+    id: `dm-${fromId}-${toId}`,
+    slug: `dm-${to?.displayName.replace(/\s+/g, "-").toLowerCase() ?? toId}`,
+    name: `Message · ${to?.displayName ?? "Member"}`,
+    kind: "dm",
+    topic: "Private member communication. DEMO. Not E2EE. Absolutely no soliciting.",
+    unread: 0,
+    isDemo: true,
+  };
+  s.channels.unshift(channel);
+  s.channelMembers[channel.id] = [fromId, toId];
+  audit(from?.displayName ?? fromId, "dm.opened", "channel", channel.id);
+  return channel;
 }

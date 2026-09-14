@@ -9,6 +9,7 @@ Wave 2 added interactive member/admin DEMO state (in-process store). It resets w
 - [ ] Create a Vercel project linked to this GitHub repo (Preview deployments only)
 - [ ] Confirm Production is **not** promoted until legal, prices, and assets are approved
 - [ ] Set `NEXT_PUBLIC_SITE_URL` to the preview URL, then later the custom domain
+- [ ] Prepared domain: **tenmeridian.com** (not purchased). Do not attach until bought and Open House / lock behavior is accepted
 - [ ] Attach the custom domain only after Open House / lock behavior is accepted
 - [ ] Keep `NEXT_PUBLIC_PREVIEW_TOOLS=false` and `PREVIEW_DEMO_AUTH=false` in Production
 - [ ] Set `NEXT_PUBLIC_RUNTIME_MODE=live` only after integrations are real
@@ -17,11 +18,11 @@ Wave 2 added interactive member/admin DEMO state (in-process store). It resets w
 ## 2. Supabase
 
 - [ ] Create a Supabase project
-- [ ] Apply `supabase/migrations/0001_init.sql` through `0006_crossings.sql` (SQL editor or CLI)
+- [ ] Apply `supabase/migrations/0001_init.sql` through `0007_profiles_network.sql` (SQL editor or CLI)
 - [ ] Confirm `pgcrypto` is available; decide whether to enable `vector` later
 - [ ] Copy `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
 - [ ] Configure Auth: email magic link / password, site URL, redirect to `/api/auth/callback`
-- [ ] Create Storage buckets if the migration cannot (dashboard fallback): `avatars`, `channel-attachments`, `event-media`
+- [ ] Create Storage buckets if the migration cannot (dashboard fallback): `avatars`, `channel-attachments`, `event-media`, `portfolio`
 - [ ] Review RLS policies with a steward account before inviting anyone real
 - [ ] Replace DEMO seed referrals before going live
 - [ ] Decide backup / PITR
@@ -30,9 +31,8 @@ Wave 2 added interactive member/admin DEMO state (in-process store). It resets w
 ## 3. Stripe Billing
 
 - [ ] Create a Stripe account (test mode first)
-- [ ] **Do not invent prices.** Obtain approved Founding and Standard amounts
-- [ ] Replace `[INSERT APPROVED FOUNDING PRICE]` and `[INSERT APPROVED STANDARD PRICE]` only after approval
-- [ ] Create Stripe Products + Prices; paste IDs into `STRIPE_FOUNDING_PRICE_ID` / `STRIPE_STANDARD_PRICE_ID` and `site_config`
+- [x] Lifetime membership **$10,000** is approved (Stefan). Monthly billing later — do not build it.
+- [ ] Create a Stripe one-time Price for lifetime; paste into `STRIPE_LIFETIME_PRICE_ID` and `site_config`
 - [ ] Organization / Strategic Partnership remains by application — no public price
 - [ ] `STRIPE_SECRET_KEY`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
 - [ ] Webhook endpoint `/api/stripe/webhook` for `checkout.session.completed`, `invoice.paid`, `customer.subscription.updated`, `customer.subscription.deleted`
@@ -62,7 +62,7 @@ Wave 2 added interactive member/admin DEMO state (in-process store). It resets w
 
 ## 6. Open House & admissions (admin decisions)
 
-- [ ] Confirm timezone (default `America/Chicago`) and hours (9 / 10 / 22)
+- [x] Visitor window is 10:00–22:00 in the visitor IANA timezone (cookie / `x-visitor-timezone`). Referral early 09:00 local the same day. Fallback `America/Chicago`.
 - [ ] Confirm day-of-month (default 10; schema caps 1–28)
 - [ ] Confirm monthly cap remains 10; override policy for stewards
 - [ ] Confirm waitlist vs next-cohort movement when the cap is reached
@@ -128,9 +128,9 @@ Wave 2 added interactive member/admin DEMO state (in-process store). It resets w
 - [ ] Confirm `X-Robots-Tag` on `/member` and `/admin`
 - [ ] Suspend / expire → revoke Stream + Stripe access job
 
-## Still needs Stefan (Wave 2)
+## Still needs Stefan
 
-- [ ] Approved Founding / Standard amounts (placeholders remain)
+- [x] Lifetime price $10,000 (approved). Monthly later — not built.
 - [ ] Hero film to replace the labeled cinematic placeholder
 - [ ] Live Supabase / Stripe / Stream / Resend keys (build and tests must not require them)
 - [ ] Counsel-approved legal pages

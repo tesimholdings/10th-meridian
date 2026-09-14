@@ -1,3 +1,7 @@
+import type { ProfilePhoto, ProfilePrivacy } from "@/lib/network/types";
+
+export type { ProfilePhoto, ProfilePrivacy };
+
 export const APP_ROLES = [
   "guest",
   "applicant",
@@ -24,7 +28,7 @@ export const APPLICATION_STATUSES = [
 
 export type ApplicationStatus = (typeof APPLICATION_STATUSES)[number];
 
-export type MembershipProduct = "founding" | "standard" | "organization";
+export type MembershipProduct = "lifetime" | "founding" | "standard" | "organization";
 
 export type ConnectionPreference =
   | "peer"
@@ -49,6 +53,9 @@ export interface ProfileRecord {
   bio: string;
   website?: string;
   linkedin?: string;
+  gallery: ProfilePhoto[];
+  privacy: ProfilePrivacy;
+  attendingEventIds: string[];
   industries: string[];
   interests: string[];
   values: string[];
@@ -66,7 +73,7 @@ export interface ProfileRecord {
   causes: string[];
   communicationStyle: string;
   availability: "open" | "selective" | "limited" | "paused";
-  visibility: "members" | "matches_only" | "hidden";
+  visibility: "members" | "index_only" | "hidden";
   completion: number;
   isDemo: boolean;
   initials: string;

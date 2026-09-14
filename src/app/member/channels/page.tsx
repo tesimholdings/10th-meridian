@@ -18,8 +18,9 @@ export default async function ChannelsPage({
       <p className="mb-6 max-w-xl text-sm text-ivory-muted">
         Channels, DMs, threads, and attachments are intended to run on Stream Chat
         with server-side access checks. Compose, reactions, threads, and unreads
-        update DEMO state here. Not Slack. Not E2EE. Crossing conversations open
-        here only after acceptance (Stream when keys exist; DEMO otherwise).
+        update DEMO state here. Not Slack. Not E2EE. Stream when keys exist; DEMO
+        otherwise. Absolutely no soliciting. Ban with no refund. Referrals are welcome.
+        Mention yourself only if asked.
       </p>
       <ChannelApp
         initialChannels={store.channels}

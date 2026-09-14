@@ -10,6 +10,7 @@ import {
   readSigned,
   REFERRAL_COOKIE,
   ROLE_COOKIE,
+  VISITOR_TZ_COOKIE,
 } from "@/lib/access/cookies";
 import { validateReferralCode } from "@/lib/referrals/validate";
 import type { AppRole } from "@/lib/data/types";
@@ -35,9 +36,13 @@ export function proxy(request: NextRequest) {
   const role = roleFrom(request);
   const referral = readSigned(request.cookies.get(REFERRAL_COOKIE)?.value);
   const forced = readSigned(request.cookies.get(OPEN_HOUSE_FORCE_COOKIE)?.value);
+  const visitorTimeZone =
+    request.cookies.get(VISITOR_TZ_COOKIE)?.value ??
+    request.headers.get("x-visitor-timezone");
   const decision = evaluateOpenHouse({
     role: role ?? "guest",
     hasValidReferral: referral ? validateReferralCode(referral).ok : false,
+    visitorTimeZone,
     config:
       forced === "open" || forced === "closed" ? { force: forced } : undefined,
   });

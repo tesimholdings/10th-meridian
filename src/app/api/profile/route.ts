@@ -11,6 +11,19 @@ const schema = z.object({
   country: z.string().optional(),
   timezone: z.string().optional(),
   bio: z.string().optional(),
+  website: z.string().optional(),
+  linkedin: z.string().optional(),
+  privacy: z
+    .object({
+      website: z.boolean(),
+      linkedin: z.boolean(),
+      gallery: z.boolean(),
+      offers: z.boolean(),
+      needs: z.boolean(),
+      strengths: z.boolean(),
+      events: z.boolean(),
+    })
+    .optional(),
   industries: z.array(z.string()).optional(),
   interests: z.array(z.string()).optional(),
   goals: z.array(z.string()).optional(),
@@ -25,7 +38,7 @@ const schema = z.object({
   values: z.array(z.string()).optional(),
   communicationStyle: z.string().optional(),
   availability: z.enum(["open", "selective", "limited", "paused"]).optional(),
-  visibility: z.enum(["members", "matches_only", "hidden"]).optional(),
+  visibility: z.enum(["members", "index_only", "hidden"]).optional(),
 });
 
 export async function GET() {

@@ -1,5 +1,6 @@
 import { env } from "@/lib/env";
 import type { AppRole } from "@/lib/data/types";
+import { resolveVisitorTimeZone } from "@/lib/access/timezone";
 
 export type WindowPhase =
   | "locked"
@@ -153,9 +154,14 @@ export function evaluateOpenHouse(input: {
   now?: Date;
   role?: AppRole | null;
   hasValidReferral?: boolean;
+  visitorTimeZone?: string | null;
   config?: Partial<OpenHouseConfig>;
 }): AccessDecision {
-  const config = getOpenHouseConfig(input.config);
+  const visitorTz = resolveVisitorTimeZone(input.visitorTimeZone ?? input.config?.timeZone);
+  const config = getOpenHouseConfig({
+    ...input.config,
+    timeZone: visitorTz,
+  });
   const nowDate = input.now ?? new Date();
   const now = zonedParts(nowDate, config.timeZone);
   const role = input.role ?? "guest";
@@ -222,7 +228,7 @@ export function evaluateOpenHouse(input: {
       return {
         phase: "referral_early",
         allowed: false,
-        reason: "Referral holders may enter from 9:00 a.m. General doors open at 10:00 a.m.",
+        reason: "Referral holders may enter from 9:00 a.m. local time. General doors open at 10:00 a.m. local time.",
         isDemo: true,
         isMemberAccess: false,
         hasReferralGrant,
@@ -245,7 +251,7 @@ export function evaluateOpenHouse(input: {
       reason:
         minutes < generalMinutes
           ? "Referral early hour. Guest access ends when the window closes."
-          : "Open House is in session. Guest access ends at 10:00 p.m.",
+          : "Open House is in session. Guest access ends at 10:00 p.m. local time.",
       isDemo: true,
       isMemberAccess: false,
       hasReferralGrant,

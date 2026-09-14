@@ -26,7 +26,7 @@ export async function POST(request: Request) {
   }
 
   const session = await stripe.checkout.sessions.create({
-    mode: "subscription",
+    mode: item.interval === "lifetime" ? "payment" : "payment",
     line_items: [{ price: item.stripePriceId, quantity: 1 }],
     success_url: `${env.siteUrl}/member/billing?checkout=success`,
     cancel_url: `${env.siteUrl}/member/billing?checkout=cancel`,

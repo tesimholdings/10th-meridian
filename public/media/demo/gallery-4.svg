@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="DEMO gallery still">
+  <rect width="800" height="600" fill="#070809"/>
+  <ellipse cx="400" cy="320" rx="280" ry="90" fill="none" stroke="#14343c" stroke-width="8"/>
+  <path d="M120 300 C 240 220 360 360 520 260 S 700 220 760 300" fill="none" stroke="#b08d4a" opacity="0.45"/>
+  <text x="40" y="560" fill="#8f8774" font-size="18" font-family="Georgia, serif">SYNTHETIC DEMO</text>
+</svg>

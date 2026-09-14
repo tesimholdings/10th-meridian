@@ -29,6 +29,7 @@ export interface MatchServiceInput {
   blocks?: BlockRecord[];
   embeddings?: Record<string, number[]>;
   useSemantic?: boolean;
+  indexRemovedIds?: string[];
 }
 
 export interface MatchIndex {
@@ -49,7 +50,11 @@ export async function computeMatchIndex(input: MatchServiceInput): Promise<Match
   const curation = input.curation ?? [];
   const blocks = input.blocks ?? [];
   const members = input.members.filter(
-    (m) => m.id !== input.viewer.id && isEligible(m) && !blocked(input.viewer.id, m.id, blocks),
+    (m) =>
+      m.id !== input.viewer.id &&
+      isEligible(m) &&
+      !blocked(input.viewer.id, m.id, blocks) &&
+      !input.indexRemovedIds?.includes(m.id),
   );
 
   const embeddings = { ...(input.embeddings ?? {}) };
@@ -159,6 +164,10 @@ export async function demoIndexFor(
     weights: store.weights,
     feedback: store.feedback,
     curation: store.curation,
+    blocks: store.crossings.blocks,
+    indexRemovedIds: store.indexRemovals
+      .filter((r) => r.viewerId === subject.id)
+      .map((r) => r.targetId),
     useSemantic: true,
     ...overrides,
   });

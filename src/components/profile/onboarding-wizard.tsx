@@ -28,6 +28,8 @@ export function OnboardingWizard({ profile, redirectTo = "/member/profile" }: { 
     roleTitle: profile.roleTitle,
     company: profile.company,
     bio: profile.bio,
+    website: profile.website ?? "",
+    linkedin: profile.linkedin ?? "",
     industries: csv(profile.industries),
     goals: csv(profile.goals),
     ambitions: csv(profile.ambitions),
@@ -50,6 +52,8 @@ export function OnboardingWizard({ profile, redirectTo = "/member/profile" }: { 
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         ...draft,
+        website: draft.website || undefined,
+        linkedin: draft.linkedin || undefined,
         industries: list(draft.industries),
         goals: list(draft.goals),
         ambitions: list(draft.ambitions),
@@ -93,6 +97,8 @@ export function OnboardingWizard({ profile, redirectTo = "/member/profile" }: { 
             <Field label="Role" value={draft.roleTitle} onChange={(v) => setDraft({ ...draft, roleTitle: v })} />
             <Field label="Company / house" value={draft.company} onChange={(v) => setDraft({ ...draft, company: v })} />
             <Area label="Bio" value={draft.bio} onChange={(v) => setDraft({ ...draft, bio: v })} />
+            <Field label="Website (optional)" value={draft.website} onChange={(v) => setDraft({ ...draft, website: v })} />
+            <Field label="LinkedIn (optional)" value={draft.linkedin} onChange={(v) => setDraft({ ...draft, linkedin: v })} />
             <Field label="Industries" value={draft.industries} onChange={(v) => setDraft({ ...draft, industries: v })} />
           </>
         ) : null}
@@ -116,6 +122,9 @@ export function OnboardingWizard({ profile, redirectTo = "/member/profile" }: { 
             <Field label="Travel" value={draft.travel} onChange={(v) => setDraft({ ...draft, travel: v })} />
             <Field label="Causes" value={draft.causes} onChange={(v) => setDraft({ ...draft, causes: v })} />
             <Field label="Communication" value={draft.communicationStyle} onChange={(v) => setDraft({ ...draft, communicationStyle: v })} />
+            <p className="text-sm leading-relaxed text-ivory-dim">
+              Absolutely no soliciting. Ban with no refund. Referrals are welcome. Mention yourself only if asked.
+            </p>
             <label className="grid gap-2">
               <span className="label">Availability</span>
               <select

@@ -1,4 +1,4 @@
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { evaluateOpenHouse, type AccessDecision } from "@/lib/access/open-house";
 import {
   getReferralGrant,
@@ -7,6 +7,7 @@ import {
   readSigned,
   type SessionUser,
 } from "@/lib/access/session";
+import { VISITOR_TZ_COOKIE } from "@/lib/access/cookies";
 import { env } from "@/lib/env";
 import { getPreviewStore } from "@/lib/preview/store";
 import { validateReferralCode } from "@/lib/referrals/validate";
@@ -35,9 +36,13 @@ export async function resolveAccessContext(): Promise<AccessContext> {
       : store.openHouse.force !== "auto"
         ? store.openHouse.force
         : undefined;
+  const visitorTimeZone =
+    jar.get(VISITOR_TZ_COOKIE)?.value ??
+    (await headers()).get("x-visitor-timezone");
   const decision = evaluateOpenHouse({
     role: user?.role ?? "guest",
     hasValidReferral: referral.ok,
+    visitorTimeZone,
     config: {
       ...store.openHouse,
       force: force ?? store.openHouse.force,

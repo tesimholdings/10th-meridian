@@ -5,19 +5,22 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { MatchIndex } from "@/lib/matching/service";
 import { brand } from "@/lib/config/site";
-import type { IntroRequest } from "@/lib/data/types";
+import type { IntroRequest, ProfileRecord } from "@/lib/data/types";
 import { WhyMeet } from "@/components/ui/why-meet";
 import { DemoMark } from "@/components/brand/demo-mark";
 import { EmptyState } from "@/components/crossings/states";
+import { MERIDIAN_10, MERIDIAN_100, SOURCE_ALGORITHMIC, SOURCE_HUMAN } from "@/lib/copy/ui";
 
 export function MatchBoard({
   index,
   intros,
   compact = false,
+  circleIds = [],
 }: {
   index: MatchIndex;
   intros: IntroRequest[];
   compact?: boolean;
+  circleIds?: string[];
 }) {
   const router = useRouter();
   const [pending, setPending] = useState<string | null>(null);
@@ -48,13 +51,52 @@ export function MatchBoard({
     router.refresh();
   }
 
+  async function message(targetId: string) {
+    setPending(targetId + "dm");
+    const res = await fetch("/api/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ targetId }),
+    });
+    const json = (await res.json()) as { ok?: boolean; href?: string };
+    setPending(null);
+    if (json.ok && json.href) {
+      router.push(json.href);
+      return;
+    }
+    setNote("Could not open that conversation.");
+  }
+
+  async function circle(targetId: string, action: "add" | "remove" | "remove-index") {
+    setPending(targetId + action);
+    await fetch("/api/circle", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action, targetId }),
+    });
+    setPending(null);
+    setNote(
+      action === "add"
+        ? "Added to Your Circle."
+        : action === "remove"
+          ? "Removed from Your Circle."
+          : "Removed from Index recommendations.",
+    );
+    router.refresh();
+  }
+
+  function sourceLabel(row: { source: string; target: ProfileRecord }) {
+    if (circleIds.includes(row.target.id)) return "Your Circle";
+    return row.source === "human_curated" ? SOURCE_HUMAN : SOURCE_ALGORITHMIC;
+  }
+
   const rest = compact ? [] : index.meridian100.slice(10);
 
   return (
     <div className="grid gap-10">
       {note ? <p className="text-sm text-gold">{note}</p> : null}
       <section>
-        <p className="label">The Meridian 10</p>
+        <p className="label">{MERIDIAN_10}</p>
         <h2 className="mt-2 font-serif text-3xl md:text-4xl">{brand.meridian10}</h2>
         {index.meridian10.length === 0 ? (
           <div className="mt-6">
@@ -88,7 +130,7 @@ export function MatchBoard({
                     </div>
                     <p className="text-sm leading-relaxed text-ivory-muted">{row.target.headline}</p>
                     <p className="mt-2 text-[11px] tracking-[0.14em] uppercase text-ivory-dim">
-                      {row.source === "human_curated" ? "Human-curated" : "Algorithmic signal"}
+                      {sourceLabel(row)}
                       {intro ? ` · Intro ${intro.status}` : ""}
                     </p>
                     {row.target.isDemo ? (
@@ -107,8 +149,20 @@ export function MatchBoard({
                       <Action disabled={pending !== null} onClick={() => void feedback(row.target.id, "hidden")}>
                         Hide
                       </Action>
+                      <Action disabled={pending !== null} onClick={() => void message(row.target.id)}>
+                        Message
+                      </Action>
                       <Action disabled={pending !== null} onClick={() => void introduce(row.target.id)}>
                         {intro ? "Requested" : "Request introduction"}
+                      </Action>
+                      <Action
+                        disabled={pending !== null}
+                        onClick={() => void circle(row.target.id, circleIds.includes(row.target.id) ? "remove" : "add")}
+                      >
+                        {circleIds.includes(row.target.id) ? "Remove from Circle" : "Add to Circle"}
+                      </Action>
+                      <Action disabled={pending !== null} onClick={() => void circle(row.target.id, "remove-index")}>
+                        Remove from Index
                       </Action>
                     </div>
                   </div>
@@ -122,7 +176,7 @@ export function MatchBoard({
 
       {compact ? null : (
         <section>
-          <p className="label">The Meridian 100</p>
+          <p className="label">{MERIDIAN_100}</p>
           <h2 className="mt-2 font-serif text-3xl">{brand.meridian100}</h2>
           <p className="mt-2 text-sm text-ivory-dim">
             {index.meridian100.length} eligible connections. Never invented.
@@ -149,8 +203,14 @@ export function MatchBoard({
                   <Action disabled={pending !== null} onClick={() => void feedback(row.target.id, "hidden")}>
                     Hide
                   </Action>
+                  <Action disabled={pending !== null} onClick={() => void message(row.target.id)}>
+                    Message
+                  </Action>
                   <Action disabled={pending !== null} onClick={() => void introduce(row.target.id)}>
-                    Introduce
+                    Request introduction
+                  </Action>
+                  <Action disabled={pending !== null} onClick={() => void circle(row.target.id, "remove-index")}>
+                    Remove from Index
                   </Action>
                 </div>
               </li>

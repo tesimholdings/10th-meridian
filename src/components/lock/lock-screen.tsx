@@ -34,8 +34,8 @@ export function LockScreen({
             </p>
             {referralEarly ? (
               <p className="mt-4 max-w-md text-sm text-gold">
-                Referral holders may enter from 9:00 a.m. {decision.config.timeZone}. General
-                doors open at 10:00 a.m.
+                Referral holders may enter from 9:00 a.m. local time ({decision.config.timeZone}).
+                General doors open at 10:00 a.m. The house closes at 10:00 p.m. the same day.
               </p>
             ) : null}
             <div className="mt-7 md:mt-10">

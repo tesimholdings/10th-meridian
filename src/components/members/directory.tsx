@@ -124,6 +124,12 @@ export function Directory({ profiles }: { profiles: ProfileRecord[] }) {
                 >
                   Open profile
                 </Link>
+                <Link
+                  href={`/member/members/${p.id}#message`}
+                  className="inline-flex min-h-11 items-center border border-[var(--line)] px-3 text-[10px] tracking-[0.16em] uppercase"
+                >
+                  Message
+                </Link>
               </div>
             </div>
           </li>

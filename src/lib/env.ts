@@ -88,6 +88,12 @@ export const env = {
   get stripeStandardPriceId(): string {
     return read("STRIPE_STANDARD_PRICE_ID");
   },
+  get stripeLifetimePriceId(): string {
+    return read("STRIPE_LIFETIME_PRICE_ID");
+  },
+  get lifetimePriceLabel(): string {
+    return read("NEXT_PUBLIC_LIFETIME_PRICE_LABEL", "$10,000");
+  },
   get foundingPriceLabel(): string {
     return read(
       "NEXT_PUBLIC_FOUNDING_PRICE_LABEL",

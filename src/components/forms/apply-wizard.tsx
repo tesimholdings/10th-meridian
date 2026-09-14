@@ -104,8 +104,7 @@ export function ApplyWizard({ referralCode }: { referralCode?: string | null }) 
                 checked={draft.terms === "yes"}
                 onChange={(e) => set("terms", e.target.checked ? "yes" : "")}
               />
-              I agree to the placeholder Terms, Privacy, and Community standards, and I understand
-              selection is human and never guaranteed.
+              I agree to the placeholder Terms, Privacy, and Community standards. Absolutely no soliciting. Ban with no refund. Referrals are welcome. Mention yourself only if asked. Selection is human and never guaranteed.
             </label>
           </>
         ) : null}

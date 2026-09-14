@@ -28,7 +28,7 @@ export default async function BillingPage() {
           <h1 className="mt-3 font-serif text-3xl">You have been invited to continue.</h1>
           <p className="mt-3 text-sm text-ivory-muted">
             A steward approved the application. Membership begins after Stripe-hosted
-            checkout. No amount is shown until finance approves a price.
+            checkout. Lifetime membership is $10,000. Monthly billing is not offered yet.
           </p>
         </div>
       ) : (
@@ -48,7 +48,7 @@ export default async function BillingPage() {
             {p.checkoutEligible ? (
               <form action="/api/stripe/checkout" method="post" className="mt-4">
                 <input type="hidden" name="product" value={p.id} />
-                <Button type="submit" variant={pending && p.id === "founding" ? "gold" : "ghost"}>
+                <Button type="submit" variant={pending && p.id === "lifetime" ? "gold" : "ghost"}>
                   Continue to Stripe Checkout
                 </Button>
               </form>

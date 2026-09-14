@@ -4,7 +4,7 @@ import { MemberShell } from "@/components/member/member-shell";
 import { MatchBoard } from "@/components/matches/match-board";
 import { demoIndexFor } from "@/lib/matching/service";
 import { brand } from "@/lib/config/site";
-import { getPreviewStore, unreadTotal, viewerProfile } from "@/lib/preview/store";
+import { getPreviewStore, unreadHouseNotifications, unreadTotal, viewerProfile } from "@/lib/preview/store";
 import { completionMessage } from "@/lib/profile/completion";
 
 export const metadata = { title: "Home", robots: { index: false } };
@@ -35,10 +35,10 @@ export default async function MemberHomePage() {
 
       <section className="mt-10 grid gap-3 md:grid-cols-3">
         <Stat label="Unread / mentions" value={`${unreadTotal()} · DEMO`} href="/member/channels" />
-        <Stat label="Profile completion" value={`${viewer.completion}%`} href="/onboarding" />
+        <Stat label="Notifications" value={`${unreadHouseNotifications(viewer.id)} quiet`} href="/member/notifications" />
         <Stat
           label="Membership"
-          value={paymentPending ? "Payment pending" : "Active · renewal unset"}
+          value={paymentPending ? "Payment pending" : "Lifetime · $10,000"}
           href="/member/billing"
         />
       </section>
@@ -66,8 +66,13 @@ export default async function MemberHomePage() {
       </section>
 
       <section className="mt-12">
-        <MatchBoard index={index} intros={store.intros} compact />
-        <Link href="/member/matches" className="mt-4 inline-flex min-h-11 items-center text-[11px] tracking-[0.18em] uppercase text-gold">
+        <MatchBoard
+          index={index}
+          intros={store.intros}
+          compact
+          circleIds={store.circle.filter((e) => e.ownerId === viewer.id).map((e) => e.memberId)}
+        />
+        <Link href="/member/index" className="mt-4 inline-flex min-h-11 items-center text-[11px] tracking-[0.18em] uppercase text-gold">
           Open the full Index
         </Link>
       </section>

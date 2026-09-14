@@ -1,46 +1,44 @@
-# Wave 3 UI polish
+# Wave 4 — profiles, Circle, Open House, notifications
 
-Branch: `cursor/ui-polish-wave3-907d`  
-Base: `cursor/crossings-travel-1da1`  
-Scope: cinematic and mobile feel only. Gating, matching, privacy, and Crossings logic are unchanged. No membership prices were invented.
+Branch: `cursor/profiles-network-openhouse-2de8`  
+Base: `cursor/ui-polish-wave3-907d`  
+Scope: next product layer. No production deploy. Lifetime **$10,000** approved. Monthly not built.
 
 ## Identity kept
 
-Deep black / charcoal, midnight ocean and teal, ivory type, antique gold accents, editorial serif + tracked sans, fine borders, meridian / compass motifs. No generic SaaS chrome, neon, or busy dashboards.
+Deep black / charcoal, midnight ocean and teal, ivory type, antique gold accents, editorial serif + tracked sans, fine borders, meridian / compass motifs. Open House adds aurora drift and title rise; all honor `prefers-reduced-motion`.
 
 ## What changed
 
-### Lock screen
-- Tighter mobile CTA cluster: primary Sign In, two-up Referral / Scan QR, Remind as a quiet text link
-- Scarcity line moved to discreet 10px type
-- Countdown is a hairline rail with padded tabular numbers, not four boxes
-- Stronger poster vignette, night-water poster SVG, reduced-motion still pauses the film
+### Naming
+- Bottom nav: Home · **Index** · Channels · Members · Profile — never “Matches”
+- Meridian 10 / Meridian 100 / Meridian Index stay
+- Inner network: **Your Circle**
+- **Ask the Meridian / Who can help**
+
+### Profiles
+- View others + edit own: gallery (Storage stub + DEMO stills), bio, role, org, city, website / LinkedIn, offers / needs / strengths
+- Mutual connections (Circle + shared channels)
+- Upcoming Meridian events
+- Message, Request introduction, Add to Circle / Remove from Circle / Remove from Index
+- Privacy toggles for optional fields
+- Never public or indexed; Open House walkthrough is SYNTHETIC DEMO only
+
+### Your Circle
+- Manual add/remove
+- Separate from algorithmic Index and human-curated intros
+- Hide/block and Index removals still respected
 
 ### Open House
-- Editorial rhythm: large hero → quiet philosophy → full-bleed meridian moment → quiet “not this / who belongs” → Index cards → quiet admissions → membership seats → DEMO gallery → quiet experiences
-- Clearer **DEMO · walkthrough only** labeling
-- Membership cards still show approved placeholders only — no amounts
+- Full cinematic marketing site when open (or forced)
+- Philosophy, who belongs, Index, Ask the Meridian, Crossings, experiences, admissions (10/month), **$10,000 lifetime**, apply / waitlist / referral
+- Anti-soliciting stated clearly
+- Visitor-local window 10:00–22:00 IANA TZ; referral 09:00 local; fallback America/Chicago
 
-### Member Home / Matches / shell
-- Quieter header, Menu, DEMO banner, and bottom nav (gold hairline instead of loud gold type)
-- Cards use a shared `panel` surface
-- “Why you should meet” is a readable gold-rule block with relaxed leading
-- Premium empty / loading / error states (compass mark, editorial copy)
+### Notifications & DMs
+- In-app center + email / in-app / digest prefs
+- DMs from profile / Index / Members; Stream when keys exist; DEMO otherwise; not E2EE; no-soliciting compose hint
 
-### Crossings
-- Set Your Coordinates: four-step rail, titled step, panel fields
-- Match carousel: snap cards, hidden scrollbar, Why-you-should-meet block
-- Atlas: faint landmasses, meridians, tick marks — destination as a gold ring, never a pin
-- A Crossing sheet: handle, initials, quieter form
-- Open a Table / City Notes / City Hosts: panel forms, DEMO marks, premium empty states
+## Out of scope
 
-### Motion & mobile
-- Slow `rise` / sheet fade; all animations honor `prefers-reduced-motion`
-- Safe-area padding on lock, member, and admin; 44px thumb targets; `overflow-x: clip`
-
-### Admin
-- Horizontal steward nav on mobile, quieter active state, panel stats
-
-## Out of scope (unchanged)
-
-Live Supabase / Stripe / Stream / Resend wiring. Legal copy. Information architecture. Production deploy.
+Monthly billing. Production deploy. Purchasing tenmeridian.com. Live Supabase / Stripe / Stream / Resend wiring.
