@@ -23,6 +23,7 @@ Runtime: Node 22, Next.js 16.3.5, preview mode (no live secrets)
 - DMs from profile / Index / Members (Stream when keys exist; DEMO otherwise; not E2EE)
 - Community: Absolutely no soliciting. Ban with no refund.
 - Bottom nav: Home · Index · Channels · Members · Profile
+- UI vibe: gold/white/black chrome; original water / yacht / concert stills on Open House, Index, and profiles; reduced-motion honored for new animations
 
 ## Privacy
 
