@@ -44,6 +44,13 @@ for (const [name, width, height] of [
     ["apply", "/apply"],
     ["members", "/member/members"],
     ["open-house", "/open-house"],
+    ["crossings", "/member/crossings"],
+    ["journey", "/member/crossings/jny-demo-01"],
+    ["coordinates", "/member/crossings/new"],
+    ["city-notes", "/member/crossings/notes"],
+    ["tables", "/member/crossings/tables"],
+    ["table-new", "/member/crossings/tables/new"],
+    ["hosts", "/member/crossings/hosts"],
   ]) {
     await page.goto(base + route);
     await page.evaluate(() => document.fonts.ready);
@@ -62,6 +69,16 @@ for (const [name, width, height] of [
       path: `docs/design/${phase}/${label}-${name}.png`,
       fullPage: label === "apply" || label === "onboarding",
     });
+    if (label === "journey") {
+      await page
+        .getByText("Tap to open A Crossing", { exact: true })
+        .first()
+        .click();
+      await page.getByRole("dialog").waitFor();
+      await page.screenshot({
+        path: `docs/design/${phase}/request-${name}.png`,
+      });
+    }
   }
   await context.close();
   console.log(`${phase}: ${name} complete`);

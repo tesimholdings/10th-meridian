@@ -2,13 +2,13 @@
   "name": "tenth-meridian",
   "version": "0.1.0",
   "private": true,
-  "description": "10th Meridian \u2014 a private network built around relevance, trust, and contribution.",
+  "description": "10th Meridian — a private network built around relevance, trust, and contribution.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "tsx --test src/lib/matching/score.test.ts src/lib/access/open-house.test.ts src/lib/preview/store.test.ts src/lib/crossings/dates.test.ts src/lib/crossings/matching.test.ts src/lib/crossings/service.test.ts",
+    "test": "tsx --test src/lib/matching/score.test.ts src/lib/access/open-house.test.ts src/lib/preview/store.test.ts src/lib/crossings/dates.test.ts src/lib/crossings/matching.test.ts src/lib/crossings/service.test.ts src/components/crossings/local-time.test.ts",
     "test:matching": "tsx --test src/lib/matching/score.test.ts src/lib/preview/store.test.ts",
     "test:ui": "playwright test",
     "review:screenshots": "node scripts/capture-design.mjs"

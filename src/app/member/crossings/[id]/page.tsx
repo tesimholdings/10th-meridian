@@ -15,7 +15,11 @@ import { CROSSINGS_COPY } from "@/lib/crossings/types";
 
 export const metadata = { title: "Journey", robots: { index: false } };
 
-export default async function JourneyPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function JourneyPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
   const access = await resolveAccessContext();
   const store = getPreviewStore();
@@ -51,24 +55,30 @@ export default async function JourneyPage({ params }: { params: Promise<{ id: st
         </>
       ) : null}
       {owner ? (
-      <section className="mt-10">
-        <p className="label">Destination matches</p>
-        <p className="mt-2 max-w-xl text-sm text-ivory-muted">
-          Locals, fellow travelers, City Hosts, and Meridian matches in this city. Never ranked by
-          wealth, popularity, or how often someone writes.
-        </p>
-        <div className="mt-4">
-          <CityAtlas journey={journey} matches={matches} />
-        </div>
-        <div className="mt-6">
-          <MatchCarousel matches={matches} journeyId={journey.id} canMutate={canMutate} />
-        </div>
-      </section>
+        <section className="mt-10">
+          <p className="label">Destination matches</p>
+          <p className="mt-2 max-w-xl text-sm text-ivory-muted">
+            Locals, fellow travelers, City Hosts, and Meridian matches in this
+            city. Never ranked by wealth, popularity, or how often someone
+            writes.
+          </p>
+          <div className="mt-4">
+            <CityAtlas journey={journey} matches={matches} />
+          </div>
+          <div className="mt-6">
+            <MatchCarousel
+              matches={matches}
+              journeyId={journey.id}
+              canMutate={canMutate}
+            />
+          </div>
+        </section>
       ) : (
         <section className="mt-10">
           <CityAtlas journey={journey} matches={[]} />
           <p className="mt-4 text-sm text-ivory-dim">
-            Destination rankings stay with the traveler. Historical Crossings remain private.
+            Destination rankings stay with the traveler. Historical Crossings
+            remain private.
           </p>
         </section>
       )}

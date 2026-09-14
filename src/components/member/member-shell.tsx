@@ -58,9 +58,12 @@ export function MemberShell({
         </div>
       </header>
       {demo ? (
-        <p className="safe-pad border-b border-[var(--gold-soft)] bg-[rgba(176,141,74,0.08)] py-2 text-[11px] leading-relaxed text-gold">
-          {DEMO_DISCLAIMER}
-        </p>
+        <details className="demo-notice safe-pad border-b border-[var(--gold-soft)] bg-[rgba(176,141,74,0.06)] text-[11px] text-gold">
+          <summary className="flex min-h-11 cursor-pointer items-center gap-2">
+            Preview · Synthetic member data <span aria-hidden="true">+</span>
+          </summary>
+          <p className="pb-3 leading-relaxed">{DEMO_DISCLAIMER}</p>
+        </details>
       ) : null}
 
       <main

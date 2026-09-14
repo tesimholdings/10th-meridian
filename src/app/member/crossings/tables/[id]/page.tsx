@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { friendlyTableTime } from "@/components/crossings/local-time";
 import { notFound } from "next/navigation";
 import { resolveAccessContext } from "@/lib/access/context";
 import { MemberShell } from "@/components/member/member-shell";
@@ -10,7 +11,11 @@ import { getPreviewStore, viewerProfile } from "@/lib/preview/store";
 
 export const metadata = { title: "A table", robots: { index: false } };
 
-export default async function TableDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function TableDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
   const access = await resolveAccessContext();
   const store = getPreviewStore();
@@ -20,7 +25,9 @@ export default async function TableDetailPage({ params }: { params: Promise<{ id
   const table = publicTableView(raw, viewer.id, access.user?.role ?? null);
   const confirmed = table.guests.filter((g) => g.status === "confirmed");
   const canMutate = canMutateCrossings(access.user?.role);
-  const inChannel = confirmed.some((g) => g.profileId === viewer.id) || table.openedByProfileId === viewer.id;
+  const inChannel =
+    confirmed.some((g) => g.profileId === viewer.id) ||
+    table.openedByProfileId === viewer.id;
 
   return (
     <MemberShell user={access.user} demo title="Open a Table">
@@ -28,12 +35,15 @@ export default async function TableDetailPage({ params }: { params: Promise<{ id
         {table.city} · {table.neighborhood}
         {table.isDemo ? " · SYNTHETIC DEMO" : ""}
       </p>
-      <h1 className="mt-2 font-serif text-4xl">{table.theme ?? "A shared table"}</h1>
+      <h1 className="mt-2 font-serif text-4xl">
+        {table.theme ?? "A shared table"}
+      </h1>
       <p className="mt-3 text-ivory-muted">
-        {table.mealType} · {table.dateTime} · {table.timezone}
+        {table.mealType} · {friendlyTableTime(table.dateTime, table.timezone)}
       </p>
       <p className="mt-3 text-sm text-ivory-muted">
-        {confirmed.length}/{table.maxGuests} confirmed · {table.joinMode === "request" ? "request to join" : "invitation only"}
+        {confirmed.length}/{table.maxGuests} confirmed ·{" "}
+        {table.joinMode === "request" ? "request to join" : "invitation only"}
       </p>
       <p className="mt-4 text-sm text-ivory-dim">
         {table.venuePrivate
@@ -49,9 +59,18 @@ export default async function TableDetailPage({ params }: { params: Promise<{ id
           Temporary private channel
         </Link>
       ) : (
-        <p className="mt-4 text-sm text-ivory-dim">The private channel opens after you are confirmed.</p>
+        <p className="mt-4 text-sm text-ivory-dim">
+          The private channel opens after you are confirmed.
+        </p>
       )}
-      <TableActions table={raw} viewerId={viewer.id} canMutate={canMutate} />
+      <TableActions
+        names={Object.fromEntries(
+          store.profiles.map((profile) => [profile.id, profile.displayName]),
+        )}
+        table={raw}
+        viewerId={viewer.id}
+        canMutate={canMutate}
+      />
     </MemberShell>
   );
 }

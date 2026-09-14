@@ -7,7 +7,11 @@ import { getPreviewStore, viewerProfile } from "@/lib/preview/store";
 
 export const metadata = { title: "Edit journey", robots: { index: false } };
 
-export default async function EditJourneyPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function EditJourneyPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
   const access = await resolveAccessContext();
   const store = getPreviewStore();
@@ -19,7 +23,16 @@ export default async function EditJourneyPage({ params }: { params: Promise<{ id
   return (
     <MemberShell user={access.user} demo title="Edit coordinates">
       {canMutate ? (
-        <CoordinatesForm initial={journey} journeyId={journey.id} />
+        <CoordinatesForm
+          channels={store.channels
+            .filter(
+              (channel) =>
+                channel.kind === "public" || channel.kind === "chapter",
+            )
+            .map(({ id, name }) => ({ id, name }))}
+          initial={journey}
+          journeyId={journey.id}
+        />
       ) : (
         <p className="text-sm text-ivory-muted">Active members only.</p>
       )}

@@ -69,7 +69,7 @@ export default async function MemberHomePage() {
       </p>
 
       <section className="mt-10">
-        <Link href="/member/crossings" className="block border border-[var(--line)] p-5 water">
+        <Link href="/member/crossings" className="crossings-hero crossings-home block">
           <p className="label">Crossings</p>
           <p className="mt-2 font-serif text-3xl">{brand.crossingsLine}</p>
           <p className="mt-2 max-w-lg text-sm text-ivory-muted">{brand.crossingsSupport}</p>

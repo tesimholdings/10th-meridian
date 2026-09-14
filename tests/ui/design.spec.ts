@@ -36,6 +36,13 @@ for (const [width, height] of [
       "/onboarding",
       "/apply",
       "/open-house",
+      "/member/crossings",
+      "/member/crossings/new",
+      "/member/crossings/jny-demo-01",
+      "/member/crossings/notes",
+      "/member/crossings/hosts",
+      "/member/crossings/tables",
+      "/member/crossings/tables/new",
     ]) {
       await page.goto(route);
       await expect(
@@ -302,4 +309,167 @@ test("steward surfaces remain readable and usable", async ({
       route,
     ).toBe(false);
   }
+});
+
+test("Crossing sheet remains open, preserves failed requests, and restores focus", async ({
+  page,
+}) => {
+  await page.goto("/member/crossings/jny-demo-01");
+  const card = page.locator(".travel-match").first();
+  await card.click();
+  const dialog = page.getByRole("dialog", { name: "A Crossing", exact: true });
+  await expect(dialog).toBeVisible();
+  await dialog.getByLabel("Proposed date 1").fill("2026-10-14");
+  await dialog
+    .getByLabel("Short note (optional)")
+    .fill("Coffee after the gallery?");
+  await page.route("**/api/crossings/requests", (r) => r.abort());
+  await dialog.getByRole("button", { name: "Propose A Crossing" }).click();
+  await expect(dialog.getByRole("status")).toContainText(
+    "dates and note are still here",
+  );
+  await expect(dialog.getByLabel("Short note (optional)")).toHaveValue(
+    "Coffee after the gallery?",
+  );
+  expect(
+    (
+      await new AxeBuilder({ page })
+        .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+        .analyze()
+    ).violations,
+  ).toEqual([]);
+  await page.keyboard.press("Escape");
+  await expect(dialog).not.toBeVisible();
+  await expect(card).toBeFocused();
+});
+
+test("journey creation validates steps, carries channel visibility, and supports pause/resume/delete", async ({
+  page,
+}) => {
+  await page.goto("/member/crossings/new");
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await expect(page.getByLabel("Destination city")).toBeVisible();
+  await page.getByLabel("Destination city").fill("Paris");
+  await page.getByLabel("Country", { exact: true }).fill("France");
+  await page.getByLabel("Timezone", { exact: true }).fill("Europe/Paris");
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await page.getByLabel("Arrival", { exact: true }).fill("2026-10-12");
+  await page.getByLabel("Departure", { exact: true }).fill("2026-10-18");
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await expect(page.getByRole("status")).toContainText("meeting format");
+  await page.getByRole("button", { name: "coffee", exact: true }).click();
+  await page.getByRole("button", { name: "professional", exact: true }).click();
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await page
+    .getByRole("combobox", { name: "Visibility", exact: true })
+    .selectOption("selected_channels");
+  await page
+    .getByRole("button", { name: "Set Your Coordinates", exact: true })
+    .click();
+  await expect(page.getByRole("status")).toContainText(
+    "Choose at least one channel",
+  );
+  await page
+    .getByRole("checkbox", { name: "Introductions", exact: true })
+    .check();
+  const responsePromise = page.waitForResponse(
+    (r) =>
+      r.url().endsWith("/api/crossings/journeys") &&
+      r.request().method() === "POST",
+  );
+  await page
+    .getByRole("button", { name: "Set Your Coordinates", exact: true })
+    .click();
+  const response = await responsePromise;
+  expect(response.ok()).toBe(true);
+  const { journey } = await response.json();
+  expect(journey.selectedChannelIds.length).toBe(1);
+  await expect(page).toHaveURL(new RegExp(`/member/crossings/${journey.id}$`));
+  await page.getByRole("button", { name: "Pause", exact: true }).click();
+  await expect(page).toHaveURL(/\/member\/crossings$/);
+  await page.goto(`/member/crossings/${journey.id}`);
+  await page.getByRole("button", { name: "Resume", exact: true }).click();
+  await expect(page).toHaveURL(/\/member\/crossings$/);
+  await page.goto(`/member/crossings/${journey.id}`);
+  await page
+    .getByRole("button", { name: "Delete journey", exact: true })
+    .click();
+  await page.getByRole("button", { name: "Keep journey", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "Delete journey", exact: true }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Delete journey", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Confirm delete", exact: true })
+    .click();
+  await expect(page).toHaveURL(/\/member\/crossings$/);
+});
+
+test("table form submits destination time and preserves details on error", async ({
+  page,
+}) => {
+  await page.goto("/member/crossings/tables/new");
+  await page.getByLabel("City", { exact: true }).fill("London");
+  await page.getByLabel("Country", { exact: true }).fill("United Kingdom");
+  await page.getByLabel("Neighborhood", { exact: true }).fill("Marylebone");
+  await page
+    .getByLabel("Date and time at the destination")
+    .fill("2026-10-14T19:30");
+  await page.getByLabel("Timezone", { exact: true }).fill("Europe/London");
+  let submitted: Record<string, unknown> = {};
+  await page.route("**/api/crossings/tables", async (r) => {
+    submitted = r.request().postDataJSON();
+    await r.fulfill({
+      status: 503,
+      contentType: "application/json",
+      body: '{"ok":false,"message":"Please try again."}',
+    });
+  });
+  await page.getByRole("button", { name: "Open a Table", exact: true }).click();
+  await expect(page.getByRole("status")).toHaveText("Please try again.");
+  expect(submitted.dateTime).toBe("2026-10-14T18:30:00.000Z");
+  await expect(page.getByLabel("Neighborhood", { exact: true })).toHaveValue(
+    "Marylebone",
+  );
+  await expect(
+    page.getByRole("button", { name: "Open a Table", exact: true }),
+  ).toBeEnabled();
+});
+
+test("City Notes search, category selection, and publishing recovery", async ({
+  page,
+}) => {
+  await page.goto("/member/crossings/notes");
+  await page.getByLabel("Explore a city").fill("No such city");
+  await expect(page.getByText("A discovery waiting to happen.")).toBeVisible();
+  await page.getByLabel("Explore a city").fill("");
+  await page.getByRole("button", { name: "restaurant", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "restaurant", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await page.getByLabel("Title", { exact: true }).fill("A quiet discovery");
+  await page
+    .getByLabel("Your recommendation")
+    .fill("A thoughtful space for a quiet conversation.");
+  await page.route("**/api/crossings/notes", (r) => r.abort());
+  await page.getByRole("button", { name: "Publish to members" }).click();
+  await expect(page.getByRole("status")).toContainText("couldn’t save");
+  await expect(page.getByLabel("Title", { exact: true })).toHaveValue(
+    "A quiet discovery",
+  );
+});
+
+test("an accepted Crossing opens its designated conversation", async ({
+  page,
+}) => {
+  await page.goto("/member/crossings");
+  await page
+    .getByRole("link", { name: "Open conversation", exact: true })
+    .first()
+    .click();
+  await expect(page).toHaveURL(/channel=ch-crossing-demo-accepted/);
+  await expect(page.locator(".channel-heading")).toContainText("crossing");
 });
