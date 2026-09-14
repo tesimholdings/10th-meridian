@@ -49,13 +49,20 @@ describe("original House atmosphere", () => {
     }
   });
 
-  it("keeps original stills on Open House and event cards, not as default member chrome", () => {
+  it("wires editorial campaign slots on Open House, Home, events, and Crossings", () => {
     const landing = readFileSync("src/components/open-house/landing.tsx", "utf8");
-    assert.match(landing, /scene-yacht|HiggsfieldSlot/);
-    assert.match(landing, /scene-concert|HiggsfieldSlot/);
+    assert.match(landing, /campaignSrc|HiggsfieldSlot/);
+    assert.match(landing, /stillForListedExperience/);
     const events = readFileSync("src/app/member/events/page.tsx", "utf8");
     assert.match(events, /HiggsfieldSlot/);
+    assert.match(events, /stillForListedExperience/);
+    const home = readFileSync("src/app/member/home/page.tsx", "utf8");
+    assert.match(home, /campaignSrc\("homeIndex"\)/);
+    assert.match(home, /campaignSrc\("homeNetwork"\)/);
+    const crossings = readFileSync("src/app/member/crossings/page.tsx", "utf8");
+    assert.match(crossings, /campaignSrc\("crossings"\)/);
     const index = readFileSync("src/app/member/index/page.tsx", "utf8");
     assert.equal(index.includes('scene="yacht"'), false);
+    assert.match(index, /campaignSrc\("homeIndex"\)/);
   });
 });

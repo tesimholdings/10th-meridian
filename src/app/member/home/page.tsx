@@ -7,6 +7,7 @@ import { getPreviewStore, unreadHouseNotifications, unreadTotal, viewerProfile }
 import { completionMessage } from "@/lib/profile/completion";
 import { formatHumanDateRange, formatHumanDateTime } from "@/lib/crossings/format";
 import { HiggsfieldSlot } from "@/components/brand/higgsfield-slot";
+import { campaignSrc } from "@/lib/atmosphere/resolve-campaign";
 import { visibleJourneysFor } from "@/lib/crossings/service";
 
 export const metadata = { title: "Home", robots: { index: false } };
@@ -72,12 +73,7 @@ export default async function MemberHomePage() {
 
       {event ? (
         <Link href={`/member/events/${event.id}`} className="mt-8 block overflow-hidden rounded-3xl">
-          <HiggsfieldSlot
-            src="/media/scene-yacht.svg"
-            alt=""
-            caption="Placeholder still — Higgsfield event photography later"
-            aspect="aspect-[16/8]"
-          />
+          <HiggsfieldSlot src={campaignSrc("homeIndex")} aspect="aspect-[16/8]" />
           <div className="pt-4">
             <p className="text-sm text-[var(--ivory-dim)]">Upcoming experience</p>
             <p className="font-serif text-3xl">{event.title}</p>
@@ -89,6 +85,7 @@ export default async function MemberHomePage() {
       ) : null}
 
       <section className="mt-10">
+        <HiggsfieldSlot src={campaignSrc("homeNetwork")} aspect="aspect-[16/8]" className="mb-4 rounded-3xl" />
         <p className="text-sm text-[var(--ivory-dim)]">Useful connections</p>
         <div className="mt-3">
           <MatchBoard

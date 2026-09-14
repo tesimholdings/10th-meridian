@@ -1,13 +1,18 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { campaign, EDITORIAL_CAPTION } from "@/lib/atmosphere/campaign";
 
 export function HeroStage({
   children,
-  caption = "Original daylight water still — Higgsfield film later.",
+  caption = EDITORIAL_CAPTION,
+  src = campaign.heroLandscape,
+  mobileSrc = campaign.heroMobile,
 }: {
   children: React.ReactNode;
   caption?: string;
+  src?: string;
+  mobileSrc?: string;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [paused, setPaused] = useState(false);
@@ -59,19 +64,21 @@ export function HeroStage({
   return (
     <div className="relative min-h-dvh overflow-hidden water text-ivory">
       <div className="absolute inset-0" aria-hidden>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/media/scene-water.svg"
-          alt=""
-          className={`h-full w-full object-cover object-center opacity-90 ${reduce || paused ? "" : "slow-drift"}`}
-        />
+        <picture>
+          <source media="(max-width: 767px)" srcSet={mobileSrc} />
+          <img
+            src={src}
+            alt=""
+            className={`h-full w-full object-cover object-center opacity-95 ${reduce || paused ? "" : "slow-drift"}`}
+          />
+        </picture>
       </div>
       <div className="absolute inset-0 opacity-55" aria-hidden>
         <WaterField />
       </div>
       <video
         ref={videoRef}
-        className="absolute inset-0 h-full w-full object-cover opacity-[0.28] contrast-125 saturate-[1.15]"
+        className="absolute inset-0 h-full w-full object-cover opacity-[0.12] contrast-125 saturate-[1.15]"
         autoPlay={!reduce}
         muted
         loop

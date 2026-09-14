@@ -2,6 +2,8 @@ import Link from "next/link";
 import { Wordmark } from "@/components/brand/logo";
 import { HeroStage } from "@/components/cinematic/hero-stage";
 import { HiggsfieldSlot } from "@/components/brand/higgsfield-slot";
+import { EDITORIAL_CAPTION, stillForListedExperience } from "@/lib/atmosphere/campaign";
+import { campaignSrc } from "@/lib/atmosphere/resolve-campaign";
 import { Button } from "@/components/ui/button";
 import { brand } from "@/lib/config/site";
 import type { AccessContext } from "@/lib/access/context";
@@ -15,7 +17,11 @@ export function OpenHouseLanding({ access }: { access: AccessContext }) {
 
   return (
     <div className="bg-[var(--paper)] text-[var(--navy)]">
-      <HeroStage caption="Original House still — Higgsfield yacht / water film later.">
+      <HeroStage
+        caption={EDITORIAL_CAPTION}
+        src={campaignSrc("heroLandscape")}
+        mobileSrc={campaignSrc("heroMobile")}
+      >
         <div className="safe-pad safe-top mx-auto flex min-h-[86dvh] max-w-6xl flex-col justify-between py-8">
           <Wordmark />
           <div className="rise max-w-xl pb-20 text-ivory">
@@ -61,11 +67,7 @@ export function OpenHouseLanding({ access }: { access: AccessContext }) {
         <ul className="mt-8 grid gap-6 md:grid-cols-2">
           {store.events.map((e, i) => (
             <li key={e.id}>
-              <HiggsfieldSlot
-                src={i === 1 ? "/media/scene-concert.svg" : "/media/scene-yacht.svg"}
-                alt=""
-                caption="Placeholder still — Higgsfield event photography later"
-              />
+              <HiggsfieldSlot src={campaignSrc(stillForListedExperience(e, i))} />
               <p className="mt-3 font-serif text-2xl">{e.title}</p>
               <p className="text-sm text-[var(--ivory-dim)]">
                 {formatHumanDateTime(e.startsAt)} · {e.city} · {e.listingState === "concept" ? "Concept" : "Planned"}

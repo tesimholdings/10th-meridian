@@ -5,6 +5,8 @@ import { Countdown } from "@/components/cinematic/countdown";
 import { Button } from "@/components/ui/button";
 import { brand } from "@/lib/config/site";
 import type { AccessDecision } from "@/lib/access/open-house";
+import { EDITORIAL_CAPTION } from "@/lib/atmosphere/campaign";
+import { campaignSrc } from "@/lib/atmosphere/resolve-campaign";
 
 export function LockScreen({
   decision,
@@ -14,7 +16,11 @@ export function LockScreen({
   referralEarly?: boolean;
 }) {
   return (
-    <HeroStage caption="Original daylight water still — Higgsfield film later.">
+    <HeroStage
+      caption={EDITORIAL_CAPTION}
+      src={campaignSrc("heroLandscape")}
+      mobileSrc={campaignSrc("heroMobile")}
+    >
       <div className="safe-pad safe-top mx-auto flex min-h-dvh max-w-6xl flex-col justify-between pb-16 pt-4 md:py-16">
         <header className="flex items-center justify-between">
           <Wordmark compact />

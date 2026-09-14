@@ -2,6 +2,8 @@ import { resolveAccessContext } from "@/lib/access/context";
 import { MemberShell } from "@/components/member/member-shell";
 import { MatchBoard, IndexCard } from "@/components/matches/match-board";
 import { AskTheMeridian } from "@/components/index/ask-meridian";
+import { HiggsfieldSlot } from "@/components/brand/higgsfield-slot";
+import { campaignSrc } from "@/lib/atmosphere/resolve-campaign";
 import { viewerProfile, getPreviewStore } from "@/lib/preview/store";
 import { demoIndexFor } from "@/lib/matching/service";
 import { INDEX_TAB_ALL, INDEX_TAB_CIRCLE, INDEX_TAB_FOR_YOU, MERIDIAN_INDEX, YOUR_CIRCLE } from "@/lib/copy/ui";
@@ -39,6 +41,7 @@ export default async function IndexPage({
 
   return (
     <MemberShell user={access.user} demo={!access.decision.isMemberAccess || viewer.isDemo} title={MERIDIAN_INDEX}>
+      <HiggsfieldSlot src={campaignSrc("homeIndex")} aspect="aspect-[16/7]" className="mb-6 rounded-3xl" />
       <AskTheMeridian initialQuery={q} />
 
       <nav className="mt-8 flex gap-2 border-b border-[var(--line)]" aria-label="Index sections">

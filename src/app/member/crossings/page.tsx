@@ -8,6 +8,8 @@ import { EmptyState } from "@/components/crossings/states";
 import { CROSSINGS_COPY } from "@/lib/crossings/types";
 import { canMutateCrossings } from "@/lib/crossings/privacy";
 import { matchesForJourney, refreshNotifications, tableSuggestionsFor, visibleJourneysFor } from "@/lib/crossings/service";
+import { HiggsfieldSlot } from "@/components/brand/higgsfield-slot";
+import { campaignSrc } from "@/lib/atmosphere/resolve-campaign";
 import { getPreviewStore, viewerProfile } from "@/lib/preview/store";
 import { demoIndexFor } from "@/lib/matching/service";
 import { DEFAULT_NOTIFICATION_PREFS } from "@/lib/crossings/notifications";
@@ -57,6 +59,8 @@ export default async function CrossingsPage() {
         </div>
         {canMutate ? <Button href="/member/crossings/new">{CROSSINGS_COPY.createAction}</Button> : null}
       </div>
+
+      <HiggsfieldSlot src={campaignSrc("crossings")} aspect="aspect-[16/8]" className="mt-6 rounded-3xl" />
 
       <nav className="mt-6 flex gap-3 overflow-x-auto hide-scroll text-sm">
         <a href="#trips" className="pill">Trips</a>

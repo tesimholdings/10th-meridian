@@ -16,7 +16,7 @@ Nav is **Home · Index · Messages · Crossings · Profile**. Index holds For yo
 
 ## Visual + copy
 
-Warm white `#FAF8F2`, navy `#092B45`, blue `#087CB8`, aqua `#30C8D2`, gold `#C4A264`. Serif for names and major moments; sans for nav, messages, forms. Round avatars, pills, fine lines. Nightlife stills are occasional (experiences), not default chrome. Higgsfield slots are marked on existing House stills.
+Warm white `#FAF8F2`, navy `#092B45`, blue `#087CB8`, aqua `#30C8D2`, gold `#C4A264`. Serif for names and major moments; sans for nav, messages, forms. Round avatars, pills, fine lines. Nightlife stills are occasional (experiences), not default chrome. Campaign stills are editorial placeholders only — never members or completed events.
 
 Copy is shortened: lock is headline + countdown + Remind me; Open House is hero, three benefits, experiences, $10,000 lifetime, no-soliciting; Home leads with connections and the next trip/experience; Index reasons are one line + city.
 
@@ -30,7 +30,7 @@ Meridian Index matching, private membership, introductions, Crossings purpose, $
 
 ## Remaining limitations
 
-- Higgsfield / TexasTurf stills are not in-repo; slots use original House placeholders.
+- Campaign pack is wired to `public/media/campaign/00–07-*.png`. If those files are missing, original House SVGs remain as fallback. Attached PNGs failed to land in this cloud VM; drop the pack into that folder to replace fallbacks. Nightlife (`05`) is used only when a listing is actually nightlife.
 - Preview store is in-process and resets on restart.
 - Stream compose is DEMO unless keys exist; not E2EE.
 - Gallery uploads are a Storage stub.
