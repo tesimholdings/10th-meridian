@@ -17,7 +17,7 @@ Wave 2 added interactive member/admin DEMO state (in-process store). It resets w
 ## 2. Supabase
 
 - [ ] Create a Supabase project
-- [ ] Apply `supabase/migrations/0001_init.sql` through `0005_seed.sql` (SQL editor or CLI)
+- [ ] Apply `supabase/migrations/0001_init.sql` through `0006_crossings.sql` (SQL editor or CLI)
 - [ ] Confirm `pgcrypto` is available; decide whether to enable `vector` later
 - [ ] Copy `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
 - [ ] Configure Auth: email magic link / password, site URL, redirect to `/api/auth/callback`
@@ -46,6 +46,7 @@ Wave 2 added interactive member/admin DEMO state (in-process store). It resets w
 - [ ] Create a Stream app
 - [ ] `NEXT_PUBLIC_STREAM_API_KEY`, `STREAM_API_SECRET`
 - [ ] Seed channels: announcements, introductions, ask-and-offer, opportunities, events, travel, ideas
+- [ ] Crossing DMs and table channels: Stream path when keys exist; DEMO compose otherwise
 - [ ] Server-side permissions for every message and attachment
 - [ ] Moderation / block / report hooks
 - [ ] Push / email notification settings
@@ -81,6 +82,7 @@ Wave 2 added interactive member/admin DEMO state (in-process store). It resets w
 ## 8. Matching (Meridian Index)
 
 - [ ] Confirm initial weights (30 / 25 / 15 / 10 / 5 / 5 / 10)
+- [ ] Confirm Crossings travel weights (40 / 25 / 15 / 10 / 10) in `travel_match_weights`
 - [ ] Decide embedding provider (`stub` vs `openai`) and `OPENAI_API_KEY`
 - [ ] Optional: migrate `profiles.embedding` jsonb → pgvector
 - [ ] Schedule `recalculate_matches_for` after profile edits (cron / trigger)
@@ -137,3 +139,5 @@ Wave 2 added interactive member/admin DEMO state (in-process store). It resets w
 ## Environment map
 
 See `.env.example` for every variable, its purpose, and safe defaults.
+
+Crossings adds **no new environment variables**. Calendar v1 is `.ics` download only — do not block on OAuth.

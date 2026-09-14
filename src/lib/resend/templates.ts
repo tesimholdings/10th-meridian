@@ -58,4 +58,18 @@ export const emailTemplates = {
     subject: `${brand.name}: ${title}`,
     html: wrap(title, "A reminder for a listed gathering. Details remain inside the house."),
   }),
+  crossingAccepted: () => ({
+    subject: `${brand.name}: Your Crossing request was accepted.`,
+    html: wrap(
+      "Your Crossing request was accepted.",
+      "A private conversation may now open. City-level presence only — this is not real-time location sharing.",
+    ),
+  }),
+  crossingOverlap: (city: string, count: string) => ({
+    subject: `${brand.name}: ${count} members will be in ${city} while you are.`,
+    html: wrap(
+      `${count} members will be in ${city} while you are.`,
+      "When your paths cross, you’ll know. SYNTHETIC DEMO copy until live mail is enabled.",
+    ),
+  }),
 };

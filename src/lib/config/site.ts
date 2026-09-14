@@ -11,6 +11,8 @@ export const brand = {
     "A referral opens the door earlier. What happens next is still earned.",
   matchingLine:
     "Intelligence finds the signal. People decide what happens next.",
+  crossingsLine: "The people you should know, wherever you land.",
+  crossingsSupport: "When your paths cross, you’ll know.",
   meridian10:
     "Ten people. Chosen for where you are—and where you are going.",
   meridian100:
@@ -32,6 +34,7 @@ export const memberNav = [
 ] as const;
 
 export const memberSecondary = [
+  { href: "/member/crossings", label: "Crossings" },
   { href: "/onboarding", label: "Onboarding" },
   { href: "/member/events", label: "Events" },
   { href: "/member/billing", label: "Billing" },

@@ -15,6 +15,10 @@ export async function GET(request: Request) {
           ? emailTemplates.declined()
           : type === "referral"
             ? emailTemplates.referralGranted()
-            : emailTemplates.doorsReminder("the next tenth");
+          : type === "crossingAccepted"
+            ? emailTemplates.crossingAccepted()
+            : type === "crossingOverlap"
+              ? emailTemplates.crossingOverlap("Paris", "Three")
+              : emailTemplates.doorsReminder("the next tenth");
   return new Response(tpl.html, { headers: { "Content-Type": "text/html" } });
 }
