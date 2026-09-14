@@ -6,7 +6,7 @@ A private, invitation-only network built around relevance, trust, contribution, 
 
 This repository is a **reviewable foundation** — not a production launch. Do not deploy or publish live membership prices.
 
-Wave 3 adds **Crossings**: member travel connections (city-level only). Bottom nav is unchanged; enter from Home or `/member/crossings`.
+Wave 3 adds **Crossings**. This wave adds **Ask the Meridian** on Members: say what you need, and the Index ranks who can help. Bottom nav is unchanged; enter from Members, Home, or `/member/ask`.
 
 ## Stack
 
@@ -50,6 +50,7 @@ npm test         # matching, Open House clock, preview store
 6. Actionable admin: admissions cap + override log, live weights, Open House schedule, referral issue/revoke, curated promote/suppress
 7. SQL migrations, `.env.example`, `SETUP.md`, `TEST_REPORT.md`
 8. **Crossings** — Set Your Coordinates, A Crossing, Open a Table, City Hosts, City Notes (SYNTHETIC DEMO; Open House isolation)
+9. **Ask the Meridian** — Who can help. Structured parse + complementarity-first ranking on Members / `/member/ask`
 
 ## Reviewer click-through (Wave 2)
 
@@ -61,6 +62,15 @@ npm test         # matching, Open House clock, preview store
 6. Events: open a listing, register (still labeled planned/concept)
 7. Reviewer tools → **Approved — payment pending** → Billing CTA (501 without price IDs)
 8. Reviewer tools → **Preview as admin** → approve against the cap, edit weights, issue/revoke a code, curate a match
+
+## Reviewer click-through (Ask the Meridian)
+
+See [docs/ASK.md](docs/ASK.md). Short path:
+
+1. Reviewer tools → **Preview as member** → **Members** (or Home → Ask the Meridian)
+2. Write a need or tap an intent — house prompts do not solicit
+3. **Who can help** · **Why you should meet** · Open profile · Message (DM) · Request introduction · Remove from Index
+4. Guest + Force Open House: SYNTHETIC DEMO only
 
 ## Reviewer click-through (Crossings)
 

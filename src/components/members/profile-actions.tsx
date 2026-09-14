@@ -6,9 +6,11 @@ import { useState } from "react";
 export function ProfileActions({
   targetId,
   introStatus,
+  askId,
 }: {
   targetId: string;
   introStatus?: string;
+  askId?: string;
 }) {
   const router = useRouter();
   const [note, setNote] = useState<string | null>(null);
@@ -27,7 +29,7 @@ export function ProfileActions({
   return (
     <div className="mt-6 flex flex-wrap gap-2">
       <a
-        href="/member/channels"
+        href={`/member/channels?dm=${encodeURIComponent(targetId)}`}
         className="inline-flex min-h-12 items-center border border-[var(--line)] px-4 text-[11px] tracking-[0.18em] uppercase"
       >
         Message
@@ -39,6 +41,24 @@ export function ProfileActions({
       >
         {introStatus ? `Intro ${introStatus}` : "Request introduction"}
       </button>
+      {askId ? (
+        <button
+          type="button"
+          onClick={() => {
+            void fetch("/api/ask/feedback", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ askId, targetId, signal: "hidden" }),
+            }).then(() => {
+              setNote("Removed from the Index.");
+              router.refresh();
+            });
+          }}
+          className="inline-flex min-h-12 items-center border border-[var(--line)] px-4 text-[11px] tracking-[0.18em] uppercase"
+        >
+          Remove from Index
+        </button>
+      ) : null}
       {note ? <p className="w-full text-sm text-gold">{note}</p> : null}
     </div>
   );

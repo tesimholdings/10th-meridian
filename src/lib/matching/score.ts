@@ -13,12 +13,12 @@ function norm(items: string[]): string[] {
   return items.map((s) => s.trim().toLowerCase()).filter(Boolean);
 }
 
-function overlap(a: string[], b: string[]): string[] {
+export function overlap(a: string[], b: string[]): string[] {
   const sb = new Set(norm(b));
   return norm(a).filter((x) => sb.has(x));
 }
 
-function jaccard(a: string[], b: string[]): number {
+export function jaccard(a: string[], b: string[]): number {
   const A = new Set(norm(a));
   const B = new Set(norm(b));
   if (A.size === 0 && B.size === 0) return 0;
@@ -28,7 +28,7 @@ function jaccard(a: string[], b: string[]): number {
   return union === 0 ? 0 : inter / union;
 }
 
-function softOverlap(a: string[], b: string[]): { score: number; hits: string[] } {
+export function softOverlap(a: string[], b: string[]): { score: number; hits: string[] } {
   const exact = overlap(a, b);
   if (a.length === 0 || b.length === 0) return { score: 0, hits: exact };
   const tokenHits: string[] = [...exact];
