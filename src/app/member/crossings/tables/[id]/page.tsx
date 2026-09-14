@@ -56,7 +56,7 @@ export default async function TableDetailPage({ params }: { params: Promise<{ id
       <PrivacyNotice />
       {inChannel && table.channelId ? (
         <Link
-          href={`/member/channels?channel=${table.channelId}`}
+          href={`/member/messages?channel=${table.channelId}`}
           className="mt-4 inline-flex min-h-11 items-center text-[11px] tracking-[0.16em] uppercase text-gold"
         >
           Temporary private channel

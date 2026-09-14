@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import type { AskHit } from "@/lib/ask/meridian";
-import { ASK_THE_MERIDIAN, WHO_CAN_HELP } from "@/lib/copy/ui";
+import type { AskHit, AskResult } from "@/lib/ask/meridian";
+import { ASK_THE_MERIDIAN } from "@/lib/copy/ui";
 
-export function AskTheMeridian() {
-  const [query, setQuery] = useState("");
-  const [hits, setHits] = useState<AskHit[] | null>(null);
+export function AskTheMeridian({ initialQuery = "" }: { initialQuery?: string }) {
+  const [query, setQuery] = useState(initialQuery);
+  const [result, setResult] = useState<AskResult | null>(null);
   const [pending, setPending] = useState(false);
 
   async function ask() {
@@ -17,20 +17,18 @@ export function AskTheMeridian() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ query }),
     });
-    const json = (await res.json()) as { hits?: AskHit[] };
-    setHits(json.hits ?? []);
+    const json = (await res.json()) as AskResult;
+    setResult(json);
     setPending(false);
   }
 
+  const hits = result?.hits ?? [];
+
   return (
-    <section className="gold-chrome light-sweep p-5 md:p-6">
-      <p className="label">{ASK_THE_MERIDIAN}</p>
-      <h2 className="mt-2 font-serif text-3xl">{WHO_CAN_HELP}</h2>
-      <p className="mt-2 text-sm leading-relaxed text-ivory-muted">
-        Ask in plain language. The house searches offers, needs, and strengths — it does not invent people.
-      </p>
+    <section>
+      <p className="text-sm text-[var(--ivory-dim)]">{ASK_THE_MERIDIAN}</p>
       <form
-        className="mt-5 grid gap-2 md:grid-cols-[1fr_auto]"
+        className="mt-3 grid gap-2 sm:grid-cols-[1fr_auto]"
         onSubmit={(e) => {
           e.preventDefault();
           void ask();
@@ -39,28 +37,48 @@ export function AskTheMeridian() {
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Who can help with a quiet Lisbon host?"
-          aria-label={WHO_CAN_HELP}
+          placeholder="Who can help with Chicago introductions?"
+          aria-label="Ask who can help"
         />
         <button type="submit" className="action-quiet" disabled={pending}>
           Ask
         </button>
       </form>
-      {hits ? (
+      {result ? (
         hits.length === 0 ? (
-          <p className="mt-4 text-sm text-ivory-dim">No one in this frame. The house does not invent members.</p>
+          <p className="mt-4 text-sm text-[var(--ivory-dim)]">
+            {result.emptyReason ?? "No one in this frame. The house does not invent members."}
+          </p>
         ) : (
-          <ul className="mt-4 grid gap-3">
-            {hits.map((hit) => (
-              <li key={hit.profileId} className="border-b border-[var(--line)] pb-3">
-                <Link href={`/member/members/${hit.profileId}`} className="font-serif text-xl">
-                  {hit.displayName}
-                </Link>
-                <p className="text-sm text-ivory-muted">{hit.headline}</p>
-                <p className="mt-1 text-[11px] tracking-[0.12em] uppercase text-gold">{hit.reason}</p>
-              </li>
-            ))}
-          </ul>
+          <div className="mt-4">
+            {result.queriedPlace && result.exactCount === 0 ? (
+              <p className="text-sm text-[var(--ivory-dim)]">
+                No exact match in {result.queriedPlace}. Related people:
+              </p>
+            ) : null}
+            <ul className="mt-3 grid gap-3">
+              {hits.map((hit: AskHit) => (
+                <li key={hit.profileId} className="flex items-start justify-between gap-3 border-b border-[var(--line)] pb-3">
+                  <div>
+                    <Link href={`/member/members/${hit.profileId}`} className="font-serif text-xl">
+                      {hit.displayName}
+                    </Link>
+                    <p className="text-sm text-[var(--ivory-dim)]">
+                      {hit.city}
+                      {hit.kind === "partial" ? " · partial" : ""}
+                    </p>
+                    <p className="mt-1 text-sm text-[var(--navy-soft)]">{hit.reason}</p>
+                  </div>
+                  <Link
+                    href={`/member/members/${hit.profileId}`}
+                    className="action-quiet shrink-0"
+                  >
+                    View
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         )
       ) : null}
     </section>

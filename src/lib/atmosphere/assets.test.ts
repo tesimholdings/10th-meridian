@@ -20,6 +20,10 @@ const motionClasses = [
   "scene-band-art",
   "scene-band-shine",
   "light-sweep",
+  "stagger-in",
+  "pressable",
+  "tab-slide",
+  "sheet-motion",
 ];
 
 const stockHosts = ["unsplash.com", "pexels.com", "pixabay.com", "shutterstock.com"];
@@ -45,16 +49,13 @@ describe("original House atmosphere", () => {
     }
   });
 
-  it("wires scenes across Open House, Index, and profiles", () => {
+  it("keeps original stills on Open House and event cards, not as default member chrome", () => {
     const landing = readFileSync("src/components/open-house/landing.tsx", "utf8");
-    assert.match(landing, /scene="water"/);
-    assert.match(landing, /scene="yacht"/);
-    assert.match(landing, /scene="concert"/);
+    assert.match(landing, /scene-yacht|HiggsfieldSlot/);
+    assert.match(landing, /scene-concert|HiggsfieldSlot/);
+    const events = readFileSync("src/app/member/events/page.tsx", "utf8");
+    assert.match(events, /HiggsfieldSlot/);
     const index = readFileSync("src/app/member/index/page.tsx", "utf8");
-    assert.match(index, /scene="yacht"/);
-    const view = readFileSync("src/app/member/members/[id]/page.tsx", "utf8");
-    assert.match(view, /scene="water"/);
-    const edit = readFileSync("src/app/member/profile/page.tsx", "utf8");
-    assert.match(edit, /scene="concert"/);
+    assert.equal(index.includes('scene="yacht"'), false);
   });
 });

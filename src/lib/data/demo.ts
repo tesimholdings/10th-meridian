@@ -841,6 +841,8 @@ export const demoChannelMembers: Record<string, string[]> = {
   "ch-ask": ["demo-01", "demo-02", "demo-06"],
   "ch-chapter-chicago": ["demo-01", "demo-12", "demo-10"],
   "ch-events": ["demo-01", "demo-03", "demo-09"],
+  "dm-demo-01-demo-12": ["demo-01", "demo-12"],
+  "ch-crossing-demo-accepted": ["demo-01", "demo-09"],
 };
 
 export const demoHouseNotifications = [
@@ -851,6 +853,9 @@ export const demoHouseNotifications = [
     title: "P. Adler added you to Your Circle",
     body: "A manual addition — not an Index suggestion. SYNTHETIC DEMO.",
     href: "/member/members/demo-12",
+    actorId: "demo-12",
+    actorName: "P. Adler",
+    actorInitials: "PA",
     read: false,
     createdAt: "2026-09-08T12:06:00.000Z",
     isDemo: true,
@@ -872,7 +877,10 @@ export const demoHouseNotifications = [
     kind: "channel_join" as const,
     title: "A new person in Introductions",
     body: "C. Moreau arrived in the channel. SYNTHETIC DEMO.",
-    href: "/member/channels?channel=ch-introductions",
+    href: "/member/messages?channel=ch-introductions",
+    actorId: "demo-09",
+    actorName: "C. Moreau",
+    actorInitials: "CM",
     read: true,
     createdAt: "2026-09-10T16:06:00.000Z",
     isDemo: true,

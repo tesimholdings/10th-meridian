@@ -11,12 +11,8 @@ export default async function NotificationsPage() {
   const notes = getPreviewStore().houseNotifications.filter((n) => n.recipientId === viewer.id);
   return (
     <MemberShell user={access.user} demo title="Notifications">
-      <h1 className="font-serif text-4xl">A quiet desk</h1>
-      <p className="mt-3 max-w-xl text-sm text-ivory-muted">
-        New people in a channel, Circle or Index additions, introductions, events, and announcements.
-        Nothing here is a campaign.
-      </p>
-      <div className="mt-8">
+      <h1 className="font-serif text-3xl">Notifications</h1>
+      <div className="mt-6">
         <NotificationCenter notifications={notes} />
       </div>
     </MemberShell>

@@ -2,18 +2,19 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { SOLICITING_COMPOSE_HINT } from "@/lib/copy/community";
 
 export function ProfileActions({
   targetId,
   introStatus,
   inCircle,
   removedFromIndex,
+  compact = false,
 }: {
   targetId: string;
   introStatus?: string;
   inCircle?: boolean;
   removedFromIndex?: boolean;
+  compact?: boolean;
 }) {
   const router = useRouter();
   const [note, setNote] = useState<string | null>(null);
@@ -45,7 +46,7 @@ export function ProfileActions({
       router.push(json.href);
       return;
     }
-    setNote("Could not open that conversation.");
+    setNote("That conversation is unavailable. Retry.");
   }
 
   async function circle(action: "add" | "remove" | "remove-index") {
@@ -70,7 +71,7 @@ export function ProfileActions({
   }
 
   return (
-    <div className="gold-chrome mt-6 grid gap-3 p-4 md:p-5">
+    <div className={compact ? "" : "mt-5"}>
       <div className="flex flex-wrap gap-2">
         <button type="button" disabled={pending} onClick={() => void message()} className="action-quiet">
           Message
@@ -78,28 +79,26 @@ export function ProfileActions({
         <button
           type="button"
           disabled={pending}
-          onClick={() => void introduce()}
-          className="inline-flex min-h-12 items-center bg-[var(--gold)] px-4 text-[11px] tracking-[0.18em] uppercase text-[var(--void)]"
+          onClick={() => void circle(inCircle ? "remove" : "add")}
+          className="action-quiet"
         >
-          {introStatus ? `Intro ${introStatus}` : "Request introduction"}
+          {inCircle ? "In Circle" : "Circle"}
         </button>
-        {inCircle ? (
-          <button type="button" disabled={pending} onClick={() => void circle("remove")} className="action-quiet">
-            Remove from Circle
-          </button>
-        ) : (
-          <button type="button" disabled={pending} onClick={() => void circle("add")} className="action-quiet">
-            Add to Circle
-          </button>
-        )}
-        {removedFromIndex ? null : (
-          <button type="button" disabled={pending} onClick={() => void circle("remove-index")} className="action-quiet">
-            Remove from Index
-          </button>
-        )}
+        <details>
+          <summary className="action-quiet cursor-pointer list-none">More</summary>
+          <div className="mt-2 grid gap-1">
+            <button type="button" disabled={pending} onClick={() => void introduce()} className="min-h-10 text-left text-sm">
+              {introStatus ? `Intro ${introStatus}` : "Request introduction"}
+            </button>
+            {removedFromIndex ? null : (
+              <button type="button" disabled={pending} onClick={() => void circle("remove-index")} className="min-h-10 text-left text-sm">
+                Remove from Index
+              </button>
+            )}
+          </div>
+        </details>
       </div>
-      <p className="text-[12px] leading-relaxed text-ivory-dim">{SOLICITING_COMPOSE_HINT}</p>
-      {note ? <p className="text-sm text-gold">{note}</p> : null}
+      {note ? <p className="mt-2 text-sm text-[var(--gold)]">{note}</p> : null}
     </div>
   );
 }

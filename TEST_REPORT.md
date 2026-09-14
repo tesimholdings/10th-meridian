@@ -1,15 +1,15 @@
-# TEST_REPORT — Profiles, Circle, Open House, notifications
+# TEST_REPORT — Astra audit redesign
 
 Date: 2026-09-14  
-Branch: `cursor/profiles-network-openhouse-2de8`  
-Base: `cursor/ui-polish-wave3-907d`  
+Branch: `cursor/astra-audit-fixes-e546`  
+Base: `cursor/profiles-network-openhouse-2de8`  
 Runtime: Node 22, Next.js 16.3.5, preview mode (no live secrets)
 
 ## Automated
 
 | Check | Result |
 | --- | --- |
-| `npm test` | 62/62 pass — prior coverage plus original water/yacht/concert stills and `prefers-reduced-motion` for new motion classes |
+| `npm test` | 74/74 pass — prior coverage plus Ask explanations, DM destination, journey Where validation, Index reason line |
 | `npm run lint` | Pass (0 errors) |
 | `npm run build` | Pass — Next.js 16.3.5 Turbopack, TypeScript clean |
 

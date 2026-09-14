@@ -3,9 +3,11 @@ import { resolveAccessContext } from "@/lib/access/context";
 import { MemberShell } from "@/components/member/member-shell";
 import { MatchBoard } from "@/components/matches/match-board";
 import { demoIndexFor } from "@/lib/matching/service";
-import { brand } from "@/lib/config/site";
 import { getPreviewStore, unreadHouseNotifications, unreadTotal, viewerProfile } from "@/lib/preview/store";
 import { completionMessage } from "@/lib/profile/completion";
+import { formatHumanDateRange, formatHumanDateTime } from "@/lib/crossings/format";
+import { HiggsfieldSlot } from "@/components/brand/higgsfield-slot";
+import { visibleJourneysFor } from "@/lib/crossings/service";
 
 export const metadata = { title: "Home", robots: { index: false } };
 
@@ -15,106 +17,103 @@ export default async function MemberHomePage() {
   const viewer = viewerProfile();
   const index = await demoIndexFor(viewer);
   const paymentPending = access.user?.role === "approved_unpaid";
+  const first = viewer.displayName.split(" ")[0] ?? viewer.displayName;
+  const journeys = visibleJourneysFor({
+    state: store.crossings,
+    viewerId: viewer.id,
+    viewerRole: access.user?.role ?? null,
+    meridianMatchIds: index.meridian100.map((m) => m.target.id),
+    sharedChannelIds: store.channels.map((c) => c.id),
+  });
+  const trip = journeys.find((j) => j.profileId === viewer.id && j.status === "active");
+  const event = store.events[0];
 
   return (
-    <MemberShell user={access.user} demo={!access.decision.isMemberAccess || viewer.isDemo} title="Good evening">
-      <h1 className="font-serif text-4xl md:text-5xl">
-        {viewer.displayName}, the house is still.
-      </h1>
-      <p className="mt-3 max-w-xl text-ivory-muted">{brand.matchingLine}</p>
+    <MemberShell user={access.user} demo={!access.decision.isMemberAccess || viewer.isDemo} title="Home">
+      <div className="flex items-end justify-between gap-3">
+        <div>
+          <p className="text-sm text-[var(--ivory-dim)]">Good evening</p>
+          <h1 className="font-serif text-4xl">{first}</h1>
+        </div>
+        <div className="flex gap-2">
+          <Link href="/member/notifications" className="pressable flex h-11 w-11 items-center justify-center rounded-full bg-white">
+            <span className="sr-only">Notifications</span>
+            {unreadHouseNotifications(viewer.id) ? <span className="unread-dot" /> : <span className="text-lg">•</span>}
+          </Link>
+          <Link href="/member/messages" className="pressable flex h-11 w-11 items-center justify-center rounded-full bg-white text-sm">
+            {unreadTotal()}
+          </Link>
+        </div>
+      </div>
 
-      {paymentPending ? (
-        <Link href="/member/billing" className="mt-6 block panel p-5" style={{ borderColor: "var(--gold-dim)" }}>
-          <p className="label">Membership</p>
-          <p className="mt-2 font-serif text-2xl">Approved — payment pending</p>
-          <p className="mt-2 text-sm text-ivory-muted">
-            Complete Stripe-hosted checkout to enter fully. Prices remain approved placeholders.
+      {viewer.completion < 90 ? (
+        <p className="mt-4 text-sm text-[var(--ivory-dim)]">{completionMessage(viewer.completion)}</p>
+      ) : null}
+
+      <div className="mt-6 flex gap-3 overflow-x-auto hide-scroll">
+        <RailChip href="/member/messages" label="Messages" value={`${unreadTotal()} new`} />
+        <RailChip href="/member/crossings" label="Next city" value={trip ? trip.destinationCity : "Add a trip"} />
+        <RailChip href="/member/events" label="Tonight" value={event?.city ?? "Experiences"} />
+      </div>
+
+      {trip ? (
+        <Link href={`/member/crossings/${trip.id}`} className="mt-8 block">
+          <p className="text-sm text-[var(--ivory-dim)]">Upcoming trip</p>
+          <p className="mt-1 font-serif text-3xl">{trip.destinationCity}</p>
+          <p className="mt-1 text-sm text-[var(--navy-soft)]">
+            {formatHumanDateRange(trip.arrivalDate, trip.departureDate)}
           </p>
+        </Link>
+      ) : (
+        <Link href="/member/crossings/new" className="mt-8 block text-[var(--blue)]">
+          Add a trip
+        </Link>
+      )}
+
+      {event ? (
+        <Link href={`/member/events/${event.id}`} className="mt-8 block overflow-hidden rounded-3xl">
+          <HiggsfieldSlot
+            src="/media/scene-yacht.svg"
+            alt=""
+            caption="Placeholder still — Higgsfield event photography later"
+            aspect="aspect-[16/8]"
+          />
+          <div className="pt-4">
+            <p className="text-sm text-[var(--ivory-dim)]">Upcoming experience</p>
+            <p className="font-serif text-3xl">{event.title}</p>
+            <p className="mt-1 text-sm text-[var(--navy-soft)]">
+              {formatHumanDateTime(event.startsAt)} · {event.city}
+            </p>
+          </div>
         </Link>
       ) : null}
 
-      <section className="mt-10 grid gap-3 md:grid-cols-3">
-        <Stat label="Unread / mentions" value={`${unreadTotal()} · DEMO`} href="/member/channels" />
-        <Stat label="Notifications" value={`${unreadHouseNotifications(viewer.id)} quiet`} href="/member/notifications" />
-        <Stat
-          label="Membership"
-          value={paymentPending ? "Payment pending" : "Lifetime · $10,000"}
-          href="/member/billing"
-        />
-      </section>
-      <p className="mt-3 text-sm text-ivory-dim">{completionMessage(viewer.completion)}</p>
-
       <section className="mt-10">
-        <Link href="/member/crossings" className="block overflow-hidden border border-[var(--line)] water p-6">
-          <p className="label">Crossings</p>
-          <p className="mt-3 font-serif text-3xl leading-tight">{brand.crossingsLine}</p>
-          <p className="mt-3 max-w-lg text-sm leading-relaxed text-ivory-muted">{brand.crossingsSupport}</p>
-          <p className="mt-5 text-[11px] tracking-[0.16em] uppercase text-gold">
-            Enter · city-level only · SYNTHETIC DEMO
-          </p>
+        <p className="text-sm text-[var(--ivory-dim)]">Useful connections</p>
+        <div className="mt-3">
+          <MatchBoard
+            index={index}
+            intros={store.intros}
+            compact
+            circleIds={store.circle.filter((e) => e.ownerId === viewer.id).map((e) => e.memberId)}
+          />
+        </div>
+      </section>
+
+      {paymentPending ? (
+        <Link href="/member/settings#billing" className="mt-10 block text-sm text-[var(--gold)]">
+          Membership approved — finish $10,000 lifetime in account settings
         </Link>
-      </section>
-
-      <section className="mt-12">
-        <p className="label">Announcements</p>
-        {store.announcements.map((a) => (
-          <article key={a.id} className="panel mt-3 p-5">
-            <h2 className="font-serif text-2xl">{a.title}</h2>
-            <p className="mt-2 text-sm leading-relaxed text-ivory-muted">{a.body}</p>
-          </article>
-        ))}
-      </section>
-
-      <section className="mt-12">
-        <MatchBoard
-          index={index}
-          intros={store.intros}
-          compact
-          circleIds={store.circle.filter((e) => e.ownerId === viewer.id).map((e) => e.memberId)}
-        />
-        <Link href="/member/index" className="mt-4 inline-flex min-h-11 items-center text-[11px] tracking-[0.18em] uppercase text-gold">
-          Open the full Index
-        </Link>
-      </section>
-
-      <section className="mt-12">
-        <p className="label">Upcoming experiences</p>
-        <ul className="mt-4 grid gap-3">
-          {store.events.map((e) => (
-            <li key={e.id} className="border-b border-[var(--line)] py-3">
-              <Link href={`/member/events/${e.id}`}>
-                <p className="font-serif text-xl">{e.title}</p>
-                <p className="text-sm text-ivory-muted">{e.summary}</p>
-                <p className="mt-1 text-[11px] uppercase tracking-[0.14em] text-gold">{e.listingState}</p>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="mt-12">
-        <p className="label">Introduction requests</p>
-        {store.intros.length === 0 ? (
-          <p className="mt-3 text-sm leading-relaxed text-ivory-dim">
-            No introductions yet. Relevance first — then a request, if the moment is right.
-          </p>
-        ) : (
-          store.intros.map((i) => (
-            <p key={i.id} className="mt-2 text-sm text-ivory-muted">
-              {i.fromName} → {i.toName} · {i.status} · DEMO
-            </p>
-          ))
-        )}
-      </section>
+      ) : null}
     </MemberShell>
   );
 }
 
-function Stat({ label, value, href }: { label: string; value: string; href: string }) {
+function RailChip({ href, label, value }: { href: string; label: string; value: string }) {
   return (
-    <Link href={href} className="panel-quiet p-4">
-      <p className="label">{label}</p>
-      <p className="mt-2 font-serif text-2xl">{value}</p>
+    <Link href={href} className="min-w-[8.5rem] rounded-2xl bg-white px-4 py-3">
+      <p className="text-xs text-[var(--ivory-dim)]">{label}</p>
+      <p className="mt-1 text-sm font-medium">{value}</p>
     </Link>
   );
 }

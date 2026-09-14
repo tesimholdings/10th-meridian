@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { resolveAccessContext } from "@/lib/access/context";
 import { getPreviewStore, openDirectMessage, viewerProfile } from "@/lib/preview/store";
+import { messageHref } from "@/lib/messaging/destination";
 import { hasStream } from "@/lib/env";
 
 const schema = z.object({
@@ -23,7 +24,7 @@ export async function POST(request: Request) {
     ok: true,
     channel,
     stream: hasStream() ? "live-keys-present" : "stub",
-    href: `/member/channels?channel=${channel.id}`,
+    href: messageHref({ profileId: parsed.data.targetId, channelId: channel.id }),
   });
 }
 

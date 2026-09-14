@@ -1,32 +1,11 @@
-import { resolveAccessContext } from "@/lib/access/context";
-import { MemberShell } from "@/components/member/member-shell";
-import { ChannelApp } from "@/components/channels/channel-app";
-import { getPreviewStore } from "@/lib/preview/store";
+import { redirect } from "next/navigation";
+import { messageHref } from "@/lib/messaging/destination";
 
-export const metadata = { title: "Channels", robots: { index: false } };
-
-export default async function ChannelsPage({
+export default async function ChannelsRedirect({
   searchParams,
 }: {
-  searchParams: Promise<{ channel?: string }>;
+  searchParams: Promise<{ channel?: string; to?: string }>;
 }) {
-  const access = await resolveAccessContext();
-  const store = getPreviewStore();
   const params = await searchParams;
-  return (
-    <MemberShell user={access.user} demo title="Private member communication">
-      <p className="mb-6 max-w-xl text-sm text-ivory-muted">
-        Channels, DMs, threads, and attachments are intended to run on Stream Chat
-        with server-side access checks. Compose, reactions, threads, and unreads
-        update DEMO state here. Not Slack. Not E2EE. Stream when keys exist; DEMO
-        otherwise. Absolutely no soliciting. Ban with no refund. Referrals are welcome.
-        Mention yourself only if asked.
-      </p>
-      <ChannelApp
-        initialChannels={store.channels}
-        initialMessages={store.messages}
-        initialActiveId={params.channel}
-      />
-    </MemberShell>
-  );
+  redirect(messageHref({ profileId: params.to, channelId: params.channel }));
 }

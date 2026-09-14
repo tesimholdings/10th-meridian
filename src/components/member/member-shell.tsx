@@ -1,9 +1,8 @@
-import Link from "next/link";
-import { Wordmark } from "@/components/brand/logo";
 import { BottomNav } from "@/components/member/bottom-nav";
-import { SceneBand, SceneChip, type SceneKind } from "@/components/atmosphere/scene-band";
-import { DEMO_DISCLAIMER } from "@/lib/data/demo";
-import { memberSecondary } from "@/lib/config/site";
+import { DesktopRail } from "@/components/member/desktop-rail";
+import { MemberHeader } from "@/components/member/member-header";
+import { DemoDisclosure } from "@/components/brand/demo-disclosure";
+import { unreadHouseNotifications, unreadTotal, viewerProfile } from "@/lib/preview/store";
 import type { SessionUser } from "@/lib/access/session";
 
 export function MemberShell({
@@ -11,62 +10,35 @@ export function MemberShell({
   demo,
   title,
   children,
-  scene,
+  flush = false,
 }: {
   user: SessionUser | null;
   demo: boolean;
-  title: string;
+  title?: string;
   children: React.ReactNode;
-  scene?: SceneKind;
+  flush?: boolean;
 }) {
-  const surface =
-    scene === "yacht" ? "index-surface" : scene === "water" || scene === "concert" ? "profile-surface" : "";
+  const unreadNotes = unreadHouseNotifications(viewerProfile().id);
+  const unreadMessages = unreadTotal();
+
   return (
-    <div className={`min-h-dvh bg-void text-ivory ${surface}`}>
-      <header className="header-chrome safe-pad safe-top sticky top-0 z-30 flex items-center justify-between py-2.5 backdrop-blur-md">
-        <Wordmark compact />
-        <details className="relative">
-          <summary className="flex min-h-11 cursor-pointer list-none items-center tracking-[0.18em] uppercase text-[11px] text-ivory-muted">
-            Menu
-          </summary>
-          <div className="absolute right-0 mt-2 w-56 border border-[rgba(212,175,106,0.35)] bg-ink/95 p-2 backdrop-blur">
-            {memberSecondary.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="flex min-h-11 items-center px-2 text-sm text-ivory-muted"
-              >
-                {item.label}
-              </Link>
-            ))}
-            {user?.role === "administrator" || user?.role === "moderator" ? (
-              <Link href="/admin" className="flex min-h-11 items-center px-2 text-sm text-gold">
-                Steward desk
-              </Link>
-            ) : null}
-            <form action="/api/auth/sign-out" method="post">
-              <button className="flex min-h-11 w-full items-center px-2 text-left text-sm text-ivory-muted">
-                Sign Out
-              </button>
-            </form>
-          </div>
-        </details>
-      </header>
-      {demo ? (
-        <p className="safe-pad border-b border-[var(--line)] py-2 text-[10px] leading-relaxed tracking-[0.04em] text-ivory-dim">
-          {DEMO_DISCLAIMER}
-        </p>
-      ) : null}
-      {scene ? (
-        <SceneBand scene={scene} height="md" className="border-b-0">
-          <SceneChip scene={scene} />
-        </SceneBand>
-      ) : null}
-      <main className="safe-pad safe-bottom relative mx-auto max-w-5xl py-8">
-        <p className="label">{title}</p>
-        <div className="mt-4">{children}</div>
-      </main>
-      <BottomNav />
+    <div className="house-light min-h-dvh text-[var(--navy)]">
+      <div className="mx-auto flex min-h-dvh max-w-6xl">
+        <DesktopRail unreadMessages={unreadMessages} />
+        <div className="min-w-0 flex-1">
+          <MemberHeader user={user} unreadNotifications={unreadNotes} />
+          {demo ? (
+            <div className="safe-pad">
+              <DemoDisclosure />
+            </div>
+          ) : null}
+          <main className={flush ? "safe-bottom" : "safe-pad safe-bottom relative mx-auto max-w-3xl py-6"}>
+            {title && !flush ? <h1 className="sr-only">{title}</h1> : null}
+            {children}
+          </main>
+          <BottomNav unreadMessages={unreadMessages} />
+        </div>
+      </div>
     </div>
   );
 }

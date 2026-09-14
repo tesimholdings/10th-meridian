@@ -2,6 +2,8 @@ import Link from "next/link";
 import { resolveAccessContext } from "@/lib/access/context";
 import { MemberShell } from "@/components/member/member-shell";
 import { getPreviewStore } from "@/lib/preview/store";
+import { HiggsfieldSlot } from "@/components/brand/higgsfield-slot";
+import { formatHumanDateTime } from "@/lib/crossings/format";
 
 export const metadata = { title: "Events", robots: { index: false } };
 
@@ -10,30 +12,24 @@ export default async function EventsPage() {
   const events = getPreviewStore().events;
   return (
     <MemberShell user={access.user} demo title="Experiences">
-      <p className="text-sm text-ivory-muted">
-        Curated dinners, salons, retreats, and member-hosted evenings. Every listing
-        below is a DEMO concept or a planned date — never a completed real-world event.
-      </p>
-      <ul className="mt-8 grid gap-4">
+      <h1 className="font-serif text-4xl">Experiences</h1>
+      <ul className="mt-8 grid gap-6">
         {events.map((e, i) => (
           <li key={e.id}>
-            <Link
-              href={`/member/events/${e.id}`}
-              className={
-                i === 0
-                  ? "water relative block min-h-[42vh] overflow-hidden border border-[var(--line)] p-6 md:p-10"
-                  : "block border border-[var(--line)] p-5"
-              }
-            >
-              <p className="label">{e.kind} · {e.listingState}</p>
-              <h2 className={i === 0 ? "mt-4 font-serif text-4xl leading-tight md:text-5xl" : "mt-2 font-serif text-3xl"}>
-                {e.title}
-              </h2>
-              <p className={i === 0 ? "mt-4 max-w-lg text-ivory-muted" : "mt-2 text-sm text-ivory-muted"}>
-                {e.summary}
+            <Link href={`/member/events/${e.id}`} className="block">
+              <HiggsfieldSlot
+                src={i % 2 ? "/media/scene-concert.svg" : "/media/scene-yacht.svg"}
+                alt=""
+                caption="Placeholder still — Higgsfield event photography later"
+              />
+              <p className="mt-3 font-serif text-3xl">{e.title}</p>
+              <p className="mt-1 text-sm text-[var(--navy-soft)]">
+                {formatHumanDateTime(e.startsAt)} · {e.city}
               </p>
-              <p className="mt-4 text-[11px] tracking-[0.16em] uppercase text-gold">
-                Capacity {e.capacity} · {e.registered} listed · {e.waitlist} waitlist · {e.city}
+              <p className="mt-1 text-sm text-[var(--ivory-dim)]">
+                {e.listingState === "concept" ? "Concept — has not occurred" : "Planned — has not occurred"}
+                {" · "}
+                {e.registered} going
               </p>
             </Link>
           </li>

@@ -117,7 +117,18 @@ export function ApplyWizard({ referralCode }: { referralCode?: string | null }) 
           </Button>
         ) : null}
         {step < steps.length - 1 ? (
-          <Button type="button" className="flex-1" onClick={() => setStep((s) => s + 1)}>
+          <Button
+            type="button"
+            className="flex-1"
+            onClick={() => {
+              if (step === 0 && (!(draft.city ?? "").trim() || !(draft.country ?? "").trim())) {
+                setStatus("City and country are required.");
+                return;
+              }
+              setStatus(null);
+              setStep((s) => s + 1);
+            }}
+          >
             Continue
           </Button>
         ) : (

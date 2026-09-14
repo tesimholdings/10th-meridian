@@ -8,15 +8,19 @@ import { getPreviewStore, viewerProfile } from "@/lib/preview/store";
 import { presentProfile, visibleEvents } from "@/lib/network/privacy";
 import { isInCircle, isRemovedFromIndex } from "@/lib/network/circle";
 import { mutualConnections } from "@/lib/network/mutual";
+import { formatHumanDateTime } from "@/lib/crossings/format";
 
 export const metadata = { title: "Member", robots: { index: false, follow: false } };
 
 export default async function MemberProfilePage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ tab?: string }>;
 }) {
   const { id } = await params;
+  const { tab = "about" } = await searchParams;
   const access = await resolveAccessContext();
   const store = getPreviewStore();
   const raw = store.profiles.find((p) => p.id === id);
@@ -38,92 +42,114 @@ export default async function MemberProfilePage({
     channelMembers: store.channelMembers,
   });
   const events = visibleEvents(store.events, profile.attendingEventIds);
+  const own = viewer.id === profile.id;
 
   return (
-    <MemberShell user={access.user} demo title="Profile" scene="water">
-      <div className="gold-chrome light-sweep p-6 md:p-8">
-      <div
-        className="rise flex h-20 w-20 items-center justify-center font-serif text-2xl"
-        style={{ background: profile.accent }}
-      >
-        {profile.initials}
+    <MemberShell user={access.user} demo title={profile.displayName}>
+      <div className="flex flex-col items-center text-center">
+        <div className="avatar h-24 w-24 text-3xl" style={{ background: profile.accent }}>
+          {profile.initials}
+        </div>
+        <h1 className="mt-4 font-serif text-4xl">{profile.displayName}</h1>
+        <p className="mt-2 max-w-md text-[var(--navy-soft)]">{profile.headline}</p>
+        <p className="mt-1 text-sm text-[var(--ivory-dim)]">
+          {profile.city}
+          {profile.country ? `, ${profile.country}` : ""}
+        </p>
       </div>
-      <h1 className="mt-6 font-serif text-4xl">{profile.displayName}</h1>
-      <p className="mt-2 text-ivory-muted">{profile.headline}</p>
-      <p className="mt-2 text-[11px] tracking-[0.16em] uppercase text-gold">SYNTHETIC DEMO</p>
-      <p className="mt-6 leading-relaxed text-ivory-muted">{profile.bio}</p>
-      <dl className="mt-8 grid gap-5">
-        <Item label="Role" value={`${profile.roleTitle} · ${profile.company}`} />
-        <Item label="City" value={`${profile.city}, ${profile.country}`} />
-        {profile.website ? (
-          <Item label="Website" value={profile.website} />
-        ) : null}
-        {profile.linkedin ? (
-          <Item label="LinkedIn" value={profile.linkedin} />
-        ) : null}
-        {profile.offers.length ? <Item label="Offers" value={profile.offers.join(" · ")} /> : null}
-        {profile.needs.length ? <Item label="Needs" value={profile.needs.join(" · ")} /> : null}
-        {profile.strengths.length ? <Item label="Strengths" value={profile.strengths.join(" · ")} /> : null}
-        <Item label="Goals" value={profile.goals.join(" · ")} />
-        <Item label="Travel" value={profile.travel.join(" · ") || "—"} />
-        <Item label="Availability" value={profile.availability} />
-      </dl>
-      </div>
+
+      {own ? (
+        <div className="mt-6 flex justify-center">
+          <Link href="/member/profile?edit=1" className="action-quiet">
+            Edit
+          </Link>
+        </div>
+      ) : (
+        <div className="mt-6 flex justify-center">
+          <ProfileActions
+            targetId={profile.id}
+            introStatus={intro?.status}
+            inCircle={inCircle}
+            removedFromIndex={removedFromIndex}
+            compact
+          />
+        </div>
+      )}
 
       {mutual.length ? (
-        <section className="mt-10">
-          <p className="label">In common</p>
-          <ul className="mt-3 grid gap-2">
+        <section className="mt-8">
+          <p className="text-sm text-[var(--ivory-dim)]">In common</p>
+          <div className="mt-3 flex gap-3 overflow-x-auto hide-scroll">
             {mutual.map((m) => (
-              <li key={m.id} className="text-sm text-ivory-muted">
-                {m.displayName} · {m.label}
-              </li>
+              <Link key={m.id} href={`/member/members/${m.id}`} className="flex flex-col items-center gap-1">
+                <span className="avatar h-12 w-12 text-sm" style={{ background: "#087CB8" }}>
+                  {m.initials}
+                </span>
+                <span className="text-xs text-[var(--ivory-dim)]">{m.displayName}</span>
+              </Link>
             ))}
-          </ul>
+          </div>
         </section>
       ) : null}
 
-      {events.length ? (
-        <section className="mt-10">
-          <p className="label">Upcoming Meridian events</p>
-          <ul className="mt-3 grid gap-3">
-            {events.map((e) => (
-              <li key={e.id}>
-                <Link href={`/member/events/${e.id}`} className="font-serif text-xl">
-                  {e.title}
-                </Link>
-                <p className="text-sm text-ivory-muted">
-                  {e.city} · {e.listingState}
-                </p>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
+      <nav className="mt-8 flex border-b border-[var(--line)]" aria-label="Profile sections">
+        <Tab href={`/member/members/${profile.id}`} on={tab === "about"}>About</Tab>
+        <Tab href={`/member/members/${profile.id}?tab=gallery`} on={tab === "gallery"}>Gallery</Tab>
+        <Tab href={`/member/members/${profile.id}?tab=events`} on={tab === "events"}>Events</Tab>
+      </nav>
 
-      <ProfileGallery photos={profile.gallery ?? []} />
-
-      {viewer.id === profile.id ? (
-        <Link href="/member/profile" className="mt-8 inline-flex min-h-11 text-[11px] tracking-[0.18em] uppercase text-gold">
-          Edit your profile
-        </Link>
-      ) : (
-        <ProfileActions
-          targetId={profile.id}
-          introStatus={intro?.status}
-          inCircle={inCircle}
-          removedFromIndex={removedFromIndex}
-        />
-      )}
+      <div className="mt-6">
+        {tab === "gallery" ? <ProfileGallery photos={profile.gallery ?? []} /> : null}
+        {tab === "events" ? (
+          events.length ? (
+            <ul className="grid gap-3">
+              {events.map((e) => (
+                <li key={e.id}>
+                  <Link href={`/member/events/${e.id}`} className="font-serif text-xl">
+                    {e.title}
+                  </Link>
+                  <p className="text-sm text-[var(--ivory-dim)]">
+                    {formatHumanDateTime(e.startsAt)} · {e.city}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-sm text-[var(--ivory-dim)]">No upcoming events listed.</p>
+          )
+        ) : null}
+        {tab === "about" || !["gallery", "events"].includes(tab) ? (
+          <dl className="grid gap-4 text-left">
+            <Item label="Role" value={`${profile.roleTitle} · ${profile.company}`} />
+            <Item label="About" value={profile.bio} />
+            {profile.offers.length ? <Item label="Offers" value={profile.offers.join(" · ")} /> : null}
+            {profile.needs.length ? <Item label="Needs" value={profile.needs.join(" · ")} /> : null}
+            {profile.website ? <Item label="Website" value={profile.website} /> : null}
+          </dl>
+        ) : null}
+      </div>
     </MemberShell>
+  );
+}
+
+function Tab({ href, on, children }: { href: string; on: boolean; children: React.ReactNode }) {
+  return (
+    <Link
+      href={href}
+      className={`tab-slide min-h-11 flex-1 text-center text-sm ${
+        on ? "border-b-2 border-[var(--gold)]" : "text-[var(--ivory-dim)]"
+      }`}
+    >
+      {children}
+    </Link>
   );
 }
 
 function Item({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="label">{label}</dt>
-      <dd className="mt-1 break-all">{value}</dd>
+      <dt className="text-sm text-[var(--ivory-dim)]">{label}</dt>
+      <dd className="mt-1 leading-relaxed">{value}</dd>
     </div>
   );
 }

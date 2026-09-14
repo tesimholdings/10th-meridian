@@ -1,9 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { ProfilePhoto } from "@/lib/data/types";
-import { DemoMark } from "@/components/brand/demo-mark";
 
 export function ProfileGallery({
   photos,
@@ -13,6 +12,7 @@ export function ProfileGallery({
   canEdit?: boolean;
 }) {
   const router = useRouter();
+  const scroller = useRef<HTMLUListElement>(null);
   const [caption, setCaption] = useState("");
   const [note, setNote] = useState<string | null>(null);
 
@@ -23,7 +23,7 @@ export function ProfileGallery({
       body: JSON.stringify({ caption, kind: "work" }),
     });
     const json = (await res.json()) as { ok?: boolean; note?: string };
-    setNote(json.note ?? (json.ok ? "Added to the gallery (Storage stub)." : "Could not add."));
+    setNote(json.note ?? (json.ok ? "Added to the gallery." : "Could not add."));
     setCaption("");
     router.refresh();
   }
@@ -31,31 +31,26 @@ export function ProfileGallery({
   if (photos.length === 0 && !canEdit) return null;
 
   return (
-    <section className="mt-10">
-      <p className="label">Work / portfolio</p>
-      <p className="mt-2 text-sm text-ivory-dim">
-        City-level life. No live location. Storage stub + SYNTHETIC DEMO stills.
-      </p>
-      <ul className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3">
+    <section className="mt-6">
+      <ul
+        ref={scroller}
+        className="hide-scroll flex snap-x snap-mandatory gap-3 overflow-x-auto"
+        aria-label="Gallery"
+      >
         {photos.map((photo) => (
-          <li key={photo.id} className="gallery-still gold-chrome">
+          <li key={photo.id} className="media-slot w-[82%] shrink-0 snap-center overflow-hidden rounded-3xl" data-higgsfield="pending">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={photo.url} alt={photo.caption} className="aspect-[4/3] w-full object-cover" />
-            <p className="px-3 py-2 text-[11px] text-ivory-muted">{photo.caption}</p>
-            {photo.isDemo ? (
-              <p className="px-3 pb-3">
-                <DemoMark />
-              </p>
-            ) : null}
+            <p className="mt-2 text-sm text-[var(--ivory-dim)]">{photo.caption}</p>
           </li>
         ))}
       </ul>
       {canEdit ? (
-        <div className="mt-4 grid gap-2 md:grid-cols-[1fr_auto]">
+        <div className="mt-4 grid gap-2 sm:grid-cols-[1fr_auto]">
           <input
             value={caption}
             onChange={(e) => setCaption(e.target.value)}
-            placeholder="Caption for a DEMO still"
+            placeholder="Caption"
             aria-label="Gallery caption"
           />
           <button type="button" className="action-quiet" onClick={() => void add()}>
@@ -63,7 +58,7 @@ export function ProfileGallery({
           </button>
         </div>
       ) : null}
-      {note ? <p className="mt-2 text-sm text-gold">{note}</p> : null}
+      {note ? <p className="mt-2 text-sm text-[var(--gold)]">{note}</p> : null}
     </section>
   );
 }
