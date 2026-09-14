@@ -58,6 +58,63 @@ describe("Meridian Index structured scoring", () => {
     );
   });
 
+  it("hides not_relevant the same as declined", async () => {
+    const viewer = demoProfiles[0];
+    const hiddenId = demoProfiles[3].id;
+    const index = await computeMatchIndex({
+      viewer,
+      members: demoProfiles,
+      useSemantic: false,
+      feedback: [{ viewerId: viewer.id, targetId: hiddenId, signal: "hidden" }],
+    });
+    assert.equal(
+      index.meridian100.find((m) => m.target.id === hiddenId),
+      undefined,
+    );
+  });
+
+  it("weight edits change complementary emphasis in ranking scores", async () => {
+    const viewer = demoProfiles[0];
+    const target = demoProfiles.find((p) => p.id === "demo-02")!;
+    const low = await computeMatchIndex({
+      viewer,
+      members: [viewer, target],
+      useSemantic: false,
+      weights: { ...DEFAULT_WEIGHTS, complementary: 0.05, goals: 0.45 },
+    });
+    const high = await computeMatchIndex({
+      viewer,
+      members: [viewer, target],
+      useSemantic: false,
+      weights: { ...DEFAULT_WEIGHTS, complementary: 0.7, goals: 0.05 },
+    });
+    const lowScore = low.meridian100.find((m) => m.target.id === target.id)?.weighted ?? 0;
+    const highScore = high.meridian100.find((m) => m.target.id === target.id)?.weighted ?? 0;
+    assert.ok(high.meridian100[0]?.raw.complementary !== undefined);
+    assert.notEqual(lowScore, highScore);
+  });
+
+  it("suppress curation removes a person even if they would otherwise rank", async () => {
+    const viewer = demoProfiles[0];
+    const index = await computeMatchIndex({
+      viewer,
+      members: demoProfiles,
+      useSemantic: false,
+      curation: [
+        {
+          viewerId: viewer.id,
+          targetId: "demo-12",
+          action: "suppress",
+          reason: "Steward hold for this cohort.",
+        },
+      ],
+    });
+    assert.equal(
+      index.meridian100.find((m) => m.target.id === "demo-12"),
+      undefined,
+    );
+  });
+
   it("marks human-curated promotions distinctly", async () => {
     const viewer = demoProfiles[0];
     const index = await computeMatchIndex({

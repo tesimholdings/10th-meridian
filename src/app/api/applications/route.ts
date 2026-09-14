@@ -6,6 +6,7 @@ import { resolveAccessContext } from "@/lib/access/context";
 import { emailTemplates } from "@/lib/resend/templates";
 import { sendTransactional } from "@/lib/resend/client";
 import { validateReferralCode } from "@/lib/referrals/validate";
+import { addApplication, getPreviewStore } from "@/lib/preview/store";
 
 const schema = z.object({
   fullName: z.string().min(2),
@@ -56,6 +57,42 @@ export async function POST(request: Request) {
     ? validateReferralCode(parsed.data.referralCode).ok
     : false;
 
+  const split = (value?: string) =>
+    (value ?? "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+  addApplication({
+    id: `app-${Date.now()}`,
+    status: referred ? "referred" : "submitted",
+    fullName: parsed.data.fullName,
+    email: parsed.data.email,
+    phone: parsed.data.phone,
+    city: parsed.data.city ?? "",
+    country: parsed.data.country ?? "",
+    timezone: parsed.data.timezone ?? "",
+    roleTitle: parsed.data.roleTitle ?? "",
+    company: parsed.data.company ?? "",
+    bio: parsed.data.bio ?? "",
+    website: parsed.data.website,
+    linkedin: parsed.data.linkedin,
+    industries: split(parsed.data.industries),
+    interests: split(parsed.data.interests),
+    goals: split(parsed.data.goals),
+    strengths: split(parsed.data.strengths),
+    offers: split(parsed.data.offers),
+    needs: split(parsed.data.needs),
+    valuedPeople: split(parsed.data.valued),
+    valuedOpportunities: split(parsed.data.valued),
+    preferredConnectionTypes: [],
+    referralCode: parsed.data.referralCode,
+    discoverySource: parsed.data.discoverySource,
+    termsAgreed: true,
+    cohortMonth: getPreviewStore().cohortMonth,
+    isDemo: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  });
   stubInsert("applications", {
     ...parsed.data,
     status: referred ? "referred" : "submitted",

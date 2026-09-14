@@ -32,6 +32,7 @@ export const memberNav = [
 ] as const;
 
 export const memberSecondary = [
+  { href: "/onboarding", label: "Onboarding" },
   { href: "/member/events", label: "Events" },
   { href: "/member/billing", label: "Billing" },
   { href: "/member/resources", label: "Resources" },

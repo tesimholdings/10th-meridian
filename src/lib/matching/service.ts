@@ -1,5 +1,5 @@
 import type { ProfileRecord } from "@/lib/data/types";
-import { demoProfiles, viewerDemoProfile } from "@/lib/data/demo";
+import { getPreviewStore, viewerProfile } from "@/lib/preview/store";
 import {
   applyCuration,
   applyFeedback,
@@ -148,21 +148,18 @@ export function invalidateMatchCache(viewerId?: string) {
 }
 
 export async function demoIndexFor(
-  viewer: ProfileRecord = viewerDemoProfile,
+  viewer?: ProfileRecord,
   overrides?: Partial<MatchServiceInput>,
 ): Promise<MatchIndex> {
-  return getCachedIndex({
-    viewer,
-    members: demoProfiles,
+  const store = getPreviewStore();
+  const subject = viewer ?? viewerProfile();
+  return computeMatchIndex({
+    viewer: subject,
+    members: store.profiles,
+    weights: store.weights,
+    feedback: store.feedback,
+    curation: store.curation,
     useSemantic: true,
-    curation: [
-      {
-        viewerId: viewer.id,
-        targetId: "demo-12",
-        action: "promote",
-        reason: "Steward note: introduction craft is unusually relevant to this member's goals.",
-      },
-    ],
     ...overrides,
   });
 }

@@ -2,6 +2,8 @@
 
 This foundation boots in preview without live secrets. Nothing below should be guessed into the product.
 
+Wave 2 added interactive member/admin DEMO state (in-process store). It resets when the Node process restarts. Persist to Supabase before any real steward uses it.
+
 ## 1. Hosting (Vercel) — do not deploy from this PR
 
 - [ ] Create a Vercel project linked to this GitHub repo (Preview deployments only)
@@ -123,6 +125,14 @@ This foundation boots in preview without live secrets. Nothing below should be g
 - [ ] Production error reporting (without leaking applicant data)
 - [ ] Confirm `X-Robots-Tag` on `/member` and `/admin`
 - [ ] Suspend / expire → revoke Stream + Stripe access job
+
+## Still needs Stefan (Wave 2)
+
+- [ ] Approved Founding / Standard amounts (placeholders remain)
+- [ ] Hero film to replace the labeled cinematic placeholder
+- [ ] Live Supabase / Stripe / Stream / Resend keys (build and tests must not require them)
+- [ ] Counsel-approved legal pages
+- [ ] Persist preview store mutations into Supabase (`site_config`, weights, admissions, referrals)
 
 ## Environment map
 

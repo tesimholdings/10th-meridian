@@ -8,8 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "tsx --test src/lib/matching/score.test.ts src/lib/access/open-house.test.ts",
-    "test:matching": "tsx --test src/lib/matching/score.test.ts"
+    "test": "tsx --test src/lib/matching/score.test.ts src/lib/access/open-house.test.ts src/lib/preview/store.test.ts",
+    "test:matching": "tsx --test src/lib/matching/score.test.ts src/lib/preview/store.test.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.8.0",

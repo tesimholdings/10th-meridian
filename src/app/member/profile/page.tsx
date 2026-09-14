@@ -1,43 +1,30 @@
+import Link from "next/link";
 import { resolveAccessContext } from "@/lib/access/context";
 import { MemberShell } from "@/components/member/member-shell";
-import { viewerDemoProfile } from "@/lib/data/demo";
+import { OnboardingWizard } from "@/components/profile/onboarding-wizard";
+import { viewerProfile } from "@/lib/preview/store";
+import { completionMessage } from "@/lib/profile/completion";
 
 export const metadata = { title: "Profile", robots: { index: false } };
 
 export default async function ProfilePage() {
   const access = await resolveAccessContext();
-  const p = viewerDemoProfile;
+  const p = viewerProfile();
   return (
-    <MemberShell user={access.user} demo={!access.decision.isMemberAccess} title="Profile">
+    <MemberShell user={access.user} demo title="Profile">
       <div className="h-1 bg-[var(--line)]">
         <div className="h-1 bg-[var(--gold)]" style={{ width: `${p.completion}%` }} />
       </div>
       <p className="mt-2 text-[11px] tracking-[0.18em] uppercase text-gold">
-        Completion {p.completion}% · matching sharpens as this fills
+        Completion {p.completion}%
       </p>
-      <h1 className="mt-6 font-serif text-4xl">{p.displayName}</h1>
-      <p className="mt-2 text-ivory-muted">{p.headline}</p>
-      <dl className="mt-8 grid gap-5">
-        <Item label="Role" value={p.roleTitle} />
-        <Item label="City" value={`${p.city}, ${p.country}`} />
-        <Item label="Offers" value={p.offers.join(" · ")} />
-        <Item label="Needs" value={p.needs.join(" · ")} />
-        <Item label="Goals" value={p.goals.join(" · ")} />
-        <Item label="Availability" value={p.availability} />
-      </dl>
-      <p className="mt-8 text-sm text-ivory-dim">
-        Onboarding after approval and payment collects the structured fields used
-        by The Meridian Index. This preview shows a completed DEMO profile.
-      </p>
+      <p className="mt-2 text-sm text-ivory-muted">{completionMessage(p.completion)}</p>
+      <Link href="/onboarding" className="mt-4 inline-flex min-h-11 items-center text-[11px] tracking-[0.18em] uppercase text-gold">
+        Open full onboarding
+      </Link>
+      <div className="mt-10">
+        <OnboardingWizard profile={p} />
+      </div>
     </MemberShell>
-  );
-}
-
-function Item({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <dt className="label">{label}</dt>
-      <dd className="mt-1">{value}</dd>
-    </div>
   );
 }

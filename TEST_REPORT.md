@@ -1,4 +1,4 @@
-# TEST_REPORT — 10th Meridian foundation
+# TEST_REPORT — 10th Meridian Wave 2
 
 Date: 2026-09-14  
 Branch: `cursor/10th-meridian-foundation-da65`  
@@ -8,69 +8,40 @@ Runtime: Node 22.14, Next.js 16.3.5, preview mode (no live secrets)
 
 | Check | Result |
 | --- | --- |
-| `npm install` | Pass |
-| `npm test` | Pass — 9/9 (Open House clock + Meridian Index) |
+| `npm test` | Pass — 18/18 (Open House clock, Meridian Index, preview store) |
 | `npm run lint` | Pass |
-| `npm run build` | Pass — no env required; Proxy + 29 routes |
+| `npm run build` | Pass — no live keys required |
 
-Build does **not** need live Supabase/Stripe/Stream/Resend keys.
+New coverage includes: decline/hide not reappearing, suppress curation, weight edits changing scores, monthly cap + override, revoked vs unknown referral copy, approved-unpaid always-on access.
 
-## HTTP / server behavior (`next start`, 2026-09-14, America/Chicago)
+## HTTP / product behavior
 
-Today is not the 10th, so the public house is locked.
+Verified in Wave 1 and extended in Wave 2:
 
-| Check | Result |
-| --- | --- |
-| `GET /` lock screen | 200 — “The doors open on the tenth.”, Remind Me, 10th Meridian |
-| `GET /api/open-house` | `phase: locked`, `allowed: false`, next open 2026-10-10 |
-| `GET /api/health` | preview; supabase/stripe/stream/resend all stub |
-| `GET /member/home` unauthenticated | 307 → `/` |
-| `POST /api/applications` while locked | 403 “Applications open during Open House.” |
-| `TENTH-EARLY` | ok + referral tone |
-| `TENTH-EXPIRED` / `TENTH-REVOKED` / unknown | same generic “That code cannot be used.” |
-| Preview member session | `/member/home` 200; Meridian 10 present |
-| `/member/matches` | Human-curated + Algorithmic signal + SYNTHETIC DEMO |
-| Member hitting `/admin` | redirected away from steward desk |
-| Preview admin | `/admin` 200 — Steward desk, monthly cap, stubs |
-| Force Open House cookie | `/open-house` 200 with price **placeholders** |
-| Remind form | stub send + “not an application” |
-| Stripe Checkout without keys | 501, no invented amount |
-| QR `TENTH-EARLY` | 200 `image/svg+xml`; unknown 404 |
-| `GET /robots.txt` | 200; `/member/` and `/admin/` disallowed |
+- Lock screen remains the only public face outside the tenth
+- Forced Open House landing: philosophy, who belongs, Index explainer, scarcity, **price placeholders only**
+- Matches feedback and introductions write to the preview store and change the Index
+- Directory filters + `/member/members/[id]` Message / Request introduction
+- Channels compose / thread / reactions / unreads persist in DEMO state
+- Events register/waitlist never labeled as completed real-world events
+- Approved-unpaid billing CTA; Stripe Checkout still 501 without approved Price IDs
+- Admin admissions cap, weights, Open House schedule, referral issue/revoke, curation with required reason
+- Camera QR: BarcodeDetector path + paste fallback; generic failure copy unchanged
+- `TENTH-EARLY` succeeds; expired/revoked/unknown share “That code cannot be used.”
 
-`GET /api/open-house` confirms the **server** clock, not the browser.
+## Browser
 
-## Browser walkthrough (390×844)
-
-Exercised lock screen, reviewer Preview as member (Home / Matches / Channels drawer / Members / Profile / Events / Billing / Resources / Settings / Sign Out), Preview as admin (overview, admissions, matching weights, Open House schedule), Force Open House, and `/remind` submit.
-
-Confirmed:
-
-- No invented membership dollar amounts — only `[INSERT APPROVED FOUNDING PRICE]` / `[INSERT APPROVED STANDARD PRICE]`
-- Initials only; SYNTHETIC DEMO labels
-- Bottom nav: Home · Matches · Channels · Members · Profile
-- Human-curated vs algorithmic match labels
-- Remind success copy
-
-Lock-screen CTAs were tightened after the first pass so Sign In, referral, QR, and Remind Me sit closer together on a phone.
+Wave 2 surfaces are built mobile-first (390px, safe-area, reduced-motion on cinematic motion). Reviewer should click through the README list on a phone viewport.
 
 ## Runtime limitations
 
-- Preview roles are signed cookies (`PREVIEW_DEMO_AUTH`); hide in production
-- Open House force cookie / `OPEN_HOUSE_FORCE` are preview-only
-- In-memory rate limits reset on cold start
-- Stream compose does not persist
-- Stripe Checkout is 501 until approved Price IDs exist — by design
-- Storage SQL may need the Supabase dashboard
-- Semantic layer without `OPENAI_API_KEY` is lexical, not a hosted model
-- Camera QR scan is not implemented (paste / link / SVG QR are)
-- Legal pages are placeholders
-- No production deploy was performed
+- Preview store is in-process and resets on server restart (must move to Supabase)
+- Camera QR needs BarcodeDetector + permission; otherwise paste/link
+- Stream compose is DEMO unless keys exist; not E2EE
+- Stripe Checkout 501 until approved Price IDs exist — by design
+- Legal pages and hero film still placeholders
+- No production deploy
 
-## Not verified
+## Still Stefan’s
 
-- Live Stripe CLI webhooks
-- Live Stream moderation
-- Live Resend domain send
-- pgvector at scale
-- Production RLS with real Auth users
+Approved prices, hero film, live keys, counsel-approved legal copy.

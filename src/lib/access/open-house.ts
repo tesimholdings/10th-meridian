@@ -80,7 +80,12 @@ export function zonedParts(date: Date, timeZone: string): ZonedParts {
 }
 
 export function isPrivilegedRole(role: AppRole | null | undefined): boolean {
-  return role === "member" || role === "moderator" || role === "administrator";
+  return (
+    role === "member" ||
+    role === "moderator" ||
+    role === "administrator" ||
+    role === "approved_unpaid"
+  );
 }
 
 function zonedDate(parts: {

@@ -28,6 +28,17 @@ describe("Open House server clock", () => {
     assert.equal(d.phase, "locked");
   });
 
+  it("lets approved-unpaid members in on any day for checkout", () => {
+    const now = chicago("2026-09-09T12:00");
+    const d = evaluateOpenHouse({
+      now,
+      role: "approved_unpaid",
+      config: { timeZone: tz, force: "auto", day: 10 },
+    });
+    assert.equal(d.allowed, true);
+    assert.equal(d.phase, "always_member");
+  });
+
   it("lets members in on any day", () => {
     const now = chicago("2026-09-09T12:00");
     const d = evaluateOpenHouse({

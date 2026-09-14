@@ -56,7 +56,12 @@ export async function POST(request: Request) {
       JSON.stringify({
         id: `preview-${role}`,
         email: `${role}@preview.10thmeridian.test`,
-        name: role === "administrator" ? "Preview Steward" : "A. Voss",
+        name:
+          role === "administrator"
+            ? "Preview Steward"
+            : role === "approved_unpaid"
+              ? "Approved Guest"
+              : "A. Voss",
         isDemo: true,
       }),
     ),
@@ -65,5 +70,6 @@ export async function POST(request: Request) {
 
   if (role === "administrator" || role === "moderator") redirect("/admin");
   if (role === "member") redirect("/member/home");
+  if (role === "approved_unpaid") redirect("/member/billing");
   redirect("/");
 }

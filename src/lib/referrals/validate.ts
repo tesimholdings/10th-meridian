@@ -1,5 +1,6 @@
 import { demoReferrals } from "@/lib/data/demo";
 import type { ReferralRecord } from "@/lib/data/types";
+import { getPreviewStore } from "@/lib/preview/store";
 
 export type ReferralPublicResult =
   | { ok: true; earlyAccess: true }
@@ -13,7 +14,7 @@ export type ReferralPublicResult =
 export function validateReferralCode(
   codeOrToken: string,
   now = new Date(),
-  catalog: ReferralRecord[] = demoReferrals,
+  catalog: ReferralRecord[] = getPreviewStore().referrals,
 ): ReferralPublicResult {
   const needle = codeOrToken.trim().toUpperCase();
   if (!needle) return { ok: false };
@@ -34,7 +35,9 @@ export function validateReferralCode(
 }
 
 export function referralByCode(code: string): ReferralRecord | null {
+  const catalog = getPreviewStore().referrals;
   return (
+    catalog.find((r) => r.code.toUpperCase() === code.trim().toUpperCase()) ??
     demoReferrals.find((r) => r.code.toUpperCase() === code.trim().toUpperCase()) ??
     null
   );

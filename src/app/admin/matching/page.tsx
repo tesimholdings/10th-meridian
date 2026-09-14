@@ -1,39 +1,34 @@
 import { AdminShell } from "@/components/admin/admin-shell";
-import { DEFAULT_WEIGHTS } from "@/lib/matching/types";
+import { WeightsForm } from "@/components/admin/weights-form";
+import { CurationForm } from "@/components/admin/curation-form";
 import { brand } from "@/lib/config/site";
+import { getPreviewStore } from "@/lib/preview/store";
 
 export const metadata = { title: "Matching weights", robots: { index: false } };
 
-const rows = [
-  ["complementary", "Reciprocal value / complementary ask-offer", DEFAULT_WEIGHTS.complementary],
-  ["goals", "Relevance to stated goals", DEFAULT_WEIGHTS.goals],
-  ["interests", "Shared interests / values", DEFAULT_WEIGHTS.interests],
-  ["industry", "Industry relevance or useful adjacency", DEFAULT_WEIGHTS.industry],
-  ["geography", "Geographic / travel compatibility", DEFAULT_WEIGHTS.geography],
-  ["preferences", "Connection preferences / availability", DEFAULT_WEIGHTS.preferences],
-  ["novelty", "Network novelty / cross-pollination", DEFAULT_WEIGHTS.novelty],
-] as const;
-
 export default function MatchingAdminPage() {
+  const store = getPreviewStore();
   return (
     <AdminShell title="Meridian Index">
       <p className="text-ivory-muted">{brand.matchingLine}</p>
       <p className="mt-2 text-sm text-ivory-dim">
-        Weights persist in <code>matching_weights</code> once Supabase is live.
-        Human curation is stored separately and labeled in the member UI.
+        Saved weights are used immediately by The Meridian 10 and 100 in this preview.
+        Human curation is labeled separately. Protected traits are never ranking factors.
       </p>
-      <form className="mt-8 grid gap-4">
-        {rows.map(([key, label, value]) => (
-          <label key={key} className="grid gap-2">
-            <span className="label">{label}</span>
-            <input name={key} defaultValue={String(value)} inputMode="decimal" />
-          </label>
-        ))}
-        <p className="text-[12px] text-ivory-dim">
-          Saving is wired after Supabase. Protected traits are not fields and must
-          never be added as ranking factors.
-        </p>
-      </form>
+      <div className="mt-8">
+        <WeightsForm weights={store.weights} />
+      </div>
+      <div className="mt-12">
+        <p className="label">Human curation</p>
+        <p className="mt-2 text-sm text-ivory-muted">Promote or suppress with a required reason.</p>
+        <div className="mt-4">
+          <CurationForm
+            profiles={store.profiles}
+            viewerId={store.viewerId}
+            curation={store.curation}
+          />
+        </div>
+      </div>
     </AdminShell>
   );
 }

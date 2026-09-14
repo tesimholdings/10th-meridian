@@ -123,6 +123,7 @@ export interface EventRecord {
   title: string;
   kind: "dinner" | "salon" | "retreat" | "trip" | "member_hosted" | "open_house";
   summary: string;
+  longDescription?: string;
   city: string;
   startsAt: string;
   endsAt: string;
@@ -132,6 +133,7 @@ export interface EventRecord {
   channelSlug?: string;
   isDemo: boolean;
   paymentRequired: boolean;
+  listingState: "planned" | "concept";
 }
 
 export interface ChannelRecord {
@@ -153,6 +155,8 @@ export interface MessageRecord {
   createdAt: string;
   isDemo: boolean;
   threadCount?: number;
+  parentId?: string;
+  reactions?: Record<string, string[]>;
 }
 
 export interface MatchExplanation {
@@ -172,9 +176,12 @@ export interface MatchRecord {
 
 export interface IntroRequest {
   id: string;
+  fromId: string;
+  targetId: string;
   fromName: string;
   toName: string;
   status: "requested" | "accepted" | "declined" | "completed";
+  note?: string;
   isDemo: boolean;
 }
 
