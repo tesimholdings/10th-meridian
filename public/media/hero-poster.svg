@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1800">
+  <rect width="1200" height="1800" fill="#070809"/>
+  <rect width="1200" height="1800" fill="#0c1c28" opacity="0.55"/>
+  <path d="M600 0 V1800" stroke="#b08d4a" stroke-width="1" opacity="0.4"/>
+  <circle cx="600" cy="820" r="220" fill="none" stroke="#efe6d4" opacity="0.12"/>
+  <text x="600" y="1720" text-anchor="middle" fill="#8f8774" font-size="18" font-family="Georgia, serif">REPLACE ASSET  hero poster</text>
+</svg>
