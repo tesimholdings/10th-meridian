@@ -30,7 +30,7 @@ Meridian Index matching, private membership, introductions, Crossings purpose, $
 
 ## Remaining limitations
 
-- Campaign pack is wired to `public/media/campaign/00–07-*.png`. If those files are missing, original House SVGs remain as fallback. Attached PNGs failed to land in this cloud VM; drop the pack into that folder to replace fallbacks. Nightlife (`05`) is used only when a listing is actually nightlife.
+- Campaign pack lives in `public/media/campaign/00–07-*.png` (editorial only). Nightlife (`05`) is used only when a listing is actually nightlife.
 - Preview store is in-process and resets on restart.
 - Stream compose is DEMO unless keys exist; not E2EE.
 - Gallery uploads are a Storage stub.

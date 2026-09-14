@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { describe, it } from "node:test";
 import { campaign, EDITORIAL_CAPTION, stillForListedExperience } from "@/lib/atmosphere/campaign";
+import { campaignPackOnDisk, campaignSrc } from "@/lib/atmosphere/resolve-campaign";
+
+const PNG = Buffer.from([0x89, 0x50, 0x4e, 0x47]);
 
 describe("campaign still mapping", () => {
   it("names the eight editorial files Stefan attached", () => {
@@ -32,5 +35,16 @@ describe("campaign still mapping", () => {
     assert.match(lock, /campaignSrc\("heroLandscape"\)/);
     assert.equal(home.includes(campaign.nightlife), false);
     assert.equal(lock.includes(campaign.nightlife), false);
+  });
+
+  it("ships the eight editorial PNGs on disk", () => {
+    assert.equal(campaignPackOnDisk(), true);
+    for (const [slot, src] of Object.entries(campaign)) {
+      const path = `public${src}`;
+      assert.equal(existsSync(path), true, path);
+      const buf = readFileSync(path);
+      assert.equal(buf.subarray(0, 4).equals(PNG), true, `${path} must be a PNG`);
+      assert.equal(campaignSrc(slot as keyof typeof campaign), src);
+    }
   });
 });

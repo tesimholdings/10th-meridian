@@ -9,7 +9,7 @@ Runtime: Node 22, Next.js 16.3.5, preview mode (no live secrets)
 
 | Check | Result |
 | --- | --- |
-| `npm test` | 77/77 pass — prior coverage plus campaign slot mapping (nightlife not default), Ask, DM destination, journey validation |
+| `npm test` | 78/78 pass — prior coverage plus campaign PNGs on disk, slot mapping (nightlife not default), Ask, DM destination, journey validation |
 | `npm run lint` | Pass (0 errors) |
 | `npm run build` | Pass — Next.js 16.3.5 Turbopack, TypeScript clean |
 
@@ -23,7 +23,7 @@ Runtime: Node 22, Next.js 16.3.5, preview mode (no live secrets)
 - DMs from profile / Index / Members (Stream when keys exist; DEMO otherwise; not E2EE)
 - Community: Absolutely no soliciting. Ban with no refund.
 - Bottom nav: Home · Index · Messages · Crossings · Profile
-- UI vibe: warm white / navy / ocean blue / restrained gold; editorial campaign stills (yacht wake, deck, dinner, salon, terrace, coastal plaza) with House SVG fallbacks; nightlife still only when listed; reduced-motion honored
+- UI vibe: warm white / navy / ocean blue / restrained gold; editorial campaign PNGs in-repo (yacht wake, deck, dinner, salon, terrace, coastal plaza); nightlife still only when listed; reduced-motion honored
 
 ## Privacy
 
