@@ -167,7 +167,7 @@ export default async function CrossingsPage() {
 
       <p className="mt-12 text-[11px] leading-relaxed text-ivory-dim">
         Navigation: Crossings lives on Home and at /member/crossings. The five-item member bar (Home ·
-        Matches · Channels · Members · Profile) is unchanged.
+        Index · Channels · Members · Profile) is unchanged.
       </p>
     </MemberShell>
   );

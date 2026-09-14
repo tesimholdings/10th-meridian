@@ -7,6 +7,7 @@ import { Chip } from "@/components/ui/chip";
 import { PrivacyNotice } from "@/components/crossings/states";
 import {
   JOURNEY_VISIBILITY,
+  JOURNEY_VISIBILITY_LABELS,
   MEETING_FORMATS,
   TRAVEL_INTENTS,
   type JourneyRecord,
@@ -244,7 +245,7 @@ export function CoordinatesForm({
               >
                 {JOURNEY_VISIBILITY.map((v) => (
                   <option key={v} value={v}>
-                    {v.replaceAll("_", " ")}
+                    {JOURNEY_VISIBILITY_LABELS[v]}
                   </option>
                 ))}
               </select>

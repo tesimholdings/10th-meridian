@@ -7,7 +7,7 @@ Member travel connections for 10th Meridian. City-level presence only — not re
 
 ## Navigation choice
 
-The member bottom bar is already full: **Home · Matches · Channels · Members · Profile**.
+The member bottom bar is already full: **Home · Index · Channels · Members · Profile**.
 
 Crossings is reachable from:
 
@@ -21,7 +21,7 @@ Crossings is reachable from:
 2. Home → **Crossings** card
 3. Read the cinematic landing, upcoming Paris journey, atlas (no precise pins), quiet notices
 4. **Set Your Coordinates** (or open the existing Paris journey)
-5. Destination match carousel → open **A Crossing** sheet → propose coffee + dates (or decline/reschedule an incoming request)
+5. Who-you-should-meet carousel → open **A Crossing** sheet → propose coffee + dates (or decline/reschedule an incoming request)
 6. Accept the DEMO request if needed → **Open conversation** (Stream stub / DEMO channel) and **Download .ics**
 7. **Open a Table** from the London suggestion (neighborhood only; venue on the detail page only if confirmed)
 8. **City Notes** and **City Hosts** (all labeled SYNTHETIC DEMO)

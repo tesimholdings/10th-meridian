@@ -8,6 +8,7 @@ Apply migrations in order against a new project:
 4. `0004_storage.sql` — private buckets (may require dashboard if `storage.buckets` is restricted)
 5. `0005_seed.sql` — SYNTHETIC DEMO channels + test referral hash
 6. `0006_crossings.sql` — journeys, crossing requests, tables, City Hosts, City Notes, travel weights, RLS
+7. `0007_lifetime_pricing.sql` — Lifetime $10,000 one-time Price fields
 
 The Next.js app does not require a live project to boot. See `src/lib/supabase/stub.ts`.
 City Notes and journeys are never readable by `anon`. Exact table venues are withheld by view/`group_tables_public` unless the viewer is a confirmed guest or steward.

@@ -28,7 +28,7 @@ export function CurationForm({
       body: JSON.stringify({ viewerId, targetId, action, reason }),
     });
     const json = (await res.json()) as { ok?: boolean; message?: string };
-    setNote(json.ok ? "Curation applied and labeled in Matches." : json.message ?? "A written reason is required.");
+    setNote(json.ok ? "Curation applied and labeled in The Index." : json.message ?? "A written reason is required.");
     setReason("");
     router.refresh();
   }

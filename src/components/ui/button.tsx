@@ -4,7 +4,7 @@ type Variant = "gold" | "ghost" | "ivory";
 
 const styles: Record<Variant, string> = {
   gold:
-    "bg-[var(--gold)] text-[var(--void)] border border-[var(--gold)] hover:bg-[#c4a05c]",
+    "bg-[var(--gold)] text-[var(--void)] border border-[var(--gold)] hover:bg-[#d4b46a]",
   ghost:
     "bg-transparent text-ivory border border-[var(--line-strong)] hover:border-[var(--gold)]",
   ivory:

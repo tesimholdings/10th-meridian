@@ -32,10 +32,13 @@ export function LockScreen({
             <p className="mt-4 max-w-md text-[0.95rem] leading-relaxed text-ivory-muted md:mt-6 md:text-lg">
               {brand.idea} The house is not a directory. It is a room that opens once a month.
             </p>
+            <p className="mt-3 max-w-md text-sm leading-relaxed text-ivory-dim">
+              {brand.houseHours} Window shown for {decision.config.timeZone}.
+            </p>
             {referralEarly ? (
               <p className="mt-4 max-w-md text-sm text-gold">
-                Referral holders may enter from 9:00 a.m. {decision.config.timeZone}. General
-                doors open at 10:00 a.m.
+                Referral early hour is open now in {decision.config.timeZone}. General doors
+                open at 10:00 local.
               </p>
             ) : null}
             <div className="mt-7 md:mt-10">

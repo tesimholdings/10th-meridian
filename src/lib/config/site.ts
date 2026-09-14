@@ -1,3 +1,6 @@
+/** Planned production origin. Not purchased; do not attach in Vercel yet. */
+export const plannedProductionUrl = "https://tenmeridian.com";
+
 export const brand = {
   name: "10th Meridian",
   shortName: "10°M",
@@ -17,6 +20,10 @@ export const brand = {
     "Ten people. Chosen for where you are—and where you are going.",
   meridian100:
     "A wider field of relevance — ranked, never invented.",
+  houseHours:
+    "Open House is the tenth, 10:00–22:00 in your local time. Referral holders may enter from 9:00 in that same local time.",
+  soliciting:
+    "Absolutely no soliciting. A ban is permanent and without refund. Members may refer people. You may mention yourself only when someone is asking.",
 } as const;
 
 export const publicNav = [
@@ -27,7 +34,7 @@ export const publicNav = [
 
 export const memberNav = [
   { href: "/member/home", label: "Home", id: "home" },
-  { href: "/member/matches", label: "Matches", id: "matches" },
+  { href: "/member/index", label: "Index", id: "index" },
   { href: "/member/channels", label: "Channels", id: "channels" },
   { href: "/member/members", label: "Members", id: "members" },
   { href: "/member/profile", label: "Profile", id: "profile" },

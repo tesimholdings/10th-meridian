@@ -1,21 +1,23 @@
 @import "tailwindcss";
 
 :root {
-  --void: #070809;
-  --ink: #0b0d0f;
-  --charcoal: #121518;
-  --ocean: #0c1c28;
-  --teal: #14343c;
-  --teal-deep: #0e2a30;
-  --ivory: #efe6d4;
-  --ivory-muted: #c9bfa8;
-  --ivory-dim: #8f8774;
-  --gold: #b08d4a;
-  --gold-dim: #8a6d38;
-  --gold-soft: rgba(176, 141, 74, 0.22);
-  --line: rgba(239, 230, 212, 0.12);
-  --line-strong: rgba(239, 230, 212, 0.22);
-  --shadow: rgba(0, 0, 0, 0.55);
+  --void: #08090b;
+  --ink: #0e1216;
+  --charcoal: #151b21;
+  --ocean: #0f4d6b;
+  --teal: #1f7fa0;
+  --teal-deep: #125a78;
+  --harbor: #2d96b8;
+  --spray: #7ec8de;
+  --ivory: #f6f4ef;
+  --ivory-muted: #d8d4cb;
+  --ivory-dim: #9c978c;
+  --gold: #c6a45a;
+  --gold-dim: #a07f3c;
+  --gold-soft: rgba(198, 164, 90, 0.28);
+  --line: rgba(246, 244, 239, 0.16);
+  --line-strong: rgba(246, 244, 239, 0.3);
+  --shadow: rgba(0, 0, 0, 0.5);
   --danger: #b4554a;
   --background: var(--void);
   --foreground: var(--ivory);
@@ -27,6 +29,8 @@
   --color-charcoal: var(--charcoal);
   --color-ocean: var(--ocean);
   --color-teal: var(--teal);
+  --color-harbor: var(--harbor);
+  --color-spray: var(--spray);
   --color-ivory: var(--ivory);
   --color-ivory-muted: var(--ivory-muted);
   --color-gold: var(--gold);
@@ -120,7 +124,7 @@ body {
 .panel {
   border: 1px solid var(--line);
   background:
-    linear-gradient(180deg, rgba(18, 21, 24, 0.42), rgba(7, 8, 9, 0.22));
+    linear-gradient(180deg, rgba(15, 77, 107, 0.28), rgba(8, 9, 11, 0.42));
 }
 
 .panel-quiet {
@@ -130,7 +134,7 @@ body {
 
 .panel-ink {
   border: 1px solid var(--line);
-  background: rgba(11, 13, 15, 0.72);
+  background: rgba(14, 18, 22, 0.78);
 }
 
 .why-meet {
@@ -194,6 +198,8 @@ body {
 .countdown-cell {
   padding: 0.7rem 0.35rem 0.85rem;
   text-align: center;
+  animation: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  pointer-events: auto;
 }
 
 .countdown-cell + .countdown-cell {
@@ -210,9 +216,10 @@ body {
 
 .water {
   background:
-    radial-gradient(1200px 500px at 50% 120%, rgba(20, 52, 60, 0.55), transparent 60%),
-    radial-gradient(800px 400px at 80% 10%, rgba(12, 28, 40, 0.7), transparent 50%),
-    linear-gradient(180deg, #070809 0%, #0c1c28 46%, #0b1214 100%);
+    radial-gradient(1200px 560px at 50% 118%, rgba(45, 150, 184, 0.46), transparent 62%),
+    radial-gradient(720px 380px at 84% 6%, rgba(126, 200, 222, 0.24), transparent 52%),
+    radial-gradient(640px 360px at 10% 28%, rgba(31, 127, 160, 0.3), transparent 55%),
+    linear-gradient(180deg, #08090b 0%, #0f4d6b 48%, #0a1218 100%);
 }
 
 @keyframes drift {
@@ -262,6 +269,57 @@ body {
   animation: breath 7s ease-in-out infinite;
 }
 
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes card-in {
+  from { opacity: 0; transform: translate3d(0, 18px, 0) scale(0.985); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+
+@keyframes line-draw {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.page-enter {
+  animation: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  pointer-events: auto;
+}
+
+.cinematic .panel,
+.cinematic .panel-quiet,
+.cinematic .panel-ink {
+  animation: card-in 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+  pointer-events: auto;
+}
+
+.cinematic .reveal-list > * {
+  animation: card-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  pointer-events: auto;
+}
+
+.cinematic .reveal-list > *:nth-child(1) { animation-delay: 0.04s; }
+.cinematic .reveal-list > *:nth-child(2) { animation-delay: 0.1s; }
+.cinematic .reveal-list > *:nth-child(3) { animation-delay: 0.16s; }
+.cinematic .reveal-list > *:nth-child(4) { animation-delay: 0.22s; }
+.cinematic .reveal-list > *:nth-child(5) { animation-delay: 0.28s; }
+.cinematic .reveal-list > *:nth-child(6) { animation-delay: 0.34s; }
+.cinematic .reveal-list > *:nth-child(7) { animation-delay: 0.4s; }
+.cinematic .reveal-list > *:nth-child(8) { animation-delay: 0.46s; }
+
+.countdown-cell:nth-child(1) { animation-delay: 0.05s; }
+.countdown-cell:nth-child(2) { animation-delay: 0.12s; }
+.countdown-cell:nth-child(3) { animation-delay: 0.19s; }
+.countdown-cell:nth-child(4) { animation-delay: 0.26s; }
+
+.editorial-rule {
+  transform-origin: center;
+  animation: line-draw 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .slow-drift,
   .pulse-gold,
@@ -270,7 +328,14 @@ body {
   .breath,
   .meridian-pulse,
   .crossings-sheet,
-  .crossings-sheet-panel {
+  .crossings-sheet-panel,
+  .page-enter,
+  .cinematic .panel,
+  .cinematic .panel-quiet,
+  .cinematic .panel-ink,
+  .cinematic .reveal-list > *,
+  .countdown-cell,
+  .editorial-rule {
     animation: none !important;
   }
 }
@@ -278,7 +343,7 @@ body {
 input,
 textarea,
 select {
-  background: rgba(7, 8, 9, 0.55);
+  background: rgba(8, 9, 11, 0.55);
   color: var(--ivory);
   border: 1px solid var(--line);
   border-radius: 0;
@@ -292,7 +357,7 @@ input:focus,
 textarea:focus,
 select:focus {
   border-color: var(--gold-dim);
-  box-shadow: 0 0 0 1px rgba(176, 141, 74, 0.25);
+  box-shadow: 0 0 0 1px rgba(198, 164, 90, 0.28);
 }
 
 textarea {
@@ -311,15 +376,15 @@ button:disabled {
 
 .atlas {
   background:
-    radial-gradient(900px 420px at 50% 80%, rgba(20, 52, 60, 0.45), transparent 62%),
-    radial-gradient(520px 280px at 18% 30%, rgba(12, 28, 40, 0.55), transparent 58%),
-    linear-gradient(180deg, rgba(12, 28, 40, 0.35), transparent 55%);
+    radial-gradient(900px 420px at 50% 80%, rgba(45, 150, 184, 0.32), transparent 62%),
+    radial-gradient(520px 280px at 18% 30%, rgba(31, 127, 160, 0.38), transparent 58%),
+    linear-gradient(180deg, rgba(15, 77, 107, 0.4), transparent 55%);
 }
 
 .atlas-grid {
   background-image:
-    linear-gradient(rgba(239, 230, 212, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(239, 230, 212, 0.045) 1px, transparent 1px);
+    linear-gradient(rgba(246, 244, 239, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(246, 244, 239, 0.06) 1px, transparent 1px);
   background-size: 56px 56px;
 }
 
@@ -336,7 +401,7 @@ button:disabled {
   position: fixed;
   inset: 0;
   z-index: 50;
-  background: rgba(7, 8, 9, 0.72);
+  background: rgba(8, 9, 11, 0.7);
   animation: sheet-in 0.35s ease-out;
 }
 
@@ -365,5 +430,21 @@ button:disabled {
     max-height: 100dvh;
     border-top: none;
     border-left: 1px solid var(--line);
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  .referral-card-print {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .referral-card-sheet {
+    box-shadow: none !important;
+    page-break-inside: avoid;
   }
 }

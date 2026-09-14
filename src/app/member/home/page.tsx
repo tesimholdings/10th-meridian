@@ -28,7 +28,7 @@ export default async function MemberHomePage() {
           <p className="label">Membership</p>
           <p className="mt-2 font-serif text-2xl">Approved — payment pending</p>
           <p className="mt-2 text-sm text-ivory-muted">
-            Complete Stripe-hosted checkout to enter fully. Prices remain approved placeholders.
+            Complete Stripe-hosted checkout to enter fully. Lifetime is $10,000, one time.
           </p>
         </Link>
       ) : null}
@@ -67,7 +67,7 @@ export default async function MemberHomePage() {
 
       <section className="mt-12">
         <MatchBoard index={index} intros={store.intros} compact />
-        <Link href="/member/matches" className="mt-4 inline-flex min-h-11 items-center text-[11px] tracking-[0.18em] uppercase text-gold">
+        <Link href="/member/index" className="mt-4 inline-flex min-h-11 items-center text-[11px] tracking-[0.18em] uppercase text-gold">
           Open the full Index
         </Link>
       </section>

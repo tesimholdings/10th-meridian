@@ -41,9 +41,34 @@ export interface AccessDecision {
   serverNowIso: string;
 }
 
+/** Used when the visitor IANA zone is missing or invalid. Never a client clock. */
+export const FALLBACK_TIMEZONE = "America/Chicago";
+
+export function isValidTimeZone(timeZone: string): boolean {
+  if (!timeZone || timeZone.length > 64 || !/^[A-Za-z0-9_+\-/]+$/.test(timeZone)) {
+    return false;
+  }
+  try {
+    Intl.DateTimeFormat("en-US", { timeZone });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/** Accept a visitor IANA zone. Never trust a client clock — only the name. */
+export function resolveVisitorTimeZone(
+  raw: string | null | undefined,
+  fallback = FALLBACK_TIMEZONE,
+): string {
+  const tz = raw?.trim();
+  if (tz && isValidTimeZone(tz)) return tz;
+  return isValidTimeZone(fallback) ? fallback : FALLBACK_TIMEZONE;
+}
+
 export function getOpenHouseConfig(overrides?: Partial<OpenHouseConfig>): OpenHouseConfig {
   return {
-    timeZone: overrides?.timeZone ?? env.openHouseTimezone,
+    timeZone: resolveVisitorTimeZone(overrides?.timeZone ?? env.openHouseTimezone),
     day: overrides?.day ?? env.openHouseDay,
     referralHour: overrides?.referralHour ?? env.openHouseReferralHour,
     generalHour: overrides?.generalHour ?? env.openHouseGeneralHour,
@@ -222,7 +247,7 @@ export function evaluateOpenHouse(input: {
       return {
         phase: "referral_early",
         allowed: false,
-        reason: "Referral holders may enter from 9:00 a.m. General doors open at 10:00 a.m.",
+        reason: "Referral holders may enter from 9:00 local time. General doors open at 10:00 local time.",
         isDemo: true,
         isMemberAccess: false,
         hasReferralGrant,
@@ -244,8 +269,8 @@ export function evaluateOpenHouse(input: {
       allowed: true,
       reason:
         minutes < generalMinutes
-          ? "Referral early hour. Guest access ends when the window closes."
-          : "Open House is in session. Guest access ends at 10:00 p.m.",
+          ? "Referral early hour in the visitor's local time. Guest access ends when the window closes."
+          : "Open House is in session in the visitor's local time. Guest access ends at 22:00 local.",
       isDemo: true,
       isMemberAccess: false,
       hasReferralGrant,

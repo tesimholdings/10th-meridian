@@ -82,23 +82,15 @@ export const env = {
   get stripeWebhookSecret(): string {
     return read("STRIPE_WEBHOOK_SECRET");
   },
-  get stripeFoundingPriceId(): string {
-    return read("STRIPE_FOUNDING_PRICE_ID");
-  },
-  get stripeStandardPriceId(): string {
-    return read("STRIPE_STANDARD_PRICE_ID");
-  },
-  get foundingPriceLabel(): string {
-    return read(
-      "NEXT_PUBLIC_FOUNDING_PRICE_LABEL",
-      "[INSERT APPROVED FOUNDING PRICE]",
+  get stripeLifetimePriceId(): string {
+    return (
+      read("STRIPE_LIFETIME_PRICE_ID") ||
+      read("STRIPE_FOUNDING_PRICE_ID") ||
+      read("STRIPE_STANDARD_PRICE_ID")
     );
   },
-  get standardPriceLabel(): string {
-    return read(
-      "NEXT_PUBLIC_STANDARD_PRICE_LABEL",
-      "[INSERT APPROVED STANDARD PRICE]",
-    );
+  get lifetimePriceLabel(): string {
+    return read("NEXT_PUBLIC_LIFETIME_PRICE_LABEL", "$10,000");
   },
   get streamApiKey(): string {
     return read("NEXT_PUBLIC_STREAM_API_KEY");

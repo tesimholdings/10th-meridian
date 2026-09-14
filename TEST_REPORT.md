@@ -9,20 +9,22 @@ Runtime: Node 22, Next.js 16.3.5, preview mode (no live secrets)
 
 | Check | Result |
 | --- | --- |
-| `npm test` | Pending at first push — matching, Open House clock, preview store, Crossings dates/matching/privacy/requests/tables |
-| `npm run lint` | Pending at first push |
-| `npm run build` | Pending at first push |
+| `npm test` | Pass — 50 tests (Lifetime $10,000 + visitor IANA Open House) |
+| `npm run lint` | Pass |
+| `npm run build` | Pass — includes `/member/index` and `/referral/[code]/card` |
 
-Product logic is unchanged. Coverage remains: journey CRUD/pause/delete; date overlaps; matching exclusions; Crossing accept/decline/reschedule; conversation only after accept; group-table capacity; venue hidden until confirmed; Open House isolation of non-demo City Notes; `.ics` only after acceptance.
+Product logic unchanged except: Stripe checkout mode (`payment` for Lifetime); public product list (Lifetime + Organization); Open House window evaluated in the visitor IANA timezone (server clock + validated zone name). Coverage remains: journey CRUD; ranking exclusions; Crossing accept/decline; Open House isolation; `.ics` after acceptance; visitor TZ vs Chicago.
 
-## UI / product walk-through (this wave)
+## Product decisions recorded
 
-- Lock: tighter mobile CTAs, hairline countdown, discreet scarcity
-- Open House: editorial rhythm, DEMO labeling, unlabeled membership amounts
-- Member Home / Matches / Crossings: quieter chrome, Why-you-should-meet readability, premium empty states
-- Crossings: coordinates steps, atlas ticks (no pins), Crossing sheet, Table / Notes polish
-- Motion respects `prefers-reduced-motion`
-- 390px: safe areas, 44px targets, no intended horizontal page scroll
+- Lifetime **$10,000** one-time shown on Open House, Billing, admin billing
+- Admissions cap still 10 / month
+- Referral card print path `/referral/{code}/card`
+- Planned domain `tenmeridian.com` documented only
+- Palette: gold / black / white + sailor water-blues
+- Member nav: **Index** (never “Matches”); Meridian 10 / 100 / Index kept
+- Open House: 10:00–22:00 visitor local; referral 09:00 local; fallback America/Chicago
+- Anti-soliciting: ban with no refund, surfaced on Open House / onboarding / legal / compose
 
 ## Privacy (unchanged)
 
@@ -30,11 +32,6 @@ City-level only. No flight numbers, hotel stays, room numbers, GPS, or live loca
 
 ## Runtime limitations
 
-- Preview store is in-process and resets on server restart
-- Stream compose is DEMO unless keys exist; not E2EE
-- Calendar v1 is `.ics` download — no external calendar OAuth
-- No production deploy
-
-## Still Stefan’s
-
-Approved prices, hero film, live keys, counsel-approved legal copy.
+- Preview store resets on server restart
+- Stripe Checkout 501 without keys / Lifetime Price ID
+- No production deploy, no domain purchase

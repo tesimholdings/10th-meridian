@@ -18,7 +18,7 @@ export function MemberShell({
 }) {
   return (
     <div className="min-h-dvh bg-void text-ivory">
-      <header className="safe-pad safe-top sticky top-0 z-30 flex items-center justify-between border-b border-[var(--line)] bg-[rgba(7,8,9,0.78)] py-2.5 backdrop-blur-md">
+      <header className="safe-pad safe-top sticky top-0 z-30 flex items-center justify-between border-b border-[var(--line)] bg-[rgba(8,9,11,0.72)] py-2.5 backdrop-blur-md">
         <Wordmark compact />
         <details className="relative">
           <summary className="flex min-h-11 cursor-pointer list-none items-center tracking-[0.18em] uppercase text-[11px] text-ivory-muted">
@@ -52,7 +52,7 @@ export function MemberShell({
           {DEMO_DISCLAIMER}
         </p>
       ) : null}
-      <main className="safe-pad safe-bottom mx-auto max-w-5xl py-8">
+      <main className="cinematic page-enter safe-pad safe-bottom mx-auto max-w-5xl py-8">
         <p className="label">{title}</p>
         <div className="mt-4">{children}</div>
       </main>

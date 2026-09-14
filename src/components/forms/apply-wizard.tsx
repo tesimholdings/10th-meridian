@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { brand } from "@/lib/config/site";
 
 const steps = [
   { id: "presence", title: "Presence" },
@@ -104,9 +105,10 @@ export function ApplyWizard({ referralCode }: { referralCode?: string | null }) 
                 checked={draft.terms === "yes"}
                 onChange={(e) => set("terms", e.target.checked ? "yes" : "")}
               />
-              I agree to the placeholder Terms, Privacy, and Community standards, and I understand
-              selection is human and never guaranteed.
+              I agree to the placeholder Terms, Privacy, and Community standards. I understand
+              selection is human, never guaranteed, and that soliciting is banned without refund.
             </label>
+            <p className="text-[12px] leading-relaxed text-ivory-dim">{brand.soliciting}</p>
           </>
         ) : null}
       </div>

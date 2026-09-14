@@ -149,8 +149,9 @@ export function OnboardingWizard({ profile, redirectTo = "/member/profile" }: { 
       </div>
       {status ? <p className="mt-4 text-sm text-gold">{status}</p> : null}
       <p className="mt-6 text-[12px] text-ivory-dim">
-        Matching is recalculated after meaningful changes. Completeness is the difference
-        between a faint signal and a precise one.
+        The Index is recalculated after meaningful changes. Completeness is the difference
+        between a faint signal and a precise one. Absolutely no soliciting — a ban is
+        without refund. Mention yourself only when someone is asking.
       </p>
     </div>
   );

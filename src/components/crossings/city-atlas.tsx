@@ -30,19 +30,19 @@ export function CityAtlas({
       <svg viewBox="0 0 100 80" className="h-56 w-full md:h-72" aria-hidden>
         <path
           d="M18 36 C 22 30, 30 28, 36 33 C 40 28, 48 30, 52 36 C 46 44, 32 46, 22 42 Z"
-          fill="rgba(20,52,60,0.28)"
+          fill="rgba(31,127,160,0.32)"
         />
         <path
           d="M48 28 C 54 24, 62 26, 64 34 C 60 42, 52 40, 48 36 Z"
-          fill="rgba(20,52,60,0.22)"
+          fill="rgba(45,150,184,0.24)"
         />
         <path
           d="M66 40 C 74 36, 82 40, 86 46 C 80 54, 70 52, 66 48 Z"
-          fill="rgba(20,52,60,0.2)"
+          fill="rgba(31,127,160,0.22)"
         />
         <path
           d="M50 50 C 56 48, 60 54, 58 62 C 52 66, 48 60, 50 54 Z"
-          fill="rgba(20,52,60,0.18)"
+          fill="rgba(45,150,184,0.18)"
         />
         {[20, 35, 50, 65].map((y) => (
           <line
@@ -66,8 +66,8 @@ export function CityAtlas({
             strokeWidth="0.15"
           />
         ))}
-        <line x1="50" y1="6" x2="50" y2="74" stroke="rgba(176,141,74,0.4)" strokeWidth="0.28" />
-        <text x="51.6" y="11" fill="#b08d4a" fontSize="2.8" letterSpacing="0.28">
+        <line x1="50" y1="6" x2="50" y2="74" stroke="rgba(198,164,90,0.5)" strokeWidth="0.28" />
+        <text x="51.6" y="11" fill="#c6a45a" fontSize="2.8" letterSpacing="0.28">
           10°
         </text>
         {MARKS.map((m) => {
@@ -81,20 +81,20 @@ export function CityAtlas({
                   cy={m.y}
                   r="3.4"
                   fill="none"
-                  stroke="#b08d4a"
+                  stroke="#c6a45a"
                   strokeWidth="0.28"
                   className="meridian-pulse"
                 />
               ) : null}
               <path
                 d={`M${m.x - 1.1} ${m.y} H${m.x + 1.1} M${m.x} ${m.y - 1.1} V${m.y + 1.1}`}
-                stroke={dest ? "#b08d4a" : on ? "#c9bfa8" : "rgba(239,230,212,0.28)"}
+                stroke={dest ? "#c6a45a" : on ? "#7ec8de" : "rgba(246,244,239,0.3)"}
                 strokeWidth={dest ? 0.45 : 0.28}
               />
               <text
                 x={m.x + 2}
                 y={m.y + 0.9}
-                fill={on ? "#efe6d4" : "#8f8774"}
+                fill={on ? "#f6f4ef" : "#9c978c"}
                 fontSize="2.5"
               >
                 {m.city}

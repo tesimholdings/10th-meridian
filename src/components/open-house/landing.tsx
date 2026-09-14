@@ -15,7 +15,7 @@ export function OpenHouseLanding({ access }: { access: AccessContext }) {
   const remaining = Math.max(0, store.admissionsCap - acceptedThisCohort());
 
   return (
-    <div className="bg-void text-ivory">
+    <div className="cinematic bg-void text-ivory">
       <HeroStage caption="REPLACE ASSET — Open House hero film. Do not use unlicensed footage.">
         <div className="safe-pad safe-top mx-auto flex min-h-dvh max-w-6xl flex-col justify-between py-8 md:py-10">
           <Wordmark />
@@ -48,7 +48,7 @@ export function OpenHouseLanding({ access }: { access: AccessContext }) {
       </HeroStage>
 
       <div
-        className="safe-pad sticky bottom-0 z-30 border-t border-[var(--line)] bg-[rgba(7,8,9,0.92)] py-3 backdrop-blur md:hidden"
+        className="safe-pad sticky bottom-0 z-30 border-t border-[var(--line)] bg-[rgba(8,9,11,0.9)] py-3 backdrop-blur md:hidden"
         style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))" }}
       >
         <div className="grid grid-cols-2 gap-2">
@@ -59,6 +59,7 @@ export function OpenHouseLanding({ access }: { access: AccessContext }) {
 
       <section className="safe-pad mx-auto max-w-6xl py-20 md:py-28">
         <p className="max-w-2xl text-[12px] leading-relaxed text-ivory-dim">{DEMO_DISCLAIMER}</p>
+        <p className="mt-4 max-w-xl text-sm leading-relaxed text-ivory-muted">{brand.houseHours}</p>
         <p className="label mt-14">Philosophy</p>
         <div className="mt-5 grid gap-10 md:grid-cols-[1.15fr_0.85fr] md:items-end">
           <h2 className="font-serif text-4xl leading-[1.05] md:text-5xl">
@@ -81,6 +82,14 @@ export function OpenHouseLanding({ access }: { access: AccessContext }) {
             {brand.matchingLine}
           </blockquote>
         </div>
+      </section>
+
+      <section className="safe-pad mx-auto max-w-6xl py-20 md:py-28">
+        <p className="label">The house rule</p>
+        <h2 className="mt-4 max-w-2xl font-serif text-4xl leading-tight">{brand.soliciting}</h2>
+        <p className="mt-4 max-w-xl text-sm text-ivory-dim">
+          Refer generously. Do not sell the room. Ban for soliciting is without refund.
+        </p>
       </section>
 
       <section className="safe-pad mx-auto max-w-6xl py-20 md:py-28">
@@ -129,8 +138,8 @@ export function OpenHouseLanding({ access }: { access: AccessContext }) {
             </p>
           </article>
         </div>
-        <Button href="/member/matches" variant="ghost" className="mt-8">
-          See DEMO matches
+        <Button href="/member/index" variant="ghost" className="mt-8">
+          See the DEMO Index
         </Button>
       </section>
 
@@ -153,7 +162,7 @@ export function OpenHouseLanding({ access }: { access: AccessContext }) {
       <section className="safe-pad mx-auto max-w-6xl border-t border-[var(--line)] py-20 md:py-28">
         <p className="label">Membership</p>
         <p className="mt-3 max-w-lg text-sm text-ivory-dim">
-          Amounts remain unpublished until approved. These cards name the seats, not the price.
+          Lifetime is $10,000, one time. Monthly billing will come later — it is not offered here yet.
         </p>
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {Object.values(membershipProducts).map((p) => (
@@ -167,19 +176,19 @@ export function OpenHouseLanding({ access }: { access: AccessContext }) {
           ))}
         </div>
         <p className="mt-6 text-[12px] text-ivory-dim">
-          Prices are not published until approved. Checkout is Stripe-hosted after
-          a human approval — never a public buy button.
+          Checkout is Stripe-hosted after a human approval — never a public buy button.
+          The live Stripe Price must be a one-time $10,000 Lifetime price.
         </p>
       </section>
 
-      <section className="border-y border-[var(--line)] bg-[rgba(12,28,40,0.22)] py-20 md:py-28">
+      <section className="border-y border-[var(--line)] bg-[rgba(15,77,107,0.2)] py-20 md:py-28">
         <div className="safe-pad mx-auto max-w-6xl">
           <p className="label">Members in this house</p>
           <div className="mt-2 flex flex-wrap items-baseline gap-3">
             <p className="font-serif text-3xl">Initials, not faces.</p>
             <DemoMark />
           </div>
-          <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-4">
+          <div className="reveal-list mt-10 grid grid-cols-2 gap-3 md:grid-cols-4">
             {store.profiles.slice(0, 8).map((p) => (
               <Link key={p.id} href={`/member/members/${p.id}`} className="panel p-4">
                 <div

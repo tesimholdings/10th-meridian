@@ -4,6 +4,8 @@ export const ROLE_COOKIE = "tm_role";
 export const REFERRAL_COOKIE = "tm_referral";
 export const ACCOUNT_COOKIE = "tm_account";
 export const OPEN_HOUSE_FORCE_COOKIE = "tm_oh_force";
+/** Browser IANA timezone. Not signed — validated server-side. Never used as a clock. */
+export const VISITOR_TZ_COOKIE = "tm_tz";
 
 function secret() {
   return process.env.SESSION_SECRET || "preview-only-not-for-production";

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 export function HeroStage({
   children,
-  caption = "REPLACE ASSET — cinematic night-water hero. Portrait on phone, widescreen on desktop. Compress and lazy-load the final film.",
+  caption = "REPLACE ASSET — harbor-water hero. Portrait on phone, widescreen on desktop. Compress and lazy-load the final film.",
 }: {
   children: React.ReactNode;
   caption?: string;
@@ -43,7 +43,7 @@ export function HeroStage({
   }
 
   return (
-    <div className="relative min-h-dvh overflow-hidden water text-ivory">
+    <div className="cinematic relative min-h-dvh overflow-hidden water text-ivory">
       <div className="absolute inset-0 slow-drift opacity-80" aria-hidden>
         <CelestialField />
       </div>
@@ -62,7 +62,7 @@ export function HeroStage({
         aria-hidden
         style={{
           background:
-            "radial-gradient(80% 70% at 50% 38%, rgba(7,8,9,0.12), rgba(7,8,9,0.55) 72%, #070809 100%)",
+            "radial-gradient(80% 70% at 50% 38%, rgba(8,9,11,0.04), rgba(8,9,11,0.38) 72%, #08090b 100%)",
         }}
       />
       <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-void to-transparent" />
@@ -88,22 +88,22 @@ function CelestialField() {
     <svg viewBox="0 0 1200 1800" className="h-full w-full" preserveAspectRatio="xMidYMid slice">
       <defs>
         <radialGradient id="glow" cx="50%" cy="40%" r="50%">
-          <stop offset="0%" stopColor="#14343c" stopOpacity="0.55" />
-          <stop offset="70%" stopColor="#0c1c28" stopOpacity="0.1" />
-          <stop offset="100%" stopColor="#070809" stopOpacity="0" />
+          <stop offset="0%" stopColor="#2d96b8" stopOpacity="0.5" />
+          <stop offset="70%" stopColor="#0f4d6b" stopOpacity="0.14" />
+          <stop offset="100%" stopColor="#08090b" stopOpacity="0" />
         </radialGradient>
       </defs>
       <rect width="1200" height="1800" fill="url(#glow)" />
       {Array.from({ length: 42 }).map((_, i) => {
         const x = (i * 97) % 1200;
         const y = (i * 173 + 80) % 1600;
-        return <circle key={i} cx={x} cy={y} r={i % 7 === 0 ? 1.4 : 0.7} fill="#efe6d4" opacity={0.35} />;
+        return <circle key={i} cx={x} cy={y} r={i % 7 === 0 ? 1.4 : 0.7} fill="#f6f4ef" opacity={0.38} />;
       })}
-      <path d="M600 40 V1760" stroke="#b08d4a" strokeWidth="0.7" opacity="0.45" />
-      <path d="M80 900 H1120" stroke="#efe6d4" strokeWidth="0.4" opacity="0.18" />
-      <ellipse cx="600" cy="900" rx="420" ry="160" fill="none" stroke="#efe6d4" opacity="0.12" />
-      <ellipse cx="600" cy="900" rx="160" ry="420" fill="none" stroke="#efe6d4" opacity="0.1" />
-      <path d="M40 1500 C 260 1380, 480 1620, 720 1480 S 1080 1400, 1180 1520" fill="none" stroke="#14343c" strokeWidth="18" opacity="0.35" />
+      <path d="M600 40 V1760" stroke="#c6a45a" strokeWidth="0.7" opacity="0.5" />
+      <path d="M80 900 H1120" stroke="#7ec8de" strokeWidth="0.4" opacity="0.22" />
+      <ellipse cx="600" cy="900" rx="420" ry="160" fill="none" stroke="#f6f4ef" opacity="0.14" />
+      <ellipse cx="600" cy="900" rx="160" ry="420" fill="none" stroke="#7ec8de" opacity="0.14" />
+      <path d="M40 1500 C 260 1380, 480 1620, 720 1480 S 1080 1400, 1180 1520" fill="none" stroke="#2d96b8" strokeWidth="18" opacity="0.4" />
     </svg>
   );
 }

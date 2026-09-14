@@ -7,7 +7,7 @@ import { Wordmark } from "@/components/brand/logo";
 const links = [
   { href: "/admin", label: "Overview" },
   { href: "/admin/admissions", label: "Admissions" },
-  { href: "/admin/matching", label: "Matching" },
+  { href: "/admin/matching", label: "The Index" },
   { href: "/admin/crossings", label: "Crossings" },
   { href: "/admin/open-house", label: "Open House" },
   { href: "/admin/referrals", label: "Referrals" },
@@ -26,7 +26,7 @@ export function AdminShell({
 
   return (
     <div className="min-h-dvh bg-void text-ivory">
-      <header className="safe-pad safe-top sticky top-0 z-30 flex items-center justify-between border-b border-[var(--line)] bg-[rgba(7,8,9,0.82)] py-3 backdrop-blur-md">
+      <header className="safe-pad safe-top sticky top-0 z-30 flex items-center justify-between border-b border-[var(--line)] bg-[rgba(8,9,11,0.78)] py-3 backdrop-blur-md">
         <Wordmark compact />
         <Link href="/member/home" className="text-[11px] tracking-[0.18em] uppercase text-ivory-muted">
           House

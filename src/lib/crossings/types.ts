@@ -34,6 +34,14 @@ export const JOURNEY_VISIBILITY = [
 
 export type JourneyVisibility = (typeof JOURNEY_VISIBILITY)[number];
 
+/** Member-facing labels. Never say “matches.” */
+export const JOURNEY_VISIBILITY_LABELS: Record<JourneyVisibility, string> = {
+  all_members: "All members",
+  meridian_matches: "Meridian Index",
+  selected_channels: "Selected channels",
+  administrators: "Administrators only",
+};
+
 export const JOURNEY_STATUS = ["active", "paused", "expired", "deleted"] as const;
 export type JourneyStatus = (typeof JOURNEY_STATUS)[number];
 

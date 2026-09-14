@@ -13,7 +13,7 @@ export async function GET(request: Request) {
   const svg = await QRCode.toString(payload, {
     type: "svg",
     margin: 1,
-    color: { dark: "#efe6d4", light: "#070809" },
+    color: { dark: "#08090b", light: "#f6f4ef" },
   });
   return new Response(svg, {
     headers: {

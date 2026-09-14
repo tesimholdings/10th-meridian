@@ -64,7 +64,7 @@ export function MatchBoard({
             />
           </div>
         ) : (
-        <ol className="mt-6 grid gap-4">
+        <ol className="reveal-list mt-6 grid gap-4">
           {index.meridian10.map((row, i) => {
             const intro = intros.find((x) => x.targetId === row.target.id);
             return (
@@ -130,7 +130,7 @@ export function MatchBoard({
           {rest.length === 0 ? (
             <p className="mt-6 text-sm text-ivory-dim">The wider field is quiet in this preview.</p>
           ) : (
-          <ol className="mt-6 grid gap-0">
+          <ol className="reveal-list mt-6 grid gap-0">
             {rest.map((row, i) => (
               <li key={row.target.id} className="border-b border-[var(--line)] py-4">
                 <div className="flex items-center justify-between gap-3">
