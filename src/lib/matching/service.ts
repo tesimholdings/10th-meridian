@@ -52,7 +52,7 @@ export async function computeMatchIndex(input: MatchServiceInput): Promise<Match
     (m) => m.id !== input.viewer.id && isEligible(m) && !blocked(input.viewer.id, m.id, blocks),
   );
 
-  let embeddings = input.embeddings ?? {};
+  const embeddings = { ...(input.embeddings ?? {}) };
   const semantic = Boolean(input.useSemantic);
   if (semantic) {
     const provider = getEmbeddingProvider();

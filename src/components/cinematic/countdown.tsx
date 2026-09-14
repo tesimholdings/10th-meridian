@@ -39,7 +39,7 @@ export function Countdown({
           [seconds, "Sec"],
         ].map(([value, unit]) => (
           <div key={String(unit)} className="border border-[var(--line)] px-2 py-3 text-center">
-            <div className="font-serif text-3xl md:text-4xl tabular-nums">{value}</div>
+            <div className="font-serif text-2xl md:text-4xl tabular-nums">{value}</div>
             <div className="label !text-[0.55rem] mt-1 !text-ivory-muted">{unit}</div>
           </div>
         ))}

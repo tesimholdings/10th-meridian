@@ -21,8 +21,9 @@ describe("Meridian Index structured scoring", () => {
     const raw = scorePair(a, b);
     const score = weigh(raw, DEFAULT_WEIGHTS);
     assert.ok(score >= 0 && score <= 1);
-    const noComp = weigh(raw, { ...DEFAULT_WEIGHTS, complementary: 0 });
-    assert.ok(weigh(raw, { ...DEFAULT_WEIGHTS, complementary: 0.9 }) >= noComp - 1e-9);
+    const highComp = weigh({ ...raw, complementary: 1 }, DEFAULT_WEIGHTS);
+    const lowComp = weigh({ ...raw, complementary: 0 }, DEFAULT_WEIGHTS);
+    assert.ok(highComp > lowComp);
   });
 
   it("returns at most ten Meridian 10 and never invents profiles", async () => {

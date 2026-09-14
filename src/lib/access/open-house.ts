@@ -113,7 +113,6 @@ function zonedDate(parts: {
 }
 
 export function nextOpenHouseStart(from: Date, config: OpenHouseConfig): Date {
-  const now = zonedParts(from, config.timeZone);
   for (let offset = 0; offset <= 40; offset++) {
     const cursor = new Date(from.getTime() + offset * 24 * 60 * 60 * 1000);
     const p = zonedParts(cursor, config.timeZone);

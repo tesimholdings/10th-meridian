@@ -57,7 +57,11 @@ export function proxy(request: NextRequest) {
       role !== "moderator"
     ) {
       const url = request.nextUrl.clone();
-      url.pathname = decision.allowed ? "/demo/home" : "/sign-in";
+      url.pathname = decision.isMemberAccess
+        ? "/member/home"
+        : decision.allowed
+          ? "/demo/home"
+          : "/sign-in";
       return NextResponse.redirect(url);
     }
     const res = NextResponse.next({ request: { headers: requestHeaders } });

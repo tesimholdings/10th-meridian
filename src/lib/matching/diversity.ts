@@ -48,7 +48,7 @@ export function rerankForDiversity(matches: ScoredMatch[], take: number): Scored
     usedCities.set(chosen.target.city, (usedCities.get(chosen.target.city) ?? 0) + 1);
   }
 
-  return selected.map((m, i) => ({ ...m, explanations: m.explanations }));
+  return selected;
 }
 
 export function industryFingerprint(profile: ProfileRecord): string {

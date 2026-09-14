@@ -15,21 +15,21 @@ export function LockScreen({
 }) {
   return (
     <HeroStage>
-      <div className="safe-pad mx-auto flex min-h-dvh max-w-6xl flex-col justify-between py-10 md:py-16">
+      <div className="safe-pad mx-auto flex min-h-dvh max-w-6xl flex-col justify-between py-7 md:py-16">
         <header className="flex items-start justify-between gap-6">
-          <Wordmark />
+          <Wordmark compact />
           <p className="hidden max-w-[12rem] text-right text-[11px] leading-relaxed tracking-[0.16em] uppercase text-ivory-muted md:block">
             Invitation only
           </p>
         </header>
 
-        <main className="mt-16 grid gap-12 md:mt-24 md:grid-cols-[1.2fr_0.8fr] md:items-end">
+        <main className="mt-8 grid gap-8 md:mt-24 md:grid-cols-[1.2fr_0.8fr] md:items-end">
           <div>
             <p className="label">A private threshold</p>
-            <h1 className="mt-4 max-w-xl font-serif text-5xl leading-[0.95] md:text-7xl">
+            <h1 className="mt-3 max-w-xl font-serif text-[2.65rem] leading-[0.95] md:text-7xl">
               {brand.lockLine}
             </h1>
-            <p className="mt-6 max-w-md text-lg leading-relaxed text-ivory-muted">
+            <p className="mt-4 max-w-md text-base leading-relaxed text-ivory-muted md:mt-6 md:text-lg">
               {brand.idea} The house is not a directory. It is a room that opens once a month.
             </p>
             {referralEarly ? (
@@ -38,7 +38,7 @@ export function LockScreen({
                 doors open at 10:00 a.m.
               </p>
             ) : null}
-            <div className="mt-10">
+            <div className="mt-6 md:mt-10">
               <Countdown
                 targetIso={decision.nextOpenAt}
                 serverNowIso={decision.serverNowIso}
@@ -51,7 +51,7 @@ export function LockScreen({
             </div>
           </div>
 
-          <div className="border border-[var(--line)] bg-black/25 p-6 backdrop-blur-sm">
+          <div className="border border-[var(--line)] bg-black/25 p-5 backdrop-blur-sm md:p-6">
             <p className="label">Enter</p>
             <div className="mt-5 grid gap-3">
               <Button href="/sign-in" variant="gold">
