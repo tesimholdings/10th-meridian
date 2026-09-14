@@ -31,7 +31,19 @@ Verified in Wave 1 and extended in Wave 2:
 
 ## Browser
 
-Wave 2 surfaces are built mobile-first (390px, safe-area, reduced-motion on cinematic motion). Reviewer should click through the README list on a phone viewport.
+Verified at 390×844 on the local preview server (`NEXT_PUBLIC_PREVIEW_TOOLS=true`):
+
+- Lock screen remains the only public face; `/open-house` redirects guests when the window is closed
+- Forced Open House: philosophy, who belongs, Index, scarcity, Founding/Standard placeholders only, SYNTHETIC DEMO initials, planned/concept experiences, sticky Apply / DEMO house CTAs
+- Home / Matches: “Why you should meet”, Human-curated vs Algorithmic, Relevant / introduction status updates
+- Members: search + refine filters, profile Message / Introduce
+- Channels: drawer, thread, reaction, compose updates DEMO state
+- Events: register copy stays “has not occurred”
+- Approved-unpaid billing: invitation CTA + placeholders; Checkout 501 branded stub, no invented amount
+- Admin: cap remaining + approve, weights save, required curation reason, schedule save, issue/revoke codes
+- `/referral`: Open camera + paste; unknown/revoked share “That code cannot be used.”
+- Onboarding 1/5 fits 390px; bottom nav + safe-area usable
+- Reduced-motion: cinematic `.slow-drift` disabled via `prefers-reduced-motion`
 
 ## Runtime limitations
 

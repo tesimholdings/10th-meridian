@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { resolveAccessContext } from "@/lib/access/context";
 import { getStripe } from "@/lib/stripe/client";
+import { stubHtmlPage } from "@/lib/http/stub-page";
 
 export async function POST() {
   const access = await resolveAccessContext();
@@ -9,12 +10,16 @@ export async function POST() {
   }
   const stripe = getStripe();
   if (!stripe) {
-    return new Response("Stripe Customer Portal is stubbed until keys are present.", {
+    return stubHtmlPage({
+      title: "Customer portal is stubbed.",
+      body: "Stripe Customer Portal waits on live keys. No amount is invented.",
       status: 501,
     });
   }
   // Live mode looks up stripe_customer_id from memberships.
-  return new Response("No Stripe customer is stored for this preview session.", {
+  return stubHtmlPage({
+    title: "No Stripe customer in this preview.",
+    body: "This DEMO session has no stored stripe_customer_id.",
     status: 501,
   });
 }

@@ -14,7 +14,7 @@ export function PreviewTools({
     <details
       className={
         placement === "app"
-          ? "fixed left-3 bottom-[5.75rem] z-50 max-w-[16rem] border border-[var(--line)] bg-void/90 p-3 text-[11px] text-ivory-muted backdrop-blur"
+          ? "fixed right-3 top-[3.4rem] z-40 max-w-[16rem] border border-[var(--line)] bg-void/90 p-3 text-[11px] text-ivory-muted backdrop-blur"
           : "fixed right-3 top-3 z-50 max-w-[16rem] border border-[var(--line)] bg-void/90 p-3 text-[11px] text-ivory-muted backdrop-blur"
       }
     >

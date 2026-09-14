@@ -3,6 +3,7 @@ import { resolveAccessContext } from "@/lib/access/context";
 import { getStripe } from "@/lib/stripe/client";
 import { membershipProducts, type MembershipProductId } from "@/lib/config/pricing";
 import { env } from "@/lib/env";
+import { stubHtmlPage } from "@/lib/http/stub-page";
 
 export async function POST(request: Request) {
   const access = await resolveAccessContext();
@@ -19,10 +20,11 @@ export async function POST(request: Request) {
 
   const stripe = getStripe();
   if (!stripe || !item.stripePriceId) {
-    return new Response(
-      "Stripe Checkout is stubbed. Add STRIPE_SECRET_KEY and an approved price ID. No amount is invented.",
-      { status: 501 },
-    );
+    return stubHtmlPage({
+      title: "Checkout is waiting on an approved price.",
+      body: "Stripe Checkout is stubbed. Add STRIPE_SECRET_KEY and an approved price ID. No amount is invented.",
+      status: 501,
+    });
   }
 
   const session = await stripe.checkout.sessions.create({
