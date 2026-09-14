@@ -9,7 +9,7 @@ Runtime: Node 22, Next.js 16.3.5, preview mode (no live secrets)
 
 | Check | Result |
 | --- | --- |
-| `npm test` | 59/59 pass — Open House visitor-local TZ; profile privacy; Circle add/remove + Index exclusion; notification prefs; no “Matches” in UI strings; soliciting copy; plus prior matching / preview store / Crossings |
+| `npm test` | 62/62 pass — prior coverage plus original water/yacht/concert stills and `prefers-reduced-motion` for new motion classes |
 | `npm run lint` | Pass (0 errors) |
 | `npm run build` | Pass — Next.js 16.3.5 Turbopack, TypeScript clean |
 
