@@ -5,8 +5,8 @@ export function PreviewTools({ access }: { access: AccessContext }) {
   if (!env.previewTools) return null;
 
   return (
-    <details className="fixed right-3 top-3 z-50 max-w-[16rem] border border-[var(--line)] bg-void/90 p-3 text-[11px] text-ivory-muted backdrop-blur">
-      <summary className="cursor-pointer tracking-[0.18em] uppercase text-gold">
+    <details className="fixed right-3 top-3 z-50 max-w-[16rem] border border-[var(--line)] bg-void/88 p-3 text-[11px] text-ivory-muted backdrop-blur-md">
+      <summary className="cursor-pointer tracking-[0.18em] uppercase text-ivory-dim">
         Reviewer tools
       </summary>
       <p className="mt-2 leading-relaxed">

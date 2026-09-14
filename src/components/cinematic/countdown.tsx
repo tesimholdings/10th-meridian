@@ -2,6 +2,10 @@
 
 import { useEffect, useState } from "react";
 
+function pad(n: number) {
+  return String(n).padStart(2, "0");
+}
+
 export function Countdown({
   targetIso,
   label = "Until the doors open",
@@ -31,20 +35,22 @@ export function Countdown({
   return (
     <div>
       <p className="label mb-4">{label}</p>
-      <div className="grid grid-cols-4 gap-2 max-w-md">
+      <div className="countdown-rail max-w-md">
         {[
           [days, "Days"],
           [hours, "Hours"],
           [minutes, "Min"],
           [seconds, "Sec"],
         ].map(([value, unit]) => (
-          <div key={String(unit)} className="border border-[var(--line)] px-2 py-3 text-center">
-            <div className="font-serif text-2xl md:text-4xl tabular-nums">{value}</div>
-            <div className="label !text-[0.55rem] mt-1 !text-ivory-muted">{unit}</div>
+          <div key={String(unit)} className="countdown-cell">
+            <div className="font-serif text-[1.85rem] leading-none tracking-tight tabular-nums md:text-4xl">
+              {typeof value === "number" ? pad(value) : value}
+            </div>
+            <div className="label mt-2 !text-[0.5rem] !text-ivory-dim">{unit}</div>
           </div>
         ))}
       </div>
-      <p className="mt-3 text-[11px] tracking-wide text-ivory-muted/70">
+      <p className="mt-3 text-[10px] tracking-[0.12em] text-ivory-dim">
         Display only. Access is decided on the server, never by this clock.
       </p>
     </div>

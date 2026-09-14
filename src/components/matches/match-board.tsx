@@ -6,6 +6,9 @@ import { useState } from "react";
 import type { MatchIndex } from "@/lib/matching/service";
 import { brand } from "@/lib/config/site";
 import type { IntroRequest } from "@/lib/data/types";
+import { WhyMeet } from "@/components/ui/why-meet";
+import { DemoMark } from "@/components/brand/demo-mark";
+import { EmptyState } from "@/components/crossings/states";
 
 export function MatchBoard({
   index,
@@ -53,11 +56,19 @@ export function MatchBoard({
       <section>
         <p className="label">The Meridian 10</p>
         <h2 className="mt-2 font-serif text-3xl md:text-4xl">{brand.meridian10}</h2>
-        <ol className="mt-6 grid gap-4">
+        {index.meridian10.length === 0 ? (
+          <div className="mt-6">
+            <EmptyState
+              title="The Index is still."
+              body="No eligible connections in this preview ranking. Profiles are never invented."
+            />
+          </div>
+        ) : (
+        <ol className="reveal-list mt-6 grid gap-4">
           {index.meridian10.map((row, i) => {
             const intro = intros.find((x) => x.targetId === row.target.id);
             return (
-              <li key={row.target.id} className="border border-[var(--line)] p-4">
+              <li key={row.target.id} className="panel p-4 md:p-5">
                 <div className="grid grid-cols-[auto_1fr] gap-4">
                   <Link
                     href={`/member/members/${row.target.id}`}
@@ -66,7 +77,7 @@ export function MatchBoard({
                   >
                     {row.target.initials}
                   </Link>
-                  <div>
+                  <div className="min-w-0">
                     <div className="flex flex-wrap items-baseline justify-between gap-2">
                       <Link href={`/member/members/${row.target.id}`} className="font-serif text-2xl">
                         {row.target.displayName}
@@ -75,20 +86,17 @@ export function MatchBoard({
                         {String(i + 1).padStart(2, "0")} · {Math.round(row.weighted * 100)}
                       </p>
                     </div>
-                    <p className="text-sm text-ivory-muted">{row.target.headline}</p>
+                    <p className="text-sm leading-relaxed text-ivory-muted">{row.target.headline}</p>
                     <p className="mt-2 text-[11px] tracking-[0.14em] uppercase text-ivory-dim">
                       {row.source === "human_curated" ? "Human-curated" : "Algorithmic signal"}
-                      {row.target.isDemo ? " · SYNTHETIC DEMO" : ""}
                       {intro ? ` · Intro ${intro.status}` : ""}
                     </p>
-                    <p className="label mt-4">Why you should meet</p>
-                    <ul className="mt-2 grid gap-1 text-sm text-ivory-muted">
-                      {row.explanations.map((e) => (
-                        <li key={e.pillar}>
-                          <span className="text-gold">{e.pillar}.</span> {e.text}
-                        </li>
-                      ))}
-                    </ul>
+                    {row.target.isDemo ? (
+                      <p className="mt-2">
+                        <DemoMark />
+                      </p>
+                    ) : null}
+                    <WhyMeet items={row.explanations} />
                     <div className="mt-4 flex flex-wrap gap-2">
                       <Action disabled={pending !== null} onClick={() => void feedback(row.target.id, "relevant")}>
                         Relevant
@@ -109,6 +117,7 @@ export function MatchBoard({
             );
           })}
         </ol>
+        )}
       </section>
 
       {compact ? null : (
@@ -118,19 +127,22 @@ export function MatchBoard({
           <p className="mt-2 text-sm text-ivory-dim">
             {index.meridian100.length} eligible connections. Never invented.
           </p>
-          <ol className="mt-6 grid gap-3">
+          {rest.length === 0 ? (
+            <p className="mt-6 text-sm text-ivory-dim">The wider field is quiet in this preview.</p>
+          ) : (
+          <ol className="reveal-list mt-6 grid gap-0">
             {rest.map((row, i) => (
-              <li key={row.target.id} className="border-b border-[var(--line)] py-3">
+              <li key={row.target.id} className="border-b border-[var(--line)] py-4">
                 <div className="flex items-center justify-between gap-3">
-                  <Link href={`/member/members/${row.target.id}`}>
+                  <Link href={`/member/members/${row.target.id}`} className="min-w-0">
                     <p className="font-serif text-xl">{row.target.displayName}</p>
                     <p className="text-sm text-ivory-muted">{row.target.headline}</p>
                   </Link>
-                  <p className="text-[11px] tracking-[0.16em] uppercase text-gold">
+                  <p className="shrink-0 text-[11px] tracking-[0.16em] uppercase text-gold">
                     {String(i + 11).padStart(2, "0")}
                   </p>
                 </div>
-                <div className="mt-2 flex flex-wrap gap-2">
+                <div className="mt-3 flex flex-wrap gap-2">
                   <Action disabled={pending !== null} onClick={() => void feedback(row.target.id, "relevant")}>
                     Relevant
                   </Action>
@@ -144,6 +156,7 @@ export function MatchBoard({
               </li>
             ))}
           </ol>
+          )}
         </section>
       )}
     </div>
@@ -164,7 +177,7 @@ function Action({
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className="min-h-11 border border-[var(--line)] px-3 text-[10px] tracking-[0.16em] uppercase text-ivory-muted"
+      className="action-quiet"
     >
       {children}
     </button>

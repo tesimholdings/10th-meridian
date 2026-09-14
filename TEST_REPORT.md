@@ -1,43 +1,38 @@
-# TEST_REPORT — 10th Meridian Crossings
+# TEST_REPORT — 10th Meridian UI polish (Wave 3)
 
 Date: 2026-09-14  
-Branch: `cursor/crossings-travel-1da1`  
+Branch: `cursor/ui-polish-wave3-907d`  
+Base: `cursor/crossings-travel-1da1`  
 Runtime: Node 22, Next.js 16.3.5, preview mode (no live secrets)
 
 ## Automated
 
 | Check | Result |
 | --- | --- |
-| `npm test` | Pass — Meridian Index, Open House clock, preview store, Crossings dates/matching/privacy/requests/tables |
+| `npm test` | Pass — 50 tests (Lifetime $10,000 + visitor IANA Open House) |
 | `npm run lint` | Pass |
-| `npm run build` | Pass — no live keys required |
+| `npm run build` | Pass — includes `/member/index` and `/referral/[code]/card` |
 
-New coverage includes: journey CRUD/pause/delete; date overlaps and timezone boundaries; matching exclusions (blocked, hidden, paused, suspended, expired); meridian/host/fellow-traveler ranking; Crossing accept/decline/reschedule; conversation only after accept; group-table capacity and invitation-only; venue hidden until confirmed; expired journey visibility; Open House isolation of non-demo City Notes; `.ics` only after acceptance.
+Product logic unchanged except: Stripe checkout mode (`payment` for Lifetime); public product list (Lifetime + Organization); Open House window evaluated in the visitor IANA timezone (server clock + validated zone name). Coverage remains: journey CRUD; ranking exclusions; Crossing accept/decline; Open House isolation; `.ics` after acceptance; visitor TZ vs Chicago.
 
-## HTTP / product behavior
+## Product decisions recorded
 
-- Home card + `/member/crossings` (bottom nav unchanged: Home · Matches · Channels · Members · Profile)
-- Set Your Coordinates, pause/edit/delete
-- Destination match carousel with “Why you should meet”
-- A Crossing sheet: propose / accept / decline / reschedule
-- Open a Table: neighborhood public, venue private, channel after confirmation
-- City Hosts opt-in (never concierge copy)
-- City Notes: attribution, save, report, steward hide
-- Notifications + digest controls (no repeat keys)
-- Admin travel weights 40 / 25 / 15 / 10 / 10
-- Open House guests: SYNTHETIC DEMO only; mutations 403
+- Lifetime **$10,000** one-time shown on Open House, Billing, admin billing
+- Admissions cap still 10 / month
+- Referral card print path `/referral/{code}/card`
+- Planned domain `tenmeridian.com` documented only
+- Chrome: gold / white / black. Atmosphere: original harbor daylight + yacht night lights (not stock)
+- Motion: animation-heavy, reduced-motion honored
+- Member nav: **Index** (never “Matches”); Meridian 10 / 100 / Index kept
+- Open House: 10:00–22:00 visitor local; referral 09:00 local; fallback America/Chicago
+- Anti-soliciting: ban with no refund, surfaced on Open House / onboarding / legal / compose
 
-## Privacy
+## Privacy (unchanged)
 
-City-level only. No flight numbers, hotel stays, room numbers, GPS, or live location. Historical Crossings remain private after a journey expires.
+City-level only. No flight numbers, hotel stays, room numbers, GPS, or live location.
 
 ## Runtime limitations
 
-- Preview store is in-process and resets on server restart
-- Stream compose is DEMO unless keys exist; not E2EE
-- Calendar v1 is `.ics` download — no external calendar OAuth
-- No production deploy
-
-## Still Stefan’s
-
-Approved prices, hero film, live keys, counsel-approved legal copy.
+- Preview store resets on server restart
+- Stripe Checkout 501 without keys / Lifetime Price ID
+- No production deploy, no domain purchase

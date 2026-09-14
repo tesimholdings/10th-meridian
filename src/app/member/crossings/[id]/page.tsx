@@ -52,9 +52,9 @@ export default async function JourneyPage({ params }: { params: Promise<{ id: st
       ) : null}
       {owner ? (
       <section className="mt-10">
-        <p className="label">Destination matches</p>
+        <p className="label">Who you should meet here</p>
         <p className="mt-2 max-w-xl text-sm text-ivory-muted">
-          Locals, fellow travelers, City Hosts, and Meridian matches in this city. Never ranked by
+          Locals, fellow travelers, City Hosts, and Meridian Index people in this city. Never ranked by
           wealth, popularity, or how often someone writes.
         </p>
         <div className="mt-4">

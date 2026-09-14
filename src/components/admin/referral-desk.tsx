@@ -71,6 +71,12 @@ export function ReferralDesk({
             <p className="mt-2 text-[11px] text-ivory-dim">
               QR {siteUrl}/api/referrals/qr?code={r.code}
             </p>
+            <a
+              href={`/referral/${encodeURIComponent(r.code)}/card`}
+              className="mt-2 inline-flex min-h-11 items-center text-[11px] tracking-[0.16em] uppercase text-gold"
+            >
+              Print card
+            </a>
             {!r.revokedAt ? (
               <button
                 type="button"

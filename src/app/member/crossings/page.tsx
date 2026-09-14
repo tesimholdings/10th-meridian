@@ -51,10 +51,10 @@ export default async function CrossingsPage() {
 
   return (
     <MemberShell user={access.user} demo title="Crossings">
-      <div className="relative overflow-hidden border border-[var(--line)] p-6 water">
+      <div className="relative overflow-hidden border border-[rgba(198,164,90,0.4)] water p-6 md:p-8">
         <p className="label">{CROSSINGS_COPY.name}</p>
-        <h1 className="mt-3 max-w-xl font-serif text-4xl md:text-5xl">{CROSSINGS_COPY.line}</h1>
-        <p className="mt-3 max-w-lg text-ivory-muted">{CROSSINGS_COPY.support}</p>
+        <h1 className="mt-4 max-w-xl font-serif text-4xl leading-[0.95] md:text-5xl">{CROSSINGS_COPY.line}</h1>
+        <p className="mt-4 max-w-lg text-ivory-muted">{CROSSINGS_COPY.support}</p>
         {canMutate ? (
           <div className="mt-6">
             <Button href="/member/crossings/new">{CROSSINGS_COPY.createAction}</Button>
@@ -114,7 +114,7 @@ export default async function CrossingsPage() {
         <section className="mt-10">
           <p className="label">Open a Table</p>
           {tables.map((t) => (
-            <article key={`${t.city}-${t.country}`} className="mt-3 border border-[var(--line)] p-4">
+            <article key={`${t.city}-${t.country}`} className="panel mt-3 p-5">
               <p className="font-serif text-2xl">
                 {t.count} paths cross in {t.city}.
               </p>
@@ -140,17 +140,17 @@ export default async function CrossingsPage() {
       </section>
 
       <nav className="mt-12 grid gap-3 md:grid-cols-3">
-        <Link href="/member/crossings/notes" className="border border-[var(--line)] p-4">
+        <Link href="/member/crossings/notes" className="panel-quiet p-5">
           <p className="label">City Notes</p>
-          <p className="mt-2 font-serif text-2xl">A private guide</p>
+          <p className="mt-3 font-serif text-2xl">A private guide</p>
         </Link>
-        <Link href="/member/crossings/hosts" className="border border-[var(--line)] p-4">
+        <Link href="/member/crossings/hosts" className="panel-quiet p-5">
           <p className="label">City Hosts</p>
-          <p className="mt-2 font-serif text-2xl">A member welcome</p>
+          <p className="mt-3 font-serif text-2xl">A member welcome</p>
         </Link>
-        <Link href="/member/crossings/tables" className="border border-[var(--line)] p-4">
+        <Link href="/member/crossings/tables" className="panel-quiet p-5">
           <p className="label">Tables</p>
-          <p className="mt-2 font-serif text-2xl">Shared meals</p>
+          <p className="mt-3 font-serif text-2xl">Shared meals</p>
         </Link>
       </nav>
 
@@ -167,7 +167,7 @@ export default async function CrossingsPage() {
 
       <p className="mt-12 text-[11px] leading-relaxed text-ivory-dim">
         Navigation: Crossings lives on Home and at /member/crossings. The five-item member bar (Home ·
-        Matches · Channels · Members · Profile) is unchanged.
+        Index · Channels · Members · Profile) is unchanged.
       </p>
     </MemberShell>
   );

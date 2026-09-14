@@ -15,21 +15,21 @@ import type {
  */
 
 export const DEMO_DISCLAIMER =
-  "DEMO ENVIRONMENT — synthetic profiles, channels, events, and matches. Not real members. Private messages, payment records, and admin data are never shown here.";
+  "DEMO ENVIRONMENT — synthetic profiles, channels, events, and Index rankings. Not real members. Private messages, payment records, and admin data are never shown here.";
 
 const accent = [
-  "#1a3a44",
-  "#142834",
-  "#2a2218",
-  "#1c2e28",
-  "#241c28",
-  "#182430",
-  "#2c2418",
-  "#163038",
-  "#201818",
-  "#182820",
-  "#222018",
-  "#1a2430",
+  "#134e68",
+  "#1a6b86",
+  "#2a3220",
+  "#125a78",
+  "#1f4a58",
+  "#163848",
+  "#3a3220",
+  "#1a5870",
+  "#241c18",
+  "#184050",
+  "#2c2818",
+  "#1a3048",
 ];
 
 function p(

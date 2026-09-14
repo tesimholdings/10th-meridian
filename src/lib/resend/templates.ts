@@ -3,14 +3,14 @@ import { brand } from "@/lib/config/site";
 function wrap(title: string, body: string) {
   return `<!doctype html>
 <html>
-  <body style="margin:0;background:#070809;color:#efe6d4;font-family:Georgia,serif;">
-    <table width="100%" cellpadding="0" cellspacing="0" style="background:#070809;padding:48px 20px;">
+  <body style="margin:0;background:#08090b;color:#f6f4ef;font-family:Georgia,serif;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#08090b;padding:48px 20px;">
       <tr><td align="center">
-        <table width="520" cellpadding="0" cellspacing="0" style="border:1px solid rgba(239,230,212,0.14);padding:36px 32px;">
-          <tr><td style="letter-spacing:0.28em;font-size:11px;text-transform:uppercase;color:#b08d4a;font-family:Helvetica,Arial,sans-serif;">${brand.name}</td></tr>
+        <table width="520" cellpadding="0" cellspacing="0" style="border:1px solid rgba(246,244,239,0.16);padding:36px 32px;">
+          <tr><td style="letter-spacing:0.28em;font-size:11px;text-transform:uppercase;color:#c6a45a;font-family:Helvetica,Arial,sans-serif;">${brand.name}</td></tr>
           <tr><td style="padding-top:18px;font-size:28px;line-height:1.2;">${title}</td></tr>
-          <tr><td style="padding-top:18px;font-size:16px;line-height:1.7;color:#c9bfa8;">${body}</td></tr>
-          <tr><td style="padding-top:28px;font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:#8a6d38;font-family:Helvetica,Arial,sans-serif;">${brand.idea}</td></tr>
+          <tr><td style="padding-top:18px;font-size:16px;line-height:1.7;color:#d8d4cb;">${body}</td></tr>
+          <tr><td style="padding-top:28px;font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:#a07f3c;font-family:Helvetica,Arial,sans-serif;">${brand.idea}</td></tr>
         </table>
       </td></tr>
     </table>
@@ -37,7 +37,7 @@ export const emailTemplates = {
     subject: `${brand.name}: you have been invited to continue`,
     html: wrap(
       "An invitation, not an ending.",
-      "A steward has approved your application. Membership begins after you complete checkout. Prices are confirmed at that step — never guessed.",
+      "A steward has approved your application. Membership begins after Stripe-hosted checkout for Lifetime — $10,000, one time.",
     ),
   }),
   declined: () => ({

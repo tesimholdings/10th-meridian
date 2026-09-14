@@ -29,7 +29,12 @@ export function OpenHouseForm({ config }: { config: OpenHouseConfig }) {
         void save();
       }}
     >
-      <Field label="Timezone" value={draft.timeZone} onChange={(v) => setDraft({ ...draft, timeZone: v })} />
+      <p className="text-sm text-ivory-dim">
+        Access uses the visitor&apos;s browser IANA timezone (10:00–22:00 local on the tenth).
+        This timezone is only the fallback when the browser zone is unknown. Default fallback:
+        America/Chicago. The server clock is never the client clock.
+      </p>
+      <Field label="Fallback timezone" value={draft.timeZone} onChange={(v) => setDraft({ ...draft, timeZone: v })} />
       <Field label="Day" value={String(draft.day)} onChange={(v) => setDraft({ ...draft, day: Number(v) })} />
       <Field label="Referral hour" value={String(draft.referralHour)} onChange={(v) => setDraft({ ...draft, referralHour: Number(v) })} />
       <Field label="General hour" value={String(draft.generalHour)} onChange={(v) => setDraft({ ...draft, generalHour: Number(v) })} />

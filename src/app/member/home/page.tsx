@@ -24,16 +24,16 @@ export default async function MemberHomePage() {
       <p className="mt-3 max-w-xl text-ivory-muted">{brand.matchingLine}</p>
 
       {paymentPending ? (
-        <Link href="/member/billing" className="mt-6 block border border-[var(--gold)] p-4">
+        <Link href="/member/billing" className="mt-6 block panel p-5" style={{ borderColor: "var(--gold-dim)" }}>
           <p className="label">Membership</p>
           <p className="mt-2 font-serif text-2xl">Approved — payment pending</p>
           <p className="mt-2 text-sm text-ivory-muted">
-            Complete Stripe-hosted checkout to enter fully. Prices remain approved placeholders.
+            Complete Stripe-hosted checkout to enter fully. Lifetime is $10,000, one time.
           </p>
         </Link>
       ) : null}
 
-      <section className="mt-10 grid gap-4 md:grid-cols-3">
+      <section className="mt-10 grid gap-3 md:grid-cols-3">
         <Stat label="Unread / mentions" value={`${unreadTotal()} · DEMO`} href="/member/channels" />
         <Stat label="Profile completion" value={`${viewer.completion}%`} href="/onboarding" />
         <Stat
@@ -45,11 +45,11 @@ export default async function MemberHomePage() {
       <p className="mt-3 text-sm text-ivory-dim">{completionMessage(viewer.completion)}</p>
 
       <section className="mt-10">
-        <Link href="/member/crossings" className="block border border-[var(--line)] p-5 water">
+        <Link href="/member/crossings" className="block overflow-hidden border border-[rgba(198,164,90,0.4)] water p-6">
           <p className="label">Crossings</p>
-          <p className="mt-2 font-serif text-3xl">{brand.crossingsLine}</p>
-          <p className="mt-2 max-w-lg text-sm text-ivory-muted">{brand.crossingsSupport}</p>
-          <p className="mt-4 text-[11px] tracking-[0.16em] uppercase text-gold">
+          <p className="mt-3 font-serif text-3xl leading-tight">{brand.crossingsLine}</p>
+          <p className="mt-3 max-w-lg text-sm leading-relaxed text-ivory-muted">{brand.crossingsSupport}</p>
+          <p className="mt-5 text-[11px] tracking-[0.16em] uppercase text-gold">
             Enter · city-level only · SYNTHETIC DEMO
           </p>
         </Link>
@@ -58,16 +58,16 @@ export default async function MemberHomePage() {
       <section className="mt-12">
         <p className="label">Announcements</p>
         {store.announcements.map((a) => (
-          <article key={a.id} className="mt-3 border border-[var(--line)] p-4">
+          <article key={a.id} className="panel mt-3 p-5">
             <h2 className="font-serif text-2xl">{a.title}</h2>
-            <p className="mt-2 text-sm text-ivory-muted">{a.body}</p>
+            <p className="mt-2 text-sm leading-relaxed text-ivory-muted">{a.body}</p>
           </article>
         ))}
       </section>
 
       <section className="mt-12">
         <MatchBoard index={index} intros={store.intros} compact />
-        <Link href="/member/matches" className="mt-4 inline-flex min-h-11 items-center text-[11px] tracking-[0.18em] uppercase text-gold">
+        <Link href="/member/index" className="mt-4 inline-flex min-h-11 items-center text-[11px] tracking-[0.18em] uppercase text-gold">
           Open the full Index
         </Link>
       </section>
@@ -90,7 +90,9 @@ export default async function MemberHomePage() {
       <section className="mt-12">
         <p className="label">Introduction requests</p>
         {store.intros.length === 0 ? (
-          <p className="mt-2 text-sm text-ivory-dim">None yet.</p>
+          <p className="mt-3 text-sm leading-relaxed text-ivory-dim">
+            No introductions yet. Relevance first — then a request, if the moment is right.
+          </p>
         ) : (
           store.intros.map((i) => (
             <p key={i.id} className="mt-2 text-sm text-ivory-muted">
@@ -105,7 +107,7 @@ export default async function MemberHomePage() {
 
 function Stat({ label, value, href }: { label: string; value: string; href: string }) {
   return (
-    <Link href={href} className="border border-[var(--line)] p-4">
+    <Link href={href} className="panel-quiet p-4">
       <p className="label">{label}</p>
       <p className="mt-2 font-serif text-2xl">{value}</p>
     </Link>

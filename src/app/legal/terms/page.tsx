@@ -9,6 +9,7 @@ export default function TermsPage() {
         Membership is selective and discretionary. A complete application, a
         referral, or early Open House entry does not guarantee acceptance.
         No more than ten new members are hand-selected each month.
+        Soliciting is forbidden. A ban for soliciting is permanent and without refund.
       </p>
       <p>
         Replace this placeholder with counsel-approved terms before any public

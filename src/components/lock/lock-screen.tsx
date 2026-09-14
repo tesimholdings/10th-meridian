@@ -15,7 +15,7 @@ export function LockScreen({
 }) {
   return (
     <HeroStage>
-      <div className="safe-pad mx-auto flex min-h-dvh max-w-6xl flex-col justify-between py-7 md:py-16">
+      <div className="safe-pad safe-top mx-auto flex min-h-dvh max-w-6xl flex-col justify-between pb-16 pt-4 md:py-16">
         <header className="flex items-start justify-between gap-6">
           <Wordmark compact />
           <p className="hidden max-w-[12rem] text-right text-[11px] leading-relaxed tracking-[0.16em] uppercase text-ivory-muted md:block">
@@ -23,22 +23,25 @@ export function LockScreen({
           </p>
         </header>
 
-        <main className="mt-8 grid gap-8 md:mt-24 md:grid-cols-[1.2fr_0.8fr] md:items-end">
-          <div>
+        <main className="mt-8 grid gap-8 md:mt-24 md:grid-cols-[1.25fr_0.75fr] md:items-end">
+          <div className="rise">
             <p className="label">A private threshold</p>
-            <h1 className="mt-3 max-w-xl font-serif text-[2.65rem] leading-[0.95] md:text-7xl">
+            <h1 className="mt-3 max-w-xl font-serif text-[2.85rem] leading-[0.92] md:text-7xl">
               {brand.lockLine}
             </h1>
-            <p className="mt-4 max-w-md text-base leading-relaxed text-ivory-muted md:mt-6 md:text-lg">
+            <p className="mt-4 max-w-md text-[0.95rem] leading-relaxed text-ivory-muted md:mt-6 md:text-lg">
               {brand.idea} The house is not a directory. It is a room that opens once a month.
+            </p>
+            <p className="mt-3 max-w-md text-sm leading-relaxed text-ivory-dim">
+              {brand.houseHours} Window shown for {decision.config.timeZone}.
             </p>
             {referralEarly ? (
               <p className="mt-4 max-w-md text-sm text-gold">
-                Referral holders may enter from 9:00 a.m. {decision.config.timeZone}. General
-                doors open at 10:00 a.m.
+                Referral early hour is open now in {decision.config.timeZone}. General doors
+                open at 10:00 local.
               </p>
             ) : null}
-            <div className="mt-6 md:mt-10">
+            <div className="mt-7 md:mt-10">
               <Countdown
                 targetIso={decision.nextOpenAt}
                 serverNowIso={decision.serverNowIso}
@@ -51,33 +54,40 @@ export function LockScreen({
             </div>
           </div>
 
-          <div className="border border-[var(--line)] bg-black/25 p-5 backdrop-blur-sm md:p-6">
-            <p className="label">Enter</p>
-            <div className="mt-5 grid gap-3">
-              <Button href="/sign-in" variant="gold">
+          <div className="rise-delay md:border md:border-[rgba(198,164,90,0.4)] md:bg-black/70 md:p-6 md:backdrop-blur-sm">
+            <p className="label mb-4 hidden md:block">Enter</p>
+            <div className="grid gap-2">
+              <Button href="/sign-in" variant="gold" className="w-full">
                 Member Sign In
               </Button>
-              <Button href="/referral" variant="ghost">
-                Enter Referral Code
-              </Button>
-              <Button href="/referral?scan=1" variant="ghost">
-                Scan Referral QR
-              </Button>
-              <Button href="/remind" variant="ivory">
-                Remind Me When the Doors Open
-              </Button>
+              <div className="grid grid-cols-2 gap-2">
+                <Button href="/referral" variant="ghost" className="px-3">
+                  <span className="md:hidden">Referral</span>
+                  <span className="hidden md:inline">Enter Referral</span>
+                </Button>
+                <Button href="/referral?scan=1" variant="ghost" className="px-3">
+                  <span className="md:hidden">Scan QR</span>
+                  <span className="hidden md:inline">Scan QR</span>
+                </Button>
+              </div>
+              <Link
+                href="/remind"
+                className="link-lift inline-flex min-h-11 items-center justify-center text-center text-[11px] tracking-[0.18em] uppercase text-ivory-muted"
+              >
+                Remind me when the doors open
+              </Link>
             </div>
-            <p className="mt-6 text-sm leading-relaxed text-ivory-muted">
+            <p className="mt-4 text-[10px] leading-relaxed tracking-[0.08em] text-ivory-dim">
               {brand.scarcity}
             </p>
-            <p className="mt-3 text-[11px] leading-relaxed text-ivory-dim">
+            <p className="mt-2 hidden text-[11px] leading-relaxed text-ivory-dim md:block">
               Outside this window the full house is not shown. Selection is human.
               A referral is not a promise.
             </p>
           </div>
         </main>
 
-        <footer className="mt-16 flex flex-wrap items-center justify-between gap-4 text-[11px] tracking-[0.16em] uppercase text-ivory-dim">
+        <footer className="mt-12 flex flex-wrap items-center justify-between gap-4 text-[11px] tracking-[0.16em] uppercase text-ivory-dim">
           <p>{brand.name}</p>
           <div className="flex gap-4">
             <Link href="/legal/privacy">Privacy</Link>

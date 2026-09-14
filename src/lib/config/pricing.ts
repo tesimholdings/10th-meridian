@@ -1,26 +1,22 @@
 import { env } from "@/lib/env";
 
 /**
- * Membership products. Amounts are NEVER invented.
- * Display copy stays as approved-price placeholders until finance signs off.
+ * Approved public membership. Stefan, 2026-09-14:
+ * Lifetime — $10,000 one-time. No monthly product in the public section yet.
+ * Organization / Strategic Partnership remains by application.
  */
+export const LIFETIME_AMOUNT_USD = 10_000;
+export const LIFETIME_PRICE_LABEL = "$10,000";
+
 export const membershipProducts = {
-  founding: {
-    id: "founding",
-    name: "Founding Membership",
+  lifetime: {
+    id: "lifetime",
+    name: "Lifetime Membership",
     summary:
-      "A limited founding cohort, with a preferential annual rate while continuously active.",
-    priceLabel: env.foundingPriceLabel,
-    stripePriceId: env.stripeFoundingPriceId || null,
-    checkoutEligible: true,
-  },
-  standard: {
-    id: "standard",
-    name: "Standard Membership",
-    summary:
-      "Full platform access: The Meridian 10 and 100, directory, channels and DMs, introductions, gatherings, and resources.",
-    priceLabel: env.standardPriceLabel,
-    stripePriceId: env.stripeStandardPriceId || null,
+      "One-time membership. Full house access: The Meridian 10 and 100, directory, channels and DMs, introductions, gatherings, and resources.",
+    priceLabel: env.lifetimePriceLabel,
+    cadence: "one-time",
+    stripePriceId: env.stripeLifetimePriceId || null,
     checkoutEligible: true,
   },
   organization: {
@@ -28,9 +24,16 @@ export const membershipProducts = {
     name: "Organization / Strategic Partnership",
     summary: "Considered by application. Not a public checkout product.",
     priceLabel: "By application",
+    cadence: "application",
     stripePriceId: null,
     checkoutEligible: false,
   },
 } as const;
 
 export type MembershipProductId = keyof typeof membershipProducts;
+
+export function resolveCheckoutProduct(raw: string): MembershipProductId | null {
+  if (raw === "lifetime" || raw === "founding" || raw === "standard") return "lifetime";
+  if (raw === "organization") return "organization";
+  return null;
+}

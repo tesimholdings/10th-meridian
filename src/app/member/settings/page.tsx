@@ -17,9 +17,9 @@ export default async function SettingsPage() {
   return (
     <MemberShell user={access.user} demo={!access.decision.isMemberAccess} title="Settings">
       <ul className="grid gap-4 text-ivory-muted">
-        <li>Privacy — members / matches only / hidden. Crossings visibility is set per journey.</li>
+        <li>Privacy — members / Index only / hidden. Crossings visibility is set per journey.</li>
         <li>Availability — open, selective, limited, paused.</li>
-        <li>Blocks and reports — server-enforced, including travel matching.</li>
+        <li>Blocks and reports — server-enforced, including the Index and Crossings.</li>
         <li>Crossings is not real-time location sharing. City-level presence only.</li>
       </ul>
       <section className="mt-10">

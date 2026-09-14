@@ -24,7 +24,7 @@ export const APPLICATION_STATUSES = [
 
 export type ApplicationStatus = (typeof APPLICATION_STATUSES)[number];
 
-export type MembershipProduct = "founding" | "standard" | "organization";
+export type MembershipProduct = "lifetime" | "organization";
 
 export type ConnectionPreference =
   | "peer"

@@ -60,9 +60,10 @@ export function TableForm({
         void save();
       }}
     >
-      <p className="text-sm text-ivory-muted">
+      <p className="max-w-xl text-sm leading-relaxed text-ivory-muted">
         Neighborhood, never a public address. Exact venue is revealed only to confirmed guests.
       </p>
+      <div className="panel grid gap-4 p-5">
       <label className="grid gap-2">
         <span className="label">City</span>
         <input value={city} onChange={(e) => setCity(e.target.value)} />
@@ -126,6 +127,7 @@ export function TableForm({
       <PrivacyNotice />
       <Button type="submit">Open a Table</Button>
       {status ? <p className="text-sm text-gold">{status}</p> : null}
+      </div>
     </form>
   );
 }

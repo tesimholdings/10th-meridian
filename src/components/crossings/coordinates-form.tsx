@@ -3,9 +3,11 @@
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Chip } from "@/components/ui/chip";
 import { PrivacyNotice } from "@/components/crossings/states";
 import {
   JOURNEY_VISIBILITY,
+  JOURNEY_VISIBILITY_LABELS,
   MEETING_FORMATS,
   TRAVEL_INTENTS,
   type JourneyRecord,
@@ -119,14 +121,27 @@ export function CoordinatesForm({
 
   return (
     <div>
-      <p className="label">
-        Set Your Coordinates · Step {step + 1} of {steps.length} · {steps[step].title}
-      </p>
-      <div className="mt-3 h-px bg-[var(--line)]">
-        <div className="h-px bg-[var(--gold)]" style={{ width: `${progress}%` }} />
+      <ol className="grid grid-cols-4 gap-2">
+        {steps.map((s, i) => (
+          <li key={s.id} className="min-w-0">
+            <p className={`text-[10px] tracking-[0.14em] uppercase ${i === step ? "text-gold" : "text-ivory-dim"}`}>
+              {String(i + 1).padStart(2, "0")}
+            </p>
+            <p className={`mt-1 truncate text-[11px] ${i === step ? "text-ivory" : "text-ivory-dim"}`}>
+              {s.title}
+            </p>
+          </li>
+        ))}
+      </ol>
+      <div className="mt-4 h-px bg-[var(--line)]">
+        <div className="h-px bg-[var(--gold)] transition-[width] duration-500 ease-out" style={{ width: `${progress}%` }} />
       </div>
+      <p className="label mt-8">
+        Set Your Coordinates · Step {step + 1} of {steps.length}
+      </p>
+      <h2 className="mt-2 font-serif text-3xl">{steps[step].title}</h2>
 
-      <div className="mt-8 grid gap-4">
+      <div className="panel mt-6 grid gap-4 p-5">
         {step === 0 ? (
           <>
             <label className="grid gap-2">
@@ -200,7 +215,7 @@ export function CoordinatesForm({
                 </Chip>
               ))}
             </div>
-            <p className="label mt-4">Intent</p>
+            <p className="label mt-2">Intent</p>
             <div className="flex flex-wrap gap-2">
               {TRAVEL_INTENTS.map((f) => (
                 <Chip key={f} on={draft.intents.includes(f)} onClick={() => toggle("intents", f)}>
@@ -230,7 +245,7 @@ export function CoordinatesForm({
               >
                 {JOURNEY_VISIBILITY.map((v) => (
                   <option key={v} value={v}>
-                    {v.replaceAll("_", " ")}
+                    {JOURNEY_VISIBILITY_LABELS[v]}
                   </option>
                 ))}
               </select>
@@ -262,7 +277,9 @@ export function CoordinatesForm({
         ) : null}
       </div>
 
-      <PrivacyNotice />
+      <div className="mt-5">
+        <PrivacyNotice />
+      </div>
 
       {status ? <p className="mt-4 text-sm text-gold">{status}</p> : null}
 
@@ -279,28 +296,6 @@ export function CoordinatesForm({
         )}
       </div>
     </div>
-  );
-}
-
-function Chip({
-  children,
-  on,
-  onClick,
-}: {
-  children: React.ReactNode;
-  on: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`min-h-11 px-3 text-[10px] tracking-[0.16em] uppercase ${
-        on ? "border border-[var(--gold)] text-gold" : "border border-[var(--line)] text-ivory-muted"
-      }`}
-    >
-      {children}
-    </button>
   );
 }
 

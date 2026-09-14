@@ -6,6 +6,8 @@ import type { CityHostRecord, MeetingFormat } from "@/lib/crossings/types";
 import { MEETING_FORMATS } from "@/lib/crossings/types";
 import type { ProfileRecord } from "@/lib/data/types";
 import { Button } from "@/components/ui/button";
+import { Chip } from "@/components/ui/chip";
+import { DemoMark } from "@/components/brand/demo-mark";
 import { CROSSINGS_COPY } from "@/lib/crossings/types";
 
 export function CityHostsBoard({
@@ -54,11 +56,13 @@ export function CityHostsBoard({
         {hosts.map((host) => {
           const person = profiles.find((p) => p.id === host.profileId);
           return (
-            <li key={host.id} className="border border-[var(--line)] p-4">
-              <p className="label">
-                {host.city}, {host.country}
-                {host.isDemo ? " · SYNTHETIC DEMO" : ""}
-              </p>
+            <li key={host.id} className="panel p-5">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <p className="label">
+                  {host.city}, {host.country}
+                </p>
+                {host.isDemo ? <DemoMark /> : null}
+              </div>
               <p className="mt-2 font-serif text-2xl">{person?.displayName ?? "Member"}</p>
               <p className="mt-1 text-sm text-ivory-muted">{person?.headline}</p>
               <p className="mt-3 text-sm text-ivory-dim">
@@ -75,7 +79,7 @@ export function CityHostsBoard({
       {canMutate ? (
         <section>
           <p className="label">Opt in by city</p>
-          <div className="mt-4 grid gap-3">
+          <div className="panel mt-4 grid gap-3 p-5">
             <input value={city} onChange={(e) => setCity(e.target.value)} placeholder="City" />
             <input value={country} onChange={(e) => setCountry(e.target.value)} placeholder="Country" />
             <input value={timezone} onChange={(e) => setTimezone(e.target.value)} placeholder="Timezone" />
@@ -86,20 +90,15 @@ export function CityHostsBoard({
             />
             <div className="flex flex-wrap gap-2">
               {MEETING_FORMATS.map((f) => (
-                <button
+                <Chip
                   key={f}
-                  type="button"
+                  on={types.includes(f)}
                   onClick={() =>
                     setTypes((cur) => (cur.includes(f) ? cur.filter((x) => x !== f) : [...cur, f]))
                   }
-                  className={`min-h-11 px-3 text-[10px] tracking-[0.16em] uppercase ${
-                    types.includes(f)
-                      ? "border border-[var(--gold)] text-gold"
-                      : "border border-[var(--line)] text-ivory-muted"
-                  }`}
                 >
                   {f}
-                </button>
+                </Chip>
               ))}
             </div>
             <label className="flex min-h-12 items-center gap-3 text-sm text-ivory-muted">

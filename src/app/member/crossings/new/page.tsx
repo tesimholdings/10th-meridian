@@ -11,8 +11,8 @@ export default async function NewJourneyPage() {
   const canMutate = canMutateCrossings(access.user?.role);
   return (
     <MemberShell user={access.user} demo title={CROSSINGS_COPY.createAction}>
-      <h1 className="font-serif text-4xl">{CROSSINGS_COPY.line}</h1>
-      <p className="mt-3 max-w-xl text-ivory-muted">
+      <h1 className="font-serif text-4xl leading-tight">{CROSSINGS_COPY.line}</h1>
+      <p className="mt-4 max-w-xl leading-relaxed text-ivory-muted">
         City, dates, and how you wish to meet. Never a flight, a hotel stay, or a live pin.
       </p>
       <div className="mt-8">

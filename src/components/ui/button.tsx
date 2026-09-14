@@ -4,12 +4,12 @@ type Variant = "gold" | "ghost" | "ivory";
 
 const styles: Record<Variant, string> = {
   gold:
-    "bg-[var(--gold)] text-[var(--void)] border border-[var(--gold)] hover:bg-[#c4a05c]",
+    "btn-gold-shine bg-[var(--gold)] text-[var(--void)] border border-[var(--gold)]",
   ghost:
-    "bg-transparent text-ivory border border-[var(--line-strong)] hover:border-[var(--gold)]",
+    "bg-transparent text-ivory border border-[rgba(246,244,239,0.4)] hover:border-[var(--gold)]",
   ivory:
-    "bg-ivory/95 text-[var(--void)] border border-ivory hover:bg-ivory",
-};
+    "bg-ivory text-[var(--void)] border border-ivory hover:bg-white",
+}
 
 export function Button({
   href,
@@ -28,7 +28,7 @@ export function Button({
   disabled?: boolean;
   onClick?: () => void;
 }) {
-  const cls = `inline-flex min-h-12 items-center justify-center px-5 text-[0.72rem] tracking-[0.22em] uppercase transition ${styles[variant]} ${className}`;
+  const cls = `btn-press inline-flex min-h-12 items-center justify-center px-5 text-[0.72rem] tracking-[0.22em] uppercase ${styles[variant]} ${className}`;
   if (href) {
     return (
       <Link href={href} className={cls}>
