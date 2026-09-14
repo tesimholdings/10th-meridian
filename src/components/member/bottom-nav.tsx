@@ -14,7 +14,12 @@ export function BottomNav() {
     >
       <ul className="mx-auto grid max-w-lg grid-cols-5">
         {memberNav.map((item) => {
-          const active = pathname?.startsWith(item.href);
+          const active =
+            item.id === "members"
+              ? Boolean(
+                  pathname?.startsWith("/member/members") || pathname?.startsWith("/member/ask"),
+                )
+              : Boolean(pathname?.startsWith(item.href));
           return (
             <li key={item.id}>
               <Link

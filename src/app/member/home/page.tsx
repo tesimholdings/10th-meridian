@@ -45,6 +45,17 @@ export default async function MemberHomePage() {
       <p className="mt-3 text-sm text-ivory-dim">{completionMessage(viewer.completion)}</p>
 
       <section className="mt-10">
+        <Link href="/member/ask" className="block overflow-hidden border border-[var(--line)] water p-6">
+          <p className="label">{brand.askSubtitle}</p>
+          <p className="mt-3 font-serif text-3xl leading-tight">{brand.askName}</p>
+          <p className="mt-3 max-w-lg text-sm leading-relaxed text-ivory-muted">{brand.askLine}</p>
+          <p className="mt-5 text-[11px] tracking-[0.16em] uppercase text-gold">
+            Enter · hybrid Index · SYNTHETIC DEMO
+          </p>
+        </Link>
+      </section>
+
+      <section className="mt-10">
         <Link href="/member/crossings" className="block overflow-hidden border border-[var(--line)] water p-6">
           <p className="label">Crossings</p>
           <p className="mt-3 font-serif text-3xl leading-tight">{brand.crossingsLine}</p>

@@ -13,6 +13,9 @@ export const brand = {
     "Intelligence finds the signal. People decide what happens next.",
   crossingsLine: "The people you should know, wherever you land.",
   crossingsSupport: "When your paths cross, you’ll know.",
+  askName: "Ask the Meridian",
+  askSubtitle: "Who can help",
+  askLine: "Say what you need. We’ll show who can help.",
   meridian10:
     "Ten people. Chosen for where you are—and where you are going.",
   meridian100:
@@ -34,6 +37,7 @@ export const memberNav = [
 ] as const;
 
 export const memberSecondary = [
+  { href: "/member/ask", label: "Ask the Meridian" },
   { href: "/member/crossings", label: "Crossings" },
   { href: "/onboarding", label: "Onboarding" },
   { href: "/member/events", label: "Events" },

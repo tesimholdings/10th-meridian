@@ -1,7 +1,9 @@
 import { AdminShell } from "@/components/admin/admin-shell";
 import { WeightsForm } from "@/components/admin/weights-form";
+import { AskWeightsForm } from "@/components/admin/ask-weights-form";
 import { CurationForm } from "@/components/admin/curation-form";
 import { brand } from "@/lib/config/site";
+import { ASK_COPY } from "@/lib/matching/ask/types";
 import { getPreviewStore } from "@/lib/preview/store";
 
 export const metadata = { title: "Matching weights", robots: { index: false } };
@@ -17,6 +19,16 @@ export default function MatchingAdminPage() {
       </p>
       <div className="mt-8">
         <WeightsForm weights={store.weights} />
+      </div>
+      <div className="mt-12">
+        <p className="label">{ASK_COPY.name}</p>
+        <p className="mt-2 text-sm text-ivory-muted">
+          Who can help. Defaults: complementarity 45 / Meridian 20 / industry 12 / geography 10 /
+          availability 8 / semantic 5. Structured + complementarity first — not a similarity prompt.
+        </p>
+        <div className="mt-4">
+          <AskWeightsForm weights={store.askWeights} />
+        </div>
       </div>
       <div className="mt-12">
         <p className="label">Human curation</p>

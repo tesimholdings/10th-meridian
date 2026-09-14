@@ -2,13 +2,17 @@ import assert from "node:assert/strict";
 import { describe, it, beforeEach } from "node:test";
 import { computeMatchIndex } from "@/lib/matching/service";
 import { validateReferralCode } from "@/lib/referrals/validate";
+import { computeAskIndex } from "@/lib/matching/ask/service";
 import {
   createReferral,
   getPreviewStore,
+  openDemoDm,
+  recordAskFeedback,
   recordFeedback,
   resetPreviewStore,
   revokeReferral,
   setApplicationStatus,
+  setAskWeights,
   setCuration,
   setWeights,
 } from "@/lib/preview/store";
@@ -90,6 +94,41 @@ describe("preview store", () => {
       override: true,
     });
     assert.equal(forced.ok, true);
+  });
+
+  it("opens a DEMO DM path without Stream keys", () => {
+    const store = getPreviewStore();
+    const target = store.profiles.find((p) => p.id === "demo-13")!;
+    const first = openDemoDm(target);
+    const again = openDemoDm(target);
+    assert.equal(first.kind, "dm");
+    assert.equal(first.id, again.id);
+    assert.ok(first.topic.includes("DEMO"));
+  });
+
+  it("ask feedback removes a person from Who can help", async () => {
+    const store = getPreviewStore();
+    const viewer = store.profiles[0];
+    setAskWeights({ ...store.askWeights, complementary: 0.6, meridian: 0.1 });
+    recordAskFeedback({
+      askId: "ask-store-test",
+      viewerId: viewer.id,
+      targetId: "demo-13",
+      signal: "not_relevant",
+    });
+    const index = await computeAskIndex({
+      viewer,
+      members: store.profiles,
+      query: "I need an intro to Series A fintech investors in NYC",
+      askId: "ask-store-test",
+      askWeights: getPreviewStore().askWeights,
+      feedback: getPreviewStore().askFeedback,
+      useSemantic: false,
+    });
+    assert.equal(
+      index.people.find((m) => m.target.id === "demo-13"),
+      undefined,
+    );
   });
 
   it("revoked referrals fail the same as unknown codes", () => {

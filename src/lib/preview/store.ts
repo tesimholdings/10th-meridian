@@ -34,8 +34,11 @@ import type {
 } from "@/lib/data/types";
 import type { OpenHouseConfig } from "@/lib/access/open-house";
 import { env } from "@/lib/env";
+import { demoAskFeedback, demoHelpAsks } from "@/lib/data/ask-demo";
 import type { MatchCuration, MatchFeedback, MatchingWeights } from "@/lib/matching/types";
 import { DEFAULT_WEIGHTS } from "@/lib/matching/types";
+import type { AskFeedback, AskMatchWeights, HelpAskRecord } from "@/lib/matching/ask/types";
+import { DEFAULT_ASK_WEIGHTS } from "@/lib/matching/ask/types";
 import { profileCompletion } from "@/lib/profile/completion";
 
 export interface PreviewState {
@@ -49,6 +52,10 @@ export interface PreviewState {
   referrals: ReferralRecord[];
   feedback: MatchFeedback[];
   curation: MatchCuration[];
+  helpAsks: HelpAskRecord[];
+  askFeedback: AskFeedback[];
+  askWeights: AskMatchWeights;
+  lastAskId: string | null;
   intros: IntroRequest[];
   events: EventRecord[];
   eventRegs: { eventId: string; accountId: string; status: "registered" | "waitlist" }[];
@@ -78,6 +85,10 @@ function seed(): PreviewState {
     applications: structuredClone(demoApplications),
     referrals: structuredClone(demoReferrals),
     feedback: [],
+    helpAsks: structuredClone(demoHelpAsks),
+    askFeedback: structuredClone(demoAskFeedback),
+    askWeights: { ...DEFAULT_ASK_WEIGHTS },
+    lastAskId: demoHelpAsks[0]?.id ?? null,
     curation: [
       {
         viewerId: viewerDemoProfile.id,
@@ -213,6 +224,63 @@ export function recordFeedback(entry: MatchFeedback, actor = "member") {
   );
   s.feedback.push(entry);
   audit(actor, `match.feedback.${entry.signal}`, "match_feedback", entry.targetId);
+}
+
+export function setAskWeights(next: AskMatchWeights, actor = "administrator") {
+  state().askWeights = { ...next };
+  audit(actor, "ask.weights_updated", "ask_match_weights");
+  return state().askWeights;
+}
+
+export function recordHelpAsk(row: HelpAskRecord, actor = "member") {
+  const s = state();
+  s.helpAsks = s.helpAsks.filter((a) => a.id !== row.id);
+  s.helpAsks.unshift(row);
+  s.lastAskId = row.id;
+  audit(actor, "ask.recorded", "help_asks", row.id);
+  return row;
+}
+
+export function recordAskFeedback(entry: AskFeedback, actor = "member") {
+  const s = state();
+  s.askFeedback = s.askFeedback.filter(
+    (f) =>
+      !(
+        f.askId === entry.askId &&
+        f.viewerId === entry.viewerId &&
+        f.targetId === entry.targetId &&
+        f.signal === entry.signal
+      ),
+  );
+  s.askFeedback.push(entry);
+  audit(actor, `ask.feedback.${entry.signal}`, "help_ask_feedback", entry.targetId);
+}
+
+export function openDemoDm(target: ProfileRecord): ChannelRecord {
+  const slug = `dm-${target.id}`;
+  const existing = state().channels.find((c) => c.slug === slug);
+  if (existing) return existing;
+  const channel: ChannelRecord = {
+    id: `ch-dm-${target.id}`,
+    slug,
+    name: target.displayName,
+    kind: "dm",
+    topic: `Private conversation with ${target.displayName}. DEMO. Not E2EE.`,
+    unread: 0,
+    isDemo: true,
+  };
+  state().channels.unshift(channel);
+  audit("member", "channel.dm_opened", "channel", channel.id);
+  return channel;
+}
+
+export function lastHelpAsk(viewerId?: string): HelpAskRecord | undefined {
+  const s = state();
+  if (s.lastAskId) {
+    const hit = s.helpAsks.find((a) => a.id === s.lastAskId && (!viewerId || a.viewerId === viewerId));
+    if (hit) return hit;
+  }
+  return s.helpAsks.find((a) => !viewerId || a.viewerId === viewerId);
 }
 
 export function setCuration(entry: MatchCuration, actor = "administrator") {

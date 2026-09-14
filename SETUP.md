@@ -17,7 +17,7 @@ Wave 2 added interactive member/admin DEMO state (in-process store). It resets w
 ## 2. Supabase
 
 - [ ] Create a Supabase project
-- [ ] Apply `supabase/migrations/0001_init.sql` through `0006_crossings.sql` (SQL editor or CLI)
+- [ ] Apply `supabase/migrations/0001_init.sql` through `0007_help_asks.sql` (SQL editor or CLI)
 - [ ] Confirm `pgcrypto` is available; decide whether to enable `vector` later
 - [ ] Copy `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
 - [ ] Configure Auth: email magic link / password, site URL, redirect to `/api/auth/callback`
@@ -83,12 +83,27 @@ Wave 2 added interactive member/admin DEMO state (in-process store). It resets w
 
 - [ ] Confirm initial weights (30 / 25 / 15 / 10 / 5 / 5 / 10)
 - [ ] Confirm Crossings travel weights (40 / 25 / 15 / 10 / 10) in `travel_match_weights`
+- [ ] Confirm Ask the Meridian weights (45 / 20 / 12 / 10 / 8 / 5) in `ask_match_weights`
 - [ ] Decide embedding provider (`stub` vs `openai`) and `OPENAI_API_KEY`
 - [ ] Optional: migrate `profiles.embedding` jsonb → pgvector
 - [ ] Schedule `recalculate_matches_for` after profile edits (cron / trigger)
+- [ ] Schedule `recalculate_help_ask` after a new ask
 - [ ] Steward training: promote / suppress with a written reason
 - [ ] Confirm protected traits remain excluded forever
-- [ ] Cache TTL for mobile rankings
+- [ ] Cache TTL for mobile rankings (Index + Ask; a new ask always recalculates)
+
+### Ask the Meridian defaults (`ask_match_weights`)
+
+| Pillar | Default | Role |
+| --- | --- | --- |
+| Complementary | 0.45 | Their offers/strengths versus the stated need |
+| Meridian | 0.20 | Existing Index pair compatibility |
+| Industry | 0.12 | Asked industry vs theirs |
+| Geography | 0.10 | Asked place vs city / travel |
+| Availability | 0.08 | Open / selective / limited |
+| Semantic | 0.05 | Lexical stub or optional embedding |
+
+Ask the Meridian is hybrid (structured parse + complementarity + Index + filters). It is not a “find similar people” prompt. Member UI calls the result **Who can help** / the **Index**, never “matches.” Relevant / not relevant feeds the behavioral layer (`help_ask_feedback` and Index `match_feedback`). House prompts do not solicit. Open House sees SYNTHETIC DEMO profiles only. RLS on `help_asks` / scores / feedback is members-only.
 
 ## 9. Assets (REPLACE)
 
