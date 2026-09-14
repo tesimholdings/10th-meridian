@@ -6,6 +6,8 @@ A private, invitation-only network built around relevance, trust, contribution, 
 
 This repository is a **reviewable foundation** — not a production launch. Do not deploy or publish live membership prices.
 
+Wave 3 adds **Crossings**: member travel connections (city-level only). Bottom nav is unchanged; enter from Home or `/member/crossings`.
+
 ## Stack
 
 - Next.js 16 (App Router) + TypeScript, mobile-first
@@ -47,6 +49,7 @@ npm test         # matching, Open House clock, preview store
 5. Meridian 10 / 100 hybrid matching (structured + complementarity + diversity + feedback + curation; embeddings pluggable)
 6. Actionable admin: admissions cap + override log, live weights, Open House schedule, referral issue/revoke, curated promote/suppress
 7. SQL migrations, `.env.example`, `SETUP.md`, `TEST_REPORT.md`
+8. **Crossings** — Set Your Coordinates, A Crossing, Open a Table, City Hosts, City Notes (SYNTHETIC DEMO; Open House isolation)
 
 ## Reviewer click-through (Wave 2)
 
@@ -58,6 +61,15 @@ npm test         # matching, Open House clock, preview store
 6. Events: open a listing, register (still labeled planned/concept)
 7. Reviewer tools → **Approved — payment pending** → Billing CTA (501 without price IDs)
 8. Reviewer tools → **Preview as admin** → approve against the cap, edit weights, issue/revoke a code, curate a match
+
+## Reviewer click-through (Crossings)
+
+See [docs/CROSSINGS.md](docs/CROSSINGS.md). Short path:
+
+1. Reviewer tools → **Preview as member** → Home → **Crossings**
+2. Upcoming Paris journey → match carousel → **A Crossing**
+3. Open a Table / City Notes / City Hosts (all SYNTHETIC DEMO)
+4. Guest + Force Open House: view-only demonstration data, no mutations
 
 ## Do not
 

@@ -1,45 +1,41 @@
-# TEST_REPORT — 10th Meridian Wave 2
+# TEST_REPORT — 10th Meridian Crossings
 
 Date: 2026-09-14  
-Branch: `cursor/10th-meridian-foundation-da65`  
-Runtime: Node 22.14, Next.js 16.3.5, preview mode (no live secrets)
+Branch: `cursor/crossings-travel-1da1`  
+Runtime: Node 22, Next.js 16.3.5, preview mode (no live secrets)
 
 ## Automated
 
 | Check | Result |
 | --- | --- |
-| `npm test` | Pass — 18/18 (Open House clock, Meridian Index, preview store) |
+| `npm test` | Pass — Meridian Index, Open House clock, preview store, Crossings dates/matching/privacy/requests/tables |
 | `npm run lint` | Pass |
 | `npm run build` | Pass — no live keys required |
 
-New coverage includes: decline/hide not reappearing, suppress curation, weight edits changing scores, monthly cap + override, revoked vs unknown referral copy, approved-unpaid always-on access.
+New coverage includes: journey CRUD/pause/delete; date overlaps and timezone boundaries; matching exclusions (blocked, hidden, paused, suspended, expired); meridian/host/fellow-traveler ranking; Crossing accept/decline/reschedule; conversation only after accept; group-table capacity and invitation-only; venue hidden until confirmed; expired journey visibility; Open House isolation of non-demo City Notes; `.ics` only after acceptance.
 
 ## HTTP / product behavior
 
-Verified in Wave 1 and extended in Wave 2:
+- Home card + `/member/crossings` (bottom nav unchanged: Home · Matches · Channels · Members · Profile)
+- Set Your Coordinates, pause/edit/delete
+- Destination match carousel with “Why you should meet”
+- A Crossing sheet: propose / accept / decline / reschedule
+- Open a Table: neighborhood public, venue private, channel after confirmation
+- City Hosts opt-in (never concierge copy)
+- City Notes: attribution, save, report, steward hide
+- Notifications + digest controls (no repeat keys)
+- Admin travel weights 40 / 25 / 15 / 10 / 10
+- Open House guests: SYNTHETIC DEMO only; mutations 403
 
-- Lock screen remains the only public face outside the tenth
-- Forced Open House landing: philosophy, who belongs, Index explainer, scarcity, **price placeholders only**
-- Matches feedback and introductions write to the preview store and change the Index
-- Directory filters + `/member/members/[id]` Message / Request introduction
-- Channels compose / thread / reactions / unreads persist in DEMO state
-- Events register/waitlist never labeled as completed real-world events
-- Approved-unpaid billing CTA; Stripe Checkout still 501 without approved Price IDs
-- Admin admissions cap, weights, Open House schedule, referral issue/revoke, curation with required reason
-- Camera QR: BarcodeDetector path + paste fallback; generic failure copy unchanged
-- `TENTH-EARLY` succeeds; expired/revoked/unknown share “That code cannot be used.”
+## Privacy
 
-## Browser
-
-Wave 2 surfaces are built mobile-first (390px, safe-area, reduced-motion on cinematic motion). Reviewer should click through the README list on a phone viewport.
+City-level only. No flight numbers, hotel stays, room numbers, GPS, or live location. Historical Crossings remain private after a journey expires.
 
 ## Runtime limitations
 
-- Preview store is in-process and resets on server restart (must move to Supabase)
-- Camera QR needs BarcodeDetector + permission; otherwise paste/link
+- Preview store is in-process and resets on server restart
 - Stream compose is DEMO unless keys exist; not E2EE
-- Stripe Checkout 501 until approved Price IDs exist — by design
-- Legal pages and hero film still placeholders
+- Calendar v1 is `.ics` download — no external calendar OAuth
 - No production deploy
 
 ## Still Stefan’s

@@ -6,14 +6,20 @@ import type { ChannelRecord, MessageRecord } from "@/lib/data/types";
 export function ChannelApp({
   initialChannels,
   initialMessages,
+  initialActiveId,
 }: {
   initialChannels: ChannelRecord[];
   initialMessages: MessageRecord[];
+  initialActiveId?: string;
 }) {
   const [channels, setChannels] = useState(initialChannels);
   const [messages, setMessages] = useState(initialMessages);
-  const [open, setOpen] = useState(false);
-  const [active, setActive] = useState(initialChannels[1]?.id ?? initialChannels[0]?.id);
+  const [open, setOpen] = useState(Boolean(initialActiveId));
+  const [active, setActive] = useState(
+    initialActiveId && initialChannels.some((c) => c.id === initialActiveId)
+      ? initialActiveId
+      : initialChannels[1]?.id ?? initialChannels[0]?.id,
+  );
   const [threadOf, setThreadOf] = useState<string | null>(null);
   const [draft, setDraft] = useState("");
   const [streamNote, setStreamNote] = useState<string | null>(null);

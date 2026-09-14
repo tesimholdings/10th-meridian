@@ -10,6 +10,17 @@ import {
   demoReferrals,
   viewerDemoProfile,
 } from "@/lib/data/demo";
+import {
+  demoCityHosts,
+  demoCityNotes,
+  demoCrossingRequests,
+  demoGroupTables,
+  demoJourneys,
+  demoTravelNotifications,
+  demoTravelPrefs,
+} from "@/lib/data/crossings-demo";
+import type { CrossingsState } from "@/lib/crossings/service";
+import { DEFAULT_TRAVEL_WEIGHTS } from "@/lib/crossings/types";
 import type {
   ApplicationRecord,
   ApplicationStatus,
@@ -46,6 +57,7 @@ export interface PreviewState {
   readChannels: string[];
   audit: AuditEvent[];
   announcements: typeof demoAnnouncements;
+  crossings: CrossingsState;
 }
 
 function seed(): PreviewState {
@@ -77,11 +89,73 @@ function seed(): PreviewState {
     intros: structuredClone(demoIntros),
     events: structuredClone(demoEvents),
     eventRegs: [],
-    channels: structuredClone(demoChannels),
-    messages: structuredClone(demoMessages),
+    channels: [
+      ...structuredClone(demoChannels),
+      {
+        id: "ch-crossing-demo-accepted",
+        slug: "crossing-voss-moreau",
+        name: "A Crossing · Paris",
+        kind: "dm" as const,
+        topic: "Opened after acceptance. DEMO. Not E2EE.",
+        unread: 1,
+        isDemo: true,
+      },
+      {
+        id: "ch-table-london",
+        slug: "table-london-demo",
+        name: "Table · London",
+        kind: "private" as const,
+        topic: "Confirmed guests only. Neighborhood: Marylebone. DEMO.",
+        unread: 0,
+        isDemo: true,
+      },
+    ],
+    messages: [
+      ...structuredClone(demoMessages),
+      {
+        id: "msg-crossing-1",
+        channelId: "ch-crossing-demo-accepted",
+        authorName: "C. Moreau",
+        authorInitials: "CM",
+        body: "DEMO: A walk on the 13th, city-level only. The house does not share live location.",
+        createdAt: "2026-09-13T09:12:00.000Z",
+        isDemo: true,
+      },
+    ],
     readChannels: [],
     audit: structuredClone(demoAudit),
     announcements: structuredClone(demoAnnouncements),
+    crossings: {
+      journeys: structuredClone(demoJourneys),
+      requests: structuredClone(demoCrossingRequests),
+      tables: structuredClone(demoGroupTables),
+      hosts: structuredClone(demoCityHosts),
+      notes: structuredClone(demoCityNotes),
+      prefs: structuredClone(demoTravelPrefs),
+      notifications: structuredClone(demoTravelNotifications),
+      conversations: [
+        {
+          id: "ch-crossing-demo-accepted",
+          crossingRequestId: "xreq-demo-accepted",
+          participantIds: ["demo-01", "demo-09"],
+          mode: "demo",
+          createdAt: "2026-09-13T09:00:00.000Z",
+          isDemo: true,
+        },
+        {
+          id: "ch-table-london",
+          tableId: "tbl-demo-london",
+          participantIds: ["demo-01", "demo-03"],
+          mode: "demo",
+          createdAt: "2026-09-13T18:00:00.000Z",
+          isDemo: true,
+        },
+      ],
+      feedback: [],
+      blocks: [],
+      standings: {},
+      travelWeights: { ...DEFAULT_TRAVEL_WEIGHTS },
+    },
   };
 }
 
@@ -353,4 +427,8 @@ export function markChannelRead(channelId: string) {
 
 export function unreadTotal(): number {
   return state().channels.reduce((n, c) => n + c.unread, 0);
+}
+
+export function crossingsState(): CrossingsState {
+  return state().crossings;
 }

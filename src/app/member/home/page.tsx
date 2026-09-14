@@ -44,6 +44,17 @@ export default async function MemberHomePage() {
       </section>
       <p className="mt-3 text-sm text-ivory-dim">{completionMessage(viewer.completion)}</p>
 
+      <section className="mt-10">
+        <Link href="/member/crossings" className="block border border-[var(--line)] p-5 water">
+          <p className="label">Crossings</p>
+          <p className="mt-2 font-serif text-3xl">{brand.crossingsLine}</p>
+          <p className="mt-2 max-w-lg text-sm text-ivory-muted">{brand.crossingsSupport}</p>
+          <p className="mt-4 text-[11px] tracking-[0.16em] uppercase text-gold">
+            Enter · city-level only · SYNTHETIC DEMO
+          </p>
+        </Link>
+      </section>
+
       <section className="mt-12">
         <p className="label">Announcements</p>
         {store.announcements.map((a) => (

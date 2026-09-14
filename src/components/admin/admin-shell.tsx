@@ -5,6 +5,7 @@ const links = [
   { href: "/admin", label: "Overview" },
   { href: "/admin/admissions", label: "Admissions" },
   { href: "/admin/matching", label: "Matching" },
+  { href: "/admin/crossings", label: "Crossings" },
   { href: "/admin/open-house", label: "Open House" },
   { href: "/admin/referrals", label: "Referrals" },
   { href: "/admin/events", label: "Events" },
