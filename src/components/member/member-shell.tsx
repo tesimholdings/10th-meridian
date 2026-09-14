@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Wordmark } from "@/components/brand/logo";
 import { BottomNav } from "@/components/member/bottom-nav";
+import { SceneBand, SceneChip, type SceneKind } from "@/components/atmosphere/scene-band";
 import { DEMO_DISCLAIMER } from "@/lib/data/demo";
 import { memberSecondary } from "@/lib/config/site";
 import type { SessionUser } from "@/lib/access/session";
@@ -10,21 +11,25 @@ export function MemberShell({
   demo,
   title,
   children,
+  scene,
 }: {
   user: SessionUser | null;
   demo: boolean;
   title: string;
   children: React.ReactNode;
+  scene?: SceneKind;
 }) {
+  const surface =
+    scene === "yacht" ? "index-surface" : scene === "water" || scene === "concert" ? "profile-surface" : "";
   return (
-    <div className="min-h-dvh bg-void text-ivory">
-      <header className="safe-pad safe-top sticky top-0 z-30 flex items-center justify-between border-b border-[var(--line)] bg-[rgba(7,8,9,0.78)] py-2.5 backdrop-blur-md">
+    <div className={`min-h-dvh bg-void text-ivory ${surface}`}>
+      <header className="header-chrome safe-pad safe-top sticky top-0 z-30 flex items-center justify-between py-2.5 backdrop-blur-md">
         <Wordmark compact />
         <details className="relative">
           <summary className="flex min-h-11 cursor-pointer list-none items-center tracking-[0.18em] uppercase text-[11px] text-ivory-muted">
             Menu
           </summary>
-          <div className="absolute right-0 mt-2 w-56 border border-[var(--line)] bg-ink/95 p-2 backdrop-blur">
+          <div className="absolute right-0 mt-2 w-56 border border-[rgba(212,175,106,0.35)] bg-ink/95 p-2 backdrop-blur">
             {memberSecondary.map((item) => (
               <Link
                 key={item.href}
@@ -52,7 +57,12 @@ export function MemberShell({
           {DEMO_DISCLAIMER}
         </p>
       ) : null}
-      <main className="safe-pad safe-bottom mx-auto max-w-5xl py-8">
+      {scene ? (
+        <SceneBand scene={scene} height="sm" className="border-b-0">
+          <SceneChip scene={scene} />
+        </SceneBand>
+      ) : null}
+      <main className="safe-pad safe-bottom relative mx-auto max-w-5xl py-8">
         <p className="label">{title}</p>
         <div className="mt-4">{children}</div>
       </main>

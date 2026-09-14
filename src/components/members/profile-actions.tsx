@@ -70,7 +70,7 @@ export function ProfileActions({
   }
 
   return (
-    <div className="mt-6 grid gap-3">
+    <div className="gold-chrome mt-6 grid gap-3 p-4 md:p-5">
       <div className="flex flex-wrap gap-2">
         <button type="button" disabled={pending} onClick={() => void message()} className="action-quiet">
           Message

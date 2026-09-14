@@ -1,6 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="DEMO gallery still">
-  <rect width="800" height="600" fill="#0e2a30"/>
-  <path d="M80 480 H720 M80 120 V480" stroke="#efe6d4" opacity="0.18"/>
-  <rect x="180" y="180" width="220" height="220" fill="none" stroke="#b08d4a" opacity="0.4"/>
-  <text x="40" y="560" fill="#8f8774" font-size="18" font-family="Georgia, serif">SYNTHETIC DEMO</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+  <rect width="1200" height="800" fill="#050608"/>
+  <polygon points="600,120 520,680 680,680" fill="#d4af6a" opacity="0.18"/>
+  <polygon points="380,200 300,700 440,700" fill="#f4efe4" opacity="0.08"/>
+  <polygon points="820,180 760,700 900,700" fill="#7ec8e3" opacity="0.1"/>
+  <ellipse cx="600" cy="700" rx="280" ry="30" fill="#d4af6a" opacity="0.25"/>
+  <rect x="540" y="640" width="120" height="40" fill="#11141a"/>
 </svg>

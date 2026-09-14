@@ -1,16 +1,23 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1800">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1800" role="img" aria-label="Original placeholder — cinematic water hero">
   <defs>
-    <radialGradient id="night" cx="50%" cy="38%" r="62%">
-      <stop offset="0%" stop-color="#14343c" stop-opacity="0.55"/>
-      <stop offset="55%" stop-color="#0c1c28" stop-opacity="0.35"/>
-      <stop offset="100%" stop-color="#070809" stop-opacity="1"/>
+    <linearGradient id="nightsky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#070809"/>
+      <stop offset="38%" stop-color="#0b1c28"/>
+      <stop offset="70%" stop-color="#146078"/>
+      <stop offset="100%" stop-color="#0a2430"/>
+    </linearGradient>
+    <radialGradient id="goldglow" cx="50%" cy="36%" r="45%">
+      <stop offset="0%" stop-color="#efe6d4" stop-opacity="0.4"/>
+      <stop offset="50%" stop-color="#b08d4a" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#070809" stop-opacity="0"/>
     </radialGradient>
   </defs>
-  <rect width="1200" height="1800" fill="#070809"/>
-  <rect width="1200" height="1800" fill="url(#night)"/>
-  <path d="M600 0 V1800" stroke="#b08d4a" stroke-width="1" opacity="0.35"/>
-  <ellipse cx="600" cy="820" rx="280" ry="110" fill="none" stroke="#efe6d4" opacity="0.1"/>
-  <ellipse cx="600" cy="820" rx="110" ry="280" fill="none" stroke="#efe6d4" opacity="0.08"/>
-  <path d="M0 1480 C 220 1360, 460 1600, 700 1460 S 1040 1380, 1200 1520" fill="none" stroke="#14343c" stroke-width="28" opacity="0.4"/>
-  <text x="600" y="1720" text-anchor="middle" fill="#8f8774" font-size="16" font-family="Georgia, serif">REPLACE ASSET — hero poster</text>
+  <rect width="1200" height="1800" fill="url(#nightsky)"/>
+  <rect width="1200" height="1800" fill="url(#goldglow)"/>
+  <path d="M0 1180 C 180 1120 380 1260 600 1190 S 980 1140 1200 1220 V1800 H0 Z" fill="#0d4a5c" opacity="0.7"/>
+  <path d="M0 1320 C 220 1260 460 1400 720 1330 S 1040 1280 1200 1360 V1800 H0 Z" fill="#0c2430"/>
+  <path d="M420 1240 L 780 1230 L 750 1288 L 450 1290 Z" fill="#070809"/>
+  <path d="M500 1232 L 720 1228 L 690 1170 H 540 Z" fill="#121518"/>
+  <line x1="600" y1="40" x2="600" y2="1760" stroke="#b08d4a" stroke-width="1" opacity="0.45"/>
+  <text x="600" y="1740" text-anchor="middle" fill="#8f8774" font-size="16" font-family="Georgia, serif">ORIGINAL PLACEHOLDER — water, yacht, night</text>
 </svg>

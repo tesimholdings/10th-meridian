@@ -40,7 +40,8 @@ export default async function MemberProfilePage({
   const events = visibleEvents(store.events, profile.attendingEventIds);
 
   return (
-    <MemberShell user={access.user} demo title="Profile">
+    <MemberShell user={access.user} demo title="Profile" scene="water">
+      <div className="gold-chrome light-sweep p-6 md:p-8">
       <div
         className="rise flex h-20 w-20 items-center justify-center font-serif text-2xl"
         style={{ background: profile.accent }}
@@ -67,6 +68,7 @@ export default async function MemberProfilePage({
         <Item label="Travel" value={profile.travel.join(" · ") || "—"} />
         <Item label="Availability" value={profile.availability} />
       </dl>
+      </div>
 
       {mutual.length ? (
         <section className="mt-10">

@@ -3,6 +3,7 @@ import { Wordmark } from "@/components/brand/logo";
 import { MeridianMark } from "@/components/brand/mark";
 import { DemoMark } from "@/components/brand/demo-mark";
 import { HeroStage } from "@/components/cinematic/hero-stage";
+import { SceneBand, SceneChip } from "@/components/atmosphere/scene-band";
 import { Button } from "@/components/ui/button";
 import { DEMO_DISCLAIMER } from "@/lib/data/demo";
 import { brand } from "@/lib/config/site";
@@ -22,7 +23,7 @@ export function OpenHouseLanding({ access }: { access: AccessContext }) {
 
   return (
     <div className="bg-void text-ivory">
-      <HeroStage caption="REPLACE ASSET — Open House hero film. Do not use unlicensed footage.">
+      <HeroStage caption="Original still — clear water, night meeting. Licensed film later.">
         <div className="safe-pad safe-top mx-auto flex min-h-dvh max-w-6xl flex-col justify-between py-8 md:py-10">
           <Wordmark />
           <div className="rise max-w-2xl pb-24">
@@ -79,6 +80,15 @@ export function OpenHouseLanding({ access }: { access: AccessContext }) {
         </div>
       </section>
 
+      <SceneBand scene="water" height="md">
+        <div>
+          <SceneChip scene="water" />
+          <p className="mt-3 max-w-md font-serif text-3xl leading-snug text-ivory md:text-4xl">
+            Clear water. A table that is still a table.
+          </p>
+        </div>
+      </SceneBand>
+
       <section className="relative overflow-hidden border-y border-[var(--line)] water">
         <div className="grain opacity-30" />
         <div className="oh-aurora breath" aria-hidden />
@@ -120,7 +130,7 @@ export function OpenHouseLanding({ access }: { access: AccessContext }) {
         <h2 className="mt-4 max-w-2xl font-serif text-4xl md:text-5xl">{brand.matchingLine}</h2>
         <p className="mt-4 max-w-xl text-sm text-ivory-muted">{brand.circleLine}</p>
         <div className="mt-12 grid gap-6 md:grid-cols-2">
-          <article className="panel oh-card p-6 md:p-8">
+          <article className="gold-chrome oh-card light-sweep p-6 md:p-8">
             <p className="label">{MERIDIAN_10}</p>
             <p className="mt-4 font-serif text-3xl leading-snug">{brand.meridian10}</p>
             <p className="mt-5 text-sm leading-relaxed text-ivory-muted">
@@ -129,7 +139,7 @@ export function OpenHouseLanding({ access }: { access: AccessContext }) {
               with a written reason.
             </p>
           </article>
-          <article className="panel oh-card p-6 md:p-8">
+          <article className="gold-chrome oh-card light-sweep p-6 md:p-8">
             <p className="label">{MERIDIAN_100}</p>
             <p className="mt-4 font-serif text-3xl leading-snug">{brand.meridian100}</p>
             <p className="mt-5 text-sm leading-relaxed text-ivory-muted">
@@ -142,6 +152,15 @@ export function OpenHouseLanding({ access }: { access: AccessContext }) {
           See the DEMO Index
         </Button>
       </section>
+
+      <SceneBand scene="yacht" height="md">
+        <div>
+          <SceneChip scene="yacht" />
+          <p className="mt-3 max-w-md font-serif text-3xl leading-snug text-ivory md:text-4xl">
+            Meetings on the water. Gold, ivory, night.
+          </p>
+        </div>
+      </SceneBand>
 
       <section className="relative overflow-hidden border-y border-[var(--line)] bg-[rgba(12,28,40,0.28)] py-20 md:py-28">
         <div className="oh-aurora breath" aria-hidden />
@@ -183,6 +202,15 @@ export function OpenHouseLanding({ access }: { access: AccessContext }) {
         </Button>
       </section>
 
+      <SceneBand scene="concert" height="lg">
+        <div>
+          <SceneChip scene="concert" />
+          <p className="mt-3 max-w-lg font-serif text-3xl leading-snug text-ivory md:text-5xl">
+            Night energy. A room that still knows how to be quiet.
+          </p>
+        </div>
+      </SceneBand>
+
       <section className="safe-pad mx-auto max-w-3xl py-16 text-center md:py-24">
         <p className="label">Admissions</p>
         <h2 className="mt-4 font-serif text-4xl leading-tight">{brand.scarcity}</h2>
@@ -206,7 +234,7 @@ export function OpenHouseLanding({ access }: { access: AccessContext }) {
         </p>
         <div className="mt-10 grid gap-6 md:grid-cols-2">
           {customerFacingProducts.map((p) => (
-            <article key={p.id} className="panel oh-card p-6 md:p-8">
+            <article key={p.id} className="gold-chrome oh-card light-sweep p-6 md:p-8">
               <h3 className="font-serif text-3xl">{p.name}</h3>
               <p className="mt-3 text-sm leading-relaxed text-ivory-muted">{p.summary}</p>
               <p className="mt-8 text-[11px] tracking-[0.18em] uppercase text-gold">
@@ -241,7 +269,7 @@ export function OpenHouseLanding({ access }: { access: AccessContext }) {
         </p>
         <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-3">
           {walkthrough.map((p) => (
-            <Link key={p.id} href={`/member/members/${p.id}`} className="panel oh-card p-4">
+            <Link key={p.id} href={`/member/members/${p.id}`} className="gold-chrome oh-card p-4">
               <div
                 className="flex h-16 w-16 items-center justify-center font-serif text-xl"
                 style={{ background: p.accent }}

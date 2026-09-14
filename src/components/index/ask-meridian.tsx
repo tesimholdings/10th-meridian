@@ -23,7 +23,7 @@ export function AskTheMeridian() {
   }
 
   return (
-    <section className="panel p-5 md:p-6">
+    <section className="gold-chrome light-sweep p-5 md:p-6">
       <p className="label">{ASK_THE_MERIDIAN}</p>
       <h2 className="mt-2 font-serif text-3xl">{WHO_CAN_HELP}</h2>
       <p className="mt-2 text-sm leading-relaxed text-ivory-muted">

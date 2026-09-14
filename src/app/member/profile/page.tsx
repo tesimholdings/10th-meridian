@@ -15,7 +15,8 @@ export default async function ProfilePage() {
   const access = await resolveAccessContext();
   const p = viewerProfile();
   return (
-    <MemberShell user={access.user} demo title="Profile">
+    <MemberShell user={access.user} demo title="Profile" scene="concert">
+      <div className="gold-chrome p-5 md:p-6">
       <div className="h-1 bg-[var(--line)]">
         <div className="h-1 bg-[var(--gold)]" style={{ width: `${p.completion}%` }} />
       </div>
@@ -27,6 +28,7 @@ export default async function ProfilePage() {
       <Link href="/onboarding" className="mt-4 inline-flex min-h-11 items-center text-[11px] tracking-[0.18em] uppercase text-gold">
         Open full onboarding
       </Link>
+      </div>
       <ProfileGallery photos={p.gallery ?? []} canEdit />
       <PrivacyControls privacy={privacyOf(p)} />
       <div className="mt-10">

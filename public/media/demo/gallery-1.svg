@@ -1,6 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="DEMO gallery still">
-  <rect width="800" height="600" fill="#0c1c28"/>
-  <path d="M0 420 C 180 360 320 480 520 400 S 760 360 800 430 V600 H0 Z" fill="#14343c"/>
-  <line x1="400" y1="40" x2="400" y2="560" stroke="#b08d4a" stroke-width="1" opacity="0.45"/>
-  <text x="40" y="560" fill="#8f8774" font-size="18" font-family="Georgia, serif">SYNTHETIC DEMO</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7ec8e3"/>
+      <stop offset="45%" stop-color="#1a6b8a"/>
+      <stop offset="100%" stop-color="#062018"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#g1)"/>
+  <ellipse cx="600" cy="520" rx="420" ry="70" fill="#0a3a48" opacity="0.35"/>
+  <path d="M0 480 Q 200 450 400 470 T 800 460 T 1200 490 V 800 H 0 Z" fill="#0d4a5c" opacity="0.45"/>
+  <path d="M80 620 Q 300 580 520 610 T 1100 600" fill="none" stroke="#d4af6a" stroke-width="2" opacity="0.45"/>
 </svg>

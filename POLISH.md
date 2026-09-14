@@ -6,7 +6,7 @@ Scope: next product layer. No production deploy. Lifetime **$10,000** approved. 
 
 ## Identity kept
 
-Deep black / charcoal, midnight ocean and teal, ivory type, antique gold accents, editorial serif + tracked sans, fine borders, meridian / compass motifs. Open House adds aurora drift and title rise; all honor `prefers-reduced-motion`.
+Gold / white / black chrome. Visuals stay lively: clear blue water, yacht-deck meetings, night-gathering energy — original House stills only, never stock photography. Motion is generous (wave shimmer, gold sweep, concert pulse, scene drift) and all honor `prefers-reduced-motion`. Applied on Open House marketing plus Index and profile surfaces.
 
 ## What changed
 

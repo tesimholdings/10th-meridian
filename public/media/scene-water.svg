@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-label="Original placeholder  clear water">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#070809"/>
+      <stop offset="42%" stop-color="#0b1f2e"/>
+      <stop offset="100%" stop-color="#1a6b88"/>
+    </linearGradient>
+    <linearGradient id="lagoon" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2aa0c4"/>
+      <stop offset="45%" stop-color="#147a96"/>
+      <stop offset="100%" stop-color="#0c2430"/>
+    </linearGradient>
+    <radialGradient id="sunpath" cx="50%" cy="38%" r="40%">
+      <stop offset="0%" stop-color="#efe6d4" stop-opacity="0.55"/>
+      <stop offset="40%" stop-color="#b08d4a" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#070809" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <rect y="430" width="1600" height="470" fill="url(#lagoon)"/>
+  <ellipse cx="800" cy="360" rx="220" ry="70" fill="url(#sunpath)"/>
+  <path d="M0 520 C 180 500 360 560 540 530 S 900 500 1080 540 1380 510 1600 530" fill="none" stroke="#efe6d4" stroke-width="1.2" opacity="0.35"/>
+  <path d="M0 610 C 220 590 440 650 700 620 S 1100 590 1600 630" fill="none" stroke="#b08d4a" stroke-width="0.8" opacity="0.4"/>
+  <path d="M0 720 C 260 690 520 760 820 730 S 1280 700 1600 740" fill="none" stroke="#efe6d4" stroke-width="0.7" opacity="0.22"/>
+  <line x1="800" y1="40" x2="800" y2="860" stroke="#b08d4a" stroke-width="0.8" opacity="0.45"/>
+  <text x="48" y="860" fill="#8f8774" font-size="16" font-family="Georgia, serif">ORIGINAL PLACEHOLDER  clear water</text>
+</svg>

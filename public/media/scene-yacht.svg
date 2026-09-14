@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-label="Original placeholder  yacht meeting">
+  <defs>
+    <linearGradient id="dusk" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#070809"/>
+      <stop offset="50%" stop-color="#0c2230"/>
+      <stop offset="100%" stop-color="#14556a"/>
+    </linearGradient>
+    <linearGradient id="hull" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#efe6d4"/>
+      <stop offset="100%" stop-color="#8f8774"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#dusk)"/>
+  <path d="M0 620 C 200 600 400 650 700 630 S 1200 610 1600 640 V900 H0 Z" fill="#0a3a4a" opacity="0.85"/>
+  <path d="M0 700 C 240 680 480 730 800 710 S 1280 690 1600 720 V900 H0 Z" fill="#0c2430"/>
+  <g transform="translate(420 430)">
+    <path d="M40 180 L 720 180 L 680 230 L 80 230 Z" fill="#070809"/>
+    <path d="M90 180 L 690 180 L 640 90 H 160 Z" fill="#121518"/>
+    <rect x="230" y="110" width="280" height="40" fill="#0b0d0f" stroke="#b08d4a" stroke-width="1"/>
+    <path d="M70 180 C 120 150 200 140 280 155" fill="none" stroke="#efe6d4" stroke-width="1.4"/>
+    <circle cx="300" cy="148" r="5" fill="#b08d4a"/>
+    <circle cx="340" cy="146" r="5" fill="#efe6d4"/>
+    <circle cx="380" cy="147" r="5" fill="#b08d4a"/>
+    <circle cx="420" cy="145" r="5" fill="#efe6d4"/>
+    <path d="M40 180 L 760 160" fill="none" stroke="#b08d4a" stroke-width="1" opacity="0.5"/>
+  </g>
+  <line x1="800" y1="30" x2="800" y2="860" stroke="#b08d4a" stroke-width="0.7" opacity="0.4"/>
+  <text x="48" y="860" fill="#8f8774" font-size="16" font-family="Georgia, serif">ORIGINAL PLACEHOLDER  yacht meeting</text>
+</svg>

@@ -110,7 +110,7 @@ export function MatchBoard({
           {index.meridian10.map((row, i) => {
             const intro = intros.find((x) => x.targetId === row.target.id);
             return (
-              <li key={row.target.id} className="panel p-4 md:p-5">
+              <li key={row.target.id} className="gold-chrome oh-card light-sweep p-4 md:p-5">
                 <div className="grid grid-cols-[auto_1fr] gap-4">
                   <Link
                     href={`/member/members/${row.target.id}`}

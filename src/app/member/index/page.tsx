@@ -21,7 +21,7 @@ export default async function IndexPage() {
   const circleProfiles = store.profiles.filter((p) => circleIds.includes(p.id));
 
   return (
-    <MemberShell user={access.user} demo={!access.decision.isMemberAccess || viewer.isDemo} title={MERIDIAN_INDEX}>
+    <MemberShell user={access.user} demo={!access.decision.isMemberAccess || viewer.isDemo} title={MERIDIAN_INDEX} scene="yacht">
       <h1 className="max-w-xl font-serif text-4xl leading-tight md:text-5xl">{brand.matchingLine}</h1>
       <p className="mt-4 max-w-xl text-sm leading-relaxed text-ivory-dim">
         {brand.circleLine} Hybrid scoring: complementary ask/offer, goals, interests, industry,
@@ -43,7 +43,7 @@ export default async function IndexPage() {
         ) : (
           <ul className="mt-6 grid gap-3">
             {circleProfiles.map((p) => (
-              <li key={p.id} className="panel grid grid-cols-[auto_1fr] gap-4 p-4">
+              <li key={p.id} className="gold-chrome oh-card grid grid-cols-[auto_1fr] gap-4 p-4">
                 <Link
                   href={`/member/members/${p.id}`}
                   className="flex h-14 w-14 items-center justify-center font-serif text-xl"

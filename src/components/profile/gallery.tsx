@@ -38,7 +38,7 @@ export function ProfileGallery({
       </p>
       <ul className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3">
         {photos.map((photo) => (
-          <li key={photo.id} className="panel overflow-hidden">
+          <li key={photo.id} className="gallery-still gold-chrome">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={photo.url} alt={photo.caption} className="aspect-[4/3] w-full object-cover" />
             <p className="px-3 py-2 text-[11px] text-ivory-muted">{photo.caption}</p>
