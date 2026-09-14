@@ -6,9 +6,13 @@ Scope: cinematic feel, approved Lifetime price, referral card, planned domain, I
 
 ## Palette (Stefan, 2026-09-14)
 
-Gold, black, and white as the core, plus **fresh sailor / water blues** (harbor, spray, clear marine). Welcoming, fun, and luxury — yacht light on water, not a purely dark private club, not neon, not SaaS.
+**Chrome (UI system):** gold, white, and black — hairlines, panels, nav, buttons, mark. Not teal-tinted chrome.
 
-Tokens live in `src/app/globals.css`: `--void` / `--ink` (black structure), `--ivory` (crisp sailcloth type), `--gold`, `--ocean` / `--teal` / `--harbor` / `--spray`. Cascaded through lock, Open House, member shell, Index, Crossings, admin, hero poster, mark, favicon, and mail HTML.
+**Atmosphere (visuals only):** lively clear water, daylight harbor, yacht deck, nightlife / concert light. Original SVG placeholders — no unlicensed stock, no other-network copies.
+
+Premium and editorial, almost fun to use — not a stiff dark-only club, not neon SaaS, not a dating app.
+
+Tokens live in `src/app/globals.css`: `--void` / `--ink` (black structure), `--ivory` (white/sailcloth type), `--gold`. Water blues (`--ocean` / `--harbor` / `--spray`) stay in hero, water, and atlas scenes only.
 
 ## Naming — Index, never Matches
 
@@ -18,7 +22,7 @@ Keep **Meridian 10 / Meridian 100 / Meridian Index**. Internal types (`MatchBoar
 
 ## Motion
 
-Cinematic page enters, card reveals, countdown stagger, lock/Open House hero drift. Animations use `pointer-events: auto` and stay short so they do not block interaction. `prefers-reduced-motion: reduce` kills decorative motion and pauses the hero film.
+Animation-heavy on purpose: harbor waves, light beams, water shimmer, page enters, card reveals, button lift/shine, chip/nav micro-interactions. Pointer events stay live — motion never blocks a tap. `prefers-reduced-motion: reduce` kills decorative motion and pauses the hero film.
 
 ## Open House hours (visitor local time)
 

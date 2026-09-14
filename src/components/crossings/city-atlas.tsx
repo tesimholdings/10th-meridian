@@ -26,7 +26,7 @@ export function CityAtlas({
   const crossingCity = journey?.destinationCity;
 
   return (
-    <div className="atlas atlas-grid relative overflow-hidden border border-[var(--line)]">
+    <div className="atlas atlas-grid relative overflow-hidden border border-[rgba(198,164,90,0.36)]">
       <svg viewBox="0 0 100 80" className="h-56 w-full md:h-72" aria-hidden>
         <path
           d="M18 36 C 22 30, 30 28, 36 33 C 40 28, 48 30, 52 36 C 46 44, 32 46, 22 42 Z"

@@ -51,7 +51,7 @@ export default async function CrossingsPage() {
 
   return (
     <MemberShell user={access.user} demo title="Crossings">
-      <div className="relative overflow-hidden border border-[var(--line)] water p-6 md:p-8">
+      <div className="relative overflow-hidden border border-[rgba(198,164,90,0.4)] water p-6 md:p-8">
         <p className="label">{CROSSINGS_COPY.name}</p>
         <h1 className="mt-4 max-w-xl font-serif text-4xl leading-[0.95] md:text-5xl">{CROSSINGS_COPY.line}</h1>
         <p className="mt-4 max-w-lg text-ivory-muted">{CROSSINGS_COPY.support}</p>

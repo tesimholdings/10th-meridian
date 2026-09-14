@@ -9,7 +9,7 @@ export function BottomNav() {
 
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-[var(--line)] bg-[rgba(8,9,11,0.86)] backdrop-blur-md"
+      className="chrome fixed inset-x-0 bottom-0 z-40 border-t backdrop-blur-md"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
       <ul className="mx-auto grid max-w-lg grid-cols-5">
@@ -20,11 +20,11 @@ export function BottomNav() {
               <Link
                 href={item.href}
                 className={`relative flex min-h-14 flex-col items-center justify-center gap-1 text-[10px] tracking-[0.16em] uppercase ${
-                  active ? "text-ivory" : "text-ivory-dim"
+                  active ? "text-gold" : "text-ivory-dim"
                 }`}
               >
                 {active ? (
-                  <span className="absolute top-0 h-px w-6 bg-[var(--gold)]" aria-hidden />
+                  <span className="nav-gold absolute top-0 h-px w-6 bg-[var(--gold)]" aria-hidden />
                 ) : null}
                 <NavIcon id={item.id} active={Boolean(active)} />
                 {item.label}

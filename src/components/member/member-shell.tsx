@@ -18,18 +18,18 @@ export function MemberShell({
 }) {
   return (
     <div className="min-h-dvh bg-void text-ivory">
-      <header className="safe-pad safe-top sticky top-0 z-30 flex items-center justify-between border-b border-[var(--line)] bg-[rgba(8,9,11,0.72)] py-2.5 backdrop-blur-md">
+      <header className="chrome safe-pad safe-top sticky top-0 z-30 flex items-center justify-between border-b py-2.5 backdrop-blur-md">
         <Wordmark compact />
         <details className="relative">
-          <summary className="flex min-h-11 cursor-pointer list-none items-center tracking-[0.18em] uppercase text-[11px] text-ivory-muted">
+          <summary className="flex min-h-11 cursor-pointer list-none items-center tracking-[0.18em] uppercase text-[11px] text-gold">
             Menu
           </summary>
-          <div className="absolute right-0 mt-2 w-56 border border-[var(--line)] bg-ink/95 p-2 backdrop-blur">
+          <div className="absolute right-0 mt-2 w-56 border border-[rgba(198,164,90,0.4)] bg-black p-2">
             {memberSecondary.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="flex min-h-11 items-center px-2 text-sm text-ivory-muted"
+                className="link-lift flex min-h-11 items-center px-2 text-sm text-ivory-muted"
               >
                 {item.label}
               </Link>

@@ -21,7 +21,8 @@ Product logic unchanged except: Stripe checkout mode (`payment` for Lifetime); p
 - Admissions cap still 10 / month
 - Referral card print path `/referral/{code}/card`
 - Planned domain `tenmeridian.com` documented only
-- Palette: gold / black / white + sailor water-blues
+- Chrome: gold / white / black. Atmosphere: original harbor daylight + yacht night lights (not stock)
+- Motion: animation-heavy, reduced-motion honored
 - Member nav: **Index** (never “Matches”); Meridian 10 / 100 / Index kept
 - Open House: 10:00–22:00 visitor local; referral 09:00 local; fallback America/Chicago
 - Anti-soliciting: ban with no refund, surfaced on Open House / onboarding / legal / compose

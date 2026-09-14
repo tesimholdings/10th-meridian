@@ -16,7 +16,7 @@ export function OpenHouseLanding({ access }: { access: AccessContext }) {
 
   return (
     <div className="cinematic bg-void text-ivory">
-      <HeroStage caption="REPLACE ASSET — Open House hero film. Do not use unlicensed footage.">
+      <HeroStage caption="REPLACE ASSET — original Open House film: clear water, yacht light, night energy. No unlicensed stock.">
         <div className="safe-pad safe-top mx-auto flex min-h-dvh max-w-6xl flex-col justify-between py-8 md:py-10">
           <Wordmark />
           <div className="rise max-w-2xl pb-24">
@@ -48,7 +48,7 @@ export function OpenHouseLanding({ access }: { access: AccessContext }) {
       </HeroStage>
 
       <div
-        className="safe-pad sticky bottom-0 z-30 border-t border-[var(--line)] bg-[rgba(8,9,11,0.9)] py-3 backdrop-blur md:hidden"
+        className="chrome safe-pad sticky bottom-0 z-30 border-t py-3 backdrop-blur md:hidden"
         style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))" }}
       >
         <div className="grid grid-cols-2 gap-2">
@@ -74,7 +74,8 @@ export function OpenHouseLanding({ access }: { access: AccessContext }) {
         </div>
       </section>
 
-      <section className="relative overflow-hidden border-y border-[var(--line)] water">
+      <section className="relative overflow-hidden border-y border-[rgba(198,164,90,0.32)] water">
+        <div className="water-shimmer" />
         <div className="grain opacity-30" />
         <div className="safe-pad relative mx-auto flex max-w-6xl flex-col items-start gap-8 py-20 md:flex-row md:items-center md:justify-between md:py-28">
           <MeridianMark className="h-24 w-24 breath md:h-32 md:w-32" />

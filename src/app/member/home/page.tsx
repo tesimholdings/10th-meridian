@@ -45,7 +45,7 @@ export default async function MemberHomePage() {
       <p className="mt-3 text-sm text-ivory-dim">{completionMessage(viewer.completion)}</p>
 
       <section className="mt-10">
-        <Link href="/member/crossings" className="block overflow-hidden border border-[var(--line)] water p-6">
+        <Link href="/member/crossings" className="block overflow-hidden border border-[rgba(198,164,90,0.4)] water p-6">
           <p className="label">Crossings</p>
           <p className="mt-3 font-serif text-3xl leading-tight">{brand.crossingsLine}</p>
           <p className="mt-3 max-w-lg text-sm leading-relaxed text-ivory-muted">{brand.crossingsSupport}</p>

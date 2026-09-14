@@ -26,7 +26,7 @@ export function AdminShell({
 
   return (
     <div className="min-h-dvh bg-void text-ivory">
-      <header className="safe-pad safe-top sticky top-0 z-30 flex items-center justify-between border-b border-[var(--line)] bg-[rgba(8,9,11,0.78)] py-3 backdrop-blur-md">
+      <header className="chrome safe-pad safe-top sticky top-0 z-30 flex items-center justify-between border-b py-3 backdrop-blur-md">
         <Wordmark compact />
         <Link href="/member/home" className="text-[11px] tracking-[0.18em] uppercase text-ivory-muted">
           House
@@ -42,7 +42,7 @@ export function AdminShell({
                 key={l.href}
                 href={l.href}
                 className={`flex min-h-11 shrink-0 items-center px-3 text-sm md:px-0 ${
-                  active ? "text-ivory" : "text-ivory-dim"
+                  active ? "text-gold" : "text-ivory-dim"
                 }`}
               >
                 {l.label}
@@ -50,7 +50,7 @@ export function AdminShell({
             );
           })}
         </nav>
-        <main className="min-w-0">
+        <main className="cinematic page-enter min-w-0">
           <p className="label">{title}</p>
           <div className="mt-4">{children}</div>
         </main>

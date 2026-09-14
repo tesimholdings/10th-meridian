@@ -54,7 +54,7 @@ export function LockScreen({
             </div>
           </div>
 
-          <div className="rise-delay md:border md:border-[var(--line)] md:bg-black/25 md:p-6 md:backdrop-blur-sm">
+          <div className="rise-delay md:border md:border-[rgba(198,164,90,0.4)] md:bg-black/70 md:p-6 md:backdrop-blur-sm">
             <p className="label mb-4 hidden md:block">Enter</p>
             <div className="grid gap-2">
               <Button href="/sign-in" variant="gold" className="w-full">
@@ -72,7 +72,7 @@ export function LockScreen({
               </div>
               <Link
                 href="/remind"
-                className="inline-flex min-h-11 items-center justify-center text-center text-[11px] tracking-[0.18em] uppercase text-ivory-muted"
+                className="link-lift inline-flex min-h-11 items-center justify-center text-center text-[11px] tracking-[0.18em] uppercase text-ivory-muted"
               >
                 Remind me when the doors open
               </Link>
