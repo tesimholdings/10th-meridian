@@ -49,7 +49,7 @@ export function HeroStage({
       </div>
       <video
         ref={videoRef}
-        className="absolute inset-0 h-full w-full object-cover opacity-25"
+        className="absolute inset-0 h-full w-full object-cover opacity-[0.22] contrast-125 saturate-50"
         autoPlay={!reduce}
         muted
         loop
@@ -57,15 +57,24 @@ export function HeroStage({
         poster="/media/hero-poster.svg"
         aria-hidden
       />
+      <div
+        className="absolute inset-0"
+        aria-hidden
+        style={{
+          background:
+            "radial-gradient(80% 70% at 50% 38%, rgba(7,8,9,0.12), rgba(7,8,9,0.55) 72%, #070809 100%)",
+        }}
+      />
+      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-void to-transparent" />
+      <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/45 to-transparent" />
       <div className="grain" />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/20 to-void" />
       <div className="relative z-10">{children}</div>
-      <div className="absolute bottom-3 left-4 right-4 z-20 flex items-end justify-between gap-3 text-[10px] tracking-[0.18em] uppercase text-ivory-muted/70">
-        <p className="max-w-[16rem] leading-relaxed">{caption}</p>
+      <div className="absolute bottom-3 left-4 right-4 z-20 flex items-end justify-between gap-3 text-[10px] tracking-[0.18em] uppercase text-ivory-muted/60">
+        <p className="max-w-[13rem] leading-relaxed md:max-w-[18rem]">{caption}</p>
         <button
           type="button"
           onClick={toggle}
-          className="min-h-11 min-w-11 border border-[var(--line)] px-3 text-[10px] tracking-[0.22em]"
+          className="min-h-11 min-w-11 border border-[var(--line)] px-3 text-[10px] tracking-[0.22em] text-ivory-muted"
         >
           {paused || reduce ? "Play" : "Pause"}
         </button>

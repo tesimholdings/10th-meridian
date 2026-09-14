@@ -6,6 +6,8 @@ import type { CityNoteRecord, CityNoteKind } from "@/lib/crossings/types";
 import { CITY_NOTE_KINDS } from "@/lib/crossings/types";
 import type { ProfileRecord } from "@/lib/data/types";
 import { Button } from "@/components/ui/button";
+import { Chip } from "@/components/ui/chip";
+import { DemoMark } from "@/components/brand/demo-mark";
 import { EmptyState, PrivacyNotice } from "@/components/crossings/states";
 
 export function CityNotesBoard({
@@ -83,29 +85,32 @@ export function CityNotesBoard({
           {filtered.map((note) => {
             const author = profiles.find((p) => p.id === note.authorProfileId);
             return (
-              <li key={note.id} className="border border-[var(--line)] p-4">
-                <p className="label">
-                  {note.kind} · {note.city}
-                  {note.neighborhood ? ` · ${note.neighborhood}` : ""}
+              <li key={note.id} className="panel p-5">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <p className="label">
+                    {note.kind} · {note.city}
+                    {note.neighborhood ? ` · ${note.neighborhood}` : ""}
+                  </p>
+                  {note.isDemo ? <DemoMark /> : null}
+                </div>
+                <h2 className="mt-3 font-serif text-2xl">{note.title}</h2>
+                <p className="mt-2 text-sm leading-relaxed text-ivory-muted">{note.body}</p>
+                <p className="mt-3 text-[11px] tracking-[0.14em] uppercase text-ivory-dim">
+                  {author?.displayName ?? "Member"}
                 </p>
-                <h2 className="mt-2 font-serif text-2xl">{note.title}</h2>
-                <p className="mt-2 text-sm text-ivory-muted">{note.body}</p>
-                <p className="mt-3 text-[11px] tracking-[0.14em] uppercase text-gold">
-                  {author?.displayName ?? "Member"} · {note.isDemo ? "SYNTHETIC DEMO" : ""}
-                </p>
-                <div className="mt-3 flex flex-wrap gap-2">
+                <div className="mt-4 flex flex-wrap gap-2">
                   {canMutate ? (
                     <>
                       <button
                         type="button"
-                        className="min-h-11 border border-[var(--line)] px-3 text-[10px] tracking-[0.16em] uppercase"
+                        className="action-quiet"
                         onClick={() => void act(note.id, "save")}
                       >
                         Save{note.savedBy.includes(viewerId) ? "d" : ""}
                       </button>
                       <button
                         type="button"
-                        className="min-h-11 border border-[var(--line)] px-3 text-[10px] tracking-[0.16em] uppercase"
+                        className="action-quiet"
                         onClick={() => void act(note.id, "report")}
                       >
                         Report
@@ -115,7 +120,7 @@ export function CityNotesBoard({
                   {isStaff ? (
                     <button
                       type="button"
-                      className="min-h-11 border border-[var(--line)] px-3 text-[10px] tracking-[0.16em] uppercase"
+                      className="action-quiet"
                       onClick={() => void act(note.id, "hide")}
                     >
                       Hide
@@ -131,7 +136,7 @@ export function CityNotesBoard({
       {canMutate ? (
         <section>
           <p className="label">Add a City Note</p>
-          <div className="mt-4 grid gap-3">
+          <div className="panel mt-4 grid gap-3 p-5">
             <input
               value={draft.title}
               onChange={(e) => setDraft({ ...draft, title: e.target.value })}
@@ -174,27 +179,5 @@ export function CityNotesBoard({
         </p>
       )}
     </div>
-  );
-}
-
-function Chip({
-  children,
-  on,
-  onClick,
-}: {
-  children: React.ReactNode;
-  on: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`min-h-11 px-3 text-[10px] tracking-[0.16em] uppercase ${
-        on ? "border border-[var(--gold)] text-gold" : "border border-[var(--line)] text-ivory-muted"
-      }`}
-    >
-      {children}
-    </button>
   );
 }

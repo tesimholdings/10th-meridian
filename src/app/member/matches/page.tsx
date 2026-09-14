@@ -14,8 +14,8 @@ export default async function MatchesPage() {
   const intros = getPreviewStore().intros;
   return (
     <MemberShell user={access.user} demo={!access.decision.isMemberAccess || viewer.isDemo} title="The Meridian Index">
-      <p className="max-w-xl text-ivory-muted">{brand.matchingLine}</p>
-      <p className="mt-3 text-sm text-ivory-dim">
+      <h1 className="max-w-xl font-serif text-4xl leading-tight md:text-5xl">{brand.matchingLine}</h1>
+      <p className="mt-4 max-w-xl text-sm leading-relaxed text-ivory-dim">
         Hybrid scoring: complementary ask/offer, goals, interests, industry,
         geography, availability, and novelty. Semantic embeddings are a supplement,
         never the whole decision. Protected traits are not ranking factors.

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { ProfileRecord } from "@/lib/data/types";
+import { EmptyState } from "@/components/crossings/states";
 
 const filters = [
   { key: "city", label: "Location" },
@@ -91,9 +92,17 @@ export function Directory({ profiles }: { profiles: ProfileRecord[] }) {
       <p className="mt-4 text-[11px] tracking-[0.16em] uppercase text-ivory-dim">
         {filtered.length} SYNTHETIC DEMO · never invented
       </p>
+      {filtered.length === 0 ? (
+        <div className="mt-6">
+          <EmptyState
+            title="No one in this frame."
+            body="Filters stay on this device. Widen the search — the house does not invent members."
+          />
+        </div>
+      ) : (
       <ul className="mt-6 grid gap-4">
         {filtered.map((p) => (
-          <li key={p.id} className="grid grid-cols-[auto_1fr] gap-4 border border-[var(--line)] p-4">
+          <li key={p.id} className="panel grid grid-cols-[auto_1fr] gap-4 p-4">
             <div
               className="flex h-16 w-16 items-center justify-center font-serif text-xl"
               style={{ background: p.accent }}
@@ -120,6 +129,7 @@ export function Directory({ profiles }: { profiles: ProfileRecord[] }) {
           </li>
         ))}
       </ul>
+      )}
     </div>
   );
 }

@@ -46,11 +46,18 @@ body {
   background: var(--void);
   color: var(--ivory);
   min-height: 100%;
+  overflow-x: clip;
+  max-width: 100vw;
 }
 
 body {
   font-family: var(--font-sans), "Outfit", sans-serif;
   text-rendering: optimizeLegibility;
+}
+
+:focus-visible {
+  outline: 1px solid var(--gold-dim);
+  outline-offset: 3px;
 }
 
 ::selection {
@@ -106,6 +113,101 @@ body {
   padding-right: max(1.25rem, env(safe-area-inset-right));
 }
 
+.safe-top {
+  padding-top: max(0.75rem, env(safe-area-inset-top));
+}
+
+.panel {
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(180deg, rgba(18, 21, 24, 0.42), rgba(7, 8, 9, 0.22));
+}
+
+.panel-quiet {
+  border: 1px solid var(--line);
+  background: transparent;
+}
+
+.panel-ink {
+  border: 1px solid var(--line);
+  background: rgba(11, 13, 15, 0.72);
+}
+
+.why-meet {
+  border-left: 1px solid var(--gold-soft);
+  padding-left: 0.9rem;
+}
+
+.why-meet p,
+.why-meet li {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--ivory-muted);
+}
+
+.demo-mark {
+  font-family: var(--font-sans), "Outfit", sans-serif;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 0.62rem;
+  color: var(--gold);
+}
+
+.chip {
+  min-height: 44px;
+  padding: 0 0.85rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border: 1px solid var(--line);
+  color: var(--ivory-muted);
+}
+
+.chip-on {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.action-quiet {
+  min-height: 44px;
+  padding: 0 0.85rem;
+  border: 1px solid var(--line);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ivory-muted);
+}
+
+.action-quiet:hover {
+  border-color: var(--gold-dim);
+  color: var(--ivory);
+}
+
+.countdown-rail {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.countdown-cell {
+  padding: 0.7rem 0.35rem 0.85rem;
+  text-align: center;
+}
+
+.countdown-cell + .countdown-cell {
+  border-left: 1px solid var(--line);
+}
+
+.hide-scroll {
+  scrollbar-width: none;
+}
+
+.hide-scroll::-webkit-scrollbar {
+  display: none;
+}
+
 .water {
   background:
     radial-gradient(1200px 500px at 50% 120%, rgba(20, 52, 60, 0.55), transparent 60%),
@@ -124,14 +226,52 @@ body {
   50% { opacity: 0.7; }
 }
 
+@keyframes rise {
+  from { opacity: 0; transform: translate3d(0, 12px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes sheet-up {
+  from { opacity: 0; transform: translate3d(0, 8%, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes sheet-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes breath {
+  0%, 100% { opacity: 0.22; }
+  50% { opacity: 0.45; }
+}
+
 .slow-drift {
   animation: drift 28s ease-in-out infinite;
 }
 
+.rise {
+  animation: rise 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.rise-delay {
+  animation: rise 1.25s 0.12s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.breath {
+  animation: breath 7s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .slow-drift,
-  .pulse-gold {
-    animation: none;
+  .pulse-gold,
+  .rise,
+  .rise-delay,
+  .breath,
+  .meridian-pulse,
+  .crossings-sheet,
+  .crossings-sheet-panel {
+    animation: none !important;
   }
 }
 
@@ -165,17 +305,22 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
+button:disabled {
+  opacity: 0.45;
+}
+
 .atlas {
   background:
     radial-gradient(900px 420px at 50% 80%, rgba(20, 52, 60, 0.45), transparent 62%),
+    radial-gradient(520px 280px at 18% 30%, rgba(12, 28, 40, 0.55), transparent 58%),
     linear-gradient(180deg, rgba(12, 28, 40, 0.35), transparent 55%);
 }
 
 .atlas-grid {
   background-image:
-    linear-gradient(rgba(239, 230, 212, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(239, 230, 212, 0.06) 1px, transparent 1px);
-  background-size: 48px 48px;
+    linear-gradient(rgba(239, 230, 212, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(239, 230, 212, 0.045) 1px, transparent 1px);
+  background-size: 56px 56px;
 }
 
 @keyframes meridian-pulse {
@@ -187,17 +332,12 @@ a {
   animation: meridian-pulse 4.8s ease-in-out infinite;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .meridian-pulse {
-    animation: none;
-  }
-}
-
 .crossings-sheet {
   position: fixed;
   inset: 0;
   z-index: 50;
   background: rgba(7, 8, 9, 0.72);
+  animation: sheet-in 0.35s ease-out;
 }
 
 .crossings-sheet-panel {
@@ -208,6 +348,14 @@ a {
   border-top: 1px solid var(--line);
   background: var(--ink);
   padding: 1.25rem max(1.25rem, env(safe-area-inset-left)) calc(1.5rem + env(safe-area-inset-bottom));
+  animation: sheet-up 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sheet-handle {
+  width: 2.5rem;
+  height: 2px;
+  margin: 0 auto 1rem;
+  background: var(--line-strong);
 }
 
 @media (min-width: 768px) {

@@ -5,6 +5,8 @@ import { publicTableView } from "@/lib/crossings/service";
 import { getPreviewStore, viewerProfile } from "@/lib/preview/store";
 import { CROSSINGS_COPY } from "@/lib/crossings/types";
 import { Button } from "@/components/ui/button";
+import { DemoMark } from "@/components/brand/demo-mark";
+import { EmptyState } from "@/components/crossings/states";
 import { canMutateCrossings } from "@/lib/crossings/privacy";
 
 export const metadata = { title: "Tables", robots: { index: false } };
@@ -26,14 +28,27 @@ export default async function TablesPage() {
           <Button href="/member/crossings/tables/new">Open a Table</Button>
         </div>
       ) : null}
+      {tables.length === 0 ? (
+        <div className="mt-8">
+          <EmptyState
+            title="No tables are set."
+            body="When paths overlap, a member may open a private table — neighborhood first, venue only after confirmation."
+            action={
+              canMutate ? <Button href="/member/crossings/tables/new">Open a Table</Button> : undefined
+            }
+          />
+        </div>
+      ) : (
       <ul className="mt-8 grid gap-4">
         {tables.map((t) => (
           <li key={t.id}>
-            <Link href={`/member/crossings/tables/${t.id}`} className="block border border-[var(--line)] p-4">
-              <p className="label">
-                {t.city} · {t.neighborhood} · {t.mealType}
-                {t.isDemo ? " · SYNTHETIC DEMO" : ""}
-              </p>
+            <Link href={`/member/crossings/tables/${t.id}`} className="panel block p-5">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <p className="label">
+                  {t.city} · {t.neighborhood} · {t.mealType}
+                </p>
+                {t.isDemo ? <DemoMark /> : null}
+              </div>
               <p className="mt-2 font-serif text-2xl">{t.theme ?? "A shared table"}</p>
               <p className="mt-2 text-sm text-ivory-muted">
                 {new Date(t.dateTime).toLocaleString("en-GB", {
@@ -53,6 +68,7 @@ export default async function TablesPage() {
           </li>
         ))}
       </ul>
+      )}
     </MemberShell>
   );
 }

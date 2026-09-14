@@ -18,29 +18,29 @@ export function MemberShell({
 }) {
   return (
     <div className="min-h-dvh bg-void text-ivory">
-      <header className="safe-pad sticky top-0 z-30 flex items-center justify-between border-b border-[var(--line)] bg-[rgba(7,8,9,0.88)] py-3 backdrop-blur">
+      <header className="safe-pad safe-top sticky top-0 z-30 flex items-center justify-between border-b border-[var(--line)] bg-[rgba(7,8,9,0.78)] py-2.5 backdrop-blur-md">
         <Wordmark compact />
         <details className="relative">
-          <summary className="flex min-h-11 cursor-pointer list-none items-center tracking-[0.18em] uppercase text-[11px] text-gold">
+          <summary className="flex min-h-11 cursor-pointer list-none items-center tracking-[0.18em] uppercase text-[11px] text-ivory-muted">
             Menu
           </summary>
-          <div className="absolute right-0 mt-2 w-56 border border-[var(--line)] bg-ink p-3">
+          <div className="absolute right-0 mt-2 w-56 border border-[var(--line)] bg-ink/95 p-2 backdrop-blur">
             {memberSecondary.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="flex min-h-11 items-center text-sm text-ivory-muted"
+                className="flex min-h-11 items-center px-2 text-sm text-ivory-muted"
               >
                 {item.label}
               </Link>
             ))}
             {user?.role === "administrator" || user?.role === "moderator" ? (
-              <Link href="/admin" className="flex min-h-11 items-center text-sm text-gold">
+              <Link href="/admin" className="flex min-h-11 items-center px-2 text-sm text-gold">
                 Steward desk
               </Link>
             ) : null}
             <form action="/api/auth/sign-out" method="post">
-              <button className="flex min-h-11 w-full items-center text-left text-sm text-ivory-muted">
+              <button className="flex min-h-11 w-full items-center px-2 text-left text-sm text-ivory-muted">
                 Sign Out
               </button>
             </form>
@@ -48,7 +48,7 @@ export function MemberShell({
         </details>
       </header>
       {demo ? (
-        <p className="safe-pad border-b border-[var(--gold-soft)] bg-[rgba(176,141,74,0.08)] py-2 text-[11px] leading-relaxed text-gold">
+        <p className="safe-pad border-b border-[var(--line)] py-2 text-[10px] leading-relaxed tracking-[0.04em] text-ivory-dim">
           {DEMO_DISCLAIMER}
         </p>
       ) : null}

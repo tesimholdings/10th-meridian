@@ -4,6 +4,7 @@ import { resolveAccessContext } from "@/lib/access/context";
 import { MemberShell } from "@/components/member/member-shell";
 import { TableActions } from "@/components/crossings/table-actions";
 import { PrivacyNotice } from "@/components/crossings/states";
+import { DemoMark } from "@/components/brand/demo-mark";
 import { canMutateCrossings } from "@/lib/crossings/privacy";
 import { publicTableView } from "@/lib/crossings/service";
 import { getPreviewStore, viewerProfile } from "@/lib/preview/store";
@@ -24,11 +25,13 @@ export default async function TableDetailPage({ params }: { params: Promise<{ id
 
   return (
     <MemberShell user={access.user} demo title="Open a Table">
-      <p className="label">
-        {table.city} · {table.neighborhood}
-        {table.isDemo ? " · SYNTHETIC DEMO" : ""}
-      </p>
-      <h1 className="mt-2 font-serif text-4xl">{table.theme ?? "A shared table"}</h1>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="label">
+          {table.city} · {table.neighborhood}
+        </p>
+        {table.isDemo ? <DemoMark /> : null}
+      </div>
+      <h1 className="mt-3 font-serif text-4xl">{table.theme ?? "A shared table"}</h1>
       <p className="mt-3 text-ivory-muted">
         {table.mealType} ·{" "}
         {new Date(table.dateTime).toLocaleString("en-GB", {

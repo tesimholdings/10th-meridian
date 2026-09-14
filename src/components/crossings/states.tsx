@@ -1,3 +1,5 @@
+import { MeridianMark } from "@/components/brand/mark";
+
 export function EmptyState({
   title,
   body,
@@ -8,27 +10,31 @@ export function EmptyState({
   action?: React.ReactNode;
 }) {
   return (
-    <div className="border border-[var(--line)] p-6">
-      <p className="font-serif text-2xl">{title}</p>
-      <p className="mt-2 max-w-md text-sm text-ivory-muted">{body}</p>
-      {action ? <div className="mt-4">{action}</div> : null}
+    <div className="panel p-7 md:p-8">
+      <MeridianMark className="h-10 w-10 opacity-70" />
+      <p className="mt-5 font-serif text-3xl leading-tight">{title}</p>
+      <p className="mt-3 max-w-md text-sm leading-relaxed text-ivory-muted">{body}</p>
+      {action ? <div className="mt-5">{action}</div> : null}
     </div>
   );
 }
 
 export function LoadingState({ label = "Finding where paths may cross…" }: { label?: string }) {
   return (
-    <p className="text-sm tracking-[0.16em] uppercase text-ivory-dim" role="status">
-      {label}
-    </p>
+    <div className="panel p-6" role="status">
+      <p className="label">{label}</p>
+      <div className="editorial-rule mt-5" />
+    </div>
   );
 }
 
 export function ErrorState({ message }: { message: string }) {
   return (
-    <p className="border border-[var(--danger)] p-4 text-sm text-ivory-muted" role="alert">
-      {message}
-    </p>
+    <div className="panel p-6" role="alert" style={{ borderColor: "rgba(180, 85, 74, 0.45)" }}>
+      <p className="label" style={{ color: "var(--danger)" }}>A pause</p>
+      <p className="mt-3 font-serif text-2xl">The house could not complete that.</p>
+      <p className="mt-2 text-sm leading-relaxed text-ivory-muted">{message}</p>
+    </div>
   );
 }
 

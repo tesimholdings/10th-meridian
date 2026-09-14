@@ -9,7 +9,7 @@ export function BottomNav() {
 
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-[var(--line)] bg-[rgba(7,8,9,0.92)] backdrop-blur-md"
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-[var(--line)] bg-[rgba(7,8,9,0.88)] backdrop-blur-md"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
       <ul className="mx-auto grid max-w-lg grid-cols-5">
@@ -19,10 +19,13 @@ export function BottomNav() {
             <li key={item.id}>
               <Link
                 href={item.href}
-                className={`flex min-h-14 flex-col items-center justify-center gap-1 text-[10px] tracking-[0.16em] uppercase ${
-                  active ? "text-gold" : "text-ivory-muted"
+                className={`relative flex min-h-14 flex-col items-center justify-center gap-1 text-[10px] tracking-[0.16em] uppercase ${
+                  active ? "text-ivory" : "text-ivory-dim"
                 }`}
               >
+                {active ? (
+                  <span className="absolute top-0 h-px w-6 bg-[var(--gold)]" aria-hidden />
+                ) : null}
                 <NavIcon id={item.id} active={Boolean(active)} />
                 {item.label}
               </Link>
@@ -35,7 +38,7 @@ export function BottomNav() {
 }
 
 function NavIcon({ id, active }: { id: string; active: boolean }) {
-  const stroke = active ? "#b08d4a" : "#c9bfa8";
+  const stroke = active ? "#b08d4a" : "#8f8774";
   return (
     <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden>
       {id === "home" ? (

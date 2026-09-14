@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { CrossingRequestRecord } from "@/lib/crossings/types";
 import { Button } from "@/components/ui/button";
+import { DemoMark } from "@/components/brand/demo-mark";
+import { EmptyState } from "@/components/crossings/states";
 
 export function RequestInbox({
   requests,
@@ -34,7 +36,12 @@ export function RequestInbox({
   }
 
   if (requests.length === 0) {
-    return <p className="text-sm text-ivory-dim">No Crossing requests yet.</p>;
+    return (
+      <EmptyState
+        title="No Crossing requests yet."
+        body="When a path overlaps, a Crossing can be proposed — city-level only, never a pin."
+      />
+    );
   }
 
   return (
@@ -43,17 +50,17 @@ export function RequestInbox({
       {requests.map((r) => {
         const incoming = r.toProfileId === viewerId;
         return (
-          <li key={r.id} className="border border-[var(--line)] p-4">
-            <p className="label">
-              {incoming ? "Received" : "Sent"} · {r.status.replaceAll("_", " ")} · {r.format}
-            </p>
-            <p className="mt-2 text-sm text-ivory-muted">
+          <li key={r.id} className="panel p-5">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <p className="label">
+                {incoming ? "Received" : "Sent"} · {r.status.replaceAll("_", " ")} · {r.format}
+              </p>
+              {r.isDemo ? <DemoMark /> : null}
+            </div>
+            <p className="mt-3 text-sm leading-relaxed text-ivory-muted">
               {r.proposedDates.join(", ")}
               {r.note ? ` · ${r.note}` : ""}
             </p>
-            {r.isDemo ? (
-              <p className="mt-1 text-[10px] tracking-[0.16em] uppercase text-gold">SYNTHETIC DEMO</p>
-            ) : null}
             {incoming && r.status === "proposed" && canMutate ? (
               <div className="mt-4 grid gap-2">
                 <input
@@ -76,13 +83,13 @@ export function RequestInbox({
               <div className="mt-3 flex flex-wrap gap-3">
                 <a
                   href={`/member/channels?channel=${r.conversationId ?? ""}`}
-                  className="text-[11px] tracking-[0.16em] uppercase text-gold"
+                  className="inline-flex min-h-11 items-center text-[11px] tracking-[0.16em] uppercase text-gold"
                 >
                   Open conversation
                 </a>
                 <a
                   href={`/api/crossings/ics/${r.id}`}
-                  className="text-[11px] tracking-[0.16em] uppercase text-ivory-muted"
+                  className="inline-flex min-h-11 items-center text-[11px] tracking-[0.16em] uppercase text-ivory-muted"
                 >
                   Download .ics
                 </a>

@@ -21,7 +21,7 @@ export function JourneyControls({ journey }: { journey: JourneyRecord }) {
       {journey.status === "paused" ? (
         <button
           type="button"
-          className="min-h-11 border border-[var(--line)] px-3 text-[10px] tracking-[0.16em] uppercase"
+          className="action-quiet"
           onClick={() => void act("resume")}
         >
           Resume
@@ -29,7 +29,7 @@ export function JourneyControls({ journey }: { journey: JourneyRecord }) {
       ) : (
         <button
           type="button"
-          className="min-h-11 border border-[var(--line)] px-3 text-[10px] tracking-[0.16em] uppercase"
+          className="action-quiet"
           onClick={() => void act("pause")}
         >
           Pause
@@ -37,7 +37,7 @@ export function JourneyControls({ journey }: { journey: JourneyRecord }) {
       )}
       <button
         type="button"
-        className="min-h-11 border border-[var(--line)] px-3 text-[10px] tracking-[0.16em] uppercase"
+        className="action-quiet"
         onClick={() => void act("delete")}
       >
         Delete

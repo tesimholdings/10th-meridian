@@ -37,7 +37,7 @@ export default function AdminHomePage() {
 
 function Card({ label, value }: { label: string; value: string }) {
   return (
-    <div className="border border-[var(--line)] p-4">
+    <div className="panel-quiet p-4">
       <p className="label">{label}</p>
       <p className="mt-2 font-serif text-2xl">{value}</p>
     </div>

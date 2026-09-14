@@ -1,7 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1800">
+  <defs>
+    <radialGradient id="night" cx="50%" cy="38%" r="62%">
+      <stop offset="0%" stop-color="#14343c" stop-opacity="0.55"/>
+      <stop offset="55%" stop-color="#0c1c28" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#070809" stop-opacity="1"/>
+    </radialGradient>
+  </defs>
   <rect width="1200" height="1800" fill="#070809"/>
-  <rect width="1200" height="1800" fill="#0c1c28" opacity="0.55"/>
-  <path d="M600 0 V1800" stroke="#b08d4a" stroke-width="1" opacity="0.4"/>
-  <circle cx="600" cy="820" r="220" fill="none" stroke="#efe6d4" opacity="0.12"/>
-  <text x="600" y="1720" text-anchor="middle" fill="#8f8774" font-size="18" font-family="Georgia, serif">REPLACE ASSET  hero poster</text>
+  <rect width="1200" height="1800" fill="url(#night)"/>
+  <path d="M600 0 V1800" stroke="#b08d4a" stroke-width="1" opacity="0.35"/>
+  <ellipse cx="600" cy="820" rx="280" ry="110" fill="none" stroke="#efe6d4" opacity="0.1"/>
+  <ellipse cx="600" cy="820" rx="110" ry="280" fill="none" stroke="#efe6d4" opacity="0.08"/>
+  <path d="M0 1480 C 220 1360, 460 1600, 700 1460 S 1040 1380, 1200 1520" fill="none" stroke="#14343c" stroke-width="28" opacity="0.4"/>
+  <text x="600" y="1720" text-anchor="middle" fill="#8f8774" font-size="16" font-family="Georgia, serif">REPLACE ASSET — hero poster</text>
 </svg>
