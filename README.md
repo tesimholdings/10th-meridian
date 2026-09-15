@@ -4,16 +4,16 @@
 
 A private, invitation-only network built around relevance, trust, contribution, and the belief that the right relationship can change everything.
 
-This repository is a **reviewable foundation** — not a production launch. Do not deploy or publish live membership except the approved lifetime amount.
+This repository is a **reviewable foundation** — not a production launch. Do not deploy or publish live membership except the approved Founding Ten / Standard amounts.
 
-This wave wires the **live stack** (Resend, Supabase, Stream Chat, Stripe lifetime Checkout, Meridian 10/100 matching, PostHog) on top of the audit-reliability tip — official lockup everywhere, Crossings plane, liquid UI, and audit P1s preserved. Demo-safe when env is missing. Bottom nav stays Home · **My Circle** · Messages · Crossings · Profile.
+This wave wires the **live stack** (Resend, Supabase, Stream Chat, Stripe Checkout, Meridian 10/100 matching, PostHog) on top of the audit-reliability tip — official lockup everywhere, Crossings plane, liquid UI, and audit P1s preserved. Demo-safe when env is missing. Bottom nav stays Home · **My Circle** · Messages · Crossings · Profile.
 
 ## Stack
 
 - Next.js 16 (App Router) + TypeScript, mobile-first
 - Vercel-ready (this PR does **not** deploy or promote Production)
-- Supabase (Auth, Postgres, Storage) — client/server helpers + schema through `0008_live_stack.sql`
-- Stripe Billing — $10,000 lifetime one-time Checkout + webhook stub (never charges without keys)
+- Supabase (Auth, Postgres, Storage) — client/server helpers + schema through `0009_stripe_membership.sql`
+- Stripe Billing — Founding Ten $5,000 one-time; after that $10,000 entry + $195/month (never charges without keys)
 - Stream Chat — server/client token helpers for DMs and Channels
 - Resend — apply received, Open House reminder, invite (`team@tenmeridian.com`)
 - Hybrid **Meridian 10 / 100** matching in TypeScript + Postgres
@@ -51,8 +51,8 @@ No live secrets required. Missing env = labeled demo.
 3. **Remind me** on the lock → `/api/reminders` stubs Resend (`EMAIL_FROM=team@tenmeridian.com`) until `RESEND_API_KEY` is set
 4. Apply during Open House → `/api/applications` sends **application received** (stub without key)
 5. Reviewer tools → **Approved — payment pending** → `/member/billing` → **Continue to Stripe Checkout**
-   - Without `STRIPE_SECRET_KEY` + `STRIPE_PRICE_ID`: HTTP 501, nothing charged
-   - With keys: hosted Checkout Session, mode `payment`, lifetime $10,000 Price only
+   - Without keys: HTTP 501, nothing charged
+   - With TEST keys: Founding Ten uses `mode=payment` ($5,000). After that / rejoin: `mode=subscription` ($10,000 entry + $195/month)
 6. `/member/circle` — Meridian **10 → 100** (never “Matches”). Hybrid TS scoring; Postgres persist when service role exists
 7. `/member/messages` — DMs + Channels. Stream token at `POST /api/stream/token` (stub without keys)
 8. `/api/health` — integration flags (supabase / stripe / stream / resend / posthog / sentry)
@@ -75,11 +75,15 @@ Never commit real secrets. Leave blank to keep demo mode.
 | `SUPABASE_SERVICE_ROLE_KEY` | Matching persist / admin | Service role — server only |
 | `NEXT_PUBLIC_STREAM_API_KEY` | Chat | Stream public key |
 | `STREAM_API_SECRET` | Chat | Stream server secret |
-| `STRIPE_SECRET_KEY` | Billing | Stripe secret — never charge without this |
+| `STRIPE_SECRET_KEY` | Billing | Stripe TEST secret — never charge without this |
 | `STRIPE_WEBHOOK_SECRET` | Billing webhooks | Signature verification |
-| `STRIPE_PRICE_ID` | Billing | Approved **$10,000 lifetime one-time** Price (`price_…`) |
-| `STRIPE_LIFETIME_PRICE_ID` | No | Alias for `STRIPE_PRICE_ID` |
+| `STRIPE_PRICE_FOUNDING_ENTRY` | Billing | Founding Ten **$5,000** one-time (`price_1UG1eB3QQyESIKbfGysIcPYf`) |
+| `STRIPE_PRICE_STANDARD_ENTRY` | Billing | Standard **$10,000** one-time entry (`price_1UG1eC3QQyESIKbfKbIfpHct`) |
+| `STRIPE_PRICE_MONTHLY` | Billing | Standard **$195/month** (`price_1UG1eD3QQyESIKbfZJOuoyS6`) |
+| `STRIPE_FOUNDING_PRICE_ID` | No | Alias for `STRIPE_PRICE_FOUNDING_ENTRY` |
+| `STRIPE_STANDARD_PRICE_ID` | No | Alias for `STRIPE_PRICE_STANDARD_ENTRY` |
 | `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Billing UI | Publishable key |
+| `STRIPE_PRICE_ID` / `STRIPE_LIFETIME_PRICE_ID` | No | **Retired.** Archived lifetime Price — do not use |
 | `NEXT_PUBLIC_POSTHOG_KEY` | Analytics | Client init; **no-op if empty** |
 | `NEXT_PUBLIC_POSTHOG_HOST` | No | Default `https://us.i.posthog.com` |
 | `SENTRY_DSN` / `NEXT_PUBLIC_SENTRY_DSN` | No | Placeholders only until PR #12 lands |
@@ -93,9 +97,9 @@ Never commit real secrets. Leave blank to keep demo mode.
 | `ADMIN_NOTIFICATION_EMAIL` | No | Steward copies |
 | `EMBEDDING_PROVIDER` / `OPENAI_API_KEY` | No | Matching semantic boost; default `stub` |
 
-Create the Stripe Price in test mode first (Dashboard → Product → one-time **$10,000** → copy `price_…`). Do not invent an amount in code. Monthly is not a product.
+Create Stripe Prices in TEST only (Dashboard). Do not invent amounts in code. Do not use the archived lifetime Price. No promotion codes.
 
-Social OAuth is **not** built. Apply migrations `0001`–`0008`. Matching algorithm: [docs/MATCHING.md](./docs/MATCHING.md).
+See [docs/STRIPE.md](./docs/STRIPE.md). Social OAuth is **not** built. Apply migrations `0001`–`0009`. Matching algorithm: [docs/MATCHING.md](./docs/MATCHING.md).
 
 ## What this PR includes
 
@@ -105,16 +109,16 @@ Social OAuth is **not** built. Apply migrations `0001`–`0008`. Matching algori
 4. Member product: Home, **My Circle** (never “Matches”), Your Circle, Ask the Meridian, directory + rich profiles, Messages (DMs + Channels), Crossings, Events, Billing
 5. Meridian 10 / 100 hybrid matching (structured + complementarity + diversity + feedback + curation)
 6. Actionable admin: admissions cap + override log, live weights, Open House schedule, referral issue/revoke, curated promote/suppress
-7. SQL migrations through `0008_live_stack.sql`, `.env.example`, `SETUP.md`, [docs/MATCHING.md](./docs/MATCHING.md)
+7. SQL migrations through `0009_stripe_membership.sql`, `.env.example`, `SETUP.md`, [docs/MATCHING.md](./docs/MATCHING.md), [docs/STRIPE.md](./docs/STRIPE.md)
 8. **Crossings** — Set Your Coordinates, A Crossing, Open a Table, City Hosts, City Notes
 9. Notifications center + preferences; community standard: absolutely no soliciting
-10. Approved **lifetime $10,000**. Monthly later — not built. Domain prep **tenmeridian.com** (not purchased)
+10. Approved **Founding Ten $5,000**; after that **$10,000 + $195/month**. No discounts. Domain prep **tenmeridian.com** (not purchased)
 
 ## Reviewer click-through (Stefan / Astra)
 
 1. `/` lock — grainy black-and-gold field only (no campaign/yacht photo), **centered** wordmark + headline + countdown + **Remind me** on desktop; Sign in in the header
 2. Desktop (fine pointer): gold/navy cursor follower. Off for touch. Off / static when `prefers-reduced-motion`
-3. Reviewer tools → **Force Open House** → `/open-house` hero, The House, Experiences, **$10,000. Once.**, no-soliciting → **Explore the house**
+3. Reviewer tools → **Force Open House** → `/open-house` hero, The House, Experiences, **Founding Ten. $5,000.**, no-soliciting → **Explore the house**
 4. Home — greeting, next trip / experience, three useful connections, Rewards teaser in **points**
 5. **My Circle** (`/member/circle`; `/member/index` redirects) — search / Ask; tabs **For you · Your Circle · All members**. For you: Meridian size **10 → 100** (default 10). Your Circle is hand-picked. All members is the directory. Never “Matches”
 6. For you — slide from Meridian 10 (immediate ten) toward 100; people enter/leave with motion
@@ -134,7 +138,8 @@ See [ASTRA_AUDIT_FIXES.md](./ASTRA_AUDIT_FIXES.md).
 
 ## Do not
 
-- Invent monthly membership prices
+- Invent membership amounts — use Founding Ten **$5,000** and Standard **$10,000 + $195/month**
+- Use coupons or referral discounts that change what a member pays
 - Copy another network’s name, copy, photographs, or logo
 - Present DEMO people or events as real
 - Deploy this branch to production from the PR

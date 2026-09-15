@@ -23,7 +23,7 @@ export default async function SettingsPage() {
       <section id="billing" className="mt-8">
         <h2 className="font-serif text-2xl">Billing</h2>
         <p className="mt-2 text-sm text-[var(--navy-soft)]">
-          Lifetime membership is $10,000. Monthly billing is not offered.
+          Founding Ten enter at $5,000. After that: $10,000 + $195/month. No discounts.
         </p>
         <a href="/member/billing" className="mt-2 inline-flex min-h-11 items-center text-sm text-[var(--blue)]">
           Open billing

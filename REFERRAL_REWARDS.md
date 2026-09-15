@@ -10,7 +10,7 @@ Robinhood Gold Card Rewards–inspired **balance + unlock cards + reserve**, bra
 - Each person who **joins through a member’s referral and is admitted** is worth **10 points**.
 - Internally **10 points = $1,000** toward redemptions. Ledger still stores USD; **the UI shows points first**.
 - Granted **once** per successful referral. Declined / withdrawn never pay.
-- Lifetime membership remains **$10,000**. No other membership prices.
+- Membership prices are **Founding Ten $5,000** (first 10 members) then **$10,000 entry + $195/month**. Points never discount those amounts.
 - Network admissions cap remains **max 10 new members / month**. The Refer tab says this plainly so a referral feels scarce.
 
 ## Policy
@@ -45,4 +45,4 @@ Seed: L. Moreau (credited, +10 pts) and S. Rahman (applied, no credit). Math mus
 
 ## Out of scope
 
-Real Stripe payouts, real gold shipping, real travel booking, stocks, changing the $10k lifetime price, or changing the 10/month cap.
+Real Stripe payouts, real gold shipping, real travel booking, stocks, changing Founding/Standard prices, or changing the 10/month admissions cap.

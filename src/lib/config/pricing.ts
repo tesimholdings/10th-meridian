@@ -1,20 +1,34 @@
 import { env } from "@/lib/env";
-import { LIFETIME_PRICE_LABEL } from "@/lib/copy/community";
+import {
+  FOUNDING_ENTRY_LABEL,
+  MONTHLY_DUES_LABEL,
+  STANDARD_ENTRY_LABEL,
+} from "@/lib/copy/community";
 
 /**
- * Membership products. Lifetime $10,000 is approved.
- * Monthly billing is deferred — do not build or display a monthly price.
+ * Membership products. Founding Ten $5,000 one-time.
+ * After that: $10,000 entry + $195/month. No discounts. No lifetime-only Price.
  */
 export const membershipProducts = {
-  lifetime: {
-    id: "lifetime",
-    name: "Lifetime Membership",
+  founding: {
+    id: "founding",
+    name: "Founding Ten",
     summary:
-      "One payment. The house, My Circle, Channels, and Crossings — for as long as the house stands. Monthly billing is not offered yet.",
-    priceLabel: env.lifetimePriceLabel || LIFETIME_PRICE_LABEL,
-    stripePriceId: env.stripeLifetimePriceId || null,
+      "One payment of $5,000 for the first ten members. The same for everyone. No discounts.",
+    priceLabel: env.foundingPriceLabel || FOUNDING_ENTRY_LABEL,
+    stripePriceId: env.stripeFoundingEntryPriceId || null,
     checkoutEligible: true,
-    interval: "lifetime" as const,
+    interval: "founding" as const,
+  },
+  standard: {
+    id: "standard",
+    name: "Membership",
+    summary: `After Founding Ten: ${STANDARD_ENTRY_LABEL} to enter, then ${MONTHLY_DUES_LABEL} each month. Cancel dues and the seat ends.`,
+    priceLabel: `${env.standardPriceLabel || STANDARD_ENTRY_LABEL} + ${env.monthlyDuesLabel || MONTHLY_DUES_LABEL}/mo`,
+    stripePriceId: env.stripeStandardEntryPriceId || null,
+    stripeMonthlyPriceId: env.stripeMonthlyPriceId || null,
+    checkoutEligible: true,
+    interval: "month" as const,
   },
   organization: {
     id: "organization",
@@ -29,4 +43,8 @@ export const membershipProducts = {
 
 export type MembershipProductId = keyof typeof membershipProducts;
 
-export const customerFacingProducts = [membershipProducts.lifetime, membershipProducts.organization];
+export const customerFacingProducts = [
+  membershipProducts.founding,
+  membershipProducts.standard,
+  membershipProducts.organization,
+];

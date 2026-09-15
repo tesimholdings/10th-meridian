@@ -24,8 +24,10 @@ import {
   ADMISSIONS_MONTHLY_CAP,
   CREDIT_PER_SUCCESSFUL_REFERRAL_USD,
   CREDIT_USD_RATIO,
-  LIFETIME_MEMBERSHIP_USD,
+  FOUNDING_ENTRY_USD,
+  MONTHLY_DUES_USD,
   POINTS_PER_SUCCESSFUL_REFERRAL,
+  STANDARD_ENTRY_USD,
   USD_PER_POINT,
   type CreditLedgerEntry,
   type RewardReservation,
@@ -65,7 +67,9 @@ describe("Referral Rewards credit math", () => {
     assert.equal(POINTS_PER_SUCCESSFUL_REFERRAL, 10);
     assert.equal(USD_PER_POINT, 100);
     assert.equal(POINTS_PER_SUCCESSFUL_REFERRAL * USD_PER_POINT, 1_000);
-    assert.equal(LIFETIME_MEMBERSHIP_USD, 10_000);
+    assert.equal(FOUNDING_ENTRY_USD, 5_000);
+    assert.equal(STANDARD_ENTRY_USD, 10_000);
+    assert.equal(MONTHLY_DUES_USD, 195);
     assert.equal(ADMISSIONS_MONTHLY_CAP, 10);
     assert.equal(earnedCreditsFromUsd(3_000), 3);
     assert.equal(progressLabel(0, 1_000), "0 pts of 10 pts");

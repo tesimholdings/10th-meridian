@@ -21,9 +21,11 @@ import {
   HOUSE_BLOCKS,
   JOIN_WAITLIST,
   MEMBERSHIP_CAP,
+  MEMBERSHIP_FOUNDING,
   MEMBERSHIP_HEADLINE,
-  MEMBERSHIP_NO_MONTHLY,
+  MEMBERSHIP_NO_DISCOUNT,
   MEMBERSHIP_SOLICITING,
+  MEMBERSHIP_STANDARD,
   OPEN_HOUSE_EVENING,
   OPEN_HOUSE_EYEBROW,
   OPEN_HOUSE_HEADLINE,
@@ -169,7 +171,9 @@ function Membership({ access }: { access: AccessContext }) {
         <p className="text-xs font-medium tracking-[0.16em] text-[#c4a264]">MEMBERSHIP</p>
         <h2 className="mt-3 font-serif text-5xl md:text-6xl">{MEMBERSHIP_HEADLINE}</h2>
         <ul className="mx-auto mt-8 grid max-w-lg gap-3 text-left text-base text-[#faf8f2]/90">
-          <li>{MEMBERSHIP_NO_MONTHLY}</li>
+          <li>{MEMBERSHIP_FOUNDING}</li>
+          <li>{MEMBERSHIP_STANDARD}</li>
+          <li>{MEMBERSHIP_NO_DISCOUNT}</li>
           <li>{MEMBERSHIP_CAP}</li>
           <li>{MEMBERSHIP_SOLICITING}</li>
           {access.referralValid ? (

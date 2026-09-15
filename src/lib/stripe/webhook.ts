@@ -1,76 +1,150 @@
-import type Stripe from "stripe";
+import Stripe from "stripe";
 import { env } from "@/lib/env";
-import { getStripe } from "@/lib/stripe/client";
+import {
+  checkoutSessionShouldUnlock,
+  customerIdFrom,
+  invoiceOfferFromLines,
+  paymentIntentIdFrom,
+  revokeMembership,
+  subscriptionIdFrom,
+  subscriptionIsRevoked,
+  unlockMembership,
+} from "@/lib/stripe/unlock";
 import { stubInsert } from "@/lib/supabase/stub";
-import { getSupabaseAdmin } from "@/lib/supabase/server";
 
 export type WebhookHandleResult =
   | { ok: true; stub: true; note: string }
-  | { ok: true; stub: false; type: string }
+  | { ok: true; stub: false; type: string; unlocked?: boolean; skipped?: string }
   | { ok: false; status: number; message: string };
 
-/**
- * Verifies Stripe signatures when STRIPE_WEBHOOK_SECRET is set.
- * Without keys, accepts a labeled stub so preview never charges or crashes.
- */
 export async function handleStripeWebhook(
   rawBody: string,
   signature: string | null,
 ): Promise<WebhookHandleResult> {
-  const stripe = getStripe();
-  if (!stripe || !env.stripeWebhookSecret) {
+  if (!env.stripeWebhookSecret) {
     stubInsert("referrals_audit", { kind: "stripe_webhook_stub", received: true });
     return {
       ok: true,
       stub: true,
-      note: "Webhook accepted in stub mode. Configure STRIPE_WEBHOOK_SECRET for verification. Nothing was charged.",
+      note: "Webhook accepted in stub mode. Configure STRIPE_WEBHOOK_SECRET for verification. Membership was not changed. Nothing was charged.",
     };
   }
-
   if (!signature) {
     return { ok: false, status: 400, message: "Missing signature" };
   }
 
   let event: Stripe.Event;
   try {
-    event = stripe.webhooks.constructEvent(rawBody, signature, env.stripeWebhookSecret);
+    event = Stripe.webhooks.constructEvent(rawBody, signature, env.stripeWebhookSecret);
   } catch {
     return { ok: false, status: 400, message: "Invalid signature" };
   }
 
-  await persistStripeEvent(event);
-  return { ok: true, stub: false, type: event.type };
+  const applied = await applyVerifiedStripeEvent(event);
+  return {
+    ok: true,
+    stub: false,
+    type: event.type,
+    unlocked: applied.unlocked,
+    skipped: applied.skipped,
+  };
 }
 
-async function persistStripeEvent(event: Stripe.Event) {
+export async function applyVerifiedStripeEvent(event: Stripe.Event): Promise<{
+  unlocked: boolean;
+  skipped?: string;
+}> {
   switch (event.type) {
-    case "checkout.session.completed": {
+    case "checkout.session.completed":
+    case "checkout.session.async_payment_succeeded": {
       const session = event.data.object as Stripe.Checkout.Session;
-      const admin = getSupabaseAdmin();
-      const row = {
-        kind: "stripe_event",
-        type: event.type,
-        session_id: session.id,
-        account_id: session.metadata?.accountId ?? null,
-        product: session.metadata?.product ?? "lifetime",
-      };
-      if (admin) {
-        try {
-          await admin.from("membership_events").insert(row);
-        } catch {
-          // Preview / missing table: fall through to the in-process stub.
-        }
+      const gate = checkoutSessionShouldUnlock(session);
+      if (!gate.ok) {
+        stubInsert("referrals_audit", {
+          kind: "stripe_event",
+          type: event.type,
+          skipped: gate.reason,
+          session_id: session.id,
+        });
+        return { unlocked: false, skipped: gate.reason };
       }
-      stubInsert("referrals_audit", row);
-      break;
+      const result = await unlockMembership({
+        eventId: event.id,
+        source: "checkout",
+        product: gate.product,
+        accountId: session.metadata?.accountId || session.client_reference_id,
+        email: session.customer_details?.email || session.customer_email,
+        applicationId: session.metadata?.applicationId,
+        stripeCustomerId: customerIdFrom(session.customer),
+        stripeCheckoutSessionId: session.id,
+        stripeInvoiceId: typeof session.invoice === "string" ? session.invoice : session.invoice?.id,
+        stripePaymentIntentId: paymentIntentIdFrom(session.payment_intent),
+        stripeSubscriptionId: subscriptionIdFrom(session.subscription),
+      });
+      return { unlocked: result.unlocked, skipped: result.skipped };
     }
-    case "invoice.paid":
-    case "customer.subscription.updated":
-    case "customer.subscription.deleted":
-      // Lifetime is one-time. These events are recorded only if a later product exists.
-      stubInsert("referrals_audit", { kind: "stripe_event", type: event.type });
-      break;
+    case "invoice.paid": {
+      const invoice = event.data.object as Stripe.Invoice;
+      const offer = invoiceOfferFromLines(invoice);
+      if ("reason" in offer) {
+        stubInsert("referrals_audit", { kind: "stripe_event", type: event.type, skipped: offer.reason });
+        return { unlocked: false, skipped: offer.reason };
+      }
+      const result = await unlockMembership({
+        eventId: event.id,
+        source: "invoice",
+        product: offer.product,
+        accountId: invoice.metadata?.accountId,
+        email: invoice.customer_email,
+        applicationId: invoice.metadata?.applicationId,
+        stripeCustomerId: customerIdFrom(invoice.customer),
+        stripeInvoiceId: invoice.id,
+        stripePaymentIntentId: paymentIntentIdFrom(
+          (invoice as Stripe.Invoice & { payment_intent?: string | Stripe.PaymentIntent | null }).payment_intent,
+        ),
+        stripeSubscriptionId: subscriptionIdFrom(
+          (invoice as Stripe.Invoice & { subscription?: string | Stripe.Subscription | null }).subscription,
+        ),
+        stripePriceId: offer.priceId,
+      });
+      return { unlocked: result.unlocked, skipped: result.skipped };
+    }
+    case "customer.subscription.updated": {
+      const subscription = event.data.object as Stripe.Subscription;
+      if (subscriptionIsRevoked(subscription.status)) {
+        const result = await revokeMembership({
+          eventId: event.id,
+          accountId: subscription.metadata?.accountId,
+          stripeSubscriptionId: subscription.id,
+          stripeCustomerId: customerIdFrom(subscription.customer),
+        });
+        return { unlocked: false, skipped: result.skipped ?? "revoked" };
+      }
+      if (subscription.status === "active") {
+        const result = await unlockMembership({
+          eventId: event.id,
+          source: "subscription",
+          product: "standard",
+          accountId: subscription.metadata?.accountId,
+          stripeCustomerId: customerIdFrom(subscription.customer),
+          stripeSubscriptionId: subscription.id,
+        });
+        return { unlocked: result.unlocked, skipped: result.skipped };
+      }
+      return { unlocked: false, skipped: `subscription-${subscription.status}` };
+    }
+    case "customer.subscription.deleted": {
+      const subscription = event.data.object as Stripe.Subscription;
+      const result = await revokeMembership({
+        eventId: event.id,
+        accountId: subscription.metadata?.accountId,
+        stripeSubscriptionId: subscription.id,
+        stripeCustomerId: customerIdFrom(subscription.customer),
+      });
+      return { unlocked: false, skipped: result.skipped ?? "revoked" };
+    }
     default:
-      break;
+      stubInsert("referrals_audit", { kind: "stripe_event", type: event.type });
+      return { unlocked: false, skipped: "ignored-event" };
   }
 }

@@ -30,7 +30,7 @@ export async function sendOpenHouseReminder(
   });
 }
 
-/** Steward invitation to continue to lifetime checkout. */
+/** Steward invitation to continue to membership checkout. */
 export async function sendInvite(
   to: string,
   inviteId: string,

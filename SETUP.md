@@ -18,7 +18,7 @@ Wave 2 added interactive member/admin DEMO state (in-process store). It resets w
 ## 2. Supabase
 
 - [ ] Create a Supabase project
-- [ ] Apply `supabase/migrations/0001_init.sql` through `0008_live_stack.sql` (SQL editor or CLI)
+- [ ] Apply `supabase/migrations/0001_init.sql` through `0009_stripe_membership.sql` (SQL editor or CLI)
 - [ ] Confirm `pgcrypto` is available; decide whether to enable `vector` later
 - [ ] Copy `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
 - [ ] Configure Auth: email magic link / password, site URL, redirect to `/api/auth/callback`
@@ -31,15 +31,19 @@ Wave 2 added interactive member/admin DEMO state (in-process store). It resets w
 ## 3. Stripe Billing
 
 - [ ] Create a Stripe account (test mode first)
-- [x] Lifetime membership **$10,000** is approved (Stefan). Monthly billing later — do not build it.
-- [ ] Create a Stripe one-time Price for lifetime **$10,000**; paste into `STRIPE_PRICE_ID` (alias `STRIPE_LIFETIME_PRICE_ID`) and `site_config`
+- [x] **Founding Ten:** $5,000 one-time, first 10 members, no discounts.
+- [x] **After Founding Ten:** $10,000 one-time entry + $195/month. Cancel dues → seat ends. Rejoin = $10,000 again.
+- [x] TEST catalog (acct_1UG1Kk3QQyESIKbf): founding `price_1UG1eB3QQyESIKbfGysIcPYf`, entry `price_1UG1eC3QQyESIKbfKbIfpHct`, monthly `price_1UG1eD3QQyESIKbfZJOuoyS6`
+- [ ] Paste those IDs into Preview: `STRIPE_PRICE_FOUNDING_ENTRY`, `STRIPE_PRICE_STANDARD_ENTRY`, `STRIPE_PRICE_MONTHLY`
 - [ ] Organization / Strategic Partnership remains by application — no public price
 - [ ] `STRIPE_SECRET_KEY`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
 - [ ] Webhook endpoint `/api/stripe/webhook` for `checkout.session.completed`, `invoice.paid`, `customer.subscription.updated`, `customer.subscription.deleted`
 - [ ] `STRIPE_WEBHOOK_SECRET`
-- [ ] Enable Customer Portal (cancellation / invoices) — copy still placeholder
-- [ ] Optional event payments: per-event Price IDs on `events.stripe_price_id`
-- [ ] Confirm founding preferential rate rules while continuously active (finance + counsel)
+- [ ] Enable Customer Portal for invoices / Standard dues — not a lifetime product
+- [ ] Do **not** use archived lifetime Price `price_1UG1Xg3QQyESIKbfV5BfJF6U`
+- [ ] Do **not** enable promotion codes or referral price changes
+
+See [docs/STRIPE.md](./docs/STRIPE.md).
 
 ## 4. Stream Chat
 
@@ -133,7 +137,7 @@ See [docs/MATCHING.md](./docs/MATCHING.md) for the algorithm (compatibility, com
 
 ## Still needs Stefan
 
-- [x] Lifetime price $10,000 (approved). Monthly later — not built.
+- [x] Founding Ten $5,000; after that $10,000 entry + $195/month. No discounts. Archived lifetime Price unused.
 - [ ] Hero film to replace the labeled cinematic placeholder
 - [ ] Live Supabase / Stripe / Stream / Resend keys (build and tests must not require them)
 - [ ] Counsel-approved legal pages
@@ -145,14 +149,9 @@ See `.env.example` and the README Vercel env checklist for every variable, its p
 
 Crossings adds **no new environment variables**. Calendar v1 is `.ics` download only — do not block on OAuth. Social OAuth is not built.
 
-## Stripe Price (lifetime $10,000)
+## Stripe Prices (TEST)
 
-1. Stripe Dashboard (test mode) → Products → Add product
-2. Name: `10th Meridian Lifetime`
-3. Pricing: **One time**, **$10,000.00 USD** — not recurring
-4. Copy the Price id (`price_…`) into Vercel Preview: `STRIPE_PRICE_ID`
-5. Webhook: `https://<preview-host>/api/stripe/webhook` for `checkout.session.completed`
-6. Do not create a monthly Price. Do not charge from this PR.
+See [docs/STRIPE.md](./docs/STRIPE.md). Founding `price_1UG1eB3QQyESIKbfGysIcPYf`, Standard entry `price_1UG1eC3QQyESIKbfKbIfpHct`, monthly `price_1UG1eD3QQyESIKbfZJOuoyS6`. Do not use archived lifetime Price `price_1UG1Xg3QQyESIKbfV5BfJF6U`. Do not enable livemode from this PR.
 
 ## PostHog
 

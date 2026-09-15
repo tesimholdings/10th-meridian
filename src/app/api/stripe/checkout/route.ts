@@ -1,11 +1,11 @@
 import { redirect } from "next/navigation";
 import { resolveAccessContext } from "@/lib/access/context";
-import { membershipProducts, type MembershipProductId } from "@/lib/config/pricing";
 import { env } from "@/lib/env";
-import {
-  checkoutStubMessage,
-  createLifetimeCheckoutSession,
-} from "@/lib/stripe/lifetime";
+import { getPreviewStore } from "@/lib/preview/store";
+import { rateLimit, clientKey } from "@/lib/security/rate-limit";
+import { checkoutStubMessage, createMembershipCheckoutSession } from "@/lib/stripe/checkout";
+
+export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   const access = await resolveAccessContext();
@@ -13,18 +13,23 @@ export async function POST(request: Request) {
     return new Response("Not available during Open House.", { status: 403 });
   }
 
-  const form = await request.formData();
-  const product = String(form.get("product") ?? "") as MembershipProductId;
-  const item = membershipProducts[product];
-  if (!item?.checkoutEligible) {
-    return new Response("This product is by application.", { status: 400 });
+  const limited = rateLimit(clientKey(request, "stripe-checkout"), 8);
+  if (!limited.ok) {
+    return new Response("Too many checkout attempts. Wait a moment.", { status: 429 });
   }
 
-  const result = await createLifetimeCheckoutSession({
+  const email = access.user?.email;
+  const application = email
+    ? getPreviewStore().applications.find((row) => row.email.toLowerCase() === email.toLowerCase())
+    : undefined;
+
+  const origin = env.siteUrl.replace(/\/$/, "");
+  const result = await createMembershipCheckoutSession({
     accountId: access.user?.id ?? "",
-    email: access.user?.email,
-    successUrl: `${env.siteUrl}/member/billing?checkout=success`,
-    cancelUrl: `${env.siteUrl}/member/billing?checkout=cancel`,
+    email,
+    applicationId: application?.id,
+    successUrl: `${origin}/member/billing?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
+    cancelUrl: `${origin}/member/billing?checkout=cancel`,
   });
 
   if (!result.ok) {

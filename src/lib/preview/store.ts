@@ -69,6 +69,27 @@ import { memberReferralCode, memberReferralToken } from "@/lib/rewards/identity"
 import { buildRewardsSnapshot } from "@/lib/rewards/snapshot";
 import type { RewardsState } from "@/lib/rewards/types";
 
+export type MembershipProductKind = "founding" | "standard";
+export type PaidMembershipStatus = "active" | "canceled" | "past_due";
+
+export type PaidMembershipRecord = {
+  accountId: string;
+  email?: string;
+  applicationId?: string;
+  product: MembershipProductKind;
+  status: PaidMembershipStatus;
+  stripeCustomerId?: string;
+  stripeCheckoutSessionId?: string;
+  stripeInvoiceId?: string;
+  stripePaymentIntentId?: string;
+  stripeSubscriptionId?: string;
+  eventId: string;
+  source: "checkout" | "invoice" | "subscription";
+  paidAt: string;
+  canceledAt?: string;
+  isDemo: boolean;
+};
+
 export interface PreviewState {
   weights: MatchingWeights;
   openHouse: OpenHouseConfig;
@@ -78,6 +99,7 @@ export interface PreviewState {
   viewerId: string;
   applications: ApplicationRecord[];
   referrals: ReferralRecord[];
+  paidMemberships: PaidMembershipRecord[];
   feedback: MatchFeedback[];
   curation: MatchCuration[];
   intros: IntroRequest[];
@@ -113,6 +135,7 @@ function seed(): PreviewState {
     profiles: structuredClone(demoProfiles),
     viewerId: viewerDemoProfile.id,
     applications: structuredClone(demoApplications),
+    paidMemberships: [],
     referrals: [
       ...structuredClone(demoReferrals),
       {
@@ -764,6 +787,89 @@ export function advanceMemberRedemption(redemptionId: string) {
   state().rewards = result.state;
   audit(viewer.displayName, "rewards.redemption_advanced", "reward_redemption", redemptionId);
   return result;
+}
+
+export function recordPaidMembership(
+  input: Omit<PaidMembershipRecord, "paidAt" | "isDemo" | "canceledAt"> & { paidAt?: string },
+): { already: boolean; record: PaidMembershipRecord } {
+  const s = state();
+  const byEvent = s.paidMemberships.find((m) => m.eventId === input.eventId);
+  if (byEvent) return { already: true, record: byEvent };
+  const existing = s.paidMemberships.find(
+    (m) =>
+      (input.accountId && m.accountId === input.accountId) ||
+      (input.email && m.email && input.email && m.email.toLowerCase() === input.email.toLowerCase()),
+  );
+  const record: PaidMembershipRecord = {
+    ...(existing ?? {}),
+    ...input,
+    status: "active",
+    paidAt: input.paidAt ?? new Date().toISOString(),
+    canceledAt: undefined,
+    isDemo: true,
+  };
+  if (existing) {
+    const already = existing.status === "active";
+    Object.assign(existing, record);
+    audit("stripe", `membership.paid.${input.source}`, "membership", input.accountId || input.eventId);
+    return { already, record: existing };
+  }
+  s.paidMemberships.unshift(record);
+  if (input.applicationId) {
+    const app = s.applications.find((a) => a.id === input.applicationId);
+    if (app) {
+      app.status = "active_member";
+      app.updatedAt = record.paidAt;
+    }
+  }
+  audit("stripe", `membership.paid.${input.source}`, "membership", input.accountId || input.eventId);
+  return { already: false, record };
+}
+
+export function revokePaidMembership(input: {
+  accountId?: string | null;
+  email?: string | null;
+  stripeSubscriptionId?: string | null;
+  eventId: string;
+}): { already: boolean; record: PaidMembershipRecord | null } {
+  const s = state();
+  const record = s.paidMemberships.find(
+    (m) =>
+      (input.accountId && m.accountId === input.accountId) ||
+      (input.stripeSubscriptionId && m.stripeSubscriptionId === input.stripeSubscriptionId) ||
+      (input.email && m.email && m.email.toLowerCase() === input.email.toLowerCase()),
+  );
+  if (!record) return { already: false, record: null };
+  if (record.status === "canceled") return { already: true, record };
+  record.status = "canceled";
+  record.canceledAt = new Date().toISOString();
+  record.eventId = input.eventId;
+  audit("stripe", "membership.revoked", "membership", record.accountId || input.eventId);
+  return { already: false, record };
+}
+
+export function membershipFor(accountId?: string | null, email?: string | null) {
+  const s = state();
+  return (
+    s.paidMemberships.find(
+      (m) =>
+        (accountId && m.accountId && m.accountId === accountId) ||
+        (email && m.email && m.email.toLowerCase() === email.toLowerCase()),
+    ) ?? null
+  );
+}
+
+export function hadPaidMembership(accountId?: string | null, email?: string | null) {
+  return Boolean(membershipFor(accountId, email));
+}
+
+export function foundingSeatsTaken() {
+  return state().paidMemberships.filter((m) => m.product === "founding").length;
+}
+
+/** @deprecated Use membershipFor */
+export function lifetimeMembershipFor(accountId?: string | null, email?: string | null) {
+  return membershipFor(accountId, email);
 }
 
 function creditMemberForAdmittedReferralCode(app: ApplicationRecord) {

@@ -13,7 +13,8 @@ export default function TermsPage() {
         No more than ten new members are hand-selected each month.
       </p>
       <p>
-        Lifetime membership is $10,000. Monthly billing is not offered.
+        Founding Ten enter at $5,000. After that: $10,000 to enter plus $195 each month.
+        Cancel monthly dues and membership ends; rejoining requires the $10,000 entry again.
         {` ${SOLICITING_BAN}`} A ban for soliciting is without refund.
       </p>
       {env.isProduction ? null : (
