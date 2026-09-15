@@ -3,6 +3,10 @@ import { resolveAccessContext } from "@/lib/access/context";
 import { MemberShell } from "@/components/member/member-shell";
 import { RegisterButton } from "@/components/events/register-button";
 import { getPreviewStore } from "@/lib/preview/store";
+import { HiggsfieldSlot } from "@/components/brand/higgsfield-slot";
+import { stillForListedExperience } from "@/lib/atmosphere/campaign";
+import { campaignSrc } from "@/lib/atmosphere/resolve-campaign";
+import { formatHumanDateTime } from "@/lib/crossings/format";
 
 export const metadata = { title: "Experience", robots: { index: false } };
 
@@ -18,15 +22,19 @@ export default async function EventDetailPage({
 
   return (
     <MemberShell user={access.user} demo title="Experience">
-      <p className="label">{event.kind} · {event.listingState}</p>
-      <h1 className="mt-3 font-serif text-4xl">{event.title}</h1>
-      <p className="mt-4 text-ivory-muted">{event.longDescription ?? event.summary}</p>
-      <p className="mt-6 text-sm text-gold">
-        This has not occurred. DEMO listing only.
+      <HiggsfieldSlot src={campaignSrc(stillForListedExperience(event))} />
+      <p className="mt-4 text-sm text-[var(--ivory-dim)]">
+        {event.listingState === "concept" ? "Concept" : "Planned"} — this has not occurred
       </p>
+      <h1 className="mt-2 font-serif text-4xl">{event.title}</h1>
+      <p className="mt-4 text-[var(--navy-soft)]">{event.longDescription ?? event.summary}</p>
       <dl className="mt-8 grid gap-4">
         <div>
-          <dt className="label">City</dt>
+          <dt className="text-sm text-[var(--ivory-dim)]">When</dt>
+          <dd className="mt-1">{formatHumanDateTime(event.startsAt)}</dd>
+        </div>
+        <div>
+          <dt className="text-sm text-[var(--ivory-dim)]">Place</dt>
           <dd className="mt-1">{event.city}</dd>
         </div>
         <div>

@@ -3,30 +3,42 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { memberNav } from "@/lib/config/site";
+import { NavIcon } from "@/components/member/nav-icons";
 
-export function BottomNav() {
+export function BottomNav({ unreadMessages = 0 }: { unreadMessages?: number }) {
   const pathname = usePathname();
 
   return (
     <nav
-      className="nav-chrome fixed inset-x-0 bottom-0 z-40 backdrop-blur-md"
+      className="nav-chrome fixed inset-x-0 bottom-0 z-40 backdrop-blur-md md:hidden"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+      aria-label="Primary"
     >
       <ul className="mx-auto grid max-w-lg grid-cols-5">
         {memberNav.map((item) => {
-          const active = pathname?.startsWith(item.href);
+          const active =
+            item.id === "home"
+              ? pathname === item.href
+              : Boolean(pathname?.startsWith(item.href));
           return (
             <li key={item.id}>
               <Link
                 href={item.href}
-                className={`relative flex min-h-14 flex-col items-center justify-center gap-1 text-[10px] tracking-[0.16em] uppercase ${
-                  active ? "text-ivory" : "text-ivory-dim"
+                className={`pressable relative flex min-h-14 flex-col items-center justify-center gap-1 text-[11px] ${
+                  active ? "text-[var(--navy)] font-medium" : "text-[var(--ivory-dim)]"
                 }`}
               >
                 {active ? (
-                  <span className="absolute top-0 h-px w-6 bg-[var(--gold)]" aria-hidden />
+                  <span className="absolute top-0 h-0.5 w-6 rounded-full bg-[var(--gold)]" aria-hidden />
                 ) : null}
-                <NavIcon id={item.id} active={Boolean(active)} />
+                <span className="relative">
+                  <NavIcon id={item.id} active={Boolean(active)} />
+                  {item.id === "messages" && unreadMessages > 0 ? (
+                    <span className="absolute -right-2 -top-1 min-w-4 rounded-full bg-[var(--blue)] px-1 text-center text-[9px] text-white">
+                      {unreadMessages > 9 ? "9+" : unreadMessages}
+                    </span>
+                  ) : null}
+                </span>
                 {item.label}
               </Link>
             </li>
@@ -34,35 +46,5 @@ export function BottomNav() {
         })}
       </ul>
     </nav>
-  );
-}
-
-function NavIcon({ id, active }: { id: string; active: boolean }) {
-  const stroke = active ? "#b08d4a" : "#8f8774";
-  return (
-    <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden>
-      {id === "home" ? (
-        <path d="M3 9 L9 3 L15 9 V15 H3 Z" fill="none" stroke={stroke} />
-      ) : null}
-      {id === "index" ? (
-        <>
-          <circle cx="9" cy="9" r="6" fill="none" stroke={stroke} />
-          <path d="M9 3 V15 M3 9 H15" stroke={stroke} />
-        </>
-      ) : null}
-      {id === "channels" ? (
-        <path d="M3 5 H15 M3 9 H15 M3 13 H10" fill="none" stroke={stroke} />
-      ) : null}
-      {id === "members" ? (
-        <>
-          <circle cx="7" cy="7" r="2.2" fill="none" stroke={stroke} />
-          <circle cx="12" cy="8" r="1.8" fill="none" stroke={stroke} />
-          <path d="M3.5 14 C4 11.5 10 11.5 10.5 14" fill="none" stroke={stroke} />
-        </>
-      ) : null}
-      {id === "profile" ? (
-        <circle cx="9" cy="9" r="6.5" fill="none" stroke={stroke} />
-      ) : null}
-    </svg>
   );
 }

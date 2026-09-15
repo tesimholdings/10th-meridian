@@ -1,15 +1,15 @@
-# TEST_REPORT — Profiles, Circle, Open House, notifications
+# TEST_REPORT — Astra audit redesign
 
 Date: 2026-09-14  
-Branch: `cursor/profiles-network-openhouse-2de8`  
-Base: `cursor/ui-polish-wave3-907d`  
+Branch: `cursor/astra-audit-fixes-e546`  
+Base: `cursor/profiles-network-openhouse-2de8`  
 Runtime: Node 22, Next.js 16.3.5, preview mode (no live secrets)
 
 ## Automated
 
 | Check | Result |
 | --- | --- |
-| `npm test` | 62/62 pass — prior coverage plus original water/yacht/concert stills and `prefers-reduced-motion` for new motion classes |
+| `npm test` | 79/79 pass — guest lock is grain-only (no campaign 00/06), plus campaign PNGs, Ask, DM destination, journey validation |
 | `npm run lint` | Pass (0 errors) |
 | `npm run build` | Pass — Next.js 16.3.5 Turbopack, TypeScript clean |
 
@@ -22,8 +22,8 @@ Runtime: Node 22, Next.js 16.3.5, preview mode (no live secrets)
 - House notifications + in-app/email/digest prefs
 - DMs from profile / Index / Members (Stream when keys exist; DEMO otherwise; not E2EE)
 - Community: Absolutely no soliciting. Ban with no refund.
-- Bottom nav: Home · Index · Channels · Members · Profile
-- UI vibe: gold/white/black chrome; original water / yacht / concert stills on Open House, Index, and profiles; reduced-motion honored for new animations
+- Bottom nav: Home · Index · Messages · Crossings · Profile
+- UI vibe: warm white / navy / ocean blue / restrained gold; editorial campaign PNGs in-repo (yacht wake, deck, dinner, salon, terrace, coastal plaza); nightlife still only when listed; reduced-motion honored
 
 ## Privacy
 

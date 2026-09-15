@@ -1,9 +1,9 @@
 import { PREPARED_DOMAIN } from "@/lib/copy/community";
 import {
-  NAV_CHANNELS,
+  NAV_CROSSINGS,
   NAV_HOME,
   NAV_INDEX,
-  NAV_MEMBERS,
+  NAV_MESSAGES,
   NAV_PROFILE,
   YOUR_CIRCLE,
 } from "@/lib/copy/ui";
@@ -42,20 +42,19 @@ export const publicNav = [
 export const memberNav = [
   { href: "/member/home", label: NAV_HOME, id: "home" },
   { href: "/member/index", label: NAV_INDEX, id: "index" },
-  { href: "/member/channels", label: NAV_CHANNELS, id: "channels" },
-  { href: "/member/members", label: NAV_MEMBERS, id: "members" },
+  { href: "/member/messages", label: NAV_MESSAGES, id: "messages" },
+  { href: "/member/crossings", label: NAV_CROSSINGS, id: "crossings" },
   { href: "/member/profile", label: NAV_PROFILE, id: "profile" },
 ] as const;
 
 export const memberSecondary = [
   { href: "/member/notifications", label: "Notifications" },
-  { href: "/member/index#circle", label: YOUR_CIRCLE },
-  { href: "/member/crossings", label: "Crossings" },
-  { href: "/onboarding", label: "Onboarding" },
+  { href: "/member/index?tab=circle", label: YOUR_CIRCLE },
   { href: "/member/events", label: "Events" },
-  { href: "/member/billing", label: "Billing" },
+  { href: "/member/settings", label: "Account settings" },
+  { href: "/member/settings#billing", label: "Billing" },
+  { href: "/onboarding", label: "Onboarding" },
   { href: "/member/resources", label: "Resources" },
-  { href: "/member/settings", label: "Settings" },
 ] as const;
 
 export const seedChannels = [

@@ -28,7 +28,7 @@ export function Button({
   disabled?: boolean;
   onClick?: () => void;
 }) {
-  const cls = `inline-flex min-h-12 items-center justify-center px-5 text-[0.72rem] tracking-[0.22em] uppercase transition duration-300 ${styles[variant]} ${className}`;
+  const cls = `pressable inline-flex min-h-12 items-center justify-center rounded-full px-5 text-sm tracking-normal transition-[transform,background-color,border-color] duration-[var(--motion-press)] ${styles[variant]} ${className}`;
   if (href) {
     return (
       <Link href={href} className={cls}>

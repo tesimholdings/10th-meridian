@@ -3,12 +3,13 @@ import { resolveAccessContext } from "@/lib/access/context";
 import { MemberShell } from "@/components/member/member-shell";
 import { Button } from "@/components/ui/button";
 import { JourneyCard } from "@/components/crossings/journey-card";
-import { CityAtlas } from "@/components/crossings/city-atlas";
 import { RequestInbox } from "@/components/crossings/request-inbox";
-import { EmptyState, PrivacyNotice } from "@/components/crossings/states";
+import { EmptyState } from "@/components/crossings/states";
 import { CROSSINGS_COPY } from "@/lib/crossings/types";
 import { canMutateCrossings } from "@/lib/crossings/privacy";
 import { matchesForJourney, refreshNotifications, tableSuggestionsFor, visibleJourneysFor } from "@/lib/crossings/service";
+import { HiggsfieldSlot } from "@/components/brand/higgsfield-slot";
+import { campaignSrc } from "@/lib/atmosphere/resolve-campaign";
 import { getPreviewStore, viewerProfile } from "@/lib/preview/store";
 import { demoIndexFor } from "@/lib/matching/service";
 import { DEFAULT_NOTIFICATION_PREFS } from "@/lib/crossings/notifications";
@@ -51,80 +52,82 @@ export default async function CrossingsPage() {
 
   return (
     <MemberShell user={access.user} demo title="Crossings">
-      <div className="relative overflow-hidden border border-[var(--line)] water p-6 md:p-8">
-        <p className="label">{CROSSINGS_COPY.name}</p>
-        <h1 className="mt-4 max-w-xl font-serif text-4xl leading-[0.95] md:text-5xl">{CROSSINGS_COPY.line}</h1>
-        <p className="mt-4 max-w-lg text-ivory-muted">{CROSSINGS_COPY.support}</p>
-        {canMutate ? (
-          <div className="mt-6">
-            <Button href="/member/crossings/new">{CROSSINGS_COPY.createAction}</Button>
-          </div>
-        ) : (
-          <p className="mt-6 text-sm text-gold">
-            Open House walkthrough — SYNTHETIC DEMO only. Active members set coordinates.
-          </p>
-        )}
+      <div className="flex items-end justify-between gap-3">
+        <div>
+          <h1 className="font-serif text-4xl">Crossings</h1>
+          <p className="mt-2 text-sm text-[var(--navy-soft)]">{CROSSINGS_COPY.support}</p>
+        </div>
+        {canMutate ? <Button href="/member/crossings/new">{CROSSINGS_COPY.createAction}</Button> : null}
       </div>
 
-      <div className="mt-8">
-        <PrivacyNotice />
-      </div>
+      <HiggsfieldSlot src={campaignSrc("crossings")} aspect="aspect-[16/8]" className="mt-6 rounded-3xl" />
 
-      <section className="mt-10">
+      <nav className="mt-6 flex gap-3 overflow-x-auto hide-scroll text-sm">
+        <a href="#trips" className="pill">Trips</a>
+        <a href="#requests" className="pill">Requests</a>
+        <a href="#guide" className="pill">City guide</a>
+      </nav>
+
+      <section id="trips" className="mt-8">
         {upcoming ? (
           <JourneyCard journey={upcoming} href={`/member/crossings/${upcoming.id}`} />
         ) : (
           <EmptyState
-            title="No journey on the water."
-            body="Set Your Coordinates when you know the city — not the flight, not the hotel."
-            action={
-              canMutate ? (
-                <Button href="/member/crossings/new">{CROSSINGS_COPY.createAction}</Button>
-              ) : undefined
-            }
+            title="No trip yet."
+            body="Add a trip when you know the city — not the flight."
+            action={canMutate ? <Button href="/member/crossings/new">{CROSSINGS_COPY.createAction}</Button> : undefined}
           />
         )}
       </section>
 
-      <section className="mt-10">
-        <p className="label">Where paths may cross</p>
+      <section id="requests" className="mt-10">
+        <h2 className="font-serif text-2xl">Requests</h2>
         <div className="mt-4">
-          <CityAtlas journey={upcoming} matches={matches.slice(0, 8)} />
+          <RequestInbox
+            requests={requests}
+            viewerId={viewer.id}
+            canMutate={canMutate}
+            profiles={store.profiles}
+            journeys={store.crossings.journeys}
+          />
         </div>
       </section>
 
-      {notifications.length ? (
-        <section className="mt-10">
-          <p className="label">Quiet notices</p>
-          <ul className="mt-4 grid gap-3">
-            {notifications.slice(0, 4).map((n) => (
-              <li key={n.id} className="border-b border-[var(--line)] py-3">
-                <p className="font-serif text-xl">{n.title}</p>
-                <p className="text-sm text-ivory-muted">{n.body}</p>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-3 text-[11px] tracking-[0.14em] uppercase text-ivory-dim">
-            Digest: {prefs.digest} · never repeated
-          </p>
-        </section>
+      <section id="guide" className="mt-10 grid gap-3 sm:grid-cols-3">
+        <Link href="/member/crossings/notes" className="py-3">
+          <p className="text-sm text-[var(--ivory-dim)]">City guide</p>
+          <p className="font-serif text-2xl">Notes</p>
+        </Link>
+        <Link href="/member/crossings/hosts" className="py-3">
+          <p className="text-sm text-[var(--ivory-dim)]">Hosts</p>
+          <p className="font-serif text-2xl">A member welcome</p>
+        </Link>
+        <Link href="/member/crossings/tables" className="py-3">
+          <p className="text-sm text-[var(--ivory-dim)]">Tables</p>
+          <p className="font-serif text-2xl">Shared meals</p>
+        </Link>
+      </section>
+
+      {matches.length ? (
+        <p className="mt-8 text-sm text-[var(--ivory-dim)]">
+          {matches.length} people may cross your path in {upcoming?.destinationCity}. Digest: {prefs.digest}.
+        </p>
       ) : null}
 
       {tables.length ? (
-        <section className="mt-10">
-          <p className="label">Open a Table</p>
+        <section className="mt-8">
+          <h2 className="font-serif text-2xl">Open a table</h2>
           {tables.map((t) => (
-            <article key={`${t.city}-${t.country}`} className="panel mt-3 p-5">
-              <p className="font-serif text-2xl">
+            <article key={`${t.city}-${t.country}`} className="mt-3">
+              <p className="font-serif text-xl">
                 {t.count} paths cross in {t.city}.
               </p>
-              <p className="mt-2 text-sm text-ivory-muted">A private group meal. Neighborhood, not a public venue.</p>
               {canMutate ? (
                 <Link
                   href={`/member/crossings/tables/new?city=${encodeURIComponent(t.city)}&country=${encodeURIComponent(t.country)}`}
-                  className="mt-3 inline-flex min-h-11 items-center text-[11px] tracking-[0.16em] uppercase text-gold"
+                  className="text-sm text-[var(--blue)]"
                 >
-                  Open a Table
+                  Open a table
                 </Link>
               ) : null}
             </article>
@@ -132,31 +135,13 @@ export default async function CrossingsPage() {
         </section>
       ) : null}
 
-      <section className="mt-12">
-        <p className="label">A Crossing — requests</p>
-        <div className="mt-4">
-          <RequestInbox requests={requests} viewerId={viewer.id} canMutate={canMutate} />
-        </div>
-      </section>
-
-      <nav className="mt-12 grid gap-3 md:grid-cols-3">
-        <Link href="/member/crossings/notes" className="panel-quiet p-5">
-          <p className="label">City Notes</p>
-          <p className="mt-3 font-serif text-2xl">A private guide</p>
-        </Link>
-        <Link href="/member/crossings/hosts" className="panel-quiet p-5">
-          <p className="label">City Hosts</p>
-          <p className="mt-3 font-serif text-2xl">A member welcome</p>
-        </Link>
-        <Link href="/member/crossings/tables" className="panel-quiet p-5">
-          <p className="label">Tables</p>
-          <p className="mt-3 font-serif text-2xl">Shared meals</p>
-        </Link>
-      </nav>
+      {notifications.length ? (
+        <p className="mt-8 text-sm text-[var(--ivory-dim)]">{notifications[0].title}</p>
+      ) : null}
 
       {mine.length > 1 ? (
-        <section className="mt-12">
-          <p className="label">Your journeys</p>
+        <section className="mt-10">
+          <h2 className="font-serif text-2xl">Your trips</h2>
           <div className="mt-4 grid gap-3">
             {mine.map((j) => (
               <JourneyCard key={j.id} journey={j} href={`/member/crossings/${j.id}`} />
@@ -164,11 +149,6 @@ export default async function CrossingsPage() {
           </div>
         </section>
       ) : null}
-
-      <p className="mt-12 text-[11px] leading-relaxed text-ivory-dim">
-        Navigation: Crossings lives on Home and at /member/crossings. The five-item member bar (Home ·
-        Index · Channels · Members · Profile) is unchanged.
-      </p>
     </MemberShell>
   );
 }

@@ -18,14 +18,18 @@ export default async function SettingsPage() {
   };
   const house = housePrefsFor(viewer.id);
   return (
-    <MemberShell user={access.user} demo={!access.decision.isMemberAccess} title="Settings">
-      <ul className="grid gap-4 text-ivory-muted">
-        <li>Privacy — members / Index only / hidden. Crossings visibility is set per journey.</li>
-        <li>Availability — open, selective, limited, paused.</li>
-        <li>Blocks and reports — server-enforced, including travel matching.</li>
-        <li>Crossings is not real-time location sharing. City-level presence only.</li>
-        <li>{SOLICITING_BAN}</li>
-      </ul>
+    <MemberShell user={access.user} demo={!access.decision.isMemberAccess} title="Account settings">
+      <h1 className="font-serif text-3xl">Account settings</h1>
+      <section id="billing" className="mt-8">
+        <h2 className="font-serif text-2xl">Billing</h2>
+        <p className="mt-2 text-sm text-[var(--navy-soft)]">
+          Lifetime membership is $10,000. Monthly billing is not offered.
+        </p>
+        <a href="/member/billing" className="mt-2 inline-flex min-h-11 items-center text-sm text-[var(--blue)]">
+          Open billing
+        </a>
+      </section>
+      <p className="mt-8 text-sm text-[var(--navy-soft)]">{SOLICITING_BAN}</p>
       <section className="mt-10">
         <p className="label">House notifications</p>
         <div className="mt-4">

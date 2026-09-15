@@ -114,9 +114,18 @@ function seed(): PreviewState {
     channels: [
       ...structuredClone(demoChannels),
       {
+        id: "dm-demo-01-demo-12",
+        slug: "dm-p-adler",
+        name: "P. Adler",
+        kind: "dm" as const,
+        topic: "Private member communication. DEMO. Not E2EE.",
+        unread: 1,
+        isDemo: true,
+      },
+      {
         id: "ch-crossing-demo-accepted",
         slug: "crossing-voss-moreau",
-        name: "A Crossing · Paris",
+        name: "C. Moreau",
         kind: "dm" as const,
         topic: "Opened after acceptance. DEMO. Not E2EE.",
         unread: 1,
@@ -134,6 +143,15 @@ function seed(): PreviewState {
     ],
     messages: [
       ...structuredClone(demoMessages),
+      {
+        id: "msg-dm-adler-1",
+        channelId: "dm-demo-01-demo-12",
+        authorName: "P. Adler",
+        authorInitials: "PA",
+        body: "If the introduction is useful, write when you are free — not a pitch.",
+        createdAt: "2026-09-13T18:20:00.000Z",
+        isDemo: true,
+      },
       {
         id: "msg-crossing-1",
         channelId: "ch-crossing-demo-accepted",

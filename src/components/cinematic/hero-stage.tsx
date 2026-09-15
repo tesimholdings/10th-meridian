@@ -1,17 +1,36 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { campaign, EDITORIAL_CAPTION } from "@/lib/atmosphere/campaign";
 
 export function HeroStage({
   children,
-  caption = "Original House still — clear water at night. Replace with licensed film only.",
+  caption = EDITORIAL_CAPTION,
+  src = campaign.heroLandscape,
+  mobileSrc = campaign.heroMobile,
 }: {
   children: React.ReactNode;
   caption?: string;
+  src?: string;
+  mobileSrc?: string;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [paused, setPaused] = useState(false);
   const [reduce, setReduce] = useState(false);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!video || reduce) return;
+        if (entry.isIntersecting && !paused) void video.play();
+        else video.pause();
+      },
+      { threshold: 0.2 },
+    );
+    if (video) io.observe(video);
+    return () => io.disconnect();
+  }, [paused, reduce]);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -45,19 +64,21 @@ export function HeroStage({
   return (
     <div className="relative min-h-dvh overflow-hidden water text-ivory">
       <div className="absolute inset-0" aria-hidden>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/media/scene-water.svg"
-          alt=""
-          className={`h-full w-full object-cover object-center opacity-90 ${reduce || paused ? "" : "slow-drift"}`}
-        />
+        <picture>
+          <source media="(max-width: 767px)" srcSet={mobileSrc} />
+          <img
+            src={src}
+            alt=""
+            className={`h-full w-full object-cover object-center opacity-95 ${reduce || paused ? "" : "slow-drift"}`}
+          />
+        </picture>
       </div>
       <div className="absolute inset-0 opacity-55" aria-hidden>
         <WaterField />
       </div>
       <video
         ref={videoRef}
-        className="absolute inset-0 h-full w-full object-cover opacity-[0.28] contrast-125 saturate-[1.15]"
+        className="absolute inset-0 h-full w-full object-cover opacity-[0.12] contrast-125 saturate-[1.15]"
         autoPlay={!reduce}
         muted
         loop
@@ -73,7 +94,7 @@ export function HeroStage({
         aria-hidden
         style={{
           background:
-            "radial-gradient(80% 70% at 50% 38%, rgba(7,8,9,0.04), rgba(7,8,9,0.28) 78%, #070809 100%)",
+            "radial-gradient(80% 70% at 50% 32%, rgba(9,43,69,0.04), rgba(9,43,69,0.22) 72%, rgba(9,43,69,0.55) 100%)",
         }}
       />
       <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-void to-transparent" />

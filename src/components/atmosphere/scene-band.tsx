@@ -1,19 +1,21 @@
 import type { ReactNode } from "react";
+import { EDITORIAL_CAPTION, type CampaignSlot } from "@/lib/atmosphere/campaign";
+import { campaignSrc } from "@/lib/atmosphere/resolve-campaign";
 
 export type SceneKind = "water" | "yacht" | "concert";
 
-const SCENES: Record<SceneKind, { src: string; label: string }> = {
+const SCENES: Record<SceneKind, { slot: CampaignSlot; label: string }> = {
   water: {
-    src: "/media/scene-water.svg",
-    label: "Clear water — original House still",
+    slot: "heroLandscape",
+    label: EDITORIAL_CAPTION,
   },
   yacht: {
-    src: "/media/scene-yacht.svg",
-    label: "Deck meeting — original House still",
+    slot: "homeIndex",
+    label: EDITORIAL_CAPTION,
   },
   concert: {
-    src: "/media/scene-concert.svg",
-    label: "Night gathering — original House still",
+    slot: "nightlife",
+    label: EDITORIAL_CAPTION,
   },
 };
 
@@ -41,7 +43,7 @@ export function SceneBand({
     <div className={`scene-band relative overflow-hidden ${HEIGHTS[height]} ${className}`}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={meta.src}
+        src={campaignSrc(meta.slot)}
         alt={meta.label}
         className="scene-band-art absolute inset-0 h-full w-full object-cover object-center"
       />

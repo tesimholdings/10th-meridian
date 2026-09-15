@@ -19,7 +19,7 @@ export function TableForm({
   const [neighborhood, setNeighborhood] = useState("");
   const [venuePrivate, setVenuePrivate] = useState("");
   const [dateTime, setDateTime] = useState("");
-  const [timezone, setTimezone] = useState("Europe/London");
+  const [timezone, setTimezone] = useState("");
   const [mealType, setMealType] = useState<MeetingFormat>("dinner");
   const [theme, setTheme] = useState("");
   const [maxGuests, setMaxGuests] = useState(6);

@@ -55,6 +55,9 @@ export interface HouseNotification {
   title: string;
   body: string;
   href?: string;
+  actorId?: string;
+  actorName?: string;
+  actorInitials?: string;
   read: boolean;
   createdAt: string;
   isDemo: boolean;

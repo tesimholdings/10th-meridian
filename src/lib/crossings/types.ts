@@ -246,7 +246,7 @@ export interface CrossingConversation {
 
 export const CROSSINGS_COPY = {
   name: "Crossings",
-  createAction: "Set Your Coordinates",
+  createAction: "Add a trip",
   meeting: "A Crossing",
   table: "Open a Table",
   hosts: "City Hosts",

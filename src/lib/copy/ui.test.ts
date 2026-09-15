@@ -25,7 +25,7 @@ const uiFiles = [
 ];
 
 describe("product naming and community copy", () => {
-  it("uses Home · Index · Channels · Members · Profile and never Matches", () => {
+  it("uses Home · Index · Messages · Crossings · Profile and never Matches", () => {
     assert.deepEqual([...memberNav.map((i) => i.label)], [...MEMBER_NAV_LABELS]);
     assert.ok(!MEMBER_NAV_LABELS.includes(FORBIDDEN_UI_LABEL as (typeof MEMBER_NAV_LABELS)[number]));
     for (const href of memberNav.map((i) => i.label)) {

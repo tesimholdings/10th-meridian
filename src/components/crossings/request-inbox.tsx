@@ -2,23 +2,29 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import type { CrossingRequestRecord } from "@/lib/crossings/types";
+import type { CrossingRequestRecord, JourneyRecord } from "@/lib/crossings/types";
+import type { ProfileRecord } from "@/lib/data/types";
 import { Button } from "@/components/ui/button";
-import { DemoMark } from "@/components/brand/demo-mark";
 import { EmptyState } from "@/components/crossings/states";
+import { formatHumanDate, formatHumanDateRange } from "@/lib/crossings/format";
+import { messageHref } from "@/lib/messaging/destination";
 
 export function RequestInbox({
   requests,
   viewerId,
   canMutate,
+  profiles = [],
+  journeys = [],
 }: {
   requests: CrossingRequestRecord[];
   viewerId: string;
   canMutate: boolean;
+  profiles?: ProfileRecord[];
+  journeys?: JourneyRecord[];
 }) {
   const router = useRouter();
   const [note, setNote] = useState<string | null>(null);
-  const [alt, setAlt] = useState("");
+  const [alts, setAlts] = useState<Record<string, string>>({});
 
   async function act(id: string, action: "accept" | "decline" | "reschedule") {
     const res = await fetch("/api/crossings/requests", {
@@ -27,7 +33,7 @@ export function RequestInbox({
       body: JSON.stringify({
         id,
         action,
-        suggestedDates: action === "reschedule" ? alt.split(",").map((s) => s.trim()).filter(Boolean) : undefined,
+        suggestedDates: action === "reschedule" && alts[id] ? [alts[id]] : undefined,
       }),
     });
     const json = (await res.json()) as { ok?: boolean; message?: string };
@@ -39,35 +45,45 @@ export function RequestInbox({
     return (
       <EmptyState
         title="No Crossing requests yet."
-        body="When a path overlaps, a Crossing can be proposed — city-level only, never a pin."
+        body="When a path overlaps, a Crossing can be proposed — city-level only."
       />
     );
   }
 
   return (
-    <ul className="grid gap-3">
-      {note ? <p className="text-sm text-gold">{note}</p> : null}
+    <ul className="grid gap-4">
+      {note ? <p className="text-sm text-[var(--gold)]">{note}</p> : null}
       {requests.map((r) => {
         const incoming = r.toProfileId === viewerId;
+        const otherId = incoming ? r.fromProfileId : r.toProfileId;
+        const person = profiles.find((p) => p.id === otherId);
+        const journey = journeys.find((j) => j.id === r.journeyId);
+        const dates =
+          r.proposedDates.length > 1
+            ? formatHumanDateRange(r.proposedDates[0], r.proposedDates[r.proposedDates.length - 1])
+            : r.proposedDates[0]
+              ? formatHumanDate(r.proposedDates[0])
+              : "";
         return (
-          <li key={r.id} className="panel p-5">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="label">
-                {incoming ? "Received" : "Sent"} · {r.status.replaceAll("_", " ")} · {r.format}
-              </p>
-              {r.isDemo ? <DemoMark /> : null}
-            </div>
-            <p className="mt-3 text-sm leading-relaxed text-ivory-muted">
-              {r.proposedDates.join(", ")}
-              {r.note ? ` · ${r.note}` : ""}
+          <li key={r.id} className="py-3">
+            <p className="font-serif text-2xl">{person?.displayName ?? "A member"}</p>
+            <p className="mt-1 text-sm text-[var(--navy-soft)]">
+              {r.format}
+              {journey ? ` in ${journey.destinationCity}` : ""}
+              {dates ? ` · ${dates}` : ""}
             </p>
+            {r.note ? <p className="mt-2 text-sm text-[var(--ivory-dim)]">{r.note}</p> : null}
             {incoming && r.status === "proposed" && canMutate ? (
               <div className="mt-4 grid gap-2">
-                <input
-                  value={alt}
-                  onChange={(e) => setAlt(e.target.value)}
-                  placeholder="Suggest another date, YYYY-MM-DD"
-                />
+                <label className="grid gap-1">
+                  <span className="text-sm">Suggest another date</span>
+                  <input
+                    type="date"
+                    value={alts[r.id] ?? ""}
+                    onChange={(e) => setAlts((s) => ({ ...s, [r.id]: e.target.value }))}
+                    aria-label="Reschedule date"
+                  />
+                </label>
                 <div className="flex flex-wrap gap-2">
                   <Button onClick={() => void act(r.id, "accept")}>Accept</Button>
                   <Button variant="ghost" onClick={() => void act(r.id, "decline")}>
@@ -82,16 +98,13 @@ export function RequestInbox({
             {r.status === "accepted" ? (
               <div className="mt-3 flex flex-wrap gap-3">
                 <a
-                  href={`/member/channels?channel=${r.conversationId ?? ""}`}
-                  className="inline-flex min-h-11 items-center text-[11px] tracking-[0.16em] uppercase text-gold"
+                  href={messageHref({ channelId: r.conversationId, profileId: otherId })}
+                  className="text-sm text-[var(--blue)]"
                 >
                   Open conversation
                 </a>
-                <a
-                  href={`/api/crossings/ics/${r.id}`}
-                  className="inline-flex min-h-11 items-center text-[11px] tracking-[0.16em] uppercase text-ivory-muted"
-                >
-                  Download .ics
+                <a href={`/api/crossings/ics/${r.id}`} className="text-sm text-[var(--ivory-dim)]">
+                  Download calendar
                 </a>
               </div>
             ) : null}

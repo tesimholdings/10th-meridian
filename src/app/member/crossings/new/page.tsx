@@ -4,7 +4,7 @@ import { CoordinatesForm } from "@/components/crossings/coordinates-form";
 import { CROSSINGS_COPY } from "@/lib/crossings/types";
 import { canMutateCrossings } from "@/lib/crossings/privacy";
 
-export const metadata = { title: "Set Your Coordinates", robots: { index: false } };
+export const metadata = { title: "Add a trip", robots: { index: false } };
 
 export default async function NewJourneyPage() {
   const access = await resolveAccessContext();

@@ -3,9 +3,19 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { HouseNotification } from "@/lib/network/types";
+import { formatRelativeTime } from "@/lib/crossings/format";
+
+function circleCopy(n: HouseNotification): string {
+  if (n.kind === "circle_add") {
+    const name = n.actorName ?? n.title.replace(/ added you to Your Circle$/i, "");
+    return `${name} added you to their Circle`;
+  }
+  return n.title;
+}
 
 export function NotificationCenter({ notifications }: { notifications: HouseNotification[] }) {
   const router = useRouter();
+  const sorted = [...notifications].sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt));
 
   async function markRead(ids?: string[]) {
     await fetch("/api/notifications", {
@@ -16,13 +26,8 @@ export function NotificationCenter({ notifications }: { notifications: HouseNoti
     router.refresh();
   }
 
-  if (notifications.length === 0) {
-    return (
-      <p className="mt-6 text-sm leading-relaxed text-ivory-dim">
-        The house is quiet. Notifications stay low-volume — new people in a channel, Circle or Index
-        additions, introductions, events, and announcements.
-      </p>
-    );
+  if (sorted.length === 0) {
+    return <p className="mt-6 text-sm text-[var(--ivory-dim)]">Nothing new.</p>;
   }
 
   return (
@@ -30,30 +35,37 @@ export function NotificationCenter({ notifications }: { notifications: HouseNoti
       <button type="button" className="action-quiet" onClick={() => void markRead()}>
         Mark all read
       </button>
-      <ul className="mt-6 grid gap-3">
-        {notifications.map((n) => (
-          <li key={n.id} className={`panel p-4 ${n.read ? "opacity-70" : ""}`}>
-            <p className="label">{n.kind.replaceAll("_", " ")}</p>
-            <p className="mt-2 font-serif text-2xl">{n.title}</p>
-            <p className="mt-2 text-sm leading-relaxed text-ivory-muted">{n.body}</p>
-            <div className="mt-3 flex flex-wrap gap-3">
+      <ul className="mt-4 divide-y divide-[var(--line)]">
+        {sorted.map((n) => {
+          const row = (
+            <span className="flex w-full items-start gap-3 py-3">
+              <span className="avatar h-10 w-10 text-xs" style={{ background: n.read ? "#1a4663" : "#087CB8" }}>
+                {n.actorInitials ?? n.kind.slice(0, 1).toUpperCase()}
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block font-medium">{circleCopy(n)}</span>
+                <span className="block text-sm text-[var(--ivory-dim)]">{n.body}</span>
+              </span>
+              <span className="flex flex-col items-end gap-2">
+                <span className="text-xs text-[var(--ivory-dim)]">{formatRelativeTime(n.createdAt)}</span>
+                {n.read ? null : <span className="unread-dot" />}
+              </span>
+            </span>
+          );
+          return (
+            <li key={n.id}>
               {n.href ? (
-                <Link href={n.href} className="text-[11px] tracking-[0.16em] uppercase text-gold">
-                  Open
+                <Link href={n.href} className="block" onClick={() => void markRead([n.id])}>
+                  {row}
                 </Link>
-              ) : null}
-              {n.read ? null : (
-                <button
-                  type="button"
-                  className="text-[11px] tracking-[0.16em] uppercase text-ivory-dim"
-                  onClick={() => void markRead([n.id])}
-                >
-                  Mark read
+              ) : (
+                <button type="button" className="w-full text-left" onClick={() => void markRead([n.id])}>
+                  {row}
                 </button>
               )}
-            </div>
-          </li>
-        ))}
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

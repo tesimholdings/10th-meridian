@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
 import { PrivacyNotice } from "@/components/crossings/states";
 import {
+  CROSSINGS_COPY,
   JOURNEY_VISIBILITY,
   MEETING_FORMATS,
   TRAVEL_INTENTS,
@@ -14,6 +15,8 @@ import {
   type MeetingFormat,
   type TravelIntent,
 } from "@/lib/crossings/types";
+import { validateWhereStep } from "@/lib/crossings/journey-validation";
+import { inferTimezone } from "@/lib/geo/timezone";
 
 const steps = [
   { id: "where", title: "Where" },
@@ -42,7 +45,7 @@ type Draft = {
 const empty: Draft = {
   destinationCity: "",
   destinationCountry: "",
-  timezone: "Europe/Paris",
+  timezone: "",
   arrivalDate: "",
   departureDate: "",
   flexibleDates: false,
@@ -87,6 +90,22 @@ export function CoordinatesForm({
   );
   const [status, setStatus] = useState<string | null>(null);
   const progress = useMemo(() => ((step + 1) / steps.length) * 100, [step]);
+
+  function continueFromWhere() {
+    const result = validateWhereStep(draft);
+    if (!result.ok) {
+      setStatus(result.message ?? "City and country are required.");
+      return;
+    }
+    setDraft((d) => ({
+      ...d,
+      destinationCity: result.destinationCity,
+      destinationCountry: result.destinationCountry,
+      timezone: result.timezone ?? d.timezone,
+    }));
+    setStatus(null);
+    setStep(1);
+  }
 
   function toggle<T extends string>(key: "availability" | "intents", value: T) {
     setDraft((d) => {
@@ -136,7 +155,7 @@ export function CoordinatesForm({
         <div className="h-px bg-[var(--gold)] transition-[width] duration-500 ease-out" style={{ width: `${progress}%` }} />
       </div>
       <p className="label mt-8">
-        Set Your Coordinates · Step {step + 1} of {steps.length}
+        {CROSSINGS_COPY.createAction} · Step {step + 1} of {steps.length}
       </p>
       <h2 className="mt-2 font-serif text-3xl">{steps[step].title}</h2>
 
@@ -147,8 +166,16 @@ export function CoordinatesForm({
               <span className="label">Destination city</span>
               <input
                 value={draft.destinationCity}
-                onChange={(e) => setDraft({ ...draft, destinationCity: e.target.value })}
-                placeholder="Paris"
+                onChange={(e) => {
+                  const destinationCity = e.target.value;
+                  const inferred = inferTimezone(destinationCity, draft.destinationCountry);
+                  setDraft({
+                    ...draft,
+                    destinationCity,
+                    timezone: inferred ?? draft.timezone,
+                  });
+                }}
+                placeholder="Chicago"
                 required
               />
             </label>
@@ -156,8 +183,16 @@ export function CoordinatesForm({
               <span className="label">Country</span>
               <input
                 value={draft.destinationCountry}
-                onChange={(e) => setDraft({ ...draft, destinationCountry: e.target.value })}
-                placeholder="France"
+                onChange={(e) => {
+                  const destinationCountry = e.target.value;
+                  const inferred = inferTimezone(draft.destinationCity, destinationCountry);
+                  setDraft({
+                    ...draft,
+                    destinationCountry,
+                    timezone: inferred ?? draft.timezone,
+                  });
+                }}
+                placeholder="United States"
                 required
               />
             </label>
@@ -166,7 +201,8 @@ export function CoordinatesForm({
               <input
                 value={draft.timezone}
                 onChange={(e) => setDraft({ ...draft, timezone: e.target.value })}
-                placeholder="Europe/Paris"
+                placeholder={inferTimezone(draft.destinationCity, draft.destinationCountry) ?? "IANA timezone required if the city is unknown"}
+                required={!inferTimezone(draft.destinationCity, draft.destinationCountry)}
               />
             </label>
           </>
@@ -174,7 +210,7 @@ export function CoordinatesForm({
         {step === 1 ? (
           <>
             <label className="grid gap-2">
-              <span className="label">Arrival</span>
+              <span className="label">Arrival date</span>
               <input
                 type="date"
                 value={draft.arrivalDate}
@@ -182,7 +218,7 @@ export function CoordinatesForm({
               />
             </label>
             <label className="grid gap-2">
-              <span className="label">Departure</span>
+              <span className="label">Departure date</span>
               <input
                 type="date"
                 value={draft.departureDate}
@@ -289,9 +325,9 @@ export function CoordinatesForm({
           </Button>
         ) : null}
         {step < steps.length - 1 ? (
-          <Button onClick={() => setStep((s) => s + 1)}>Continue</Button>
+          <Button onClick={() => (step === 0 ? continueFromWhere() : setStep((s) => s + 1))}>Continue</Button>
         ) : (
-          <Button onClick={() => void save()}>{journeyId ? "Save journey" : "Set Your Coordinates"}</Button>
+          <Button onClick={() => void save()}>{journeyId ? "Save trip" : CROSSINGS_COPY.createAction}</Button>
         )}
       </div>
     </div>

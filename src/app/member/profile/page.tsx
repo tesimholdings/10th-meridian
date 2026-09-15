@@ -6,34 +6,79 @@ import { PrivacyControls } from "@/components/profile/privacy-controls";
 import { ProfileGallery } from "@/components/profile/gallery";
 import { viewerProfile } from "@/lib/preview/store";
 import { completionMessage } from "@/lib/profile/completion";
-import { SOLICITING_BAN } from "@/lib/copy/community";
-import { privacyOf } from "@/lib/network/privacy";
 
 export const metadata = { title: "Profile", robots: { index: false } };
 
-export default async function ProfilePage() {
+export default async function ProfilePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ edit?: string; tab?: string }>;
+}) {
   const access = await resolveAccessContext();
   const p = viewerProfile();
+  const params = await searchParams;
+  const edit = params.edit === "1";
+  const tab = params.tab ?? "about";
+
+  if (!edit) {
+    return (
+      <MemberShell user={access.user} demo title="Profile">
+        <div className="flex flex-col items-center text-center">
+          <div className="avatar h-24 w-24 text-3xl" style={{ background: p.accent }}>
+            {p.initials}
+          </div>
+          <h1 className="mt-4 font-serif text-4xl">{p.displayName}</h1>
+          <p className="mt-2 max-w-md text-[var(--navy-soft)]">{p.headline}</p>
+          <p className="mt-1 text-sm text-[var(--ivory-dim)]">
+            {p.city}, {p.country}
+          </p>
+          <Link href="/member/profile?edit=1" className="action-quiet mt-5">
+            Edit
+          </Link>
+        </div>
+        {p.completion < 90 ? (
+          <p className="mt-6 text-center text-sm text-[var(--ivory-dim)]">{completionMessage(p.completion)}</p>
+        ) : null}
+        <nav className="mt-8 flex border-b border-[var(--line)]">
+          <Link href="/member/profile" className={`min-h-11 flex-1 text-center text-sm ${tab === "about" ? "border-b-2 border-[var(--gold)]" : "text-[var(--ivory-dim)]"}`}>
+            About
+          </Link>
+          <Link href="/member/profile?tab=gallery" className={`min-h-11 flex-1 text-center text-sm ${tab === "gallery" ? "border-b-2 border-[var(--gold)]" : "text-[var(--ivory-dim)]"}`}>
+            Gallery
+          </Link>
+        </nav>
+        <div className="mt-6">
+          {tab === "gallery" ? (
+            <ProfileGallery photos={p.gallery ?? []} canEdit />
+          ) : (
+            <p className="leading-relaxed text-[var(--navy-soft)]">{p.bio}</p>
+          )}
+        </div>
+      </MemberShell>
+    );
+  }
+
   return (
-    <MemberShell user={access.user} demo title="Profile" scene="concert">
-      <div className="gold-chrome p-5 md:p-6">
-      <div className="h-1 bg-[var(--line)]">
-        <div className="h-1 bg-[var(--gold)]" style={{ width: `${p.completion}%` }} />
-      </div>
-      <p className="mt-2 text-[11px] tracking-[0.18em] uppercase text-gold">
-        Completion {p.completion}%
-      </p>
-      <p className="mt-2 text-sm text-ivory-muted">{completionMessage(p.completion)}</p>
-      <p className="mt-3 text-sm text-ivory-dim">{SOLICITING_BAN} Profiles are never public or indexed.</p>
-      <Link href="/onboarding" className="mt-4 inline-flex min-h-11 items-center text-[11px] tracking-[0.18em] uppercase text-gold">
-        Open full onboarding
+    <MemberShell user={access.user} demo title="Edit profile">
+      <Link href="/member/profile" className="text-sm text-[var(--blue)]">
+        Back to profile
       </Link>
-      </div>
-      <ProfileGallery photos={p.gallery ?? []} canEdit />
-      <PrivacyControls privacy={privacyOf(p)} />
-      <div className="mt-10">
+      <h1 className="mt-4 font-serif text-3xl">Settings</h1>
+      {p.completion < 90 ? (
+        <p className="mt-2 text-sm text-[var(--ivory-dim)]">{completionMessage(p.completion)}</p>
+      ) : null}
+      <section className="mt-8">
+        <h2 className="font-serif text-2xl">Identity</h2>
         <OnboardingWizard profile={p} />
-      </div>
+      </section>
+      <section className="mt-10">
+        <h2 className="font-serif text-2xl">Privacy</h2>
+        <PrivacyControls privacy={p.privacy} />
+      </section>
+      <section className="mt-10">
+        <h2 className="font-serif text-2xl">Gallery</h2>
+        <ProfileGallery photos={p.gallery ?? []} canEdit />
+      </section>
     </MemberShell>
   );
 }
