@@ -312,7 +312,7 @@ export function ChannelApp({
       )}
 
       <form
-        className="sticky bottom-0 grid grid-cols-[1fr_auto] gap-2 border-t border-[var(--line)] bg-[var(--paper)] py-3"
+        className="header-glass sticky bottom-0 grid grid-cols-[1fr_auto] gap-2 py-3"
         style={{ paddingBottom: "calc(0.5rem + env(safe-area-inset-bottom))" }}
         onSubmit={(e) => {
           e.preventDefault();

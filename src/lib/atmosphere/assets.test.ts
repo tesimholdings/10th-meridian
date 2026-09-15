@@ -135,6 +135,31 @@ describe("original House atmosphere", () => {
     }
   });
 
+  it("uses liquid black / white / gold surfaces instead of printer-white panels", () => {
+    const css = readFileSync("src/app/globals.css", "utf8");
+    const house = css.split(".house-light {")[1]?.split(".house-light .panel")[0] ?? "";
+    assert.match(house, /linear-gradient/);
+    assert.match(house, /#c4a264|#C4A264|rgba\(196, 162, 100/);
+    assert.equal(/background:\s*#fff;/.test(house), false);
+    assert.equal(/^\s*background:\s*var\(--paper\);/m.test(house), false);
+    assert.match(css, /\.surface/);
+    assert.match(css, /\.liquid-dark/);
+    assert.match(css, /backdrop-filter/);
+    assert.match(css, /\.member-frame/);
+    assert.match(css, /90rem/);
+    const reduced = css.split("@media (prefers-reduced-motion: reduce)")[1] ?? "";
+    assert.match(reduced, /backdrop-filter:\s*none/);
+    const shell = readFileSync("src/components/member/member-shell.tsx", "utf8");
+    assert.match(shell, /member-frame/);
+    assert.equal(shell.includes("max-w-3xl"), false);
+    const home = readFileSync("src/app/member/home/page.tsx", "utf8");
+    assert.equal(home.includes("bg-white"), false);
+    const landing = readFileSync("src/components/open-house/landing.tsx", "utf8");
+    assert.match(landing, /liquid-dark/);
+    assert.match(landing, /liquid-paper/);
+    assert.equal(landing.includes("bg-[var(--paper)]"), false);
+  });
+
   it("wires editorial campaign slots on Open House, Home, events, and Crossings", () => {
     const landing = readFileSync("src/components/open-house/landing.tsx", "utf8");
     assert.match(landing, /campaignSrc|HiggsfieldSlot/);

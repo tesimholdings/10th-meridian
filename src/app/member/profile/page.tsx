@@ -25,7 +25,7 @@ export default async function ProfilePage({
   if (!edit) {
     return (
       <MemberShell user={access.user} demo title="Profile">
-        <div className="flex flex-col items-center text-center">
+        <div className="surface mx-auto flex max-w-xl flex-col items-center rounded-[1.75rem] px-6 py-8 text-center">
           <div className="avatar h-24 w-24 text-3xl" style={{ background: p.accent }}>
             {p.initials}
           </div>
@@ -58,7 +58,7 @@ export default async function ProfilePage({
           {tab === "gallery" ? (
             <ProfileGallery photos={p.gallery ?? []} canEdit />
           ) : (
-            <p className="leading-relaxed text-[var(--navy-soft)]">{p.bio}</p>
+            <p className="surface rounded-3xl p-5 leading-relaxed text-[var(--navy-soft)]">{p.bio}</p>
           )}
         </div>
       </MemberShell>

@@ -34,7 +34,7 @@ import {
 
 export function OpenHouseLanding({ access }: { access: AccessContext }) {
   return (
-    <div className="house-light bg-[var(--paper)] text-[var(--navy)]">
+    <div className="house-light text-[var(--navy)]">
       <PublicHeader overlay landing />
       <main>
         <Hero />
@@ -91,16 +91,17 @@ function Hero() {
 
 function HouseStory() {
   return (
-    <section id="the-house" className="oh-wrap scroll-mt-24 py-16 md:py-24">
+    <section id="the-house" className="liquid-paper oh-wrap scroll-mt-24 py-16 md:py-24">
       <p className="text-xs font-medium tracking-[0.16em] text-[var(--gold-dim)]">THE HOUSE</p>
       <div className="mt-8 grid gap-10 md:grid-cols-3">
         {HOUSE_BLOCKS.map((block, i) => {
           const media = OPEN_HOUSE_HOUSE_MEDIA[i];
           return (
-            <article key={block.id}>
+            <article key={block.id} className="surface overflow-hidden rounded-[1.75rem] p-3 md:p-4">
               <EditorialFilm
                 poster={media ? globalSrc(media.global, media.fallback) : campaignSrc(block.still)}
                 videoSrc={media ? filmSrc(media.film) : undefined}
+                className="aspect-[16/10] w-full overflow-hidden rounded-2xl"
               />
               <h2 className="mt-5 font-serif text-3xl">{block.title}</h2>
               <p className="mt-2 text-[var(--navy-soft)]">{block.body}</p>
@@ -114,7 +115,7 @@ function HouseStory() {
 
 function ExperiencesRail() {
   return (
-    <section id="experiences" className="oh-wrap scroll-mt-24 pb-16 md:pb-24">
+    <section id="experiences" className="liquid-paper oh-wrap scroll-mt-24 pb-16 md:pb-24">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <h2 className="font-serif text-4xl">Experiences</h2>
         <p className="max-w-sm text-sm text-[var(--navy-soft)]">{EXPERIENCES_DISCLOSURE}</p>
@@ -124,18 +125,19 @@ function ExperiencesRail() {
           const media = OPEN_HOUSE_EXPERIENCE_MEDIA[i];
           const fallback = stillForListedExperience(item, i);
           return (
-          <li key={item.id}>
+          <li key={item.id} className="surface overflow-hidden rounded-[1.75rem] p-3 md:p-4">
             {media && "film" in media && media.film ? (
               <EditorialFilm
                 poster={globalSrc(media.global, fallback)}
                 videoSrc={filmSrc(media.film)}
+                className="aspect-[16/10] w-full overflow-hidden rounded-2xl"
               />
             ) : (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={media ? globalSrc(media.global, fallback) : campaignSrc(fallback)}
                 alt=""
-                className="aspect-[16/10] w-full object-cover"
+                className="aspect-[16/10] w-full rounded-2xl object-cover"
               />
             )}
             <p className="mt-3 font-serif text-2xl">{item.title}</p>
@@ -155,7 +157,7 @@ function Membership({ access }: { access: AccessContext }) {
   return (
     <section
       id="membership"
-      className="scroll-mt-24 bg-[#092b45] py-16 text-[#faf8f2] md:py-24"
+      className="liquid-dark scroll-mt-24 py-16 text-[#faf8f2] md:py-24"
     >
       <div className="safe-pad mx-auto max-w-3xl text-center">
         <p className="text-xs font-medium tracking-[0.16em] text-[#c4a264]">MEMBERSHIP</p>

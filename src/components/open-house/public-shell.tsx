@@ -9,7 +9,7 @@ export function PublicShell({
   wide?: boolean;
 }) {
   return (
-    <div className="house-light min-h-dvh bg-[var(--paper)] text-[var(--navy)]">
+    <div className="house-light min-h-dvh text-[var(--navy)]">
       <PublicHeader />
       <main className={`safe-pad mx-auto py-12 ${wide ? "max-w-2xl" : "max-w-lg"}`}>
         {children}

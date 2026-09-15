@@ -4,7 +4,7 @@ import { FOOTER_PRIVATE } from "@/lib/copy/open-house";
 
 export function PublicFooter() {
   return (
-    <footer className="border-t border-[var(--line)] bg-[var(--paper)] py-12 text-[var(--navy)]">
+    <footer className="header-glass py-12 text-[var(--navy)]">
       <div className="oh-wrap flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
         <div>
           <Wordmark compact surface="light" />

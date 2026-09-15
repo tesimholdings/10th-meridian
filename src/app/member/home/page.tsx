@@ -45,11 +45,11 @@ export default async function MemberHomePage() {
           <h1 className="font-serif text-4xl">{first}</h1>
         </div>
         <div className="flex gap-2">
-          <Link href="/member/notifications" className="pressable flex h-11 w-11 items-center justify-center rounded-full bg-white">
+          <Link href="/member/notifications" className="surface pressable flex h-11 w-11 items-center justify-center rounded-full">
             <span className="sr-only">Notifications</span>
             {unreadHouseNotifications(viewer.id) ? <span className="unread-dot" /> : <span className="text-lg">•</span>}
           </Link>
-          <Link href="/member/messages" className="pressable flex h-11 w-11 items-center justify-center rounded-full bg-white text-sm">
+          <Link href="/member/messages" className="surface pressable flex h-11 w-11 items-center justify-center rounded-full text-sm">
             {unreadTotal()}
           </Link>
         </div>
@@ -75,7 +75,7 @@ export default async function MemberHomePage() {
       ) : null}
 
       {trip ? (
-        <Link href={`/member/crossings/${trip.id}`} className="mt-8 block">
+        <Link href={`/member/crossings/${trip.id}`} className="surface mt-8 block rounded-3xl px-5 py-5">
           <p className="text-sm text-[var(--ivory-dim)]">Upcoming trip</p>
           <p className="mt-1 font-serif text-3xl">{trip.destinationCity}</p>
           <p className="mt-1 text-sm text-[var(--navy-soft)]">
@@ -83,7 +83,7 @@ export default async function MemberHomePage() {
           </p>
         </Link>
       ) : (
-        <Link href="/member/crossings/new" className="mt-8 block text-[var(--blue)]">
+        <Link href="/member/crossings/new" className="surface mt-8 block rounded-3xl px-5 py-5 text-[var(--navy)]">
           Add a trip
         </Link>
       )}
@@ -125,7 +125,7 @@ export default async function MemberHomePage() {
 
 function RailChip({ href, label, value }: { href: string; label: string; value: string }) {
   return (
-    <Link href={href} className="min-w-[8.5rem] rounded-2xl bg-white px-4 py-3">
+    <Link href={href} className="surface min-w-[8.5rem] rounded-2xl px-4 py-3">
       <p className="text-xs text-[var(--ivory-dim)]">{label}</p>
       <p className="mt-1 text-sm font-medium">{value}</p>
     </Link>

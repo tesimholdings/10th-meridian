@@ -11,7 +11,7 @@ export default function SignInPage() {
       <p className="mt-3 text-sm text-[var(--navy-soft)]">
         Members enter with the email on their account.
       </p>
-      <form action="/api/auth/sign-in" method="post" className="mt-8 grid gap-4">
+      <form action="/api/auth/sign-in" method="post" className="surface mt-8 grid gap-4 rounded-3xl p-5">
         <label className="grid gap-2">
           <span className="label">Email</span>
           <input name="email" type="email" required autoComplete="email" />

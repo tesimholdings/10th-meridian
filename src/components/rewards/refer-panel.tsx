@@ -26,7 +26,7 @@ export function ReferPanel({ snapshot }: { snapshot: RewardsSnapshot }) {
 
   return (
     <div className="grid gap-8">
-      <section className="rounded-3xl bg-white p-5">
+      <section className="surface rounded-3xl p-5">
         <p className="label">Your referral</p>
         <p className="mt-2 font-serif text-3xl">{snapshot.code}</p>
         <p className="mt-2 break-all text-sm text-[var(--navy-soft)]">{snapshot.link}</p>
@@ -87,7 +87,7 @@ function ReferralForm({ onDone }: { onDone: (message: string) => void }) {
 
   return (
     <form
-      className="grid gap-3 rounded-3xl bg-white p-5"
+      className="surface grid gap-3 rounded-3xl p-5"
       onSubmit={(e) => {
         e.preventDefault();
         void onSubmit(new FormData(e.currentTarget));
@@ -138,7 +138,7 @@ function ReferralRow({ row, onChange }: { row: MemberReferral; onChange: () => v
   }
 
   return (
-    <li className="rounded-3xl bg-white p-4">
+    <li className="surface rounded-3xl p-4">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="font-medium">{row.fullName}</p>

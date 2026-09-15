@@ -86,7 +86,7 @@ export function PublicHeader({
         overlay ? "fixed inset-x-0 top-0" : "sticky top-0"
       } ${
         paper
-          ? "border-b border-[rgba(9,43,69,0.08)] bg-[rgba(250,248,242,0.88)] text-[var(--navy)] backdrop-blur-md"
+          ? "header-glass"
           : "border-b border-transparent bg-transparent text-[#faf8f2]"
       }`}
     >
@@ -148,7 +148,7 @@ export function PublicHeader({
             role="dialog"
             aria-modal="true"
             aria-label="Menu"
-            className="fixed inset-x-0 top-[4.25rem] z-50 border-b border-[rgba(9,43,69,0.08)] bg-[var(--paper)] text-[var(--navy)] shadow-lg"
+            className="glass-menu fixed inset-x-0 top-[4.25rem] z-50 text-[var(--navy)]"
           >
             <nav aria-label="Mobile" className="oh-wrap grid py-3">
               {PUBLIC_NAV.map((item) => (

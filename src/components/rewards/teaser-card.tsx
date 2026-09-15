@@ -12,7 +12,7 @@ export function RewardsTeaserCard({
   return (
     <Link
       href="/member/rewards"
-      className={`block rounded-3xl bg-white ${compact ? "px-4 py-4" : "px-5 py-5"}`}
+      className={`block surface rounded-3xl ${compact ? "px-4 py-4" : "px-5 py-5"}`}
     >
       <p className="text-sm text-[var(--ivory-dim)]">{REWARDS_HEADLINE}</p>
       <p className={`mt-1 font-serif ${compact ? "text-3xl" : "text-4xl"}`}>{formatPoints(availablePoints)}</p>

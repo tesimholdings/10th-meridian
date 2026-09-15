@@ -142,7 +142,7 @@ export function IndexCard({
           </button>
           <details className="relative" open={open} onToggle={(e) => setOpen((e.target as HTMLDetailsElement).open)}>
             <summary className="action-quiet cursor-pointer list-none">More</summary>
-            <div className="absolute left-0 z-10 mt-1 grid min-w-44 rounded-2xl bg-white p-2 shadow-lg">
+            <div className="glass-menu absolute left-0 z-10 mt-1 grid min-w-44 rounded-2xl p-2">
               <button type="button" className="min-h-10 px-2 text-left text-sm" onClick={() => void overflow("intro")}>
                 {intro ? "Introduction requested" : "Request introduction"}
               </button>

@@ -9,7 +9,7 @@ import { Wordmark } from "@/components/brand/logo";
 export function DesktopRail({ unreadMessages = 0 }: { unreadMessages?: number }) {
   const pathname = usePathname();
   return (
-    <aside className="sticky top-0 hidden h-dvh w-56 shrink-0 flex-col border-r border-[var(--line)] px-4 py-5 md:flex">
+    <aside className="sticky top-0 hidden h-dvh w-56 shrink-0 flex-col border-r border-[rgba(196,162,100,0.28)] px-4 py-5 md:flex">
       <Wordmark compact surface="light" />
       <nav className="mt-8 grid gap-1" aria-label="Primary">
         {memberNav.map((item) => {
@@ -22,7 +22,7 @@ export function DesktopRail({ unreadMessages = 0 }: { unreadMessages?: number })
               key={item.id}
               href={item.href}
               className={`pressable flex min-h-11 items-center gap-3 rounded-full px-3 text-sm ${
-                active ? "bg-white text-[var(--navy)]" : "text-[var(--ivory-dim)]"
+                active ? "rail-active text-[var(--navy)]" : "text-[var(--ivory-dim)]"
               }`}
             >
               <span className="relative">

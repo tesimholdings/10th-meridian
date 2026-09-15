@@ -10,7 +10,7 @@ const styles: Record<Variant, string> = {
   ghost:
     "bg-[rgba(250,248,242,0.16)] text-[#faf8f2] border border-[rgba(250,248,242,0.7)] hover:border-[#c4a264]",
   ivory:
-    "bg-[#faf8f2] text-[#092b45] border border-[#faf8f2] hover:bg-white",
+    "bg-[#faf8f2] text-[#092b45] border border-[#c4a264] hover:bg-[#efe6d4]",
   quiet:
     "bg-transparent text-[#092b45] border border-[rgba(9,43,69,0.22)] hover:border-[#092b45]",
 };

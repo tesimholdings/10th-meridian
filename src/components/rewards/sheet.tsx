@@ -42,7 +42,7 @@ export function RewardsSheet({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="reward-sheet w-full max-w-md rounded-3xl bg-white p-5 text-[var(--navy)] shadow-xl"
+        className="reward-sheet surface w-full max-w-md rounded-3xl p-5 text-[var(--navy)]"
       >
         <div className="flex items-start justify-between gap-3">
           <h3 id={titleId} className="font-serif text-2xl">

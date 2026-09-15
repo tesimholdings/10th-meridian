@@ -19,7 +19,7 @@ export default async function ApplyPage() {
         place. No more than ten new members are hand-selected each month.
         Lifetime membership is $10,000. Absolutely no soliciting. Ban with no refund.
       </p>
-      <div className="mt-10">
+      <div className="surface mt-10 rounded-3xl p-5">
         <ApplyWizard referralCode={access.referralCode} />
       </div>
     </PublicShell>

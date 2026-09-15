@@ -20,7 +20,7 @@ export function ActivityPanel({ snapshot }: { snapshot: RewardsSnapshot }) {
         ) : (
           <ul className="mt-4 grid gap-2">
             {snapshot.ledger.map((row) => (
-              <li key={row.id} className="flex items-start justify-between gap-3 rounded-2xl bg-white px-4 py-3">
+              <li key={row.id} className="surface flex items-start justify-between gap-3 rounded-2xl px-4 py-3">
                 <div>
                   <p className="text-sm">{row.memo}</p>
                   <p className="mt-1 text-xs text-[var(--ivory-dim)]">
@@ -46,7 +46,7 @@ export function ActivityPanel({ snapshot }: { snapshot: RewardsSnapshot }) {
             {snapshot.redemptions.map((row) => {
               const item = catalogById(row.rewardId);
               return (
-                <li key={row.id} className="rounded-3xl bg-white p-4">
+                <li key={row.id} className="surface rounded-3xl p-4">
                   <p className="font-medium">{item?.title ?? row.rewardId}</p>
                   <p className="mt-1 text-sm text-[var(--ivory-dim)]">
                     {formatPoints(pointsFromUsd(row.amountUsd))} · {formatUsd(row.amountUsd)} · {row.status.replaceAll("_", " ")}

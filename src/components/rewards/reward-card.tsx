@@ -39,7 +39,7 @@ export function RewardCard({ card }: { card: RewardCardView }) {
 
   return (
     <article
-      className={`reward-card rounded-3xl bg-white p-5 ${card.state === "ready" ? "reward-unlock" : ""}`}
+      className={`reward-card surface rounded-3xl p-5 ${card.state === "ready" ? "reward-unlock" : ""}`}
     >
       <div className="flex items-start justify-between gap-3">
         <div>
