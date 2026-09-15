@@ -14,6 +14,9 @@ function luxuryCursorAllowed(
   return pointerType === "mouse" || pointerType === "pen";
 }
 
+const TIP = 8;
+const FILAMENT = 3;
+
 export function CursorAura() {
   const tip = useRef<HTMLDivElement>(null);
   const trail = useRef<HTMLDivElement>(null);
@@ -76,15 +79,21 @@ export function CursorAura() {
     }
 
     function tick() {
-      x += (tx - x) * 0.42;
-      y += (ty - y) * 0.42;
-      gx += (tx - gx) * 0.13;
-      gy += (ty - gy) * 0.13;
+      x += (tx - x) * 0.48;
+      y += (ty - y) * 0.48;
+      gx += (tx - gx) * 0.14;
+      gy += (ty - gy) * 0.14;
+      const dx = x - gx;
+      const dy = y - gy;
+      const lag = Math.hypot(dx, dy);
+      const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+      const len = Math.min(82, 12 + lag * 1.05);
       if (tip.current) {
-        tip.current.style.transform = `translate3d(${x - 7}px, ${y - 7}px, 0)`;
+        tip.current.style.transform = `translate3d(${x - TIP / 2}px, ${y - TIP / 2}px, 0)`;
       }
       if (trail.current) {
-        trail.current.style.transform = `translate3d(${gx - 36}px, ${gy - 36}px, 0)`;
+        trail.current.style.width = `${len}px`;
+        trail.current.style.transform = `translate3d(${x - len}px, ${y - FILAMENT / 2}px, 0) rotate(${angle}deg)`;
       }
       frame = window.requestAnimationFrame(tick);
     }
@@ -101,7 +110,7 @@ export function CursorAura() {
 
   return (
     <>
-      <div ref={trail} className="cursor-aura-trail" aria-hidden />
+      <div ref={trail} className="cursor-aura-trail cursor-aura-filament" aria-hidden />
       <div ref={tip} className="cursor-aura" aria-hidden />
     </>
   );

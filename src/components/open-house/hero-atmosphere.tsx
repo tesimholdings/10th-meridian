@@ -34,10 +34,10 @@ export function HeroAtmosphere() {
     }
 
     function tick() {
-      px += (tx - px) * 0.16;
-      py += (ty - py) * 0.16;
-      mx += (tmx - mx) * 0.18;
-      my += (tmy - my) * 0.18;
+      px += (tx - px) * 0.14;
+      py += (ty - py) * 0.14;
+      mx += (tmx - mx) * 0.16;
+      my += (tmy - my) * 0.16;
       apply();
       frame = window.requestAnimationFrame(tick);
     }
@@ -76,6 +76,8 @@ export function HeroAtmosphere() {
   return (
     <div ref={root} className="hero-atmosphere" aria-hidden>
       <div className="hero-lamp" />
+      <div className="hero-caustic" />
+      <div className="hero-sheet" />
       <div className="hero-wash" />
       <div className="hero-grain" />
       <div className="hero-flecks" />

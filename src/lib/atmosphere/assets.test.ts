@@ -29,12 +29,15 @@ const motionClasses = [
   "reward-sheet",
   "cursor-aura",
   "cursor-aura-trail",
+  "cursor-aura-filament",
   "lock-gold-follow",
   "circle-person",
   "hero-grain",
   "hero-flecks",
   "hero-wash",
   "hero-lamp",
+  "hero-caustic",
+  "hero-sheet",
   "hero-media-shift",
 ];
 
@@ -57,12 +60,16 @@ describe("original House atmosphere", () => {
     const cursor = readFileSync("src/components/atmosphere/cursor-aura.tsx", "utf8");
     assert.match(css, /\.cursor-aura\s*\{/);
     assert.match(css, /\.cursor-aura-trail/);
+    assert.match(css, /\.cursor-aura-filament/);
     assert.match(css, /#c4a264|#f0d78a|#fff8e4/);
+    assert.match(css, /linear-gradient\(\s*90deg/);
     const aura = css.split(".cursor-aura {")[1]?.split("html.has-luxury-cursor")[0] ?? "";
     assert.equal(aura.includes("border: 2"), false);
     assert.equal(aura.includes("0 0 0 2px"), false);
+    assert.equal(aura.includes("width: 14px"), false);
     assert.equal(css.includes("cursor-aura-core"), false);
     assert.equal(cursor.includes("cursor-aura-core"), false);
+    assert.match(cursor, /cursor-aura-filament/);
     assert.match(css, /html\.has-luxury-cursor/);
     assert.match(css, /html\.has-luxury-cursor[\s\S]*cursor:\s*none/);
     const beforeClass = css.split("html.has-luxury-cursor")[0] ?? "";
@@ -97,10 +104,12 @@ describe("original House atmosphere", () => {
     const atmosphere = readFileSync("src/components/open-house/hero-atmosphere.tsx", "utf8");
     assert.match(css, /\.hero-wash/);
     assert.match(css, /\.hero-lamp/);
+    assert.match(css, /\.hero-caustic/);
+    assert.match(css, /\.hero-sheet/);
     assert.match(css, /var\(--hero-mx\)/);
-    assert.match(css, /var\(--hero-px\) \* 54px/);
-    assert.match(css, /var\(--hero-px\) \* -96px/);
-    assert.match(css, /var\(--hero-px\) \* 118px/);
+    assert.match(css, /var\(--hero-px\) \* 92px/);
+    assert.match(css, /var\(--hero-px\) \* -148px/);
+    assert.match(css, /var\(--hero-px\) \* 176px/);
     assert.match(hero, /preload="auto"/);
     assert.match(hero, /canplay/);
     assert.match(hero, /type="video\/mp4"/);

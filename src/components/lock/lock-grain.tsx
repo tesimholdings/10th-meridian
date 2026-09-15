@@ -12,7 +12,6 @@ export function LockGrain() {
 
     function move(e: PointerEvent) {
       if (e.pointerType === "touch" || !wash.current) return;
-      if (e.pointerType !== "mouse" && e.pointerType !== "pen") return;
       const x = (e.clientX / window.innerWidth) * 100;
       const y = (e.clientY / window.innerHeight) * 100;
       wash.current.style.setProperty("--lock-mx", `${x}%`);
