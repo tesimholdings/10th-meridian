@@ -83,6 +83,7 @@ describe("Open House customer copy", () => {
       "public/brand/tenth-meridian-logo-full-lockup.webp",
       "public/brand/tenth-meridian-logo-full-lockup-knockout.png",
       "public/brand/tenth-meridian-logo-full-lockup-knockout.webp",
+      "public/brand/tenth-meridian-emblem-icon.png",
     ]) {
       assert.equal(existsSync(path), true, path);
     }
@@ -123,11 +124,16 @@ describe("Open House customer copy", () => {
     }
     const favicon = readFileSync("public/favicon.svg", "utf8");
     const appIcon = readFileSync("src/app/icon.svg", "utf8");
-    assert.match(favicon, /#c4a264/);
-    assert.match(favicon, /rotate\(-48 40 40\)/);
-    assert.equal(favicon.includes("#b08d4a"), false);
-    assert.match(appIcon, /#c4a264/);
-    assert.match(appIcon, /rotate\(-48 40 40\)/);
+    assert.match(favicon, /data:image\/png;base64,/);
+    assert.match(favicon, /#000000|#000\b|#070809/);
+    assert.equal(favicon.includes("#c4a264"), false);
+    assert.equal(favicon.includes("rotate(-48"), false);
+    assert.match(appIcon, /data:image\/png;base64,/);
+    assert.equal(appIcon.includes("#c4a264"), false);
+    assert.equal(appIcon.includes("rotate(-48"), false);
+    const builder = readFileSync("scripts/build-brand-icons.mjs", "utf8");
+    assert.match(builder, /SOURCE = "public\/brand\/tenth-meridian-emblem-icon\.png"/);
+    assert.equal(/sharp\([^)]*tenth-meridian-mark\.svg/.test(builder), false);
     const layout = readFileSync("src/app/layout.tsx", "utf8");
     assert.match(layout, /favicon\.ico/);
     assert.match(layout, /apple-touch-icon/);
