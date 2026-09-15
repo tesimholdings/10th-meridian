@@ -75,6 +75,7 @@ export function HeroAtmosphere() {
 
   return (
     <div ref={root} className="hero-atmosphere" aria-hidden>
+      <div className="hero-shade" />
       <div className="hero-lamp" />
       <div className="hero-caustic" />
       <div className="hero-sheet" />

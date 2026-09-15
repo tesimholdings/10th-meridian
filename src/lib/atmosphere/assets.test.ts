@@ -36,6 +36,7 @@ const motionClasses = [
   "hero-flecks",
   "hero-wash",
   "hero-lamp",
+  "hero-shade",
   "hero-caustic",
   "hero-sheet",
   "hero-media-shift",
@@ -105,6 +106,7 @@ describe("original House atmosphere", () => {
     assert.match(css, /\.hero-wash/);
     assert.match(css, /\.hero-lamp/);
     assert.match(css, /\.hero-caustic/);
+    assert.match(css, /\.hero-shade/);
     assert.match(css, /\.hero-sheet/);
     assert.match(css, /var\(--hero-mx\)/);
     assert.match(css, /var\(--hero-px\) \* 92px/);
