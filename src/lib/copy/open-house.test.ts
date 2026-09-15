@@ -118,6 +118,12 @@ describe("Open House customer surfaces", () => {
     assert.match(page, /HeroAtmosphere/);
     assert.match(page, /hero-luxury/);
     assert.match(page, /filmSrc\("heroLandscape"\)/);
+    assert.match(page, /oh-wrap/);
+    assert.equal(page.includes("max-w-6xl"), false);
+    assert.match(nav, /oh-wrap/);
+    assert.match(foot, /oh-wrap/);
+    assert.equal(nav.includes("userAgent"), false);
+    assert.equal(page.includes("userAgent"), false);
     assert.equal(foot.includes("FormalLockup"), false);
     assert.match(foot, /Wordmark/);
     for (const href of ["/legal/privacy", "/legal/terms", "/legal/community", "/sign-in"]) {

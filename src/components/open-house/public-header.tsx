@@ -82,7 +82,7 @@ export function PublicHeader({
 
   return (
     <header
-      className={`safe-pad safe-top z-40 transition-[background-color,backdrop-filter,border-color,color] duration-300 ${
+      className={`safe-top z-40 transition-[background-color,backdrop-filter,border-color,color] duration-300 ${
         overlay ? "fixed inset-x-0 top-0" : "sticky top-0"
       } ${
         paper
@@ -90,7 +90,7 @@ export function PublicHeader({
           : "border-b border-transparent bg-transparent text-[#faf8f2]"
       }`}
     >
-      <div className="mx-auto flex h-[4.25rem] max-w-6xl items-center gap-3">
+      <div className="oh-wrap flex h-[4.25rem] items-center gap-3">
         <Link href="/" className="min-h-11 shrink-0" aria-label="10th Meridian home">
           {paper ? (
             <Wordmark compact surface="light" />
@@ -150,7 +150,7 @@ export function PublicHeader({
             aria-label="Menu"
             className="fixed inset-x-0 top-[4.25rem] z-50 border-b border-[rgba(9,43,69,0.08)] bg-[var(--paper)] text-[var(--navy)] shadow-lg"
           >
-            <nav aria-label="Mobile" className="safe-pad mx-auto grid max-w-6xl py-3">
+            <nav aria-label="Mobile" className="oh-wrap grid py-3">
               {PUBLIC_NAV.map((item) => (
                 <Link
                   key={item.label}

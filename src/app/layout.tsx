@@ -17,6 +17,11 @@ const sans = Outfit({
   subsets: ["latin"],
 });
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(env.siteUrl),
   title: {

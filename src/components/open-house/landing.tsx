@@ -67,11 +67,11 @@ function Hero() {
             "linear-gradient(180deg, rgba(9,43,69,0.22) 0%, rgba(9,43,69,0.08) 36%, rgba(9,43,69,0.28) 70%, rgba(250,248,242,0.96) 100%)",
         }}
       />
-      <div className="relative z-10 mx-auto flex min-h-[76svh] max-w-6xl flex-col justify-end px-[max(1.25rem,env(safe-area-inset-left))] pb-16 pt-28 md:min-h-[90svh] md:pb-24">
+      <div className="oh-wrap relative z-10 flex min-h-[76svh] flex-col justify-end pb-16 pt-28 md:min-h-[90svh] md:pb-24">
         <p className="text-[0.72rem] font-medium tracking-[0.18em] text-[#faf8f2] [text-shadow:0_1px_12px_rgba(9,43,69,0.35)]">
           {OPEN_HOUSE_EYEBROW}
         </p>
-        <h1 className="oh-title mt-4 max-w-3xl font-serif text-[2.6rem] leading-[0.96] text-[#faf8f2] [text-shadow:0_2px_24px_rgba(9,43,69,0.35)] md:text-6xl">
+        <h1 className="oh-title mt-4 max-w-3xl font-serif text-[2.6rem] leading-[0.96] text-[#faf8f2] [text-shadow:0_2px_24px_rgba(9,43,69,0.35)] md:max-w-4xl md:text-6xl xl:text-7xl">
           {OPEN_HOUSE_HEADLINE}
         </h1>
         <p className="mt-5 max-w-md text-base text-[#faf8f2]/90 [text-shadow:0_1px_12px_rgba(9,43,69,0.35)]">
@@ -91,7 +91,7 @@ function Hero() {
 
 function HouseStory() {
   return (
-    <section id="the-house" className="safe-pad mx-auto max-w-6xl scroll-mt-24 py-16 md:py-24">
+    <section id="the-house" className="oh-wrap scroll-mt-24 py-16 md:py-24">
       <p className="text-xs font-medium tracking-[0.16em] text-[var(--gold-dim)]">THE HOUSE</p>
       <div className="mt-8 grid gap-10 md:grid-cols-3">
         {HOUSE_BLOCKS.map((block, i) => {
@@ -114,7 +114,7 @@ function HouseStory() {
 
 function ExperiencesRail() {
   return (
-    <section id="experiences" className="safe-pad mx-auto max-w-6xl scroll-mt-24 pb-16 md:pb-24">
+    <section id="experiences" className="oh-wrap scroll-mt-24 pb-16 md:pb-24">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <h2 className="font-serif text-4xl">Experiences</h2>
         <p className="max-w-sm text-sm text-[var(--navy-soft)]">{EXPERIENCES_DISCLOSURE}</p>
