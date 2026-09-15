@@ -68,6 +68,7 @@ describe("original House atmosphere", () => {
     assert.match(cursor, /prefers-reduced-motion/);
     assert.match(cursor, /pointerType/);
     assert.match(cursor, /"mouse"/);
+    assert.match(cursor, /hover: hover/);
     const reduced = css.split("@media (prefers-reduced-motion: reduce)")[1] ?? "";
     assert.match(reduced, /cursor:\s*auto/);
   });
@@ -96,6 +97,10 @@ describe("original House atmosphere", () => {
     assert.match(css, /var\(--hero-px\) \* 64px/);
     assert.match(hero, /preload="auto"/);
     assert.match(hero, /canplay/);
+    assert.match(hero, /type="video\/mp4"/);
+    const resolve = readFileSync("src/lib/atmosphere/resolve-campaign.ts", "utf8");
+    assert.match(resolve, /Always the public CDN path/);
+    assert.equal(resolve.includes("mediaOnDisk(src) ? src : undefined"), false);
     assert.match(atmosphere, /hero-wash/);
     const reduced = css.split("@media (prefers-reduced-motion: reduce)")[1] ?? "";
     assert.match(reduced, /hero-grain/);

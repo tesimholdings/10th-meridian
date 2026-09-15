@@ -31,6 +31,13 @@ const nextConfig: NextConfig = {
         source: "/apply/:path*",
         headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
       },
+      {
+        source: "/media/campaign/video/:path*.mp4",
+        headers: [
+          { key: "Content-Type", value: "video/mp4" },
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
     ];
   },
 };

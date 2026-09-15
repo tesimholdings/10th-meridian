@@ -68,6 +68,10 @@ describe("campaign still mapping", () => {
     assert.match(hero, /prefers-reduced-motion/);
     assert.match(hero, /IntersectionObserver/);
     assert.match(hero, /Pause/);
+    assert.match(hero, /type="video\/mp4"/);
+    const resolve = readFileSync("src/lib/atmosphere/resolve-campaign.ts", "utf8");
+    assert.match(resolve, /return campaignFilms\[slot\]/);
+    assert.equal(resolve.includes("mediaOnDisk(src) ? src : undefined"), false);
   });
 
   it("ships the editorial stills on disk", () => {

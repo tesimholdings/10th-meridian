@@ -2,9 +2,15 @@
 
 import { useEffect, useRef, useState } from "react";
 
-function luxuryCursorAllowed(motion: MediaQueryList, pointerType?: string) {
+function luxuryCursorAllowed(
+  fine: MediaQueryList,
+  motion: MediaQueryList,
+  pointerType?: string,
+) {
   if (motion.matches) return false;
   if (pointerType === "touch") return false;
+  const touchPrimary = navigator.maxTouchPoints > 0 && !fine.matches;
+  if (fine.matches && !touchPrimary) return true;
   return pointerType === "mouse" || pointerType === "pen";
 }
 
@@ -13,34 +19,35 @@ export function CursorAura() {
   const [on, setOn] = useState(false);
 
   useEffect(() => {
+    const fine = window.matchMedia("(hover: hover) and (pointer: fine)");
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-    function disable() {
-      setOn(false);
-      document.documentElement.classList.remove("has-luxury-cursor");
+    function apply(next: boolean) {
+      setOn(next);
+      document.documentElement.classList.toggle("has-luxury-cursor", next);
+    }
+
+    function sync() {
+      apply(luxuryCursorAllowed(fine, motion));
     }
 
     function onMove(e: PointerEvent) {
-      if (!luxuryCursorAllowed(motion, e.pointerType)) {
-        if (motion.matches || e.pointerType === "touch") disable();
+      if (luxuryCursorAllowed(fine, motion, e.pointerType)) {
+        apply(true);
         return;
       }
-      setOn((prev) => {
-        if (!prev) document.documentElement.classList.add("has-luxury-cursor");
-        return true;
-      });
+      if (motion.matches || e.pointerType === "touch") apply(false);
     }
 
-    function onMotion() {
-      if (motion.matches) disable();
-    }
-
+    sync();
+    fine.addEventListener("change", sync);
+    motion.addEventListener("change", sync);
     window.addEventListener("pointermove", onMove, { passive: true });
-    motion.addEventListener("change", onMotion);
     return () => {
-      window.removeEventListener("pointermove", onMove);
-      motion.removeEventListener("change", onMotion);
       document.documentElement.classList.remove("has-luxury-cursor");
+      fine.removeEventListener("change", sync);
+      motion.removeEventListener("change", sync);
+      window.removeEventListener("pointermove", onMove);
     };
   }, []);
 

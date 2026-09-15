@@ -28,9 +28,9 @@ export function globalSrc(slot: GlobalSlot, fallback: CampaignSlot = "homeIndex"
   return mediaOnDisk(src) ? src : campaignSrc(fallback);
 }
 
-export function filmSrc(slot: CampaignFilm): string | undefined {
-  const src = campaignFilms[slot];
-  return mediaOnDisk(src) ? src : undefined;
+/** Always the public CDN path. Do not existsSync-gate — Vercel functions often lack /public MP4s. */
+export function filmSrc(slot: CampaignFilm): string {
+  return campaignFilms[slot];
 }
 
 export function campaignPackOnDisk(): boolean {

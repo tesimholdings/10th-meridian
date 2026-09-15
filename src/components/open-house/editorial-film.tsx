@@ -40,14 +40,17 @@ export function EditorialFilm({
     const video = videoRef.current;
     if (!video || !showVideo) return;
 
+    let alive = true;
     const tryPlay = () => {
-      if (!paused) void video.play();
+      if (!alive || paused) return;
+      void video.play().catch(() => {});
     };
     tryPlay();
     video.addEventListener("canplay", tryPlay);
 
     const io = new IntersectionObserver(
       ([entry]) => {
+        if (!alive) return;
         if (!entry.isIntersecting) {
           video.pause();
           return;
@@ -58,6 +61,7 @@ export function EditorialFilm({
     );
     io.observe(video);
     return () => {
+      alive = false;
       video.removeEventListener("canplay", tryPlay);
       io.disconnect();
     };
@@ -70,7 +74,7 @@ export function EditorialFilm({
       return;
     }
     if (el.paused) {
-      void el.play();
+      void el.play().catch(() => {});
       setPaused(false);
     } else {
       el.pause();
@@ -85,17 +89,19 @@ export function EditorialFilm({
       {showVideo ? (
         <video
           ref={videoRef}
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 z-[1] h-full w-full object-cover"
           poster={poster}
-          src={videoSrc}
           muted
           loop
           playsInline
           autoPlay
           preload="auto"
           onError={() => setFailedVideo(true)}
+          data-hero-film={videoSrc}
           aria-hidden
-        />
+        >
+          <source src={videoSrc} type="video/mp4" />
+        </video>
       ) : null}
       {showVideo ? (
         <button
