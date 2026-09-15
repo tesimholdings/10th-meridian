@@ -8,8 +8,10 @@ export function HeroAtmosphere() {
 
   useEffect(() => {
     const el = root.current;
-    const host = el?.parentElement;
-    if (!el || !host) return;
+    if (!el) return;
+    const host = el.parentElement;
+    if (!host) return;
+    const surface: HTMLElement = host;
 
     const fine = window.matchMedia("(hover: hover) and (pointer: fine)");
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -21,8 +23,8 @@ export function HeroAtmosphere() {
     let frame = 0;
 
     function apply(x: number, y: number) {
-      host.style.setProperty("--hero-px", x.toFixed(3));
-      host.style.setProperty("--hero-py", y.toFixed(3));
+      surface.style.setProperty("--hero-px", x.toFixed(3));
+      surface.style.setProperty("--hero-py", y.toFixed(3));
     }
 
     function tick() {
@@ -34,7 +36,7 @@ export function HeroAtmosphere() {
 
     function onMove(e: PointerEvent) {
       if (e.pointerType === "touch" || motion.matches || !fine.matches) return;
-      const rect = host.getBoundingClientRect();
+      const rect = surface.getBoundingClientRect();
       if (rect.width === 0 || rect.height === 0) return;
       tx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
       ty = ((e.clientY - rect.top) / rect.height) * 2 - 1;
@@ -51,19 +53,19 @@ export function HeroAtmosphere() {
     }
 
     if (fine.matches) {
-      host.addEventListener("pointermove", onMove, { passive: true });
-      host.addEventListener("pointerleave", onLeave);
+      surface.addEventListener("pointermove", onMove, { passive: true });
+      surface.addEventListener("pointerleave", onLeave);
       frame = window.requestAnimationFrame(tick);
     } else {
       el.dataset.ambient = "true";
     }
 
     return () => {
-      host.removeEventListener("pointermove", onMove);
-      host.removeEventListener("pointerleave", onLeave);
+      surface.removeEventListener("pointermove", onMove);
+      surface.removeEventListener("pointerleave", onLeave);
       window.cancelAnimationFrame(frame);
-      host.style.removeProperty("--hero-px");
-      host.style.removeProperty("--hero-py");
+      surface.style.removeProperty("--hero-px");
+      surface.style.removeProperty("--hero-py");
     };
   }, []);
 

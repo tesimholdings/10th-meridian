@@ -5,7 +5,12 @@ import { HeroMedia } from "@/components/open-house/hero-media";
 import { PublicFooter } from "@/components/open-house/public-footer";
 import { PublicHeader } from "@/components/open-house/public-header";
 import { Button } from "@/components/ui/button";
-import { stillForListedExperience } from "@/lib/atmosphere/campaign";
+import {
+  OPEN_HOUSE_CLOSING_MEDIA,
+  OPEN_HOUSE_EXPERIENCE_MEDIA,
+  OPEN_HOUSE_HOUSE_MEDIA,
+  stillForListedExperience,
+} from "@/lib/atmosphere/campaign";
 import { campaignSrc, filmSrc, globalSrc } from "@/lib/atmosphere/resolve-campaign";
 import type { AccessContext } from "@/lib/access/context";
 import {
@@ -89,16 +94,19 @@ function HouseStory() {
     <section id="the-house" className="safe-pad mx-auto max-w-6xl scroll-mt-24 py-16 md:py-24">
       <p className="text-xs font-medium tracking-[0.16em] text-[var(--gold-dim)]">THE HOUSE</p>
       <div className="mt-8 grid gap-10 md:grid-cols-3">
-        {HOUSE_BLOCKS.map((block) => (
-          <article key={block.id}>
-            <EditorialFilm
-              poster={campaignSrc(block.still)}
-              videoSrc={block.still === "eventsDinner" ? filmSrc("eventsDinner") : undefined}
-            />
-            <h2 className="mt-5 font-serif text-3xl">{block.title}</h2>
-            <p className="mt-2 text-[var(--navy-soft)]">{block.body}</p>
-          </article>
-        ))}
+        {HOUSE_BLOCKS.map((block, i) => {
+          const media = OPEN_HOUSE_HOUSE_MEDIA[i];
+          return (
+            <article key={block.id}>
+              <EditorialFilm
+                poster={media ? globalSrc(media.global, media.fallback) : campaignSrc(block.still)}
+                videoSrc={media ? filmSrc(media.film) : undefined}
+              />
+              <h2 className="mt-5 font-serif text-3xl">{block.title}</h2>
+              <p className="mt-2 text-[var(--navy-soft)]">{block.body}</p>
+            </article>
+          );
+        })}
       </div>
     </section>
   );
@@ -112,11 +120,14 @@ function ExperiencesRail() {
         <p className="max-w-sm text-sm text-[var(--navy-soft)]">{EXPERIENCES_DISCLOSURE}</p>
       </div>
       <ul className="mt-8 grid gap-6 md:grid-cols-3">
-        {experiences.map((item, i) => (
+        {experiences.map((item, i) => {
+          const media = OPEN_HOUSE_EXPERIENCE_MEDIA[i];
+          const fallback = stillForListedExperience(item, i);
+          return (
           <li key={item.id}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={campaignSrc(stillForListedExperience(item, i))}
+              src={media ? globalSrc(media.global, fallback) : campaignSrc(fallback)}
               alt=""
               className="aspect-[16/10] w-full object-cover"
             />
@@ -126,7 +137,8 @@ function ExperiencesRail() {
             </p>
             <p className="mt-1 text-sm text-[var(--navy-soft)]">{item.summary}</p>
           </li>
-        ))}
+          );
+        })}
       </ul>
     </section>
   );
@@ -164,8 +176,8 @@ function Closing() {
   return (
     <section className="relative isolate overflow-hidden">
       <EditorialFilm
-        poster={globalSrc("nycRooftop")}
-        videoSrc={filmSrc("nycRooftop")}
+        poster={globalSrc(OPEN_HOUSE_CLOSING_MEDIA.global, OPEN_HOUSE_CLOSING_MEDIA.fallback)}
+        videoSrc={filmSrc(OPEN_HOUSE_CLOSING_MEDIA.film)}
         className="absolute inset-0 h-full w-full"
       />
       <div className="absolute inset-0 bg-[rgba(9,43,69,0.42)]" aria-hidden />

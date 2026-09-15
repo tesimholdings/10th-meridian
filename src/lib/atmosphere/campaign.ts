@@ -37,19 +37,38 @@ export const campaignFilms = {
 } as const;
 
 export const globalCampaign = {
-  nycRooftop: "/media/campaign/global/01-nyc-rooftop.jpg",
-  paris: "/media/campaign/global/02-paris.jpg",
-  capeTown: "/media/campaign/global/03-cape-town.jpg",
-  london: "/media/campaign/global/04-london-mayfair.jpg",
-  amalfi: "/media/campaign/global/05-amalfi-yacht.jpg",
-  safari: "/media/campaign/global/06-sa-safari.jpg",
-  lakeComo: "/media/campaign/global/07-lake-como.jpg",
-  nycClub: "/media/campaign/global/08-nyc-club.jpg",
+  nycRooftop: "/media/campaign/global/00-nyc-rooftop.jpg",
+  paris: "/media/campaign/global/01-paris-sg.jpg",
+  capeTown: "/media/campaign/global/02-cape-town-terrace.jpg",
+  london: "/media/campaign/global/03-london-mayfair.jpg",
+  amalfi: "/media/campaign/global/04-amalfi-yacht.jpg",
+  safari: "/media/campaign/global/05-sa-safari-lodge.jpg",
+  lakeComo: "/media/campaign/global/06-lake-como.jpg",
+  nycClub: "/media/campaign/global/07-nyc-club.jpg",
 } as const;
 
 export type CampaignSlot = keyof typeof campaign;
 export type CampaignFilm = keyof typeof campaignFilms;
 export type GlobalSlot = keyof typeof globalCampaign;
+
+/** Open House section rotation. Editorial only — never real members or completed events. */
+export const OPEN_HOUSE_HOUSE_MEDIA = [
+  { global: "nycRooftop", film: "nycRooftop", fallback: "homeIndex" },
+  { global: "paris", film: "paris", fallback: "crossings" },
+  { global: "capeTown", film: "capeTown", fallback: "eventsDinner" },
+] as const;
+
+export const OPEN_HOUSE_EXPERIENCE_MEDIA = [
+  { global: "london", fallback: "celebrations" },
+  { global: "amalfi", fallback: "homeNetwork" },
+  { global: "safari", fallback: "crossings" },
+] as const;
+
+export const OPEN_HOUSE_CLOSING_MEDIA = {
+  global: "lakeComo",
+  film: "lakeComo",
+  fallback: "homeIndex",
+} as const;
 
 const NIGHTLIFE = /\b(night.?life|nightclub|concert|after.?hours|club)\b/;
 
