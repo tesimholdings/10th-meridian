@@ -106,6 +106,36 @@ describe("Open House customer copy", () => {
     const wordmarkImpl = logo.split("export function Wordmark")[1] ?? "";
     assert.match(wordmarkImpl, /FormalLockup/);
     assert.match(wordmarkImpl, /knockout/);
+    for (const path of [
+      "public/favicon.ico",
+      "public/favicon.svg",
+      "public/favicon-16x16.png",
+      "public/favicon-32x32.png",
+      "public/apple-touch-icon.png",
+      "public/icon-192.png",
+      "public/icon-512.png",
+      "public/site.webmanifest",
+      "src/app/favicon.ico",
+      "src/app/icon.svg",
+      "src/app/apple-icon.png",
+    ]) {
+      assert.equal(existsSync(path), true, path);
+    }
+    const favicon = readFileSync("public/favicon.svg", "utf8");
+    const appIcon = readFileSync("src/app/icon.svg", "utf8");
+    assert.match(favicon, /#c4a264/);
+    assert.match(favicon, /rotate\(-48 40 40\)/);
+    assert.equal(favicon.includes("#b08d4a"), false);
+    assert.match(appIcon, /#c4a264/);
+    assert.match(appIcon, /rotate\(-48 40 40\)/);
+    const layout = readFileSync("src/app/layout.tsx", "utf8");
+    assert.match(layout, /favicon\.ico/);
+    assert.match(layout, /apple-touch-icon/);
+    assert.match(layout, /appleWebApp/);
+    assert.match(layout, /site\.webmanifest/);
+    const manifest = readFileSync("public/site.webmanifest", "utf8");
+    assert.match(manifest, /icon-192\.png/);
+    assert.match(manifest, /icon-512\.png/);
   });
 });
 
