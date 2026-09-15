@@ -53,6 +53,47 @@ describe("product naming and community copy", () => {
     }
   });
 
+  it("keeps implementation copy and empty-library files out of member UI", () => {
+    const memberSurfaces = [
+      "src/app/member/home/page.tsx",
+      "src/app/member/resources/page.tsx",
+      "src/components/brand/higgsfield-slot.tsx",
+      "src/components/brand/demo-disclosure.tsx",
+      "src/components/channels/channel-app.tsx",
+      "src/lib/config/site.ts",
+      "src/components/member/member-header.tsx",
+    ];
+    for (const file of memberSurfaces) {
+      const text = readFileSync(file, "utf8");
+      assert.equal(text.includes("Higgsfield slot"), false, `${file} shows Higgsfield slot`);
+      assert.equal(text.includes("Editorial still"), false, `${file} shows Editorial still`);
+    }
+    const resources = readFileSync("src/app/member/resources/page.tsx", "utf8");
+    assert.equal(resources.includes("SETUP.md"), false);
+    const site = readFileSync("src/lib/config/site.ts", "utf8");
+    assert.equal(site.includes("/member/resources"), false);
+    assert.match(site, /\/member\/help/);
+    const drafts = readFileSync("src/components/channels/channel-app.tsx", "utf8");
+    assert.match(drafts, /composeDraftId/);
+    const header = readFileSync("src/components/member/member-header.tsx", "utf8");
+    assert.match(header, /createPortal/);
+    assert.match(header, /Wordmark/);
+    const logo = readFileSync("src/components/brand/logo.tsx", "utf8");
+    assert.match(logo, /FORMAL_LOCKUP_KNOCKOUT_SRC/);
+    assert.match(logo, /Tenth Meridian — Private Network/);
+    assert.equal(logo.includes("MeridianMark"), false);
+    assert.equal(logo.includes(">10th Meridian<"), false);
+    const rail = readFileSync("src/components/member/desktop-rail.tsx", "utf8");
+    assert.match(rail, /FormalLockup/);
+    assert.match(rail, /knockout/);
+    const notes = readFileSync("src/components/crossings/city-notes-board.tsx", "utf8");
+    assert.match(notes, /\{note\.city\}/);
+    assert.match(notes, /\{note\.kind\}/);
+    assert.ok(notes.indexOf("{note.city}") < notes.indexOf("{note.kind}"));
+    const home = readFileSync("src/app/member/home/page.tsx", "utf8");
+    assert.ok(home.indexOf("Useful connections") < home.indexOf("<RewardsTeaserCard"));
+  });
+
   it("states the no-soliciting rule", () => {
     assert.match(SOLICITING_BAN, /Absolutely no soliciting/);
     assert.match(SOLICITING_BAN, /Ban with no refund/);

@@ -66,6 +66,7 @@ export function HouseNotificationPrefsForm({ prefs }: { prefs: HouseNotification
                     className="h-5 w-5"
                     checked={draft[row.key].inApp}
                     onChange={(e) => setChannel(row.key, { inApp: e.target.checked })}
+                    aria-label={`${row.label} — in-app`}
                   />
                 </td>
                 <td>
@@ -74,6 +75,7 @@ export function HouseNotificationPrefsForm({ prefs }: { prefs: HouseNotification
                     className="h-5 w-5"
                     checked={draft[row.key].email}
                     onChange={(e) => setChannel(row.key, { email: e.target.checked })}
+                    aria-label={`${row.label} — email`}
                   />
                 </td>
               </tr>

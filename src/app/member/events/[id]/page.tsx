@@ -6,7 +6,7 @@ import { getPreviewStore } from "@/lib/preview/store";
 import { HiggsfieldSlot } from "@/components/brand/higgsfield-slot";
 import { stillForListedExperience, occasionCredit } from "@/lib/atmosphere/campaign";
 import { campaignSrc } from "@/lib/atmosphere/resolve-campaign";
-import { formatHumanDateTime } from "@/lib/crossings/format";
+import { formatEventWhen } from "@/lib/events/when";
 
 export const metadata = { title: "Experience", robots: { index: false } };
 
@@ -21,7 +21,7 @@ export default async function EventDetailPage({
   if (!event) notFound();
 
   return (
-    <MemberShell user={access.user} demo title="Experience">
+    <MemberShell user={access.user} demo title="Experience" hasHeading>
       <HiggsfieldSlot
         src={campaignSrc(stillForListedExperience(event))}
         credit={occasionCredit(event.title, event.city)}
@@ -34,7 +34,7 @@ export default async function EventDetailPage({
       <dl className="mt-8 grid gap-4">
         <div>
           <dt className="text-sm text-[var(--ivory-dim)]">When</dt>
-          <dd className="mt-1">{formatHumanDateTime(event.startsAt)}</dd>
+          <dd className="mt-1">{formatEventWhen(event.startsAt, event.city)}</dd>
         </div>
         <div>
           <dt className="text-sm text-[var(--ivory-dim)]">Place</dt>

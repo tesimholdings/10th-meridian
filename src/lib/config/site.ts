@@ -57,8 +57,7 @@ export const memberSecondary = [
   { href: "/member/events", label: "Events" },
   { href: "/member/settings", label: "Account settings" },
   { href: "/member/settings#billing", label: "Billing" },
-  { href: "/onboarding", label: "Onboarding" },
-  { href: "/member/resources", label: "Resources" },
+  { href: "/member/help", label: "Help" },
 ] as const;
 
 export const seedChannels = [

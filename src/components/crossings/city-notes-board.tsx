@@ -24,6 +24,7 @@ export function CityNotesBoard({
   isStaff: boolean;
 }) {
   const router = useRouter();
+  const [city, setCity] = useState<string>("all");
   const [kind, setKind] = useState<CityNoteKind | "all">("all");
   const [status, setStatus] = useState<string | null>(null);
   const [draft, setDraft] = useState({
@@ -35,10 +36,21 @@ export function CityNotesBoard({
     neighborhood: "",
   });
 
-  const filtered = useMemo(
-    () => notes.filter((n) => (kind === "all" ? true : n.kind === kind)),
-    [notes, kind],
+  const cities = useMemo(
+    () => [...new Set(notes.map((n) => n.city).filter(Boolean))].sort(),
+    [notes],
   );
+  const filtered = useMemo(
+    () =>
+      notes.filter((n) => {
+        if (city !== "all" && n.city !== city) return false;
+        if (kind !== "all" && n.kind !== kind) return false;
+        return true;
+      }),
+    [notes, city, kind],
+  );
+  const filterCity = city === "all" ? null : city;
+  const filterKind = kind === "all" ? null : kind;
 
   async function act(id: string, action: "save" | "report" | "hide") {
     const res = await fetch("/api/crossings/notes", {
@@ -65,6 +77,16 @@ export function CityNotesBoard({
   return (
     <div className="grid gap-10">
       <div className="flex flex-wrap gap-2">
+        <Chip on={city === "all"} onClick={() => setCity("all")}>
+          All cities
+        </Chip>
+        {cities.map((c) => (
+          <Chip key={c} on={city === c} onClick={() => setCity(c)}>
+            {c}
+          </Chip>
+        ))}
+      </div>
+      <div className="flex flex-wrap gap-2">
         <Chip on={kind === "all"} onClick={() => setKind("all")}>
           All
         </Chip>
@@ -77,8 +99,30 @@ export function CityNotesBoard({
       {status ? <p className="text-sm text-gold">{status}</p> : null}
       {filtered.length === 0 ? (
         <EmptyState
-          title="No notes in this city yet."
+          title={
+            filterCity && filterKind
+              ? `No ${filterKind} notes in ${filterCity} yet.`
+              : filterCity
+                ? `No notes in ${filterCity} yet.`
+                : filterKind
+                  ? `No ${filterKind} notes yet.`
+                  : "No notes yet."
+          }
           body="City Notes are a private member guide — never public, never Open House real data."
+          action={
+            filterCity || filterKind ? (
+              <button
+                type="button"
+                className="action-quiet"
+                onClick={() => {
+                  setCity("all");
+                  setKind("all");
+                }}
+              >
+                Clear filters
+              </button>
+            ) : undefined
+          }
         />
       ) : (
         <ul className="grid gap-4">
@@ -88,8 +132,8 @@ export function CityNotesBoard({
               <li key={note.id} className="panel p-5">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <p className="label">
-                    {note.kind} · {note.city}
-                    {note.neighborhood ? ` · ${note.neighborhood}` : ""}
+                    {note.city}
+                    {note.neighborhood ? ` · ${note.neighborhood}` : ""} · {note.kind}
                   </p>
                   {note.isDemo ? <DemoMark /> : null}
                 </div>

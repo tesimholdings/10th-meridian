@@ -5,6 +5,7 @@ import {
   campaign,
   campaignFilms,
   EDITORIAL_CAPTION,
+  EDITORIAL_CREDIT,
   globalCampaign,
   journeyMedia,
   occasionCredit,
@@ -57,6 +58,7 @@ describe("campaign still mapping", () => {
 
   it("never claims editorial stills are members or completed events", () => {
     assert.match(EDITORIAL_CAPTION, /not a photograph of members/i);
+    assert.equal(EDITORIAL_CREDIT, "");
     const home = readFileSync("src/app/member/home/page.tsx", "utf8");
     const landing = readFileSync("src/components/open-house/landing.tsx", "utf8");
     const lock = readFileSync("src/components/lock/lock-screen.tsx", "utf8");

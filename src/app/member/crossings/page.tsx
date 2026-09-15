@@ -52,7 +52,7 @@ export default async function CrossingsPage() {
   };
 
   return (
-    <MemberShell user={access.user} demo title="Crossings">
+    <MemberShell user={access.user} demo title="Crossings" hasHeading>
       <div className="flex items-end justify-between gap-3">
         <div>
           <h1 className="font-serif text-4xl">Crossings</h1>
@@ -120,7 +120,8 @@ export default async function CrossingsPage() {
 
       {matches.length ? (
         <p className="mt-8 text-sm text-[var(--ivory-dim)]">
-          {matches.length} people may cross your path in {upcoming?.destinationCity}. Digest: {prefs.digest}.
+          {matches.length} overlapping members in {upcoming?.destinationCity} (people on trips that may cross yours).
+          Digest: {prefs.digest}.
         </p>
       ) : null}
 
@@ -130,7 +131,10 @@ export default async function CrossingsPage() {
           {tables.map((t) => (
             <article key={`${t.city}-${t.country}`} className="mt-3">
               <p className="font-serif text-xl">
-                {t.count} paths cross in {t.city}.
+                {t.count} members open to a table in {t.city}.
+              </p>
+              <p className="text-sm text-[var(--ivory-dim)]">
+                Table candidates in overlapping trips — not the same as people who may cross your path.
               </p>
               {canMutate ? (
                 <Link

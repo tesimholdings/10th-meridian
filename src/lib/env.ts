@@ -3,6 +3,8 @@
  * Client code must only read NEXT_PUBLIC_* values.
  */
 
+import { resolvePublicOrigin } from "@/lib/config/public-origin";
+
 export type RuntimeMode = "preview" | "live";
 export type OpenHouseForce = "auto" | "open" | "closed";
 
@@ -34,10 +36,11 @@ export const env = {
     return readBool("PREVIEW_DEMO_AUTH", true);
   },
   get siteUrl(): string {
-    return read("NEXT_PUBLIC_SITE_URL", "http://localhost:3000").replace(
-      /\/$/,
-      "",
-    );
+    return resolvePublicOrigin({
+      appUrl: read("NEXT_PUBLIC_APP_URL"),
+      siteUrl: read("NEXT_PUBLIC_SITE_URL", "http://localhost:3000"),
+      vercelUrl: read("VERCEL_URL"),
+    });
   },
   get siteName(): string {
     return read("NEXT_PUBLIC_SITE_NAME", "10th Meridian");

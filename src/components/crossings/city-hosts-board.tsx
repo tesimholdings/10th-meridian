@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
 import { DemoMark } from "@/components/brand/demo-mark";
 import { CROSSINGS_COPY } from "@/lib/crossings/types";
+import Link from "next/link";
 
 export function CityHostsBoard({
   hosts,
@@ -72,6 +73,16 @@ export function CityHostsBoard({
                 {host.welcomeDirectRequests ? "Direct requests welcome" : "Introductions preferred"} · max{" "}
                 {host.maxRequestsPerWeek}/week
               </p>
+              {person ? (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <Link href={`/member/members/${person.id}`} className="action-quiet">
+                    View profile
+                  </Link>
+                  <Link href={`/member/messages?to=${person.id}`} className="action-quiet">
+                    Request a welcome
+                  </Link>
+                </div>
+              ) : null}
             </li>
           );
         })}

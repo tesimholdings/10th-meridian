@@ -169,7 +169,7 @@ describe("original House atmosphere", () => {
     assert.equal(shell.includes("max-w-3xl"), false);
     const rail = readFileSync("src/components/member/desktop-rail.tsx", "utf8");
     assert.match(rail, /liquid-dark/);
-    assert.match(rail, /surface="dark"/);
+    assert.match(rail, /FormalLockup/);
     const home = readFileSync("src/app/member/home/page.tsx", "utf8");
     assert.equal(home.includes("bg-white"), false);
     const landing = readFileSync("src/components/open-house/landing.tsx", "utf8");
@@ -184,10 +184,15 @@ describe("original House atmosphere", () => {
     assert.match(film, /playSafe/);
     assert.equal(film.includes("autoPlay"), false);
     const apply = readFileSync("src/components/forms/apply-wizard.tsx", "utf8");
-    assert.match(apply, /Name and email are required/);
-    assert.match(apply, /Agree to the house standards/);
+    assert.match(apply, /validatePresence/);
+    assert.match(apply, /validateApplication/);
+    const rules = readFileSync("src/lib/apply/validation.ts", "utf8");
+    assert.match(rules, /Name is required/);
+    assert.match(rules, /Agree to the house standards/);
     const header = readFileSync("src/components/member/member-header.tsx", "utf8");
     assert.match(header, /Escape/);
+    assert.match(header, /Search people and cities/);
+    assert.match(header, /house-search-sheet/);
     const play = readFileSync("src/lib/atmosphere/play-safe.ts", "utf8");
     assert.match(play, /AbortError/);
   });

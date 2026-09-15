@@ -1,4 +1,3 @@
-import { MeridianMark } from "@/components/brand/mark";
 import {
   FORMAL_LOCKUP_KNOCKOUT_SRC,
   FORMAL_LOCKUP_KNOCKOUT_WEBP,
@@ -6,39 +5,17 @@ import {
   FORMAL_LOCKUP_WEBP,
 } from "@/lib/copy/open-house";
 
-export function Wordmark({
-  compact = false,
-  surface = "dark",
-}: {
-  compact?: boolean;
-  /** dark = ivory/white type for grain and hero; light = navy type for paper. Never a black raster on white. */
-  surface?: "dark" | "light";
-}) {
-  const onDark = surface === "dark";
+/** Chrome height for the official lockup (gold globe + TENTH MERIDIAN + rule + PRIVATE NETWORK). */
+export const LOCKUP_CHROME_CLASS =
+  "h-8 w-auto max-w-[min(58vw,13.75rem)] md:h-9 md:max-w-[17rem]";
 
-  return (
-    <div
-      className={`flex items-center gap-2.5 ${onDark ? "text-[#faf8f2]" : "text-[#092b45]"}`}
-    >
-      <MeridianMark className={compact ? "h-9 w-9" : "h-11 w-11"} />
-      <p
-        className={`font-serif leading-none tracking-tight ${
-          compact ? "text-[1.35rem]" : "text-[1.55rem] md:text-3xl"
-        }`}
-      >
-        10th Meridian
-      </p>
-    </div>
-  );
-}
-
-/** Official formal lockup — gold globe + TENTH MERIDIAN. Black plate only on dark surfaces. */
+/** Official formal lockup — same asset as the closed lock. Knockout (no black plate) on chrome. */
 export function FormalLockup({
   className = "h-14 w-auto max-w-[min(100%,22rem)]",
-  knockout = false,
+  knockout = true,
 }: {
   className?: string;
-  /** Transparent crop for photography / hero. Never use the black plate on paper. */
+  /** Transparent crop. Never put the black plate on glass, paper, or photography. */
   knockout?: boolean;
 }) {
   const png = knockout ? FORMAL_LOCKUP_KNOCKOUT_SRC : FORMAL_LOCKUP_SRC;
@@ -54,5 +31,28 @@ export function FormalLockup({
         className={className}
       />
     </picture>
+  );
+}
+
+/**
+ * House chrome mark. Always the official lockup (not “10th Meridian” + approximate globe).
+ * `surface` is accepted for call-site compatibility; type color lives in the knockout asset.
+ */
+export function Wordmark({
+  compact = false,
+  surface: _surface = "dark",
+}: {
+  compact?: boolean;
+  surface?: "dark" | "light";
+}) {
+  return (
+    <FormalLockup
+      knockout
+      className={
+        compact
+          ? LOCKUP_CHROME_CLASS
+          : "h-10 w-auto max-w-[min(80vw,20rem)] md:h-12 md:max-w-[24rem]"
+      }
+    />
   );
 }

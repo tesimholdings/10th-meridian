@@ -89,6 +89,18 @@ describe("Open House customer copy", () => {
     assert.match(formal, /TENTH MERIDIAN/);
     const knockout = readFileSync("public/brand/tenth-meridian-logo-full-lockup-knockout.png");
     assert.equal(knockout[25], 6, "knockout lockup must be RGBA, not a black plate");
+    const logo = readFileSync("src/components/brand/logo.tsx", "utf8");
+    assert.match(logo, /FORMAL_LOCKUP_KNOCKOUT/);
+    assert.equal(logo.includes("MeridianMark"), false, "chrome lockup must not use the approximate globe mark");
+    assert.equal(logo.includes(">10th Meridian<"), false);
+    const lock = readFileSync("src/components/lock/lock-screen.tsx", "utf8");
+    assert.match(lock, /FormalLockup/);
+    assert.match(lock, /knockout/);
+    const memberHeader = readFileSync("src/components/member/member-header.tsx", "utf8");
+    assert.match(memberHeader, /Wordmark/);
+    const wordmarkImpl = logo.split("export function Wordmark")[1] ?? "";
+    assert.match(wordmarkImpl, /FormalLockup/);
+    assert.match(wordmarkImpl, /knockout/);
   });
 });
 
@@ -125,7 +137,7 @@ describe("Open House customer surfaces", () => {
     assert.match(nav, /href="\/apply"/);
     assert.match(nav, /FormalLockup/);
     assert.match(nav, /knockout/);
-    assert.match(nav, /Wordmark/);
+    assert.equal(nav.includes("Wordmark"), false);
     assert.match(page, /HeroAtmosphere/);
     assert.match(page, /hero-luxury/);
     assert.match(page, /filmSrc\("heroLandscape"\)/);
@@ -140,8 +152,9 @@ describe("Open House customer surfaces", () => {
     assert.match(css, /@media \(min-width: 1280px\)/);
     assert.equal(nav.includes("userAgent"), false);
     assert.equal(page.includes("userAgent"), false);
-    assert.equal(foot.includes("FormalLockup"), false);
-    assert.match(foot, /Wordmark/);
+    assert.match(foot, /FormalLockup/);
+    assert.match(foot, /knockout/);
+    assert.equal(foot.includes("Wordmark"), false);
     for (const href of ["/legal/privacy", "/legal/terms", "/legal/community", "/sign-in"]) {
       assert.equal(foot.includes(href), true, `footer missing ${href}`);
     }

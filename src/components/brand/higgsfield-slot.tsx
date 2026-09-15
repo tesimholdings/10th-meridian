@@ -1,4 +1,4 @@
-import { EDITORIAL_CAPTION, EDITORIAL_CREDIT } from "@/lib/atmosphere/campaign";
+import { EDITORIAL_CAPTION } from "@/lib/atmosphere/campaign";
 
 /** Editorial frame. Never claims the still depicts real members or a completed event. */
 
@@ -8,7 +8,7 @@ export function HiggsfieldSlot({
   caption = EDITORIAL_CAPTION,
   className = "",
   aspect = "aspect-[16/10]",
-  credit = EDITORIAL_CREDIT,
+  credit = "",
 }: {
   src: string;
   alt?: string;

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { AskHit, AskResult } from "@/lib/ask/meridian";
 import { ASK_THE_MERIDIAN } from "@/lib/copy/ui";
 
@@ -10,17 +10,25 @@ export function AskTheMeridian({ initialQuery = "" }: { initialQuery?: string })
   const [result, setResult] = useState<AskResult | null>(null);
   const [pending, setPending] = useState(false);
 
-  async function ask() {
+  async function ask(value = query) {
+    const needle = value.trim();
+    if (!needle) return;
     setPending(true);
     const res = await fetch("/api/ask", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query }),
+      body: JSON.stringify({ query: needle }),
     });
     const json = (await res.json()) as AskResult;
     setResult(json);
     setPending(false);
   }
+
+  useEffect(() => {
+    if (initialQuery.trim()) void ask(initialQuery);
+    // Header search lands here — show Ask results on Enter, not a second click.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialQuery]);
 
   const hits = result?.hits ?? [];
 

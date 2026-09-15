@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
-import { FormalLockup, Wordmark } from "@/components/brand/logo";
+import { FormalLockup, LOCKUP_CHROME_CLASS } from "@/components/brand/logo";
 import { APPLY_LABEL, PUBLIC_NAV } from "@/lib/copy/open-house";
 
 const FOCUSABLE =
@@ -86,20 +86,13 @@ export function PublicHeader({
         overlay ? "fixed inset-x-0 top-0" : "sticky top-0"
       } ${
         paper
-          ? "header-glass"
+          ? "header-chrome text-[#faf8f2]"
           : "border-b border-transparent bg-transparent text-[#faf8f2]"
       }`}
     >
       <div className="oh-wrap flex h-[4.25rem] items-center gap-3">
-        <Link href="/" className="min-h-11 shrink-0" aria-label="10th Meridian home">
-          {paper ? (
-            <Wordmark compact surface="light" />
-          ) : (
-            <FormalLockup
-              knockout
-              className="h-8 w-auto max-w-[min(100%,14.5rem)] md:h-9 md:max-w-[18rem]"
-            />
-          )}
+        <Link href="/" className="min-h-11 shrink-0" aria-label="Tenth Meridian home">
+          <FormalLockup knockout className={LOCKUP_CHROME_CLASS} />
         </Link>
 
         <nav aria-label="Open House" className="ml-auto hidden items-center gap-1 lg:flex">

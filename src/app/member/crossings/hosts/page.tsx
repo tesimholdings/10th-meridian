@@ -11,12 +11,15 @@ export default async function CityHostsPage() {
   const access = await resolveAccessContext();
   const store = getPreviewStore();
   return (
-    <MemberShell user={access.user} demo title={CROSSINGS_COPY.hosts}>
+    <MemberShell user={access.user} demo title={CROSSINGS_COPY.hosts} hasHeading>
+      <h1 className="font-serif text-3xl">{CROSSINGS_COPY.hosts}</h1>
+      <div className="mt-6">
       <CityHostsBoard
         hosts={store.crossings.hosts}
         profiles={store.profiles}
         canMutate={canMutateCrossings(access.user?.role)}
       />
+      </div>
     </MemberShell>
   );
 }

@@ -7,8 +7,8 @@ import { ProfileGallery } from "@/components/profile/gallery";
 import { getPreviewStore, viewerProfile } from "@/lib/preview/store";
 import { presentProfile, visibleEvents } from "@/lib/network/privacy";
 import { isInCircle, isRemovedFromIndex } from "@/lib/network/circle";
-import { mutualConnections } from "@/lib/network/mutual";
-import { formatHumanDateTime } from "@/lib/crossings/format";
+import { mutualConnections, mutualHref } from "@/lib/network/mutual";
+import { formatEventWhen } from "@/lib/events/when";
 import { FoundingBadge } from "@/components/members/founding-badge";
 
 export const metadata = { title: "Member", robots: { index: false, follow: false } };
@@ -41,12 +41,13 @@ export default async function MemberProfilePage({
     circle: store.circle,
     channels: store.channels,
     channelMembers: store.channelMembers,
+    events: store.events,
   });
   const events = visibleEvents(store.events, profile.attendingEventIds);
   const own = viewer.id === profile.id;
 
   return (
-    <MemberShell user={access.user} demo title={profile.displayName}>
+    <MemberShell user={access.user} demo title={profile.displayName} hasHeading>
       <div className="flex flex-col items-center text-center">
         <div className="avatar h-24 w-24 text-3xl" style={{ background: profile.accent }}>
           {profile.initials}
@@ -84,14 +85,22 @@ export default async function MemberProfilePage({
 
       {mutual.length ? (
         <section className="mt-8">
-          <p className="text-sm text-[var(--ivory-dim)]">In common</p>
+          <h2 className="text-sm font-normal text-[var(--ivory-dim)]">In common</h2>
           <div className="mt-3 flex gap-3 overflow-x-auto hide-scroll">
             {mutual.map((m) => (
-              <Link key={m.id} href={`/member/members/${m.id}`} className="flex flex-col items-center gap-1">
-                <span className="avatar h-12 w-12 text-sm" style={{ background: "#087CB8" }}>
+              <Link
+                key={m.id}
+                href={mutualHref(m)}
+                className="flex flex-col items-center gap-1"
+                aria-label={m.label}
+              >
+                <span
+                  className="avatar h-12 w-12 text-sm"
+                  style={{ background: m.kind === "circle" ? "#087CB8" : m.kind === "event" ? "#C4A264" : "#1a1a1a" }}
+                >
                   {m.initials}
                 </span>
-                <span className="text-xs text-[var(--ivory-dim)]">{m.displayName}</span>
+                <span className="max-w-[5.5rem] truncate text-xs text-[var(--ivory-dim)]">{m.displayName}</span>
               </Link>
             ))}
           </div>
@@ -115,7 +124,7 @@ export default async function MemberProfilePage({
                     {e.title}
                   </Link>
                   <p className="text-sm text-[var(--ivory-dim)]">
-                    {formatHumanDateTime(e.startsAt)} · {e.city}
+                    {formatEventWhen(e.startsAt, e.city)} · {e.city}
                   </p>
                 </li>
               ))}

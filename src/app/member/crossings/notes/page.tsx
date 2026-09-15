@@ -14,8 +14,9 @@ export default async function CityNotesPage() {
   const viewer = viewerProfile();
   const notes = visibleCityNotes(store.crossings, access.decision.isMemberAccess);
   return (
-    <MemberShell user={access.user} demo title={CROSSINGS_COPY.notes}>
-      <p className="max-w-xl text-ivory-muted">
+    <MemberShell user={access.user} demo title={CROSSINGS_COPY.notes} hasHeading>
+      <h1 className="font-serif text-3xl">{CROSSINGS_COPY.notes}</h1>
+      <p className="mt-3 max-w-xl text-ivory-muted">
         A private member-curated city guide. Never public. Never Open House as real data.
       </p>
       <div className="mt-8">
