@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { crossingsAccess, jsonError } from "@/lib/crossings/http";
+import { crossingsAccess, jsonCaught, jsonError } from "@/lib/crossings/http";
 import { proposeCrossing, respondToCrossing } from "@/lib/crossings/service";
 import { MEETING_FORMATS } from "@/lib/crossings/types";
 import { viewerProfile } from "@/lib/preview/store";
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
     const row = proposeCrossing(ctx.state, { ...parsed.data, fromProfileId: viewer.id });
     return Response.json({ ok: true, request: row });
   } catch (error) {
-    return jsonError(error instanceof Error ? error.message : "Could not send.");
+    return jsonCaught(error, "Could not send.");
   }
 }
 
@@ -56,6 +56,6 @@ export async function PATCH(request: Request) {
     });
     return Response.json({ ok: true, request: row });
   } catch (error) {
-    return jsonError(error instanceof Error ? error.message : "Could not respond.");
+    return jsonCaught(error, "Could not respond.");
   }
 }

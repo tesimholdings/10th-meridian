@@ -20,6 +20,7 @@ export default function AdminHomePage() {
         <Card label="Applications (DEMO)" value={String(store.applications.length)} />
         <Card label="Supabase" value={integrations.supabase ? "connected" : "stub"} />
         <Card label="Stripe" value={integrations.stripe ? "keys present" : "stub"} />
+        <Card label="Sentry" value={integrations.sentry ? "DSN present" : "placeholder"} />
       </section>
       <section className="mt-10">
         <p className="label">Activity</p>

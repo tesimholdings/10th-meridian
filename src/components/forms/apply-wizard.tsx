@@ -9,6 +9,7 @@ import {
   validatePresence,
   type ApplyDraft,
 } from "@/lib/apply/validation";
+import { captureRouteError } from "@/lib/sentry/capture";
 
 const steps = [
   { id: "presence", title: "Presence" },
@@ -69,13 +70,18 @@ export function ApplyWizard({ referralCode }: { referralCode?: string | null }) 
       if (validatePresence(draft)) setStep(0);
       return;
     }
-    const res = await fetch("/api/applications", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(draft),
-    });
-    const json = (await res.json()) as { ok?: boolean; message?: string };
-    setStatus(json.message ?? (json.ok ? "Received, and in human hands." : "Could not submit."));
+    try {
+      const res = await fetch("/api/applications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(draft),
+      });
+      const json = (await res.json()) as { ok?: boolean; message?: string };
+      setStatus(json.message ?? (json.ok ? "Received, and in human hands." : "Could not submit."));
+    } catch (error) {
+      captureRouteError(error, { route: "apply" });
+      setStatus("Could not submit.");
+    }
   }
 
   return (

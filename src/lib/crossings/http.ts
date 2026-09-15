@@ -2,6 +2,7 @@ import { resolveAccessContext } from "@/lib/access/context";
 import { canMutateCrossings } from "@/lib/crossings/privacy";
 import { crossingsState } from "@/lib/preview/store";
 import type { AppRole } from "@/lib/data/types";
+import { captureRouteError } from "@/lib/sentry/capture";
 
 export async function crossingsAccess() {
   const access = await resolveAccessContext();
@@ -18,4 +19,13 @@ export async function crossingsAccess() {
 
 export function jsonError(message: string, status = 400) {
   return Response.json({ ok: false, message }, { status });
+}
+
+export function jsonCaught(
+  error: unknown,
+  fallback: string,
+  status = 400,
+) {
+  captureRouteError(error, { route: "crossings" });
+  return jsonError(error instanceof Error ? error.message : fallback, status);
 }

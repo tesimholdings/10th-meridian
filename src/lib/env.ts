@@ -4,6 +4,7 @@
  */
 
 import { resolvePublicOrigin } from "@/lib/config/public-origin";
+import { resolveSentryDsn } from "@/lib/sentry/config";
 
 export type RuntimeMode = "preview" | "live";
 export type OpenHouseForce = "auto" | "open" | "closed";
@@ -151,6 +152,9 @@ export const env = {
   get rateLimitApplications(): number {
     return Number(read("RATE_LIMIT_MAX_APPLICATIONS", "4")) || 4;
   },
+  get sentryDsn(): string {
+    return resolveSentryDsn();
+  },
 };
 
 export function hasSupabase(): boolean {
@@ -169,6 +173,10 @@ export function hasResend(): boolean {
   return Boolean(env.resendApiKey);
 }
 
+export function hasSentry(): boolean {
+  return Boolean(env.sentryDsn);
+}
+
 export function integrationStatus() {
   return {
     mode: env.runtimeMode,
@@ -176,6 +184,7 @@ export function integrationStatus() {
     stripe: hasStripe(),
     stream: hasStream(),
     resend: hasResend(),
+    sentry: hasSentry(),
     embeddings: env.embeddingProvider,
   };
 }

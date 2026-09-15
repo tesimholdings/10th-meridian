@@ -124,7 +124,7 @@ Wave 2 added interactive member/admin DEMO state (in-process store). It resets w
 - [ ] Confirm RLS with a non-staff test user
 - [ ] Attachment MIME / size validation on live Storage
 - [ ] Replace in-memory rate limits with Redis/Upstash
-- [ ] Production error reporting (without leaking applicant data)
+- [x] Production error reporting (without leaking applicant data) — Sentry wired on a review branch; DSN/token stay in Vercel Preview env, events scrub request bodies and emails
 - [ ] Confirm `X-Robots-Tag` on `/member` and `/admin`
 - [ ] Suspend / expire → revoke Stream + Stripe access job
 
@@ -136,8 +136,19 @@ Wave 2 added interactive member/admin DEMO state (in-process store). It resets w
 - [ ] Counsel-approved legal pages
 - [ ] Persist preview store mutations into Supabase (`site_config`, weights, admissions, referrals)
 
+## 13. Sentry (Preview only)
+
+- [x] Org `tenth-meridian`, project `javascript-nextjs` (`@sentry/nextjs`)
+- [ ] Stefan pastes `SENTRY_DSN` and `NEXT_PUBLIC_SENTRY_DSN` (same DSN) into **Vercel Preview** env — Sentry → Project Settings → Client Keys
+- [ ] Optional: paste `SENTRY_AUTH_TOKEN` so preview builds upload source maps (delete after upload is on)
+- [ ] Confirm `SENTRY_ORG=tenth-meridian` and `SENTRY_PROJECT=javascript-nextjs`
+- [ ] Do **not** set these on Production from this PR
+- [ ] Do **not** commit the live DSN or auth token
+
 ## Environment map
 
 See `.env.example` for every variable, its purpose, and safe defaults.
+
+Sentry adds `SENTRY_DSN`, `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_ORG`, `SENTRY_PROJECT`, and `SENTRY_AUTH_TOKEN`. Leave the DSN/token blank in git; paste them in Vercel Preview.
 
 Crossings adds **no new environment variables**. Calendar v1 is `.ics` download only — do not block on OAuth.

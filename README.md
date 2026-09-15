@@ -17,6 +17,7 @@ This wave adds **Referral Rewards** (points-first balance + unlock cards + reser
 - Stream Chat — token + member Channels / DM scaffolding
 - Resend — transactional templates
 - Hybrid **Meridian Index** matching in TypeScript + Postgres functions
+- Sentry (`@sentry/nextjs`) — client, server, and edge error monitoring. DSN via env; no live secrets in git
 
 ## Run locally
 
@@ -37,8 +38,26 @@ Or set `OPEN_HOUSE_FORCE=open` in `.env.local`.
 
 ```bash
 npm run build    # production build
-npm test         # My Circle, Open House TZ, Circle, privacy, notifications, copy, Referral Rewards
+npm test         # My Circle, Open House TZ, Circle, privacy, notifications, copy, Referral Rewards, Sentry config
 ```
+
+## Sentry (review Preview only — do not promote to production)
+
+Official `@sentry/nextjs` wiring: `src/instrumentation-client.ts`, `src/sentry.server.config.ts`, `src/sentry.edge.config.ts`, plus `src/instrumentation.ts`. Source maps upload only when `SENTRY_AUTH_TOKEN` is set.
+
+Stefan’s get-started run code `91aa403a33` was treated as a wizard handshake; that hash is no longer live (Sentry returned 404). The Sentry org `tenth-meridian` and project `javascript-nextjs` are the destination. Paste keys in **Vercel → Project → Settings → Environment Variables** for **Preview** (not Production):
+
+| Variable | Where to paste | Notes |
+| --- | --- | --- |
+| `SENTRY_DSN` | Vercel Preview | Sentry → **tenth-meridian** → **javascript-nextjs** → Settings → Client Keys (DSN) |
+| `NEXT_PUBLIC_SENTRY_DSN` | Vercel Preview | Same DSN value (public client key; required for browser init) |
+| `SENTRY_ORG` | Vercel Preview | `tenth-meridian` |
+| `SENTRY_PROJECT` | Vercel Preview | `javascript-nextjs` |
+| `SENTRY_AUTH_TOKEN` | Vercel Preview | Org auth token with `project:releases` + `org:read`. Build-time only. Leave blank to skip source maps. **Never commit.** |
+
+Preview-only verification (requires `NEXT_PUBLIC_PREVIEW_TOOLS=true`): `GET /api/debug/sentry` then `POST /api/debug/sentry` with `{ "marker": "review-1" }`. The POST throws through the real server init.
+
+This PR does **not** merge and does **not** deploy to production.
 
 ## What this PR includes
 

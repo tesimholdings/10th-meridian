@@ -1,4 +1,4 @@
-import { crossingsAccess, jsonError } from "@/lib/crossings/http";
+import { crossingsAccess, jsonCaught, jsonError } from "@/lib/crossings/http";
 import { icsForRequest } from "@/lib/crossings/service";
 import { getPreviewStore, viewerProfile } from "@/lib/preview/store";
 
@@ -23,6 +23,6 @@ export async function GET(
       },
     });
   } catch (error) {
-    return jsonError(error instanceof Error ? error.message : "Could not build calendar.");
+    return jsonCaught(error, "Could not build calendar.");
   }
 }

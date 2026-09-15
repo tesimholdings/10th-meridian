@@ -1,4 +1,6 @@
 import type { NextConfig } from "next";
+import { withSentryConfig } from "@sentry/nextjs/config";
+import { SENTRY_ORG, SENTRY_PROJECT } from "./src/lib/sentry/config";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
@@ -42,4 +44,16 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withSentryConfig(nextConfig, {
+  org: process.env.SENTRY_ORG || SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT || SENTRY_PROJECT,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  silent: !process.env.CI,
+  widenClientFileUpload: true,
+  tunnelRoute: "/monitoring",
+  sourcemaps: {
+    // Upload only when Stefan pastes SENTRY_AUTH_TOKEN. Never require a token for a green build.
+    disable: !process.env.SENTRY_AUTH_TOKEN,
+    deleteSourcemapsAfterUpload: true,
+  },
+});

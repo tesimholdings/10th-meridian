@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { crossingsAccess, jsonError } from "@/lib/crossings/http";
+import { crossingsAccess, jsonCaught, jsonError } from "@/lib/crossings/http";
 import {
   createJourney,
   deleteJourney,
@@ -68,7 +68,7 @@ export async function POST(request: Request) {
     });
     return Response.json({ ok: true, journey });
   } catch (error) {
-    return jsonError(error instanceof Error ? error.message : "Could not save.");
+    return jsonCaught(error, "Could not save.");
   }
 }
 
@@ -89,6 +89,6 @@ export async function PATCH(request: Request) {
     const journey = updateJourney(ctx.state, body.id, viewer.id, (body.patch ?? {}) as never);
     return Response.json({ ok: true, journey });
   } catch (error) {
-    return jsonError(error instanceof Error ? error.message : "Could not update.");
+    return jsonCaught(error, "Could not update.");
   }
 }
