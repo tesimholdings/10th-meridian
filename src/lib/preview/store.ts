@@ -41,6 +41,13 @@ import type { MatchCuration, MatchFeedback, MatchingWeights } from "@/lib/matchi
 import { DEFAULT_WEIGHTS } from "@/lib/matching/types";
 import { profileCompletion } from "@/lib/profile/completion";
 import {
+  disconnectSocial,
+  legacyFromSocials,
+  upsertSocial,
+  type SocialConnection,
+  type SocialProvider,
+} from "@/lib/onboarding/socials";
+import {
   addToCircle,
   removeFromCircle,
   removeFromIndex,
@@ -459,10 +466,32 @@ export function updateViewerProfile(patch: Partial<ProfileRecord>) {
   const profile = s.profiles.find((p) => p.id === s.viewerId);
   if (!profile) return null;
   Object.assign(profile, patch);
+  if (patch.socials) {
+    const legacy = legacyFromSocials(patch.socials);
+    if (legacy.website !== undefined) profile.website = legacy.website;
+    if (legacy.linkedin !== undefined) profile.linkedin = legacy.linkedin;
+    if (!legacy.website) delete profile.website;
+    if (!legacy.linkedin) delete profile.linkedin;
+  }
   profile.completion = profileCompletion(profile);
   profile.isDemo = true;
   audit("member", "profile.updated", "profile", profile.id);
   return profile;
+}
+
+export function connectViewerSocial(row: SocialConnection) {
+  const profile = viewerProfile();
+  const socials = upsertSocial(profile.socials, {
+    ...row,
+    connected: true,
+    connectedAt: row.connectedAt ?? new Date().toISOString(),
+  });
+  return updateViewerProfile({ socials });
+}
+
+export function disconnectViewerSocial(provider: SocialProvider) {
+  const profile = viewerProfile();
+  return updateViewerProfile({ socials: disconnectSocial(profile.socials, provider) });
 }
 
 export function postMessage(input: {

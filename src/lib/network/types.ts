@@ -10,6 +10,7 @@ export interface ProfilePrivacy {
   /** Optional fields. Core identity (name, role, org, city) stays visible to members. */
   website: boolean;
   linkedin: boolean;
+  socials: boolean;
   gallery: boolean;
   offers: boolean;
   needs: boolean;
@@ -20,6 +21,7 @@ export interface ProfilePrivacy {
 export const DEFAULT_PROFILE_PRIVACY: ProfilePrivacy = {
   website: true,
   linkedin: true,
+  socials: true,
   gallery: true,
   offers: true,
   needs: true,

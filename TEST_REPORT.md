@@ -1,3 +1,11 @@
+# TEST_REPORT — Experiential onboarding
+
+Date: 2026-09-15  
+Branch: `cursor/experiential-onboarding-2772`  
+Base: `cursor/open-house-experience-d90a`
+
+Adds coverage for join intents, field examples, DEMO social connect/disconnect (never claims live OAuth when env is empty), and reduced-motion classes for the cinematic chapters (`src/lib/onboarding/*.test.ts`, preview-store social hook, atmosphere motion list).
+
 # TEST_REPORT — Referral Rewards
 
 Date: 2026-09-15  

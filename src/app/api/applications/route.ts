@@ -7,6 +7,7 @@ import { emailTemplates } from "@/lib/resend/templates";
 import { sendTransactional } from "@/lib/resend/client";
 import { validateReferralCode } from "@/lib/referrals/validate";
 import { addApplication, getPreviewStore } from "@/lib/preview/store";
+import { normalizeIntents } from "@/lib/onboarding/intents";
 
 const schema = z.object({
   fullName: z.string().min(2),
@@ -20,6 +21,29 @@ const schema = z.object({
   bio: z.string().optional(),
   website: z.string().optional(),
   linkedin: z.string().optional(),
+  intents: z.array(z.string()).optional(),
+  intentOther: z.string().optional(),
+  socials: z
+    .array(
+      z.object({
+        provider: z.enum([
+          "linkedin",
+          "instagram",
+          "facebook",
+          "x",
+          "website",
+          "whatsapp",
+          "telegram",
+          "youtube",
+        ]),
+        handle: z.string().optional(),
+        url: z.string().optional(),
+        connected: z.boolean(),
+        mode: z.enum(["demo", "oauth"]),
+        connectedAt: z.string().optional(),
+      }),
+    )
+    .optional(),
   industries: z.string().optional(),
   interests: z.string().optional(),
   goals: z.string().optional(),
@@ -76,6 +100,8 @@ export async function POST(request: Request) {
     bio: parsed.data.bio ?? "",
     website: parsed.data.website,
     linkedin: parsed.data.linkedin,
+    ...normalizeIntents(parsed.data.intents ?? [], parsed.data.intentOther),
+    socials: parsed.data.socials,
     industries: split(parsed.data.industries),
     interests: split(parsed.data.interests),
     goals: split(parsed.data.goals),

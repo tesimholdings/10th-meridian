@@ -148,7 +148,40 @@ export const env = {
   get rateLimitApplications(): number {
     return Number(read("RATE_LIMIT_MAX_APPLICATIONS", "4")) || 4;
   },
+  get linkedinClientId(): string {
+    return read("LINKEDIN_CLIENT_ID") || read("NEXT_PUBLIC_LINKEDIN_CLIENT_ID");
+  },
+  get linkedinClientSecret(): string {
+    return read("LINKEDIN_CLIENT_SECRET");
+  },
+  get instagramClientId(): string {
+    return read("INSTAGRAM_CLIENT_ID") || read("NEXT_PUBLIC_INSTAGRAM_CLIENT_ID");
+  },
+  get instagramClientSecret(): string {
+    return read("INSTAGRAM_CLIENT_SECRET");
+  },
+  get facebookClientId(): string {
+    return read("FACEBOOK_CLIENT_ID") || read("NEXT_PUBLIC_FACEBOOK_CLIENT_ID");
+  },
+  get facebookClientSecret(): string {
+    return read("FACEBOOK_CLIENT_SECRET");
+  },
+  get xClientId(): string {
+    return read("X_CLIENT_ID") || read("NEXT_PUBLIC_X_CLIENT_ID");
+  },
+  get xClientSecret(): string {
+    return read("X_CLIENT_SECRET");
+  },
 };
+
+export function socialOAuthAvailability() {
+  return {
+    linkedin: Boolean(env.linkedinClientId && env.linkedinClientSecret),
+    instagram: Boolean(env.instagramClientId && env.instagramClientSecret),
+    facebook: Boolean(env.facebookClientId && env.facebookClientSecret),
+    x: Boolean(env.xClientId && env.xClientSecret),
+  } as const;
+}
 
 export function hasSupabase(): boolean {
   return Boolean(env.supabaseUrl && env.supabaseAnonKey);

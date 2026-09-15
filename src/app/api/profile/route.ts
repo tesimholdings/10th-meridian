@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { resolveAccessContext } from "@/lib/access/context";
 import { updateViewerProfile, viewerProfile } from "@/lib/preview/store";
+import { normalizeIntents } from "@/lib/onboarding/intents";
+import type { ProfileRecord } from "@/lib/data/types";
 
 const schema = z.object({
   displayName: z.string().optional(),
@@ -13,10 +15,34 @@ const schema = z.object({
   bio: z.string().optional(),
   website: z.string().optional(),
   linkedin: z.string().optional(),
+  intents: z.array(z.string()).optional(),
+  intentOther: z.string().optional(),
+  socials: z
+    .array(
+      z.object({
+        provider: z.enum([
+          "linkedin",
+          "instagram",
+          "facebook",
+          "x",
+          "website",
+          "whatsapp",
+          "telegram",
+          "youtube",
+        ]),
+        handle: z.string().optional(),
+        url: z.string().optional(),
+        connected: z.boolean(),
+        mode: z.enum(["demo", "oauth"]),
+        connectedAt: z.string().optional(),
+      }),
+    )
+    .optional(),
   privacy: z
     .object({
       website: z.boolean(),
       linkedin: z.boolean(),
+      socials: z.boolean().optional(),
       gallery: z.boolean(),
       offers: z.boolean(),
       needs: z.boolean(),
@@ -54,6 +80,16 @@ export async function POST(request: Request) {
   if (!parsed.success) {
     return Response.json({ ok: false, message: "Invalid profile." }, { status: 400 });
   }
-  const profile = updateViewerProfile(parsed.data);
+  const { intents: rawIntents, intentOther: rawOther, privacy, ...rest } = parsed.data;
+  const patch: Partial<ProfileRecord> = { ...rest };
+  if (privacy) {
+    patch.privacy = { ...privacy, socials: privacy.socials ?? true };
+  }
+  if (rawIntents || rawOther) {
+    const normalized = normalizeIntents(rawIntents ?? [], rawOther);
+    patch.intents = normalized.intents;
+    patch.intentOther = normalized.intentOther;
+  }
+  const profile = updateViewerProfile(patch);
   return Response.json({ ok: true, profile });
 }

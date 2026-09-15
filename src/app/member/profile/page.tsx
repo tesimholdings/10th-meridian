@@ -7,6 +7,7 @@ import { ProfileGallery } from "@/components/profile/gallery";
 import { viewerProfile, viewerRewardsSnapshot } from "@/lib/preview/store";
 import { RewardsTeaserCard } from "@/components/rewards/teaser-card";
 import { completionMessage } from "@/lib/profile/completion";
+import { SocialLinks } from "@/components/onboarding/social-links";
 
 export const metadata = { title: "Profile", robots: { index: false } };
 
@@ -34,6 +35,7 @@ export default async function ProfilePage({
           <p className="mt-1 text-sm text-[var(--ivory-dim)]">
             {p.city}, {p.country}
           </p>
+          <SocialLinks socials={p.socials} />
           <Link href="/member/profile?edit=1" className="action-quiet mt-5">
             Edit
           </Link>
@@ -76,7 +78,7 @@ export default async function ProfilePage({
       ) : null}
       <section className="mt-8">
         <h2 className="font-serif text-2xl">Identity</h2>
-        <OnboardingWizard profile={p} />
+        <OnboardingWizard profile={p} variant="compact" />
       </section>
       <section className="mt-10">
         <h2 className="font-serif text-2xl">Privacy</h2>

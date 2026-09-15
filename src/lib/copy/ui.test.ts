@@ -24,6 +24,8 @@ const uiFiles = [
   "src/app/member/settings/page.tsx",
   "src/app/member/crossings/page.tsx",
   "src/components/forms/apply-wizard.tsx",
+  "src/lib/onboarding/copy.ts",
+  "src/components/onboarding/experience-journey.tsx",
   "src/app/legal/community/page.tsx",
   "src/app/member/rewards/page.tsx",
 ];
@@ -61,10 +63,14 @@ describe("product naming and community copy", () => {
     const community = readFileSync("src/app/legal/community/page.tsx", "utf8");
     const apply = readFileSync("src/components/forms/apply-wizard.tsx", "utf8");
     const onboarding = readFileSync("src/components/profile/onboarding-wizard.tsx", "utf8");
+    const intents = readFileSync("src/lib/onboarding/copy.ts", "utf8");
+    const socials = readFileSync("src/lib/onboarding/socials.ts", "utf8");
     const rewards = readFileSync("src/lib/rewards/copy.ts", "utf8");
     assert.ok(community.includes(SOLICITING_BAN) || community.includes("Absolutely no soliciting"));
     assert.ok(apply.includes("Absolutely no soliciting"));
     assert.ok(onboarding.includes("Absolutely no soliciting"));
+    assert.ok(intents.includes("SOLICITING_BAN") || intents.includes("Absolutely no soliciting"));
+    assert.ok(socials.includes("not live OAuth"));
     assert.ok(rewards.includes("Referrals are welcome") || rewards.includes("SOLICITING_REFERRALS"));
     assert.ok(rewards.includes("SOLICITING_BAN"));
   });

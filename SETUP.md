@@ -18,7 +18,7 @@ Wave 2 added interactive member/admin DEMO state (in-process store). It resets w
 ## 2. Supabase
 
 - [ ] Create a Supabase project
-- [ ] Apply `supabase/migrations/0001_init.sql` through `0007_profiles_network.sql` (SQL editor or CLI)
+- [ ] Apply `supabase/migrations/0001_init.sql` through `0008_onboarding_socials.sql` (SQL editor or CLI)
 - [ ] Confirm `pgcrypto` is available; decide whether to enable `vector` later
 - [ ] Copy `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
 - [ ] Configure Auth: email magic link / password, site URL, redirect to `/api/auth/callback`
@@ -141,3 +141,5 @@ Wave 2 added interactive member/admin DEMO state (in-process store). It resets w
 See `.env.example` for every variable, its purpose, and safe defaults.
 
 Crossings adds **no new environment variables**. Calendar v1 is `.ics` download only — do not block on OAuth.
+
+Social connects are **DEMO** (handle/URL stored in preview profile) until both `*_CLIENT_ID` and `*_CLIENT_SECRET` exist for LinkedIn, Instagram, Facebook, or X. The UI must not claim live OAuth when those are empty. Website, WhatsApp, Telegram, and YouTube stay paste-in.

@@ -17,6 +17,13 @@ export function presentProfile(
     ...profile,
     website: privacy.website ? profile.website : undefined,
     linkedin: privacy.linkedin ? profile.linkedin : undefined,
+    socials: privacy.socials
+      ? (profile.socials ?? []).filter((row) => {
+          if (row.provider === "website") return privacy.website;
+          if (row.provider === "linkedin") return privacy.linkedin;
+          return true;
+        })
+      : [],
     gallery: privacy.gallery ? profile.gallery : [],
     offers: privacy.offers ? profile.offers : [],
     needs: privacy.needs ? profile.needs : [],

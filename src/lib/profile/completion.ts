@@ -20,6 +20,7 @@ export function profileCompletion(profile: ProfileRecord): number {
     Boolean(profile.communicationStyle),
     Boolean(profile.availability),
     profile.causes.length > 0 || profile.values.length > 0,
+    (profile.intents?.length ?? 0) > 0,
   ];
   return Math.round((checks.filter(Boolean).length / checks.length) * 100);
 }
