@@ -63,7 +63,7 @@ export default async function MyCirclePage({
         </Tab>
       </nav>
 
-      <div className="mt-6">
+      <div className="section-band mt-6">
         {tab === "for-you" ? (
           <ForYouField rows={index.meridian100} intros={intros} circleIds={circleIds} />
         ) : null}

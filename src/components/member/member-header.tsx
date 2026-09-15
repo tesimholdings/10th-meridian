@@ -54,7 +54,7 @@ export function MemberHeader({
         <summary className="flex h-11 cursor-pointer list-none items-center px-2 text-sm text-[var(--ivory-dim)]">
           More
         </summary>
-        <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white p-2 shadow-lg">
+        <div className="surface absolute right-0 mt-2 w-56 rounded-2xl p-2">
           {memberSecondary.map((item) => (
             <Link
               key={item.href}

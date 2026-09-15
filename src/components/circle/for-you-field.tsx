@@ -27,7 +27,7 @@ export function ForYouField({
 
   return (
     <div>
-      <div className="rounded-3xl bg-white px-4 py-4">
+      <div className="surface rounded-3xl px-4 py-4">
         <div className="flex items-end justify-between gap-3">
           <div>
             <p className="label">{size <= 10 ? MERIDIAN_10 : `${size} people`}</p>
@@ -54,7 +54,7 @@ export function ForYouField({
         </label>
       </div>
 
-      <ul className="mt-4 grid gap-1">
+      <ul className="mt-4 grid gap-3">
         {shown.map((row, i) => (
           <IndexCard
             key={row.target.id}

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { OfficialLockup } from "@/components/brand/official-lockup";
 import { Countdown } from "@/components/cinematic/countdown";
+import { LockGrain } from "@/components/lock/lock-grain";
 import { Button } from "@/components/ui/button";
 import { brand } from "@/lib/config/site";
 import type { AccessDecision } from "@/lib/access/open-house";
@@ -14,8 +15,7 @@ export function LockScreen({
 }) {
   return (
     <div className="lock-gold relative min-h-dvh overflow-hidden text-ivory">
-      <div className="lock-gold-glow" aria-hidden />
-      <div className="grain lock-gold-grain" aria-hidden />
+      <LockGrain />
       <div className="safe-pad safe-top relative z-10 mx-auto flex min-h-dvh max-w-5xl flex-col">
         <header className="flex items-center justify-end py-4 md:py-6">
           <Link href="/sign-in" className="min-h-11 text-sm text-ivory">

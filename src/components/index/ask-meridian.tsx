@@ -26,7 +26,7 @@ export function AskTheMeridian({ initialQuery = "" }: { initialQuery?: string })
 
   return (
     <section>
-      <p className="text-sm text-[var(--ivory-dim)]">{ASK_THE_MERIDIAN}</p>
+      <p className="section-kicker text-sm">{ASK_THE_MERIDIAN}</p>
       <form
         className="mt-3 grid gap-2 sm:grid-cols-[1fr_auto]"
         onSubmit={(e) => {

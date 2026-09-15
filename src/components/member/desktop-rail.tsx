@@ -22,7 +22,7 @@ export function DesktopRail({ unreadMessages = 0 }: { unreadMessages?: number })
               key={item.id}
               href={item.href}
               className={`pressable flex min-h-11 items-center gap-3 rounded-full px-3 text-sm ${
-                active ? "bg-white text-[var(--navy)]" : "text-[var(--ivory-dim)]"
+                active ? "bg-[rgba(9,43,69,0.07)] text-[var(--navy)]" : "text-[var(--ivory-dim)]"
               }`}
             >
               <span className="relative">

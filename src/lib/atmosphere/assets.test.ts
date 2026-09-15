@@ -35,6 +35,8 @@ const motionClasses = [
   "reward-ring",
   "reward-sheet",
   "cursor-aura",
+  "cursor-aura-core",
+  "lock-gold-follow",
   "circle-person",
 ];
 
@@ -62,6 +64,44 @@ describe("original House atmosphere", () => {
         assert.equal(svg.includes(host), false, `${path} must not reference ${host}`);
       }
     }
+  });
+
+  it("keeps a dual-layer luxury cursor visible and never hides the system pointer without it", () => {
+    const css = readFileSync("src/app/globals.css", "utf8");
+    const cursor = readFileSync("src/components/atmosphere/cursor-aura.tsx", "utf8");
+    assert.match(css, /\.cursor-aura\s*\{/);
+    assert.match(css, /#c4a264/);
+    assert.match(css, /#092b45/);
+    assert.match(css, /\.cursor-aura-core/);
+    assert.equal(css.includes("mix-blend-mode: screen"), false);
+    assert.match(css, /html\.has-luxury-cursor/);
+    const hideBlock = css.split("@media (hover: hover) and (pointer: fine)")[1] ?? "";
+    assert.match(hideBlock, /cursor:\s*none/);
+    assert.match(hideBlock, /has-luxury-cursor/);
+    const unscopedHide = hideBlock.split("html.has-luxury-cursor")[0] ?? "";
+    assert.equal(/body\s*\{[^}]*cursor:\s*none/.test(unscopedHide), false);
+    assert.match(cursor, /has-luxury-cursor/);
+    assert.match(cursor, /prefers-reduced-motion/);
+    const reduced = css.split("@media (prefers-reduced-motion: reduce)")[1] ?? "";
+    assert.match(reduced, /cursor:\s*auto/);
+  });
+
+  it("gives member house-light paper depth instead of flat white", () => {
+    const css = readFileSync("src/app/globals.css", "utf8");
+    const house = css.split(".house-light {")[1] ?? "";
+    assert.match(house, /#faf8f2/);
+    assert.match(house, /radial-gradient/);
+    assert.match(css, /rgba\(8, 124, 184/);
+    assert.match(css, /rgba\(48, 200, 210/);
+    assert.match(css, /\.surface\s*\{/);
+    assert.match(css, /\.section-band\s*\{/);
+    assert.match(css, /#fffdf8/);
+    assert.match(css, /\.house-light \.panel[\s\S]*box-shadow/);
+    const home = readFileSync("src/app/member/home/page.tsx", "utf8");
+    assert.match(home, /section-band/);
+    assert.match(home, /surface/);
+    const circle = readFileSync("src/app/member/circle/page.tsx", "utf8");
+    assert.match(circle, /section-band/);
   });
 
   it("honors prefers-reduced-motion for new motion classes", () => {

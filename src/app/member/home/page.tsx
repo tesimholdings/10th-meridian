@@ -41,15 +41,15 @@ export default async function MemberHomePage() {
     <MemberShell user={access.user} demo={!access.decision.isMemberAccess || viewer.isDemo} title="Home">
       <div className="flex items-end justify-between gap-3">
         <div>
-          <p className="text-sm text-[var(--ivory-dim)]">Good evening</p>
+          <p className="section-kicker text-sm">Good evening</p>
           <h1 className="font-serif text-4xl">{first}</h1>
         </div>
         <div className="flex gap-2">
-          <Link href="/member/notifications" className="pressable flex h-11 w-11 items-center justify-center rounded-full bg-white">
+          <Link href="/member/notifications" className="pressable surface flex h-11 w-11 items-center justify-center rounded-full">
             <span className="sr-only">Notifications</span>
             {unreadHouseNotifications(viewer.id) ? <span className="unread-dot" /> : <span className="text-lg">•</span>}
           </Link>
-          <Link href="/member/messages" className="pressable flex h-11 w-11 items-center justify-center rounded-full bg-white text-sm">
+          <Link href="/member/messages" className="pressable surface flex h-11 w-11 items-center justify-center rounded-full text-sm">
             {unreadTotal()}
           </Link>
         </div>
@@ -75,8 +75,8 @@ export default async function MemberHomePage() {
       ) : null}
 
       {trip ? (
-        <Link href={`/member/crossings/${trip.id}`} className="mt-8 block">
-          <p className="text-sm text-[var(--ivory-dim)]">Upcoming trip</p>
+        <Link href={`/member/crossings/${trip.id}`} className="section-band mt-8 block">
+          <p className="section-kicker text-sm">Upcoming trip</p>
           <p className="mt-1 font-serif text-3xl">{trip.destinationCity}</p>
           <p className="mt-1 text-sm text-[var(--navy-soft)]">
             {formatHumanDateRange(trip.arrivalDate, trip.departureDate)}
@@ -89,10 +89,10 @@ export default async function MemberHomePage() {
       )}
 
       {event ? (
-        <Link href={`/member/events/${event.id}`} className="mt-8 block overflow-hidden rounded-3xl">
+        <Link href={`/member/events/${event.id}`} className="surface mt-8 block overflow-hidden rounded-3xl">
           <HiggsfieldSlot src={campaignSrc("homeIndex")} aspect="aspect-[16/8]" />
-          <div className="pt-4">
-            <p className="text-sm text-[var(--ivory-dim)]">Upcoming experience</p>
+          <div className="px-4 pb-4 pt-4">
+            <p className="section-kicker text-sm">Upcoming experience</p>
             <p className="font-serif text-3xl">{event.title}</p>
             <p className="mt-1 text-sm text-[var(--navy-soft)]">
               {formatHumanDateTime(event.startsAt)} · {event.city}
@@ -101,9 +101,9 @@ export default async function MemberHomePage() {
         </Link>
       ) : null}
 
-      <section className="mt-10">
+      <section className="section-band mt-10">
         <HiggsfieldSlot src={campaignSrc("homeNetwork")} aspect="aspect-[16/8]" className="mb-4 rounded-3xl" />
-        <p className="text-sm text-[var(--ivory-dim)]">Useful connections</p>
+        <p className="section-kicker text-sm">Useful connections</p>
         <div className="mt-3">
           <MatchBoard
             index={index}
@@ -125,7 +125,7 @@ export default async function MemberHomePage() {
 
 function RailChip({ href, label, value }: { href: string; label: string; value: string }) {
   return (
-    <Link href={href} className="min-w-[8.5rem] rounded-2xl bg-white px-4 py-3">
+    <Link href={href} className="surface min-w-[8.5rem] rounded-2xl px-4 py-3">
       <p className="text-xs text-[var(--ivory-dim)]">{label}</p>
       <p className="mt-1 text-sm font-medium">{value}</p>
     </Link>

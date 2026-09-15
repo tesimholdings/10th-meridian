@@ -112,7 +112,7 @@ export function IndexCard({
   }
 
   return (
-    <li className={`flex gap-3 py-3 ${className ?? ""}`.trim()}>
+    <li className={`surface flex gap-3 rounded-3xl p-4 ${className ?? ""}`.trim()}>
       <Link
         href={`/member/members/${profile.id}`}
         className="avatar h-14 w-14 text-lg"
@@ -142,7 +142,7 @@ export function IndexCard({
           </button>
           <details className="relative" open={open} onToggle={(e) => setOpen((e.target as HTMLDetailsElement).open)}>
             <summary className="action-quiet cursor-pointer list-none">More</summary>
-            <div className="absolute left-0 z-10 mt-1 grid min-w-44 rounded-2xl bg-white p-2 shadow-lg">
+            <div className="surface absolute left-0 z-10 mt-1 grid min-w-44 rounded-2xl p-2">
               <button type="button" className="min-h-10 px-2 text-left text-sm" onClick={() => void overflow("intro")}>
                 {intro ? "Introduction requested" : "Request introduction"}
               </button>

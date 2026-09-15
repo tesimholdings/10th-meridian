@@ -143,32 +143,45 @@ body {
   mix-blend-mode: overlay;
 }
 
+.lock-gold-follow {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    32% 24% at var(--lock-mx, 50%) var(--lock-my, 22%),
+    rgba(212, 175, 106, 0.14),
+    transparent 72%
+  );
+}
+
 .cursor-aura {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 80;
-  width: 28px;
-  height: 28px;
+  z-index: 2147483000;
+  width: 24px;
+  height: 24px;
   border-radius: 999px;
   pointer-events: none;
-  background: radial-gradient(circle, rgba(196, 162, 100, 0.42) 0%, rgba(9, 43, 69, 0.18) 55%, transparent 70%);
-  box-shadow: 0 0 22px rgba(196, 162, 100, 0.28);
-  mix-blend-mode: screen;
+  border: 2px solid #c4a264;
+  background: #092b45;
+  box-shadow:
+    0 0 0 1.5px rgba(250, 248, 242, 0.94),
+    0 0 16px rgba(196, 162, 100, 0.42);
   will-change: transform;
 }
 
+.cursor-aura-core {
+  position: absolute;
+  inset: 6px;
+  border-radius: 999px;
+  background: #faf8f2;
+  box-shadow: inset 0 0 0 1px rgba(9, 43, 69, 0.18);
+}
+
 @media (hover: hover) and (pointer: fine) {
-  body {
-    cursor: none;
-  }
-  a,
-  button,
-  input,
-  textarea,
-  select,
-  summary,
-  [role="button"] {
+  html.has-luxury-cursor,
+  html.has-luxury-cursor * {
     cursor: none;
   }
 }
@@ -607,6 +620,8 @@ body {
   .reward-ring,
   .reward-sheet,
   .cursor-aura,
+  .cursor-aura-core,
+  .lock-gold-follow,
   .circle-person {
     animation: none !important;
     transition: none !important;
@@ -625,7 +640,8 @@ body {
     opacity: 0;
   }
 
-  .cursor-aura {
+  .cursor-aura,
+  .lock-gold-follow {
     display: none !important;
   }
 
@@ -747,7 +763,7 @@ button:disabled {
 
 .house-light {
   --void: #faf8f2;
-  --ink: #ffffff;
+  --ink: #fffdf8;
   --charcoal: #f3efe4;
   --ivory: #092b45;
   --ivory-muted: #1a4663;
@@ -757,20 +773,25 @@ button:disabled {
   --shadow: rgba(9, 43, 69, 0.08);
   --background: var(--paper);
   --foreground: var(--navy);
-  background: var(--paper);
+  background:
+    radial-gradient(88% 46% at 100% -8%, rgba(8, 124, 184, 0.07), transparent 54%),
+    radial-gradient(70% 34% at 0% 10%, rgba(48, 200, 210, 0.055), transparent 50%),
+    radial-gradient(46% 28% at 72% 100%, rgba(196, 162, 100, 0.09), transparent 58%),
+    linear-gradient(180deg, #faf8f2 0%, #f3efe4 46%, #faf8f2 100%);
   color: var(--navy);
 }
 
 .house-light .panel,
 .house-light .panel-quiet,
-.house-light .panel-ink,
-.house-light .gold-chrome {
-  background: #fff;
-  border: 0;
-  box-shadow: none;
+.house-light .panel-ink {
+  background: #fffdf8;
+  border: 1px solid rgba(9, 43, 69, 0.07);
+  box-shadow: 0 12px 30px rgba(9, 43, 69, 0.05);
 }
 
 .house-light .gold-chrome {
+  background: rgba(250, 248, 242, 0.94);
+  border: 0;
   box-shadow: none;
   border-bottom: 1px solid var(--line);
   border-radius: 0;
@@ -779,7 +800,7 @@ button:disabled {
 .house-light input,
 .house-light textarea,
 .house-light select {
-  background: #fff;
+  background: #fffdf8;
   color: var(--navy);
   border-color: var(--line);
   border-radius: 14px;
@@ -787,7 +808,28 @@ button:disabled {
 
 .house-light .nav-chrome,
 .house-light .header-chrome {
-  background: rgba(250, 248, 242, 0.92);
+  background: rgba(250, 248, 242, 0.9);
+  border-bottom: 1px solid rgba(9, 43, 69, 0.06);
+}
+
+.surface {
+  background: #fffdf8;
+  border: 1px solid rgba(9, 43, 69, 0.07);
+  box-shadow: 0 10px 26px rgba(9, 43, 69, 0.045);
+}
+
+.section-band {
+  padding: 1.15rem 0.9rem 1.35rem;
+  border-radius: 1.5rem;
+  background:
+    linear-gradient(180deg, rgba(9, 43, 69, 0.045), rgba(250, 248, 242, 0.35) 72%),
+    #f4efe6;
+  border: 1px solid rgba(9, 43, 69, 0.05);
+}
+
+.section-kicker {
+  font-family: var(--font-serif), "Cormorant Garamond", serif;
+  color: var(--gold-dim);
 }
 
 .house-light .action-quiet {
