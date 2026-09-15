@@ -55,7 +55,7 @@ npm test         # Index, Open House TZ, Circle, privacy, notifications, copy, R
 
 ## Reviewer click-through (Stefan / Astra)
 
-1. `/` lock — editorial yacht-wake / mobile water hero (not members), short headline, countdown, **Remind me**, Sign in
+1. `/` lock — grainy black-and-gold field only (no campaign/yacht photo), short headline, countdown, **Remind me**, Sign in
 2. Reviewer tools → **Force Open House** → hero, three benefits, experiences, **$10,000 lifetime**, no-soliciting → **Walk the house**
 3. Home — greeting, next trip / experience, three useful connections
 4. Index — search / Ask; tabs For you · Your Circle · All members; one reason + city; Message + Circle
