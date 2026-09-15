@@ -85,33 +85,46 @@ export const env = {
   get stripeSecretKey(): string {
     return read("STRIPE_SECRET_KEY");
   },
+  get stripePublishableKey(): string {
+    return read("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY");
+  },
   get stripeWebhookSecret(): string {
     return read("STRIPE_WEBHOOK_SECRET");
   },
+  get stripeFoundingEntryPriceId(): string {
+    return read("STRIPE_PRICE_FOUNDING_ENTRY") || read("STRIPE_FOUNDING_PRICE_ID");
+  },
+  get stripeStandardEntryPriceId(): string {
+    return read("STRIPE_PRICE_STANDARD_ENTRY") || read("STRIPE_STANDARD_PRICE_ID");
+  },
+  get stripeMonthlyPriceId(): string {
+    return read("STRIPE_PRICE_MONTHLY");
+  },
   get stripeFoundingPriceId(): string {
-    return read("STRIPE_FOUNDING_PRICE_ID");
+    return this.stripeFoundingEntryPriceId;
   },
   get stripeStandardPriceId(): string {
-    return read("STRIPE_STANDARD_PRICE_ID");
+    return this.stripeStandardEntryPriceId;
   },
   get stripeLifetimePriceId(): string {
-    // Prefer STRIPE_PRICE_ID (lifetime $10,000). Keep STRIPE_LIFETIME_PRICE_ID as alias.
-    return read("STRIPE_PRICE_ID") || read("STRIPE_LIFETIME_PRICE_ID");
+    // Retired: archived lifetime Price must not be charged.
+    return "";
   },
   get lifetimePriceLabel(): string {
-    return read("NEXT_PUBLIC_LIFETIME_PRICE_LABEL", "$10,000");
+    return read("NEXT_PUBLIC_STANDARD_ENTRY_LABEL", "$10,000");
   },
   get foundingPriceLabel(): string {
-    return read(
-      "NEXT_PUBLIC_FOUNDING_PRICE_LABEL",
-      "[INSERT APPROVED FOUNDING PRICE]",
-    );
+    return read("NEXT_PUBLIC_FOUNDING_ENTRY_LABEL", "$5,000");
+  },
+  get monthlyDuesLabel(): string {
+    return read("NEXT_PUBLIC_MONTHLY_DUES_LABEL", "$195");
+  },
+  get foundingTenCap(): number {
+    const n = Number(read("FOUNDING_TEN_CAP", "10"));
+    return Number.isFinite(n) && n > 0 ? Math.min(n, 10) : 10;
   },
   get standardPriceLabel(): string {
-    return read(
-      "NEXT_PUBLIC_STANDARD_PRICE_LABEL",
-      "[INSERT APPROVED STANDARD PRICE]",
-    );
+    return read("NEXT_PUBLIC_STANDARD_ENTRY_LABEL", "$10,000");
   },
   get streamApiKey(): string {
     return read("NEXT_PUBLIC_STREAM_API_KEY");
@@ -173,6 +186,14 @@ export function hasStripe(): boolean {
   return Boolean(env.stripeSecretKey);
 }
 
+export function hasStripePublishableKey(): boolean {
+  return Boolean(env.stripePublishableKey);
+}
+
+export function stripeLivemodeAllowed(): boolean {
+  return env.isProduction && env.runtimeMode === "live";
+}
+
 export function hasStream(): boolean {
   return Boolean(env.streamApiKey && env.streamApiSecret);
 }
@@ -189,12 +210,34 @@ export function hasSentryDsn(): boolean {
   return Boolean(env.sentryDsn);
 }
 
-export function hasStripePrice(): boolean {
-  return Boolean(env.stripeLifetimePriceId);
+export function hasFoundingEntryPrice(): boolean {
+  return Boolean(env.stripeFoundingEntryPriceId);
 }
 
+export function hasStandardEntryPrice(): boolean {
+  return Boolean(env.stripeStandardEntryPriceId);
+}
+
+export function hasMonthlyPrice(): boolean {
+  return Boolean(env.stripeMonthlyPriceId);
+}
+
+export function hasStripePrice(): boolean {
+  return hasFoundingEntryPrice() || (hasStandardEntryPrice() && hasMonthlyPrice());
+}
+
+export function canChargeMembership(): boolean {
+  if (!hasStripe() || !hasStripePrice()) return false;
+  const key = env.stripeSecretKey;
+  if ((key.startsWith("sk_live") || key.startsWith("rk_live")) && !stripeLivemodeAllowed()) {
+    return false;
+  }
+  return true;
+}
+
+/** @deprecated Use canChargeMembership */
 export function canChargeLifetime(): boolean {
-  return hasStripe() && hasStripePrice();
+  return canChargeMembership();
 }
 
 export function formatFromAddress(raw: string): string {
@@ -210,7 +253,11 @@ export function integrationStatus() {
     supabase: hasSupabase(),
     stripe: hasStripe(),
     stripePrice: hasStripePrice(),
-    canCharge: canChargeLifetime(),
+    stripeFounding: hasFoundingEntryPrice(),
+    stripeStandard: hasStandardEntryPrice(),
+    stripeMonthly: hasMonthlyPrice(),
+    stripePublishable: hasStripePublishableKey(),
+    canCharge: canChargeMembership(),
     stream: hasStream(),
     resend: hasResend(),
     posthog: hasPosthog(),

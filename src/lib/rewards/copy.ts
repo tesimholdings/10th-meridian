@@ -12,4 +12,5 @@ export const REWARDS_POLICY = `${SOLICITING_REFERRALS} Cold soliciting is still 
 export const REWARDS_EDITORIAL =
   "Cards and imagery are editorial. Nothing here is delivered gold, booked travel, or a completed evening until ops marks it fulfilled.";
 export const REWARDS_MEMBERS_ONLY = "Referral Rewards are for members.";
-export const REWARDS_LIFETIME = "Lifetime membership is $10,000.";
+export const REWARDS_PRICING =
+  "Founding Ten enter at $5,000. After that: $10,000 to enter plus $195 each month. Points never discount membership.";

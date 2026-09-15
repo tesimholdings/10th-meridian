@@ -9,9 +9,11 @@ import {
   HOUSE_BLOCKS,
   JOIN_WAITLIST,
   MEMBERSHIP_CAP,
+  MEMBERSHIP_FOUNDING,
   MEMBERSHIP_HEADLINE,
-  MEMBERSHIP_NO_MONTHLY,
+  MEMBERSHIP_NO_DISCOUNT,
   MEMBERSHIP_SOLICITING,
+  MEMBERSHIP_STANDARD,
   OPEN_HOUSE_EVENING,
   OPEN_HOUSE_EYEBROW,
   OPEN_HOUSE_HEADLINE,
@@ -33,9 +35,12 @@ describe("Open House customer copy", () => {
     assert.equal(OPEN_HOUSE_HEADLINE, "The people you should know next.");
     assert.equal(OPEN_HOUSE_LEDE, "A private house for the next conversation that matters.");
     assert.equal(OPEN_HOUSE_EYEBROW, "10TH MERIDIAN · PRIVATE NETWORK");
-    assert.equal(OPEN_HOUSE_PROOF, "Ten new members a month · One lifetime membership");
-    assert.equal(MEMBERSHIP_HEADLINE, "$10,000. Once.");
-    assert.match(MEMBERSHIP_NO_MONTHLY, /Monthly billing is not offered/);
+    assert.equal(OPEN_HOUSE_PROOF, "Ten new members a month · Founding Ten $5,000");
+    assert.equal(MEMBERSHIP_HEADLINE, "Founding Ten. $5,000.");
+    assert.match(MEMBERSHIP_FOUNDING, /\$5,000/);
+    assert.match(MEMBERSHIP_STANDARD, /\$10,000/);
+    assert.match(MEMBERSHIP_STANDARD, /\$195/);
+    assert.match(MEMBERSHIP_NO_DISCOUNT, /No discounts/);
     assert.match(MEMBERSHIP_CAP, /No more than ten new members/);
     assert.match(MEMBERSHIP_SOLICITING, /Absolutely no soliciting/);
     assert.match(MEMBERSHIP_SOLICITING, /without refund/);
@@ -116,6 +121,9 @@ describe("Open House customer surfaces", () => {
       "OPEN_HOUSE_PROOF",
       "EXPLORE_THE_HOUSE",
       "MEMBERSHIP_HEADLINE",
+      "MEMBERSHIP_FOUNDING",
+      "MEMBERSHIP_STANDARD",
+      "MEMBERSHIP_NO_DISCOUNT",
       "CLOSING_HEADLINE",
       "EXPERIENCES_DISCLOSURE",
       "OPEN_HOUSE_MOMENT",
@@ -174,6 +182,21 @@ describe("Open House customer surfaces", () => {
       "Higgsfield slot",
     ]) {
       assert.equal(page.includes(banned), false, `landing contains ${banned}`);
+    }
+  });
+
+  it("never markets lifetime $10,000", () => {
+    for (const path of [
+      landing,
+      "src/app/member/billing/page.tsx",
+      "src/app/legal/terms/page.tsx",
+      "src/app/legal/refund/page.tsx",
+      "src/lib/copy/open-house.ts",
+      "src/lib/rewards/copy.ts",
+    ]) {
+      const text = readFileSync(path, "utf8");
+      assert.equal(/lifetime \$10,000/i.test(text), false, `${path} still says lifetime $10,000`);
+      assert.equal(text.includes("Lifetime membership is $10,000"), false, path);
     }
   });
 

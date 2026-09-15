@@ -18,6 +18,10 @@ export const COMMUNITY_STANDARD = [
   SOLICITING_MENTION,
 ].join(" ");
 
-export const LIFETIME_PRICE_LABEL = "$10,000";
-export const LIFETIME_PRICE_AMOUNT = 10_000;
+export const FOUNDING_ENTRY_LABEL = "$5,000";
+export const FOUNDING_ENTRY_AMOUNT = 5_000;
+export const STANDARD_ENTRY_LABEL = "$10,000";
+export const STANDARD_ENTRY_AMOUNT = 10_000;
+export const MONTHLY_DUES_LABEL = "$195";
+export const MONTHLY_DUES_AMOUNT = 195;
 export const PREPARED_DOMAIN = "tenmeridian.com";

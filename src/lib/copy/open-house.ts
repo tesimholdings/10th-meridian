@@ -1,4 +1,9 @@
-import { LIFETIME_PRICE_LABEL, SOLICITING_BAN } from "@/lib/copy/community";
+import {
+  FOUNDING_ENTRY_LABEL,
+  MONTHLY_DUES_LABEL,
+  SOLICITING_BAN,
+  STANDARD_ENTRY_LABEL,
+} from "@/lib/copy/community";
 import { brand } from "@/lib/config/site";
 import type { CampaignSlot } from "@/lib/atmosphere/campaign";
 
@@ -7,15 +12,18 @@ import type { CampaignSlot } from "@/lib/atmosphere/campaign";
 export const OPEN_HOUSE_EYEBROW = "10TH MERIDIAN · PRIVATE NETWORK";
 export const OPEN_HOUSE_HEADLINE = brand.idea;
 export const OPEN_HOUSE_LEDE = "A private house for the next conversation that matters.";
-export const OPEN_HOUSE_PROOF = "Ten new members a month · One lifetime membership";
+export const OPEN_HOUSE_PROOF = "Ten new members a month · Founding Ten $5,000";
 
 export const EXPLORE_THE_HOUSE = "Explore the house";
 export const JOIN_WAITLIST = "Join waitlist";
 export const APPLY_LABEL = "Apply";
 export const SIGN_IN_LABEL = "Sign in";
 
-export const MEMBERSHIP_HEADLINE = `${LIFETIME_PRICE_LABEL}. Once.`;
-export const MEMBERSHIP_NO_MONTHLY = "Monthly billing is not offered.";
+export const MEMBERSHIP_HEADLINE = `Founding Ten. ${FOUNDING_ENTRY_LABEL}.`;
+export const MEMBERSHIP_FOUNDING = `The first ten members enter at ${FOUNDING_ENTRY_LABEL} — one payment, the same for everyone.`;
+export const MEMBERSHIP_STANDARD = `After Founding Ten: ${STANDARD_ENTRY_LABEL} to enter plus ${MONTHLY_DUES_LABEL} each month. Cancel the dues and the seat ends. To rejoin, the ${STANDARD_ENTRY_LABEL} entry is due again.`;
+export const MEMBERSHIP_NO_DISCOUNT =
+  "No discounts. A referral opens the door earlier; it does not change what you pay.";
 export const MEMBERSHIP_CAP = brand.scarcity;
 export const MEMBERSHIP_SOLICITING = `${SOLICITING_BAN} Removal for violations is without refund.`;
 
@@ -50,7 +58,7 @@ export const HOUSE_BLOCKS = [
   {
     id: "a-closed-table",
     title: "A closed table",
-    body: "Ten new members a month. Lifetime membership, once.",
+    body: "Ten new members a month. Founding Ten enter at $5,000.",
     still: "eventsDinner" as CampaignSlot,
   },
 ] as const;

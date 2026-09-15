@@ -17,14 +17,14 @@ Review-only. Does not merge. Does not promote Production. Does not purchase doma
 
 ## Automated (this wave)
 
-Added coverage for env from-address + integration flags, Resend stub helpers, Stream channel/token stubs, Stripe lifetime Checkout stub (never charges), PostHog no-op, Sentry placeholders (PR #12 not landed), hybrid matching fallback, Supabase unconfigured fallback.
+Added coverage for env from-address + integration flags, Resend stub helpers, Stream channel/token stubs, Stripe Checkout stub (never charges), PostHog no-op, Sentry placeholders (PR #12 not landed), hybrid matching fallback, Supabase unconfigured fallback.
 
 ## Demo-safe behavior
 
 | Integration | Missing env | Behavior |
 | --- | --- | --- |
 | Resend | `RESEND_API_KEY` | Apply / reminder / invite return `{ stub: true }` |
-| Stripe | `STRIPE_SECRET_KEY` or `STRIPE_PRICE_ID` | Checkout 501, webhook stub, nothing charged |
+| Stripe | `STRIPE_SECRET_KEY` or founding/standard/monthly Price IDs | Checkout 501, webhook stub, nothing charged |
 | Stream | `STREAM_API_SECRET` | Token `{ stub: true, token: null }` |
 | Supabase | public URL/anon | Auth + matching stay on preview store |
 | PostHog | `NEXT_PUBLIC_POSTHOG_KEY` | `PostHogInit` is a no-op |
@@ -80,4 +80,29 @@ Profiles are never public or indexed. Open House walkthrough is SYNTHETIC DEMO o
 
 ## Still Stefan’s
 
-Hero film, live keys, counsel-approved legal pages, Stripe lifetime Price ID.
+Hero film, live keys, counsel-approved legal pages, Stripe TEST Price IDs on Preview.
+
+# TEST_REPORT — Stripe Founding Ten / Standard dues
+
+Date: 2026-09-15  
+Branch: `cursor/stripe-founding-standard-1168`  
+Base: `cursor/live-stack-wiring-4a1b`  
+Runtime: Node 22, Next.js 16.3.5, preview mode (no live secrets)
+
+Review-only. Does not merge. Does not promote Production. Does not enable livemode. Does not purchase.
+
+## Pricing under test
+
+- Founding Ten: $5,000 one-time (`price_1UG1eB3QQyESIKbfGysIcPYf`)
+- Standard: $10,000 entry (`price_1UG1eC3QQyESIKbfKbIfpHct`) + $195/month (`price_1UG1eD3QQyESIKbfZJOuoyS6`)
+- Archived lifetime Price `price_1UG1Xg3QQyESIKbfV5BfJF6U` is rejected
+- No promotion codes
+
+## Checks
+
+| Check | Result |
+| --- | --- |
+| `npm test` | 157/157 pass |
+| `npm run build` | Green — Next.js 16.3.5, TypeScript clean |
+
+Without keys: Checkout and invoices return 501. Webhooks stub and do not unlock.

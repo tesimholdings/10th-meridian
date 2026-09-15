@@ -132,7 +132,7 @@ export default async function MemberHomePage() {
 
       {paymentPending ? (
         <Link href="/member/settings#billing" className="mt-10 block text-sm text-[var(--gold)]">
-          Membership approved — finish $10,000 lifetime in account settings
+          Membership approved — finish Founding $5,000 or Standard $10,000 + $195/month in billing
         </Link>
       ) : null}
     </MemberShell>

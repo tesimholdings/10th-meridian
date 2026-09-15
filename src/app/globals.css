@@ -1457,3 +1457,9 @@ button:disabled {
 .house-light .media-slot > p {
   color: var(--gold-dim);
 }
+
+.billing-ledger {
+  background:
+    radial-gradient(80% 50% at 12% 0%, rgba(196, 162, 100, 0.22), transparent 58%),
+    linear-gradient(180deg, #070809 0%, #0c1c28 100%);
+}

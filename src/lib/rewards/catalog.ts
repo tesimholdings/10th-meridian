@@ -67,7 +67,7 @@ export const REWARD_CATALOG: readonly RewardCatalogItem[] = [
     title: "Guest Open House pass",
     short: "10 pts · One guest",
     description:
-      "One-time guest access for a referred friend to an Open House. Not membership. Not a transfer of the $10,000 lifetime seat.",
+      "One-time guest access for a referred friend to an Open House. Not membership. Not a transfer of a Founding or Standard seat.",
     costPoints: POINTS_PER_SUCCESSFUL_REFERRAL,
     unlockCreditsRequired: 1,
     reservable: false,

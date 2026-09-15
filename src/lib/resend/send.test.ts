@@ -20,10 +20,13 @@ describe("Resend transactional helpers", () => {
     }
   });
 
-  it("keeps invite and apply copy honest about $10,000 lifetime", () => {
+  it("keeps invite copy honest about Founding $5,000 and Standard $10,000 + $195/month", () => {
     const invite = emailTemplates.invite();
     const apply = emailTemplates.applicationReceived();
+    assert.match(invite.html, /\$5,000/);
     assert.match(invite.html, /\$10,000/);
+    assert.match(invite.html, /\$195/);
+    assert.equal(invite.html.includes("Lifetime membership is $10,000"), false);
     assert.match(invite.html, /not a solicitation/i);
     assert.match(apply.html, /No more than ten/);
   });

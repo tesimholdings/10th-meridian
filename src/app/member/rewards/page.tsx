@@ -10,7 +10,7 @@ import {
   REWARDS_EDITORIAL,
   REWARDS_EARN,
   REWARDS_HEADLINE,
-  REWARDS_LIFETIME,
+  REWARDS_PRICING,
   REWARDS_MEMBERS_ONLY,
   REWARDS_NOT_INVESTMENT,
   REWARDS_PARITY,
@@ -39,7 +39,7 @@ export default async function RewardsPage({
       <MemberShell user={access.user} demo title={REFERRAL_REWARDS}>
         <h1 className="font-serif text-4xl">{REWARDS_HEADLINE}</h1>
         <p className="mt-4 max-w-md text-[var(--navy-soft)]">{REWARDS_MEMBERS_ONLY}</p>
-        <p className="mt-2 text-sm text-[var(--ivory-dim)]">{REWARDS_LIFETIME}</p>
+        <p className="mt-2 text-sm text-[var(--ivory-dim)]">{REWARDS_PRICING}</p>
         <Link href="/member/settings#billing" className="mt-6 inline-flex text-sm text-[var(--blue)]">
           Account settings
         </Link>

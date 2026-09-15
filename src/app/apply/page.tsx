@@ -17,7 +17,7 @@ export default async function ApplyPage() {
       <p className="mt-3 text-sm text-[var(--navy-soft)]">
         Selection is discretionary. Completeness helps. Nothing here guarantees a
         place. No more than ten new members are hand-selected each month.
-        Lifetime membership is $10,000. Absolutely no soliciting. Ban with no refund.
+        Founding Ten enter at $5,000. After that: $10,000 to enter plus $195 each month. Cancel monthly dues and the seat ends; rejoining requires the $10,000 entry again. Absolutely no soliciting. Ban with no refund.
       </p>
       <div className="surface mt-10 rounded-3xl p-5">
         <ApplyWizard referralCode={access.referralCode} />

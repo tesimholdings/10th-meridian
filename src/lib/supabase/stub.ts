@@ -7,13 +7,17 @@ export type StubTable =
   | "applications"
   | "reminders"
   | "referrals_audit"
-  | "profiles";
+  | "profiles"
+  | "membership_events"
+  | "memberships";
 
 const store: Record<StubTable, Record<string, unknown>[]> = {
   applications: [],
   reminders: [],
   referrals_audit: [],
   profiles: [],
+  membership_events: [],
+  memberships: [],
 };
 
 export function stubInsert(table: StubTable, row: Record<string, unknown>) {

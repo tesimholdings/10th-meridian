@@ -37,14 +37,14 @@ export const emailTemplates = {
     subject: `${brand.name}: you have been invited to continue`,
     html: wrap(
       "An invitation, not an ending.",
-      "A steward has approved your application. Membership begins after you complete checkout. Lifetime membership is $10,000. Monthly billing is not offered.",
+      "A steward has approved your application. Membership begins after checkout. Founding Ten enter at $5,000. After that: $10,000 to enter plus $195 each month. No discounts.",
     ),
   }),
   invite: () => ({
     subject: `${brand.name}: an invitation to the house`,
     html: wrap(
       "You are invited.",
-      "A steward has opened the next step. Lifetime membership is $10,000 — one payment, no monthly plan. Checkout is Stripe-hosted. This is not a public offer and not a solicitation.",
+      "A steward has opened the next step. Founding Ten: $5,000 once. After the first ten: $10,000 to enter plus $195 each month. Cancel dues and the seat ends; rejoining requires the $10,000 entry again. Checkout is Stripe-hosted. This is not a public offer and not a solicitation.",
     ),
   }),
   declined: () => ({
