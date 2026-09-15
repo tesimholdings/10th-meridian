@@ -40,7 +40,7 @@ export default async function ProfilePage({
         </div>
         {rewards ? (
           <div className="mx-auto mt-8 max-w-md">
-            <RewardsTeaserCard availableUsd={rewards.availableUsd} compact />
+            <RewardsTeaserCard availablePoints={rewards.availablePoints} compact />
           </div>
         ) : null}
         {p.completion < 90 ? (

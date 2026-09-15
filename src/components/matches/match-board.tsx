@@ -7,6 +7,7 @@ import type { MatchIndex } from "@/lib/matching/service";
 import type { IntroRequest, ProfileRecord } from "@/lib/data/types";
 import { shortMatchReason } from "@/lib/matching/reason";
 import { YOUR_CIRCLE } from "@/lib/copy/ui";
+import { FoundingBadge } from "@/components/members/founding-badge";
 
 export function MatchBoard({
   index,
@@ -40,11 +41,13 @@ export function IndexCard({
   reason,
   intro,
   inCircle,
+  className,
 }: {
   profile: ProfileRecord;
   reason: string;
   intro?: IntroRequest;
   inCircle?: boolean;
+  className?: string;
 }) {
   const router = useRouter();
   const [pending, setPending] = useState(false);
@@ -101,7 +104,7 @@ export function IndexCard({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: "remove-index", targetId: profile.id }),
       });
-      setNote("Removed from Index recommendations.");
+      setNote("Removed from For you recommendations.");
     }
     setPending(false);
     setOpen(false);
@@ -109,7 +112,7 @@ export function IndexCard({
   }
 
   return (
-    <li className="flex gap-3 py-3">
+    <li className={`flex gap-3 py-3 ${className ?? ""}`.trim()}>
       <Link
         href={`/member/members/${profile.id}`}
         className="avatar h-14 w-14 text-lg"
@@ -124,6 +127,11 @@ export function IndexCard({
           </Link>
           <p className="text-sm text-[var(--ivory-dim)]">{profile.city}</p>
         </div>
+        {profile.foundingMember ? (
+          <div className="mt-1">
+            <FoundingBadge compact />
+          </div>
+        ) : null}
         <p className="mt-1 text-sm leading-relaxed text-[var(--navy-soft)]">{reason}</p>
         <div className="mt-3 flex flex-wrap items-center gap-2">
           <button type="button" disabled={pending} onClick={() => void message()} className="action-quiet">
@@ -142,7 +150,7 @@ export function IndexCard({
                 Hide
               </button>
               <button type="button" className="min-h-10 px-2 text-left text-sm" onClick={() => void overflow("remove-index")}>
-                Remove from Index
+                Remove from For you
               </button>
             </div>
           </details>

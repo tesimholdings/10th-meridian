@@ -9,6 +9,7 @@ import { presentProfile, visibleEvents } from "@/lib/network/privacy";
 import { isInCircle, isRemovedFromIndex } from "@/lib/network/circle";
 import { mutualConnections } from "@/lib/network/mutual";
 import { formatHumanDateTime } from "@/lib/crossings/format";
+import { FoundingBadge } from "@/components/members/founding-badge";
 
 export const metadata = { title: "Member", robots: { index: false, follow: false } };
 
@@ -51,6 +52,11 @@ export default async function MemberProfilePage({
           {profile.initials}
         </div>
         <h1 className="mt-4 font-serif text-4xl">{profile.displayName}</h1>
+        {profile.foundingMember ? (
+          <div className="mt-2">
+            <FoundingBadge />
+          </div>
+        ) : null}
         <p className="mt-2 max-w-md text-[var(--navy-soft)]">{profile.headline}</p>
         <p className="mt-1 text-sm text-[var(--ivory-dim)]">
           {profile.city}

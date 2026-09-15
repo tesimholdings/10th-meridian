@@ -26,7 +26,7 @@ export function MemberHeader({
         className="min-w-0 flex-1"
         onSubmit={(e) => {
           e.preventDefault();
-          router.push(`/member/index?q=${encodeURIComponent(q.trim())}`);
+          router.push(`/member/circle?q=${encodeURIComponent(q.trim())}`);
         }}
       >
         <label className="sr-only" htmlFor="house-search">

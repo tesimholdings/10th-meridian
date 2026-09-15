@@ -7,7 +7,7 @@ import type { HouseNotificationPrefs, NotifyChannel } from "@/lib/network/types"
 const rows: { key: keyof Omit<HouseNotificationPrefs, "profileId" | "digest">; label: string }[] = [
   { key: "channelJoin", label: "New person in a channel" },
   { key: "circle", label: "Added to Your Circle" },
-  { key: "index", label: "Added to your Index" },
+  { key: "index", label: "Added to My Circle" },
   { key: "intros", label: "Introductions" },
   { key: "events", label: "Events" },
   { key: "announcements", label: "Announcements" },

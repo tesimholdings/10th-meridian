@@ -4,6 +4,7 @@ import {
   availableBalanceUsd,
   buildRewardCard,
   earnedCreditsFromUsd,
+  pointsFromUsd,
   sumEarnedUsd,
   sumRedeemedUsd,
   sumReservedUsd,
@@ -37,6 +38,10 @@ export function buildRewardsSnapshot(input: {
     reservedUsd,
     redeemedUsd,
     availableUsd,
+    earnedPoints: pointsFromUsd(earnedUsd),
+    reservedPoints: pointsFromUsd(reservedUsd),
+    redeemedPoints: pointsFromUsd(redeemedUsd),
+    availablePoints: pointsFromUsd(availableUsd),
     earnedCredits,
     admissionsCap: input.admissionsCap ?? ADMISSIONS_MONTHLY_CAP,
     cards: REWARD_CATALOG.map((item) =>

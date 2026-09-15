@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
 export default function MatchesRedirect() {
-  redirect("/member/index");
+  redirect("/member/circle");
 }

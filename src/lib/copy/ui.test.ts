@@ -9,6 +9,7 @@ import {
   MERIDIAN_10,
   MERIDIAN_100,
   MERIDIAN_INDEX,
+  NAV_CIRCLE,
   REFERRAL_REWARDS,
   YOUR_CIRCLE,
 } from "@/lib/copy/ui";
@@ -18,6 +19,7 @@ const uiFiles = [
   "src/components/member/bottom-nav.tsx",
   "src/components/open-house/landing.tsx",
   "src/app/member/home/page.tsx",
+  "src/app/member/circle/page.tsx",
   "src/app/member/index/page.tsx",
   "src/app/member/settings/page.tsx",
   "src/app/member/crossings/page.tsx",
@@ -27,13 +29,15 @@ const uiFiles = [
 ];
 
 describe("product naming and community copy", () => {
-  it("uses Home · Index · Messages · Crossings · Profile and never Matches", () => {
+  it("uses Home · My Circle · Messages · Crossings · Profile and never Matches", () => {
     assert.deepEqual([...memberNav.map((i) => i.label)], [...MEMBER_NAV_LABELS]);
     assert.ok(!MEMBER_NAV_LABELS.includes(FORBIDDEN_UI_LABEL as (typeof MEMBER_NAV_LABELS)[number]));
     for (const href of memberNav.map((i) => i.label)) {
       assert.notEqual(href, "Matches");
     }
-    assert.equal(MERIDIAN_INDEX.includes("Meridian"), true);
+    assert.equal(NAV_CIRCLE, "My Circle");
+    assert.equal(MERIDIAN_INDEX, "My Circle");
+    assert.equal(memberNav[1]?.href, "/member/circle");
     assert.equal(MERIDIAN_10, "The Meridian 10");
     assert.equal(MERIDIAN_100, "The Meridian 100");
     assert.equal(YOUR_CIRCLE, "Your Circle");

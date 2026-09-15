@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
 export default function DemoIndexRedirect() {
-  redirect("/member/index");
+  redirect("/member/circle");
 }

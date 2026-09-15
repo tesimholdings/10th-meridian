@@ -10,7 +10,7 @@ export const membershipProducts = {
     id: "lifetime",
     name: "Lifetime Membership",
     summary:
-      "One payment. The house, the Index, Channels, and Crossings — for as long as the house stands. Monthly billing is not offered yet.",
+      "One payment. The house, My Circle, Channels, and Crossings — for as long as the house stands. Monthly billing is not offered yet.",
     priceLabel: env.lifetimePriceLabel || LIFETIME_PRICE_LABEL,
     stripePriceId: env.stripeLifetimePriceId || null,
     checkoutEligible: true,

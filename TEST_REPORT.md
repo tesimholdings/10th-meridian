@@ -1,10 +1,10 @@
 # TEST_REPORT — Referral Rewards
 
-Date: 2026-09-14  
+Date: 2026-09-15  
 Branch: `cursor/referral-rewards-4914`  
 Base: `cursor/astra-audit-fixes-e546`
 
-Adds unit coverage for credit math, reserve locking, admission → +$1,000 once, and catalog unlock thresholds (`src/lib/rewards/math.test.ts`, `src/lib/rewards/actions.test.ts`, preview-store admission hook).
+Adds unit coverage for points math (10 pts = $1,000), reserve locking, admission → +10 pts once, catalog unlock thresholds, named demo members, and My Circle copy (`src/lib/rewards/math.test.ts`, `src/lib/rewards/actions.test.ts`, `src/lib/data/demo.test.ts`, preview-store admission hook).
 
 # TEST_REPORT — Astra audit redesign
 
@@ -26,11 +26,11 @@ Runtime: Node 22, Next.js 16.3.5, preview mode (no live secrets)
 - Open House 10:00–22:00 in the **provided IANA timezone**; referral 09:00 local; fallback `America/Chicago`
 - Lock-screen countdown uses the same `evaluateOpenHouse` `nextOpenAt`
 - Profiles: gallery (Storage stub + DEMO), optional website/LinkedIn, privacy, in-common, upcoming events
-- Your Circle add/remove; Remove from Index; hide/block still respected
+- Your Circle add/remove; Remove from For you; hide/block still respected
 - House notifications + in-app/email/digest prefs
-- DMs from profile / Index / Members (Stream when keys exist; DEMO otherwise; not E2EE)
+- DMs from profile / My Circle / Members (Stream when keys exist; DEMO otherwise; not E2EE)
 - Community: Absolutely no soliciting. Ban with no refund.
-- Bottom nav: Home · Index · Messages · Crossings · Profile
+- Bottom nav: Home · My Circle · Messages · Crossings · Profile
 - UI vibe: warm white / navy / ocean blue / restrained gold; editorial campaign PNGs in-repo (yacht wake, deck, dinner, salon, terrace, coastal plaza); nightlife still only when listed; reduced-motion honored
 
 ## Privacy

@@ -7,7 +7,7 @@ Member travel connections for 10th Meridian. City-level presence only — not re
 
 ## Navigation choice
 
-The member bottom bar is already full: **Home · Index · Channels · Members · Profile**.
+The member bottom bar is already full: **Home · My Circle · Messages · Crossings · Profile**.
 
 Crossings is reachable from:
 

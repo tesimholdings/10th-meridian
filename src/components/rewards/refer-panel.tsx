@@ -128,7 +128,7 @@ function ReferralForm({ onDone }: { onDone: (message: string) => void }) {
 
 function ReferralRow({ row, onChange }: { row: MemberReferral; onChange: () => void }) {
   const [busy, setBusy] = useState(false);
-  const paid = row.credited ? "$1,000 credited" : "No credit yet";
+  const paid = row.credited ? "+10 pts credited" : "No points yet";
 
   async function act(action: string) {
     setBusy(true);

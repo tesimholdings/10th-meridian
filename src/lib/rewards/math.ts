@@ -1,4 +1,4 @@
-import { CREDIT_PER_SUCCESSFUL_REFERRAL_USD, REFERRAL_PIPELINE } from "@/lib/rewards/types";
+import { CREDIT_PER_SUCCESSFUL_REFERRAL_USD, REFERRAL_PIPELINE, USD_PER_POINT } from "@/lib/rewards/types";
 import type {
   CreditLedgerEntry,
   MemberReferral,
@@ -18,8 +18,20 @@ export function formatUsd(amount: number): string {
   }).format(amount);
 }
 
+export function pointsFromUsd(usd: number): number {
+  return Math.round(usd / USD_PER_POINT);
+}
+
+export function usdFromPoints(points: number): number {
+  return points * USD_PER_POINT;
+}
+
+export function formatPoints(points: number): string {
+  return `${points} ${points === 1 ? "pt" : "pts"}`;
+}
+
 export function progressLabel(progressUsd: number, costUsd: number): string {
-  return `${formatUsd(progressUsd)} of ${formatUsd(costUsd)}`;
+  return `${formatPoints(pointsFromUsd(progressUsd))} of ${formatPoints(pointsFromUsd(costUsd))}`;
 }
 
 export function earnedCreditsFromUsd(earnedUsd: number): number {
@@ -201,9 +213,12 @@ export function buildRewardCard(
     item,
     state,
     progressUsd,
+    progressPoints: pointsFromUsd(progressUsd),
     costUsd: item.costUsd,
+    costPoints: item.costPoints,
     progressLabel: progressLabel(progressUsd, item.costUsd),
     reservedUsd,
+    reservedPoints: pointsFromUsd(reservedUsd),
     reservation,
     redemption,
     canReserve: canReserveReward({ item, reservations: input.reservations, redeemed }),

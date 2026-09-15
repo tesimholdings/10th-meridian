@@ -25,6 +25,8 @@ import {
   CREDIT_PER_SUCCESSFUL_REFERRAL_USD,
   CREDIT_USD_RATIO,
   LIFETIME_MEMBERSHIP_USD,
+  POINTS_PER_SUCCESSFUL_REFERRAL,
+  USD_PER_POINT,
   type CreditLedgerEntry,
   type RewardReservation,
 } from "@/lib/rewards/types";
@@ -60,10 +62,13 @@ describe("Referral Rewards credit math", () => {
   it("keeps $1 = $1 and the locked prices", () => {
     assert.equal(CREDIT_USD_RATIO, 1);
     assert.equal(CREDIT_PER_SUCCESSFUL_REFERRAL_USD, 1_000);
+    assert.equal(POINTS_PER_SUCCESSFUL_REFERRAL, 10);
+    assert.equal(USD_PER_POINT, 100);
+    assert.equal(POINTS_PER_SUCCESSFUL_REFERRAL * USD_PER_POINT, 1_000);
     assert.equal(LIFETIME_MEMBERSHIP_USD, 10_000);
     assert.equal(ADMISSIONS_MONTHLY_CAP, 10);
     assert.equal(earnedCreditsFromUsd(3_000), 3);
-    assert.equal(progressLabel(0, 1_000), "$0 of $1,000");
+    assert.equal(progressLabel(0, 1_000), "0 pts of 10 pts");
   });
 
   it("grants +$1,000 once when a referral is admitted", () => {
@@ -217,7 +222,8 @@ describe("Referral Rewards credit math", () => {
       redemptions: [],
     });
     assert.equal(card.state, "ready");
-    assert.equal(card.progressLabel, "$1,000 of $1,000");
+    assert.equal(card.progressLabel, "10 pts of 10 pts");
+    assert.equal(card.costPoints, 10);
     assert.equal(card.canRedeem, true);
 
     const spent = buildRewardCard(trip, {

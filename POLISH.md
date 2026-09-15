@@ -11,7 +11,7 @@ Gold / white / black chrome. Visuals stay lively: clear blue water, yacht-deck m
 ## What changed
 
 ### Naming
-- Bottom nav: Home · **Index** · Channels · Members · Profile — never “Matches”
+- Bottom nav: Home · **My Circle** · Messages · Crossings · Profile — never “Matches”
 - Meridian 10 / Meridian 100 / Meridian Index stay
 - Inner network: **Your Circle**
 - **Ask the Meridian / Who can help**

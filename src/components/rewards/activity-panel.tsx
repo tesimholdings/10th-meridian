@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { postRewards } from "@/lib/rewards/http";
 import { catalogById } from "@/lib/rewards/catalog";
-import { formatUsd } from "@/lib/rewards/math";
+import { formatPoints, formatUsd, pointsFromUsd } from "@/lib/rewards/math";
 import type { RewardsSnapshot } from "@/lib/rewards/types";
 
 export function ActivityPanel({ snapshot }: { snapshot: RewardsSnapshot }) {
@@ -28,8 +28,8 @@ export function ActivityPanel({ snapshot }: { snapshot: RewardsSnapshot }) {
                   </p>
                 </div>
                 <p className={`text-sm font-medium ${row.amountUsd < 0 ? "text-[var(--ivory-dim)]" : "text-[var(--navy)]"}`}>
-                  {row.amountUsd > 0 ? "+" : ""}
-                  {formatUsd(row.amountUsd)}
+                  {row.amountUsd > 0 ? "+" : "−"}
+                  {formatPoints(Math.abs(pointsFromUsd(row.amountUsd)))}
                 </p>
               </li>
             ))}
@@ -49,7 +49,7 @@ export function ActivityPanel({ snapshot }: { snapshot: RewardsSnapshot }) {
                 <li key={row.id} className="rounded-3xl bg-white p-4">
                   <p className="font-medium">{item?.title ?? row.rewardId}</p>
                   <p className="mt-1 text-sm text-[var(--ivory-dim)]">
-                    {formatUsd(row.amountUsd)} · {row.status.replaceAll("_", " ")}
+                    {formatPoints(pointsFromUsd(row.amountUsd))} · {formatUsd(row.amountUsd)} · {row.status.replaceAll("_", " ")}
                   </p>
                   {row.destination ? (
                     <p className="mt-1 text-sm text-[var(--navy-soft)]">

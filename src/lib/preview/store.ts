@@ -534,7 +534,7 @@ export function addMemberToCircle(ownerId: string, memberId: string) {
       recipientId: memberId,
       kind: "circle_add",
       title: `${owner?.displayName ?? "A member"} added you to Your Circle`,
-      body: "A manual addition — not an Index suggestion. SYNTHETIC DEMO.",
+      body: "A manual addition — not a For you suggestion. SYNTHETIC DEMO.",
       href: `/member/members/${ownerId}`,
     });
     audit(ownerId, "circle.added", "circle", memberId);

@@ -3,6 +3,7 @@ import { Cormorant_Garamond, Outfit } from "next/font/google";
 import { brand } from "@/lib/config/site";
 import { env } from "@/lib/env";
 import { TimezoneSync } from "@/components/access/timezone-sync";
+import { CursorAura } from "@/components/atmosphere/cursor-aura";
 import "./globals.css";
 
 const serif = Cormorant_Garamond({
@@ -40,6 +41,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full bg-void font-sans text-ivory">
         <TimezoneSync />
+        <CursorAura />
         {children}
       </body>
     </html>

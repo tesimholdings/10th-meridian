@@ -5,7 +5,7 @@ export function NavIcon({ id, active }: { id: string; active: boolean }) {
       {id === "home" ? (
         <path d="M3.5 10 L10 4 L16.5 10 V16.5 H3.5 Z" fill="none" stroke={stroke} strokeWidth="1.4" />
       ) : null}
-      {id === "index" ? (
+      {id === "circle" || id === "index" ? (
         <>
           <circle cx="7" cy="8" r="2.2" fill="none" stroke={stroke} strokeWidth="1.4" />
           <circle cx="13.5" cy="8.5" r="1.8" fill="none" stroke={stroke} strokeWidth="1.4" />

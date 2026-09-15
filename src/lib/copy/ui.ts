@@ -1,14 +1,16 @@
 /** User-facing product labels. Tests assert these never include the word "Matches". */
 
 export const NAV_HOME = "Home";
-export const NAV_INDEX = "Index";
+export const NAV_CIRCLE = "My Circle";
+/** @deprecated Use NAV_CIRCLE — kept so old imports fail loudly if someone writes "Index" in nav. */
+export const NAV_INDEX = NAV_CIRCLE;
 export const NAV_MESSAGES = "Messages";
 export const NAV_CROSSINGS = "Crossings";
 export const NAV_PROFILE = "Profile";
 
 export const MEMBER_NAV_LABELS = [
   NAV_HOME,
-  NAV_INDEX,
+  NAV_CIRCLE,
   NAV_MESSAGES,
   NAV_CROSSINGS,
   NAV_PROFILE,
@@ -17,9 +19,10 @@ export const MEMBER_NAV_LABELS = [
 export const YOUR_CIRCLE = "Your Circle";
 export const ASK_THE_MERIDIAN = "Ask the Meridian";
 export const WHO_CAN_HELP = "Who can help";
-export const MERIDIAN_INDEX = "The Meridian Index";
+export const MERIDIAN_INDEX = "My Circle";
 export const MERIDIAN_10 = "The Meridian 10";
 export const MERIDIAN_100 = "The Meridian 100";
+export const FOUNDING_MEMBER = "Founding member";
 
 export const SOURCE_ALGORITHMIC = "For you";
 export const SOURCE_CIRCLE = "Your Circle";

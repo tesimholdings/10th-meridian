@@ -5,7 +5,7 @@ import { RewardCard } from "@/components/rewards/reward-card";
 import { ReferPanel } from "@/components/rewards/refer-panel";
 import { ActivityPanel } from "@/components/rewards/activity-panel";
 import { viewerRewardsSnapshot } from "@/lib/preview/store";
-import { formatUsd } from "@/lib/rewards/math";
+import { formatPoints, formatUsd } from "@/lib/rewards/math";
 import {
   REWARDS_EDITORIAL,
   REWARDS_EARN,
@@ -52,10 +52,11 @@ export default async function RewardsPage({
   return (
     <MemberShell user={access.user} demo title={REFERRAL_REWARDS}>
       <p className="text-sm text-[var(--ivory-dim)]">{REWARDS_HEADLINE}</p>
-      <p className="mt-1 font-serif text-5xl tracking-tight">{formatUsd(snapshot.availableUsd)}</p>
+      <p className="mt-1 font-serif text-5xl tracking-tight">{formatPoints(snapshot.availablePoints)}</p>
       <p className="mt-2 text-sm text-[var(--navy-soft)]">Available · {REWARDS_PARITY}</p>
       <p className="mt-1 text-sm text-[var(--ivory-dim)]">
-        {formatUsd(snapshot.earnedUsd)} earned · {formatUsd(snapshot.reservedUsd)} reserved · {formatUsd(snapshot.redeemedUsd)} redeemed
+        {formatPoints(snapshot.earnedPoints)} earned · {formatPoints(snapshot.reservedPoints)} reserved · {formatPoints(snapshot.redeemedPoints)} redeemed
+        <span className="block mt-1">{formatUsd(snapshot.availableUsd)} redemption value</span>
       </p>
 
       <p className="mt-6 max-w-xl text-sm leading-relaxed text-[var(--navy-soft)]">{REWARDS_EARN}</p>

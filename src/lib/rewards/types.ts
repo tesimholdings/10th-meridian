@@ -1,6 +1,8 @@
-/** Referral Rewards domain. Credit is $1 = $1. Not an investment product. */
+/** Referral Rewards domain. Points are primary. 10 pts = $1,000 toward redemptions. */
 
-export const CREDIT_PER_SUCCESSFUL_REFERRAL_USD = 1_000;
+export const POINTS_PER_SUCCESSFUL_REFERRAL = 10;
+export const USD_PER_POINT = 100;
+export const CREDIT_PER_SUCCESSFUL_REFERRAL_USD = POINTS_PER_SUCCESSFUL_REFERRAL * USD_PER_POINT;
 export const CREDIT_USD_RATIO = 1;
 export const LIFETIME_MEMBERSHIP_USD = 10_000;
 export const ADMISSIONS_MONTHLY_CAP = 10;
@@ -57,6 +59,7 @@ export interface RewardCatalogItem {
   title: string;
   short: string;
   description: string;
+  costPoints: number;
   costUsd: number;
   unlockCreditsRequired: number;
   reservable: boolean;
@@ -138,9 +141,12 @@ export interface RewardCardView {
   item: RewardCatalogItem;
   state: RewardCardState;
   progressUsd: number;
+  progressPoints: number;
   costUsd: number;
+  costPoints: number;
   progressLabel: string;
   reservedUsd: number;
+  reservedPoints: number;
   reservation: RewardReservation | null;
   redemption: RewardRedemption | null;
   canReserve: boolean;
@@ -157,6 +163,10 @@ export interface RewardsSnapshot {
   reservedUsd: number;
   redeemedUsd: number;
   availableUsd: number;
+  earnedPoints: number;
+  reservedPoints: number;
+  redeemedPoints: number;
+  availablePoints: number;
   earnedCredits: number;
   admissionsCap: number;
   cards: RewardCardView[];

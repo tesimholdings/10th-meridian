@@ -7,7 +7,7 @@ import { RewardGlyph } from "@/components/rewards/glyphs";
 import { ProgressRing } from "@/components/rewards/progress-ring";
 import { RewardsSheet } from "@/components/rewards/sheet";
 import { postRewards } from "@/lib/rewards/http";
-import { formatUsd } from "@/lib/rewards/math";
+import { formatPoints, formatUsd } from "@/lib/rewards/math";
 import type { RewardCardView } from "@/lib/rewards/types";
 
 const stateLabel: Record<RewardCardView["state"], string> = {
@@ -59,7 +59,9 @@ export function RewardCard({ card }: { card: RewardCardView }) {
 
       <div className="mt-4 flex flex-wrap items-center gap-2">
         <span className="pill">{stateLabel[card.state]}</span>
-        <span className="text-sm text-[var(--navy-soft)]">{formatUsd(card.costUsd)}</span>
+        <span className="text-sm text-[var(--navy-soft)]">
+          {formatPoints(card.costPoints)} · {formatUsd(card.costUsd)}
+        </span>
       </div>
 
       <p className="mt-3 text-sm leading-relaxed text-[var(--navy-soft)]">{card.item.description}</p>

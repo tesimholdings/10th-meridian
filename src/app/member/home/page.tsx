@@ -10,7 +10,7 @@ import { HiggsfieldSlot } from "@/components/brand/higgsfield-slot";
 import { campaignSrc } from "@/lib/atmosphere/resolve-campaign";
 import { visibleJourneysFor } from "@/lib/crossings/service";
 import { RewardsTeaserCard } from "@/components/rewards/teaser-card";
-import { formatUsd } from "@/lib/rewards/math";
+import { formatPoints } from "@/lib/rewards/math";
 
 export const metadata = { title: "Home", robots: { index: false } };
 
@@ -64,13 +64,13 @@ export default async function MemberHomePage() {
         <RailChip href="/member/crossings" label="Next city" value={trip ? trip.destinationCity : "Add a trip"} />
         <RailChip href="/member/events" label="Tonight" value={event?.city ?? "Experiences"} />
         {rewards ? (
-          <RailChip href="/member/rewards" label="Rewards" value={formatUsd(rewards.availableUsd)} />
+          <RailChip href="/member/rewards" label="Rewards" value={formatPoints(rewards.availablePoints)} />
         ) : null}
       </div>
 
       {rewards ? (
         <div className="mt-8">
-          <RewardsTeaserCard availableUsd={rewards.availableUsd} />
+          <RewardsTeaserCard availablePoints={rewards.availablePoints} />
         </div>
       ) : null}
 

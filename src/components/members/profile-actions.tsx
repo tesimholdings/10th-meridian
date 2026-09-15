@@ -64,7 +64,7 @@ export function ProfileActions({
           ? "Added to Your Circle."
           : action === "remove"
             ? "Removed from Your Circle."
-            : "Removed from Index recommendations."
+            : "Removed from For you recommendations."
         : "Could not update the network.",
     );
     router.refresh();
@@ -92,7 +92,7 @@ export function ProfileActions({
             </button>
             {removedFromIndex ? null : (
               <button type="button" disabled={pending} onClick={() => void circle("remove-index")} className="min-h-10 text-left text-sm">
-                Remove from Index
+                Remove from For you
               </button>
             )}
           </div>

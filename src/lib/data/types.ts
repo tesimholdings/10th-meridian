@@ -78,6 +78,7 @@ export interface ProfileRecord {
   isDemo: boolean;
   initials: string;
   accent: string;
+  foundingMember?: boolean;
 }
 
 export interface ApplicationRecord {

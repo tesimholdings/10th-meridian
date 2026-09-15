@@ -11,7 +11,7 @@ import {
   shouldGrantCreditOnTransition,
   sumEarnedUsd,
 } from "@/lib/rewards/math";
-import { CREDIT_PER_SUCCESSFUL_REFERRAL_USD } from "@/lib/rewards/types";
+import { CREDIT_PER_SUCCESSFUL_REFERRAL_USD, POINTS_PER_SUCCESSFUL_REFERRAL } from "@/lib/rewards/types";
 import type {
   CreditLedgerEntry,
   MemberReferral,
@@ -59,7 +59,7 @@ function grantAdmissionCredit(state: RewardsState, referral: MemberReferral): Re
     amountUsd: incoming,
     kind: "referral_admission",
     referralId: referral.id,
-    memo: `Admitted through your referral. $${incoming.toLocaleString("en-US")} Meridian Credit.`,
+    memo: `Admitted through your referral. +${POINTS_PER_SUCCESSFUL_REFERRAL} pts ($${incoming.toLocaleString("en-US")} toward redemptions).`,
     createdAt: nowIso(),
     isDemo: true,
   };
@@ -260,7 +260,7 @@ export function requestRedemption(
       redeemed: Boolean(already),
     })
   ) {
-    return { ok: false, message: "Not enough Meridian Credit, or this reward is still locked." };
+    return { ok: false, message: "Not enough points, or this reward is still locked." };
   }
 
   if (item.fulfillment === "trip_stipend") {

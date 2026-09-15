@@ -98,6 +98,7 @@ describe("preview store", () => {
     resetPreviewStore();
     const before = viewerRewardsSnapshot();
     assert.equal(before.availableUsd, 1_000);
+    assert.equal(before.availablePoints, 10);
     assert.equal(before.code, "VOSS-10");
     addApplication({
       id: "app-voss-ref",
@@ -131,6 +132,7 @@ describe("preview store", () => {
     assert.equal(ok.ok, true);
     const after = viewerRewardsSnapshot();
     assert.equal(after.availableUsd, 2_000);
+    assert.equal(after.availablePoints, 20);
     assert.equal(after.earnedCredits, 2);
     setApplicationStatus({ id: "app-voss-ref", status: "active_member" });
     assert.equal(viewerRewardsSnapshot().availableUsd, 2_000);

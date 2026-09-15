@@ -25,8 +25,8 @@ export function profileCompletion(profile: ProfileRecord): number {
 }
 
 export function completionMessage(score: number): string {
-  if (score >= 90) return "The Index has enough to be precise.";
+  if (score >= 90) return "My Circle has enough to be precise.";
   if (score >= 70) return "Matching is useful. A few more fields will sharpen it.";
   if (score >= 40) return "The signal is faint. Completeness changes who appears next.";
-  return "Begin onboarding — the Index cannot invent what you have not said.";
+  return "Begin onboarding — My Circle cannot invent what you have not said.";
 }

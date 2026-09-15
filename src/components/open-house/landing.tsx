@@ -51,7 +51,7 @@ export function OpenHouseLanding({ access }: { access: AccessContext }) {
 
       <section className="safe-pad mx-auto grid max-w-6xl gap-8 py-16 md:grid-cols-3 md:py-24">
         {[
-          { t: "People first", d: "A private Index of who you should know next — never a public feed." },
+          { t: "People first", d: "A private circle of who you should know next — never a public feed." },
           { t: "When paths cross", d: "Crossings when you land in the same city. City-level only." },
           { t: "A closed table", d: "Ten new members a month. Lifetime membership, once." },
         ].map((b) => (

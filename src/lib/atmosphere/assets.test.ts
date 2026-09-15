@@ -27,6 +27,8 @@ const motionClasses = [
   "reward-unlock",
   "reward-ring",
   "reward-sheet",
+  "cursor-aura",
+  "circle-person",
 ];
 
 const stockHosts = ["unsplash.com", "pexels.com", "pixabay.com", "shutterstock.com"];
@@ -64,8 +66,10 @@ describe("original House atmosphere", () => {
     assert.match(home, /campaignSrc\("homeNetwork"\)/);
     const crossings = readFileSync("src/app/member/crossings/page.tsx", "utf8");
     assert.match(crossings, /campaignSrc\("crossings"\)/);
-    const index = readFileSync("src/app/member/index/page.tsx", "utf8");
-    assert.equal(index.includes('scene="yacht"'), false);
-    assert.match(index, /campaignSrc\("homeIndex"\)/);
+    const circle = readFileSync("src/app/member/circle/page.tsx", "utf8");
+    assert.equal(circle.includes('scene="yacht"'), false);
+    assert.match(circle, /campaignSrc\("homeIndex"\)/);
+    const indexRedirect = readFileSync("src/app/member/index/page.tsx", "utf8");
+    assert.match(indexRedirect, /\/member\/circle/);
   });
 });

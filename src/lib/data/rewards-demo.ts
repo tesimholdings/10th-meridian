@@ -48,7 +48,7 @@ const admissionCredit: CreditLedgerEntry = {
   amountUsd: CREDIT_PER_SUCCESSFUL_REFERRAL_USD,
   kind: "referral_admission",
   referralId: credited.id,
-  memo: "Admitted through your referral. $1,000 Meridian Credit.",
+  memo: "Admitted through your referral. +10 pts ($1,000 toward redemptions).",
   createdAt: "2026-09-02T14:00:00.000Z",
   isDemo: true,
 };

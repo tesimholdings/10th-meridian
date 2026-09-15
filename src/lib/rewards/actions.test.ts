@@ -10,17 +10,18 @@ import {
   submitReferral,
   withdrawReferral,
 } from "@/lib/rewards/actions";
-import { availableBalanceUsd, creditAlreadyGrantedForReferral } from "@/lib/rewards/math";
+import { availableBalanceUsd, creditAlreadyGrantedForReferral, pointsFromUsd } from "@/lib/rewards/math";
 import type { RewardsState } from "@/lib/rewards/types";
 
 const memberId = "demo-01";
 
 describe("Referral Rewards actions", () => {
-  it("seeds one credited referral and a $1,000 available balance", () => {
+  it("seeds one credited referral and a 10-point available balance", () => {
     const seed = seedRewardsState();
     assert.equal(seed.referrals.filter((r) => r.status === "credited").length, 1);
     assert.equal(seed.referrals.filter((r) => r.status === "applied").length, 1);
     assert.equal(availableBalanceUsd(seed.ledger, seed.reservations), 1_000);
+    assert.equal(pointsFromUsd(availableBalanceUsd(seed.ledger, seed.reservations)), 10);
   });
 
   it("credits exactly once when a submitted referral is admitted", () => {

@@ -2,7 +2,7 @@ import { PREPARED_DOMAIN } from "@/lib/copy/community";
 import {
   NAV_CROSSINGS,
   NAV_HOME,
-  NAV_INDEX,
+  NAV_CIRCLE,
   NAV_MESSAGES,
   NAV_PROFILE,
   REFERRAL_REWARDS,
@@ -29,7 +29,9 @@ export const brand = {
   meridian100:
     "A wider field of relevance — ranked, never invented.",
   askLine: "Ask the Meridian. Who can help — and who you should know next.",
-  circleLine: "Your Circle is chosen by you. The Index is suggested. Introductions are human.",
+  circleLine: "Your Circle is chosen by you. For you is suggested. Introductions are human.",
+  meridianSize:
+    "Meridian 10 is your immediate circle of ten. Slide toward 100 to widen the recommended set.",
   solicitingLine: "Absolutely no soliciting. Ban with no refund.",
   preparedDomain: PREPARED_DOMAIN,
 } as const;
@@ -42,7 +44,7 @@ export const publicNav = [
 
 export const memberNav = [
   { href: "/member/home", label: NAV_HOME, id: "home" },
-  { href: "/member/index", label: NAV_INDEX, id: "index" },
+  { href: "/member/circle", label: NAV_CIRCLE, id: "circle" },
   { href: "/member/messages", label: NAV_MESSAGES, id: "messages" },
   { href: "/member/crossings", label: NAV_CROSSINGS, id: "crossings" },
   { href: "/member/profile", label: NAV_PROFILE, id: "profile" },
@@ -50,7 +52,7 @@ export const memberNav = [
 
 export const memberSecondary = [
   { href: "/member/notifications", label: "Notifications" },
-  { href: "/member/index?tab=circle", label: YOUR_CIRCLE },
+  { href: "/member/circle?tab=circle", label: YOUR_CIRCLE },
   { href: "/member/rewards", label: REFERRAL_REWARDS },
   { href: "/member/events", label: "Events" },
   { href: "/member/settings", label: "Account settings" },
