@@ -152,6 +152,9 @@ describe("original House atmosphere", () => {
     const shell = readFileSync("src/components/member/member-shell.tsx", "utf8");
     assert.match(shell, /member-frame/);
     assert.equal(shell.includes("max-w-3xl"), false);
+    const rail = readFileSync("src/components/member/desktop-rail.tsx", "utf8");
+    assert.match(rail, /liquid-dark/);
+    assert.match(rail, /surface="dark"/);
     const home = readFileSync("src/app/member/home/page.tsx", "utf8");
     assert.equal(home.includes("bg-white"), false);
     const landing = readFileSync("src/components/open-house/landing.tsx", "utf8");

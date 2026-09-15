@@ -25,7 +25,7 @@ export function BottomNav({ unreadMessages = 0 }: { unreadMessages?: number }) {
               <Link
                 href={item.href}
                 className={`pressable relative flex min-h-14 flex-col items-center justify-center gap-1 text-[11px] ${
-                  active ? "text-[var(--navy)] font-medium" : "text-[var(--ivory-dim)]"
+                  active ? "text-[#faf8f2] font-medium" : "text-[#efe6d4]/55"
                 }`}
               >
                 {active ? (
@@ -34,7 +34,7 @@ export function BottomNav({ unreadMessages = 0 }: { unreadMessages?: number }) {
                 <span className="relative">
                   <NavIcon id={item.id} active={Boolean(active)} />
                   {item.id === "messages" && unreadMessages > 0 ? (
-                    <span className="absolute -right-2 -top-1 min-w-4 rounded-full bg-[var(--blue)] px-1 text-center text-[9px] text-white">
+                    <span className="absolute -right-2 -top-1 min-w-4 rounded-full bg-[var(--gold)] px-1 text-center text-[9px] text-[#092b45]">
                       {unreadMessages > 9 ? "9+" : unreadMessages}
                     </span>
                   ) : null}
