@@ -83,7 +83,9 @@ export function PublicHeader({
 
   return (
     <header
-      className={`safe-pad safe-top sticky top-0 z-40 transition-[background-color,backdrop-filter,border-color,color] duration-300 ${
+      className={`safe-pad safe-top z-40 transition-[background-color,backdrop-filter,border-color,color] duration-300 ${
+        overlay ? "fixed inset-x-0 top-0" : "sticky top-0"
+      } ${
         paper
           ? "border-b border-[rgba(9,43,69,0.08)] bg-[rgba(250,248,242,0.88)] text-[var(--navy)] backdrop-blur-md"
           : "border-b border-transparent bg-transparent text-[#faf8f2]"

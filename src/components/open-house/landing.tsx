@@ -54,11 +54,15 @@ function Hero() {
         }}
       />
       <div className="relative z-10 mx-auto flex min-h-[76svh] max-w-6xl flex-col justify-end px-[max(1.25rem,env(safe-area-inset-left))] pb-16 pt-28 md:min-h-[90svh] md:pb-24">
-        <p className="text-[0.72rem] font-medium tracking-[0.18em] text-[#faf8f2]">{OPEN_HOUSE_EYEBROW}</p>
-        <h1 className="oh-title mt-4 max-w-3xl font-serif text-[2.6rem] leading-[0.96] text-[#faf8f2] md:text-6xl">
+        <p className="text-[0.72rem] font-medium tracking-[0.18em] text-[#faf8f2] [text-shadow:0_1px_12px_rgba(9,43,69,0.35)]">
+          {OPEN_HOUSE_EYEBROW}
+        </p>
+        <h1 className="oh-title mt-4 max-w-3xl font-serif text-[2.6rem] leading-[0.96] text-[#faf8f2] [text-shadow:0_2px_24px_rgba(9,43,69,0.35)] md:text-6xl">
           {OPEN_HOUSE_HEADLINE}
         </h1>
-        <p className="mt-5 max-w-md text-base text-[#faf8f2]/90">{OPEN_HOUSE_LEDE}</p>
+        <p className="mt-5 max-w-md text-base text-[#faf8f2]/90 [text-shadow:0_1px_12px_rgba(9,43,69,0.35)]">
+          {OPEN_HOUSE_LEDE}
+        </p>
         <div className="mt-8 flex flex-wrap gap-3">
           <Button href="/apply">{APPLY_LABEL}</Button>
           <Button href="#the-house" variant="ghost">

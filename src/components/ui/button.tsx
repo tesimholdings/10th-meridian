@@ -8,7 +8,7 @@ const styles: Record<Variant, string> = {
   navy:
     "bg-[#092b45] text-[#faf8f2] border border-[#092b45] hover:bg-[#0c3858]",
   ghost:
-    "bg-transparent text-ivory border border-[rgba(250,248,242,0.45)] hover:border-[#c4a264]",
+    "bg-[rgba(250,248,242,0.16)] text-[#faf8f2] border border-[rgba(250,248,242,0.7)] hover:border-[#c4a264]",
   ivory:
     "bg-[#faf8f2] text-[#092b45] border border-[#faf8f2] hover:bg-white",
   quiet:
