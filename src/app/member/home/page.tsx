@@ -7,9 +7,6 @@ import { getPreviewStore, unreadHouseNotifications, unreadTotal, viewerProfile, 
 import { completionMessage } from "@/lib/profile/completion";
 import { formatHumanDateRange } from "@/lib/crossings/format";
 import { formatEventWhen, isEventTonight } from "@/lib/events/when";
-import { HiggsfieldSlot } from "@/components/brand/higgsfield-slot";
-import { stillForListedExperience, occasionCredit } from "@/lib/atmosphere/campaign";
-import { campaignSrc, journeyStillSrc } from "@/lib/atmosphere/resolve-campaign";
 import { visibleJourneysFor } from "@/lib/crossings/service";
 import { RewardsTeaserCard } from "@/components/rewards/teaser-card";
 import { formatPoints } from "@/lib/rewards/math";
@@ -65,7 +62,7 @@ export default async function MemberHomePage() {
         <p className="mt-4 text-sm text-[var(--ivory-dim)]">{completionMessage(viewer.completion)}</p>
       ) : null}
 
-      <div className="mt-6 flex gap-3 overflow-x-auto hide-scroll">
+      <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
         <RailChip href="/member/messages" label="Messages" value={`${unreadTotal()} new`} />
         <RailChip href="/member/crossings" label="Next city" value={trip ? trip.destinationCity : "Add a trip"} crossings />
         <RailChip href="/member/events" label={eventChipLabel} value={event?.city ?? "Experiences"} />
@@ -75,40 +72,31 @@ export default async function MemberHomePage() {
       </div>
 
       {trip ? (
-        <Link href={`/member/crossings/${trip.id}`} className="mt-8 block overflow-hidden rounded-3xl">
-          <HiggsfieldSlot
-            src={journeyStillSrc(trip)}
-            aspect="aspect-[16/8]"
-            credit={occasionCredit("Crossing", trip.destinationCity)}
-          />
-          <div className="pt-4">
-            <p className="text-sm text-[var(--ivory-dim)]">Upcoming trip</p>
-            <p className="mt-1 font-serif text-3xl">{trip.destinationCity}</p>
-            <p className="mt-1 text-sm text-[var(--navy-soft)]">
-              {formatHumanDateRange(trip.arrivalDate, trip.departureDate)}
-            </p>
-          </div>
-        </Link>
+        <CrossingsEntryLink
+          href={`/member/crossings/${trip.id}`}
+          className="surface pressable mt-8 block rounded-3xl px-5 py-6 md:px-7 md:py-7"
+        >
+          <p className="text-xs tracking-[0.18em] uppercase text-[var(--ivory-dim)]">Your Crossing</p>
+          <p className="mt-3 font-serif text-4xl">{trip.destinationCity}</p>
+          <p className="mt-2 text-sm text-[var(--navy-soft)]">
+            {formatHumanDateRange(trip.arrivalDate, trip.departureDate)}
+          </p>
+          <p className="mt-5 text-sm text-[var(--gold)]">Open this trip</p>
+        </CrossingsEntryLink>
       ) : (
-        <CrossingsEntryLink href="/member/crossings/new" className="surface mt-8 block rounded-3xl px-5 py-5 text-[var(--navy)]">
+        <CrossingsEntryLink href="/member/crossings/new" className="surface pressable mt-8 block rounded-3xl px-5 py-6 text-[var(--navy)]">
           Add a trip
         </CrossingsEntryLink>
       )}
 
       {event ? (
-        <Link href={`/member/events/${event.id}`} className="mt-8 block overflow-hidden rounded-3xl">
-          <HiggsfieldSlot
-            src={campaignSrc(stillForListedExperience(event))}
-            aspect="aspect-[16/8]"
-            credit={occasionCredit(event.title, event.city)}
-          />
-          <div className="pt-4">
-            <p className="text-sm text-[var(--ivory-dim)]">Upcoming experience</p>
-            <p className="font-serif text-3xl">{event.title}</p>
-            <p className="mt-1 text-sm text-[var(--navy-soft)]">
-              {formatEventWhen(event.startsAt, event.city)} · {event.city}
-            </p>
-          </div>
+        <Link href={`/member/events/${event.id}`} className="surface pressable mt-8 block rounded-3xl px-5 py-6 md:px-7 md:py-7">
+          <p className="text-xs tracking-[0.18em] uppercase text-[var(--ivory-dim)]">Upcoming experience</p>
+          <p className="mt-3 font-serif text-4xl">{event.title}</p>
+          <p className="mt-2 text-sm text-[var(--navy-soft)]">
+            {formatEventWhen(event.startsAt, event.city)} · {event.city}
+          </p>
+          <p className="mt-5 text-sm text-[var(--gold)]">Open this experience</p>
         </Link>
       ) : null}
 
@@ -152,7 +140,7 @@ function RailChip({
 }) {
   const ChipLink = crossings ? CrossingsEntryLink : Link;
   return (
-    <ChipLink href={href} className="surface min-w-[8.5rem] rounded-2xl px-4 py-3">
+    <ChipLink href={href} className="surface block w-full min-w-0 rounded-2xl px-4 py-3">
       <p className="text-xs text-[var(--ivory-dim)]">{label}</p>
       <p className="mt-1 text-sm font-medium">{value}</p>
     </ChipLink>

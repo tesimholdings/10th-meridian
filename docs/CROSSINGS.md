@@ -19,7 +19,7 @@ Crossings is reachable from:
 
 1. `/` → Reviewer tools → **Preview as member**
 2. Home → **Crossings** card
-3. Read the cinematic landing, upcoming Paris journey, atlas (no precise pins), quiet notices
+3. Read the cinematic landing, upcoming Paris journey, city-presence list (no map, no precise pins), quiet notices
 4. **Set Your Coordinates** (or open the existing Paris journey)
 5. Destination match carousel → open **A Crossing** sheet → propose coffee + dates (or decline/reschedule an incoming request)
 6. Accept the DEMO request if needed → **Open conversation** (Stream stub / DEMO channel) and **Download .ics**

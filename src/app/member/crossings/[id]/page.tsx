@@ -54,8 +54,8 @@ export default async function JourneyPage({ params }: { params: Promise<{ id: st
       <section className="mt-10">
         <p className="label">People in this city</p>
         <p className="mt-2 max-w-xl text-sm text-ivory-muted">
-          Locals, fellow travelers, City Hosts, and My Circle connections in this city. Never ranked by
-          wealth, popularity, or how often someone writes.
+          A city-level list — locals, fellow travelers, City Hosts, and My Circle. Never a map, never
+          ranked by wealth, popularity, or how often someone writes.
         </p>
         <div className="mt-4">
           <CityAtlas journey={journey} matches={matches} />
