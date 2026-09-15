@@ -10,20 +10,29 @@ import {
 describe("city presence", () => {
   it("counts people by role without inventing geography", () => {
     const summary = summarizeCityPresence([
-      { kind: "local" },
-      { kind: "local" },
-      { kind: "fellow_traveler" },
-      { kind: "city_host" },
-      { kind: "meridian" },
+      { kind: "local", inMeridian10: true, inMeridian100: true },
+      { kind: "local", inMeridian10: false, inMeridian100: false },
+      { kind: "fellow_traveler", inMeridian10: false, inMeridian100: true },
+      { kind: "city_host", inMeridian10: false, inMeridian100: false },
+      { kind: "meridian", inMeridian10: false, inMeridian100: true },
     ]);
-    assert.equal(summary.total, 5);
+    assert.equal(summary.total, 4);
     assert.equal(summary.local, 2);
     assert.equal(summary.fellow_traveler, 1);
     assert.equal(summary.city_host, 1);
     assert.equal(summary.meridian, 1);
+    assert.equal(summary.inCity.every((row) => row.kind !== "meridian"), true);
     assert.equal(PRESENCE_KIND_LABELS.local, "Local");
     assert.equal(presenceLine("fellow_traveler", "Chicago"), "Also traveling here");
     assert.equal(presenceLine("local", "Paris"), "Lives in Paris");
+    const withCircle = summarizeCityPresence(
+      [
+        { kind: "local", inMeridian10: true, target: { id: "a" } },
+        { kind: "fellow_traveler", inMeridian10: false, target: { id: "b" } },
+      ],
+      ["b"],
+    );
+    assert.equal(withCircle.meridian, 1);
   });
 
   it("replaces the fake atlas with a readable city list", () => {

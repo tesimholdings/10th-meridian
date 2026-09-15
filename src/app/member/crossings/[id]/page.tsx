@@ -58,7 +58,11 @@ export default async function JourneyPage({ params }: { params: Promise<{ id: st
           ranked by wealth, popularity, or how often someone writes.
         </p>
         <div className="mt-4">
-          <CityAtlas journey={journey} matches={matches} />
+          <CityAtlas
+            journey={journey}
+            matches={matches}
+            circleIds={store.circle.filter((e) => e.ownerId === viewer.id).map((e) => e.memberId)}
+          />
         </div>
         <div className="mt-6">
           <MatchCarousel matches={matches} journeyId={journey.id} canMutate={canMutate} />
