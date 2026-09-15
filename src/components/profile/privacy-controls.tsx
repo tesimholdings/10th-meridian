@@ -7,6 +7,7 @@ import type { ProfilePrivacy } from "@/lib/data/types";
 const fields: { key: keyof ProfilePrivacy; label: string }[] = [
   { key: "website", label: "Website" },
   { key: "linkedin", label: "LinkedIn" },
+  { key: "socials", label: "Other social connects" },
   { key: "gallery", label: "Work / portfolio gallery" },
   { key: "offers", label: "Offers" },
   { key: "needs", label: "Needs" },

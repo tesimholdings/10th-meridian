@@ -4,7 +4,9 @@ import { computeMatchIndex } from "@/lib/matching/service";
 import { validateReferralCode } from "@/lib/referrals/validate";
 import {
   addApplication,
+  connectViewerSocial,
   createReferral,
+  disconnectViewerSocial,
   getPreviewStore,
   recordFeedback,
   resetPreviewStore,
@@ -12,6 +14,7 @@ import {
   setApplicationStatus,
   setCuration,
   setWeights,
+  viewerProfile,
   viewerRewardsSnapshot,
 } from "@/lib/preview/store";
 
@@ -136,6 +139,20 @@ describe("preview store", () => {
     assert.equal(after.earnedCredits, 2);
     setApplicationStatus({ id: "app-voss-ref", status: "active_member" });
     assert.equal(viewerRewardsSnapshot().availableUsd, 2_000);
+  });
+
+  it("stores DEMO social connects on the viewer without claiming OAuth", () => {
+    resetPreviewStore();
+    const connected = connectViewerSocial({
+      provider: "instagram",
+      handle: "@yourname",
+      url: "https://instagram.com/yourname",
+      connected: true,
+      mode: "demo",
+    });
+    assert.ok(connected?.socials.some((row) => row.provider === "instagram" && row.mode === "demo"));
+    disconnectViewerSocial("instagram");
+    assert.equal(viewerProfile().socials.some((row) => row.provider === "instagram"), false);
   });
 
   it("revoked referrals fail the same as unknown codes", () => {

@@ -1,6 +1,8 @@
 import type { ProfilePhoto, ProfilePrivacy } from "@/lib/network/types";
+import type { JoinIntentId } from "@/lib/onboarding/intents";
+import type { SocialConnection } from "@/lib/onboarding/socials";
 
-export type { ProfilePhoto, ProfilePrivacy };
+export type { ProfilePhoto, ProfilePrivacy, SocialConnection, JoinIntentId };
 
 export const APP_ROLES = [
   "guest",
@@ -53,6 +55,9 @@ export interface ProfileRecord {
   bio: string;
   website?: string;
   linkedin?: string;
+  intents: JoinIntentId[];
+  intentOther?: string;
+  socials: SocialConnection[];
   gallery: ProfilePhoto[];
   privacy: ProfilePrivacy;
   attendingEventIds: string[];
@@ -95,6 +100,9 @@ export interface ApplicationRecord {
   bio: string;
   website?: string;
   linkedin?: string;
+  intents?: JoinIntentId[];
+  intentOther?: string;
+  socials?: SocialConnection[];
   industries: string[];
   interests: string[];
   goals: string[];

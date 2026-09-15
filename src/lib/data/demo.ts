@@ -9,6 +9,7 @@ import type {
   ReferralRecord,
 } from "@/lib/data/types";
 import { DEFAULT_PROFILE_PRIVACY } from "@/lib/network/types";
+import { connectionFromLegacy } from "@/lib/onboarding/socials";
 import { demoGalleryFor } from "@/lib/storage/gallery";
 
 /**
@@ -35,14 +36,22 @@ const accent = [
 ];
 
 function p(
-  partial: Omit<ProfileRecord, "isDemo" | "completion" | "visibility" | "gallery" | "privacy" | "attendingEventIds"> & {
+  partial: Omit<
+    ProfileRecord,
+    "isDemo" | "completion" | "visibility" | "gallery" | "privacy" | "attendingEventIds" | "intents" | "socials"
+  > & {
     completion?: number;
     gallery?: ProfileRecord["gallery"];
-    privacy?: ProfileRecord["privacy"];
+    privacy?: Partial<ProfileRecord["privacy"]>;
     attendingEventIds?: string[];
     visibility?: ProfileRecord["visibility"];
+    intents?: ProfileRecord["intents"];
+    intentOther?: string;
+    socials?: ProfileRecord["socials"];
   },
 ): ProfileRecord {
+  const socials =
+    partial.socials ?? connectionFromLegacy({ website: partial.website, linkedin: partial.linkedin });
   const base = {
     visibility: partial.visibility ?? "members",
     completion: partial.completion ?? 78,
@@ -50,6 +59,8 @@ function p(
     gallery: partial.gallery ?? demoGalleryFor(partial.id, partial.accent),
     privacy: { ...DEFAULT_PROFILE_PRIVACY, ...partial.privacy },
     attendingEventIds: partial.attendingEventIds ?? [],
+    intents: partial.intents ?? [],
+    socials,
   };
   return {
     ...partial,
@@ -57,6 +68,8 @@ function p(
     gallery: partial.gallery ?? base.gallery,
     privacy: { ...DEFAULT_PROFILE_PRIVACY, ...partial.privacy },
     attendingEventIds: partial.attendingEventIds ?? [],
+    intents: partial.intents ?? [],
+    socials,
     isDemo: true,
   };
 }
@@ -88,6 +101,7 @@ export const demoProfiles: ProfileRecord[] = [
     valuedPeople: ["builders who finish"],
     valuedOpportunities: ["small rooms with high signal"],
     preferredConnectionTypes: ["peer", "collaborator"],
+    intents: ["travel-crossings", "meet-friends", "host-table"] as ProfileRecord["intents"],
     geography: ["Chicago", "Lisbon"],
     travel: ["Q4 Europe"],
     causes: ["apprenticeship"],
@@ -109,7 +123,7 @@ export const demoProfiles: ProfileRecord[] = [
     bio: "Looks for founders who treat capital as a tool, not a personality.",
     website: "https://example.test/latitude",
     attendingEventIds: ["evt-demo-1"],
-    privacy: { website: true, linkedin: false, gallery: true, offers: true, needs: true, strengths: true, events: true },
+    privacy: { website: true, linkedin: false, socials: true, gallery: true, offers: true, needs: true, strengths: true, events: true },
     industries: ["venture", "climate"],
     interests: ["cartography", "night swimming", "archives"],
     values: ["patience", "clarity"],
@@ -330,7 +344,7 @@ export const demoProfiles: ProfileRecord[] = [
     timezone: "Europe/Paris",
     bio: "Programs evenings that do not need a recap.",
     attendingEventIds: ["evt-demo-2"],
-    privacy: { website: false, linkedin: false, gallery: true, offers: true, needs: false, strengths: true, events: true },
+    privacy: { website: false, linkedin: false, socials: true, gallery: true, offers: true, needs: false, strengths: true, events: true },
     industries: ["culture", "fashion"],
     interests: ["perfume", "archives", "piano"],
     values: ["mystery", "manners"],

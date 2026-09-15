@@ -10,6 +10,7 @@ import { isInCircle, isRemovedFromIndex } from "@/lib/network/circle";
 import { mutualConnections } from "@/lib/network/mutual";
 import { formatHumanDateTime } from "@/lib/crossings/format";
 import { FoundingBadge } from "@/components/members/founding-badge";
+import { SocialLinks } from "@/components/onboarding/social-links";
 
 export const metadata = { title: "Member", robots: { index: false, follow: false } };
 
@@ -131,6 +132,14 @@ export default async function MemberProfilePage({
             {profile.offers.length ? <Item label="Offers" value={profile.offers.join(" · ")} /> : null}
             {profile.needs.length ? <Item label="Needs" value={profile.needs.join(" · ")} /> : null}
             {profile.website ? <Item label="Website" value={profile.website} /> : null}
+            {profile.socials?.length ? (
+              <div>
+                <dt className="text-sm text-[var(--ivory-dim)]">Connected</dt>
+                <dd className="mt-1">
+                  <SocialLinks socials={profile.socials} />
+                </dd>
+              </div>
+            ) : null}
           </dl>
         ) : null}
       </div>

@@ -6,7 +6,7 @@ A private, invitation-only network built around relevance, trust, contribution, 
 
 This repository is a **reviewable foundation** — not a production launch. Do not deploy or publish live membership except the approved lifetime amount.
 
-This wave adds **Referral Rewards** (points-first balance + unlock cards + reserve) on top of rich profiles, My Circle, Open House, notifications, and DMs. Bottom nav stays Home · **My Circle** · Messages · Crossings · Profile.
+This wave adds an **experiential onboarding** flow (cinematic apply + first-run profile) with DEMO social connects, on top of Referral Rewards, rich profiles, My Circle, Open House, notifications, and DMs. Bottom nav stays Home · **My Circle** · Messages · Crossings · Profile.
 
 ## Stack
 
@@ -48,7 +48,7 @@ npm test         # My Circle, Open House TZ, Circle, privacy, notifications, cop
 4. Member product: Home, **My Circle** (never “Matches”), Your Circle, Ask the Meridian, directory + rich profiles, Messages (DMs + Channels), Crossings, Events, Billing
 5. Meridian 10 / 100 hybrid matching (structured + complementarity + diversity + feedback + curation)
 6. Actionable admin: admissions cap + override log, live weights, Open House schedule, referral issue/revoke, curated promote/suppress
-7. SQL migrations through `0007_profiles_network.sql`, `.env.example`, `SETUP.md`, `TEST_REPORT.md`
+7. SQL migrations through `0008_onboarding_socials.sql`, `.env.example`, `SETUP.md`, `TEST_REPORT.md`
 8. **Crossings** — Set Your Coordinates, A Crossing, Open a Table, City Hosts, City Notes
 9. Notifications center + preferences; community standard: absolutely no soliciting
 10. Approved **lifetime $10,000**. Monthly later — not built. Domain prep **tenmeridian.com** (not purchased)
@@ -70,6 +70,8 @@ npm test         # My Circle, Open House TZ, Circle, privacy, notifications, cop
 13. Own Profile — portrait first, **Referral Rewards** card in points, Edit opens grouped settings
 14. Legal → Community: **Absolutely no soliciting. Ban with no refund.**
 15. Referral Rewards — `/member/rewards`: **10 pts** seeded (10 pts = $1,000), unlock cards (trip/gold = 10 pts, Founders Circle = 30 pts), reserve gold, request trip credit, submit a referral (Preview: advance → Admitted credits **+10 pts** once)
+16. **Apply** (`/apply`) — six-chapter experience: Welcome · Why you’re here · Who you are · Connect · Offer & need · Threshold. Progress + editorial stills (not members). Every field has a placeholder example + helper. Multi-select intents + Other. Social tiles: LinkedIn, Instagram, Facebook, X, plus optional website / WhatsApp / Telegram / YouTube. **DEMO connect** opens a modal, pastes a handle/URL into session draft, never claims live OAuth unless both client id + secret exist. Review + terms + **Submit application**
+17. **Member onboarding** (`/onboarding`) — same chapters, writes to DEMO profile store, **Continue into the house** → `/member/home`. Profile Edit still uses the compact chapter form. Own profile shows connected socials
 
 See [REFERRAL_REWARDS.md](./REFERRAL_REWARDS.md) and [ASTRA_AUDIT_FIXES.md](./ASTRA_AUDIT_FIXES.md).
 

@@ -27,6 +27,11 @@ const motionClasses = [
   "reward-unlock",
   "reward-ring",
   "reward-sheet",
+  "experience-still-art",
+  "experience-progress-fill",
+  "chapter-in",
+  "intent-chip",
+  "experience-modal-card",
   "cursor-aura",
   "circle-person",
 ];
