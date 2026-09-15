@@ -24,6 +24,9 @@ const motionClasses = [
   "pressable",
   "tab-slide",
   "sheet-motion",
+  "reward-unlock",
+  "reward-ring",
+  "reward-sheet",
 ];
 
 const stockHosts = ["unsplash.com", "pexels.com", "pixabay.com", "shutterstock.com"];

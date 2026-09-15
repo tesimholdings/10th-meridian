@@ -121,6 +121,28 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
 }
 
+.lock-gold {
+  background:
+    radial-gradient(72% 48% at 50% 22%, rgba(196, 162, 100, 0.2), transparent 58%),
+    radial-gradient(90% 70% at 50% 110%, rgba(196, 162, 100, 0.08), transparent 52%),
+    linear-gradient(180deg, #0c0d0f 0%, #070809 58%, #050506 100%);
+  color: var(--ivory);
+}
+
+.lock-gold-glow {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(42% 28% at 50% 18%, rgba(212, 175, 106, 0.18), transparent 70%),
+    linear-gradient(180deg, rgba(196, 162, 100, 0.06), transparent 36%);
+}
+
+.lock-gold-grain {
+  opacity: 0.46;
+  mix-blend-mode: overlay;
+}
+
 .safe-bottom {
   padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
 }
@@ -488,6 +510,29 @@ body {
   transform: scale(1.04);
 }
 
+@keyframes reward-unlock {
+  0% { transform: scale(0.98); }
+  55% { transform: scale(1.015); }
+  100% { transform: scale(1); }
+}
+
+.reward-unlock {
+  animation: reward-unlock 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.reward-ring {
+  transition: stroke-dasharray 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reward-sheet {
+  animation: sheet-up 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.house-light .house-light-btn {
+  color: var(--navy);
+  border-color: var(--line-strong);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .slow-drift,
   .pulse-gold,
@@ -509,7 +554,10 @@ body {
   .stagger-in,
   .pressable,
   .tab-slide,
-  .sheet-motion {
+  .sheet-motion,
+  .reward-unlock,
+  .reward-ring,
+  .reward-sheet {
     animation: none !important;
     transition: none !important;
   }

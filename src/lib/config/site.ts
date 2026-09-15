@@ -5,6 +5,7 @@ import {
   NAV_INDEX,
   NAV_MESSAGES,
   NAV_PROFILE,
+  REFERRAL_REWARDS,
   YOUR_CIRCLE,
 } from "@/lib/copy/ui";
 
@@ -50,6 +51,7 @@ export const memberNav = [
 export const memberSecondary = [
   { href: "/member/notifications", label: "Notifications" },
   { href: "/member/index?tab=circle", label: YOUR_CIRCLE },
+  { href: "/member/rewards", label: REFERRAL_REWARDS },
   { href: "/member/events", label: "Events" },
   { href: "/member/settings", label: "Account settings" },
   { href: "/member/settings#billing", label: "Billing" },

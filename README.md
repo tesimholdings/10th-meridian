@@ -6,7 +6,7 @@ A private, invitation-only network built around relevance, trust, contribution, 
 
 This repository is a **reviewable foundation** — not a production launch. Do not deploy or publish live membership except the approved lifetime amount.
 
-This wave adds **rich profiles**, **Your Circle**, a full **Open House** site, **visitor-local Open House hours**, a **notifications center**, and **direct messages**. Bottom nav: Home · **Index** · Messages · Crossings · Profile.
+This wave adds **Referral Rewards** (Robinhood-style balance + unlock cards + reserve) on top of rich profiles, Your Circle, Open House, notifications, and DMs. Bottom nav stays Home · **Index** · Messages · Crossings · Profile.
 
 ## Stack
 
@@ -37,7 +37,7 @@ Or set `OPEN_HOUSE_FORCE=open` in `.env.local`.
 
 ```bash
 npm run build    # production build
-npm test         # Index, Open House TZ, Circle, privacy, notifications, copy
+npm test         # Index, Open House TZ, Circle, privacy, notifications, copy, Referral Rewards
 ```
 
 ## What this PR includes
@@ -55,7 +55,7 @@ npm test         # Index, Open House TZ, Circle, privacy, notifications, copy
 
 ## Reviewer click-through (Stefan / Astra)
 
-1. `/` lock — editorial yacht-wake / mobile water hero (not members), short headline, countdown, **Remind me**, Sign in
+1. `/` lock — grainy black-and-gold field only (no campaign/yacht photo), short headline, countdown, **Remind me**, Sign in
 2. Reviewer tools → **Force Open House** → hero, three benefits, experiences, **$10,000 lifetime**, no-soliciting → **Walk the house**
 3. Home — greeting, next trip / experience, three useful connections
 4. Index — search / Ask; tabs For you · Your Circle · All members; one reason + city; Message + Circle
@@ -64,8 +64,11 @@ npm test         # Index, Open House TZ, Circle, privacy, notifications, copy
 7. Messages inbox — DMs + Channels, last-message preview, unread; Inbox drawer: Escape + focus trap
 8. Notifications — compact rows, timestamps, “added you to their Circle”, Crossing deep-link
 9. Crossings — **Add a trip**; empty city/country cannot advance; timezone from destination; requests show person / meeting / dates
-10. Own Profile — portrait first, Edit opens grouped settings
+10. Own Profile — portrait first, **Referral Rewards** card, Edit opens grouped settings
 11. Legal → Community: **Absolutely no soliciting. Ban with no refund.**
+12. Referral Rewards — `/member/rewards`: $1,000 seeded balance, unlock cards, reserve gold, request trip credit, submit a referral (Preview: advance → Admitted credits +$1,000 once)
+
+See [REFERRAL_REWARDS.md](./REFERRAL_REWARDS.md) and [ASTRA_AUDIT_FIXES.md](./ASTRA_AUDIT_FIXES.md).
 
 See [ASTRA_AUDIT_FIXES.md](./ASTRA_AUDIT_FIXES.md).
 

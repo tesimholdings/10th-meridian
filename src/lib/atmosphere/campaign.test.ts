@@ -32,7 +32,10 @@ describe("campaign still mapping", () => {
     const lock = readFileSync("src/components/lock/lock-screen.tsx", "utf8");
     assert.match(home, /EDITORIAL_CAPTION|campaignSrc\("homeIndex"\)/);
     assert.match(landing, /campaignSrc/);
-    assert.match(lock, /campaignSrc\("heroLandscape"\)/);
+    assert.equal(lock.includes("campaignSrc"), false);
+    assert.equal(lock.includes("/media/campaign"), false);
+    assert.equal(lock.includes("yacht"), false);
+    assert.match(lock, /lock-gold/);
     assert.equal(home.includes(campaign.nightlife), false);
     assert.equal(lock.includes(campaign.nightlife), false);
   });

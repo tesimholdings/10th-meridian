@@ -1,12 +1,9 @@
 import Link from "next/link";
 import { Wordmark } from "@/components/brand/logo";
-import { HeroStage } from "@/components/cinematic/hero-stage";
 import { Countdown } from "@/components/cinematic/countdown";
 import { Button } from "@/components/ui/button";
 import { brand } from "@/lib/config/site";
 import type { AccessDecision } from "@/lib/access/open-house";
-import { EDITORIAL_CAPTION } from "@/lib/atmosphere/campaign";
-import { campaignSrc } from "@/lib/atmosphere/resolve-campaign";
 
 export function LockScreen({
   decision,
@@ -16,12 +13,10 @@ export function LockScreen({
   referralEarly?: boolean;
 }) {
   return (
-    <HeroStage
-      caption={EDITORIAL_CAPTION}
-      src={campaignSrc("heroLandscape")}
-      mobileSrc={campaignSrc("heroMobile")}
-    >
-      <div className="safe-pad safe-top mx-auto flex min-h-dvh max-w-6xl flex-col justify-between pb-16 pt-4 md:py-16">
+    <div className="lock-gold relative min-h-dvh overflow-hidden text-ivory">
+      <div className="lock-gold-glow" aria-hidden />
+      <div className="grain lock-gold-grain" aria-hidden />
+      <div className="safe-pad safe-top relative z-10 mx-auto flex min-h-dvh max-w-6xl flex-col justify-between pb-16 pt-4 md:py-16">
         <header className="flex items-center justify-between">
           <Wordmark compact />
           <Link href="/sign-in" className="min-h-11 text-sm text-ivory">
@@ -55,6 +50,6 @@ export function LockScreen({
           </div>
         </footer>
       </div>
-    </HeroStage>
+    </div>
   );
 }

@@ -29,6 +29,15 @@ export default async function SettingsPage() {
           Open billing
         </a>
       </section>
+      <section className="mt-8">
+        <h2 className="font-serif text-2xl">Referral Rewards</h2>
+        <p className="mt-2 text-sm text-[var(--navy-soft)]">
+          Members only. $1,000 Meridian Credit for each person who joins through you and is admitted.
+        </p>
+        <a href="/member/rewards" className="mt-2 inline-flex min-h-11 items-center text-sm text-[var(--blue)]">
+          Open Referral Rewards
+        </a>
+      </section>
       <p className="mt-8 text-sm text-[var(--navy-soft)]">{SOLICITING_BAN}</p>
       <section className="mt-10">
         <p className="label">House notifications</p>

@@ -1,3 +1,11 @@
+# TEST_REPORT — Referral Rewards
+
+Date: 2026-09-14  
+Branch: `cursor/referral-rewards-4914`  
+Base: `cursor/astra-audit-fixes-e546`
+
+Adds unit coverage for credit math, reserve locking, admission → +$1,000 once, and catalog unlock thresholds (`src/lib/rewards/math.test.ts`, `src/lib/rewards/actions.test.ts`, preview-store admission hook).
+
 # TEST_REPORT — Astra audit redesign
 
 Date: 2026-09-14  

@@ -3,6 +3,7 @@ import { describe, it, beforeEach } from "node:test";
 import { computeMatchIndex } from "@/lib/matching/service";
 import { validateReferralCode } from "@/lib/referrals/validate";
 import {
+  addApplication,
   createReferral,
   getPreviewStore,
   recordFeedback,
@@ -11,6 +12,7 @@ import {
   setApplicationStatus,
   setCuration,
   setWeights,
+  viewerRewardsSnapshot,
 } from "@/lib/preview/store";
 
 describe("preview store", () => {
@@ -90,6 +92,48 @@ describe("preview store", () => {
       override: true,
     });
     assert.equal(forced.ok, true);
+  });
+
+  it("credits the member once when someone is admitted through their personal code", () => {
+    resetPreviewStore();
+    const before = viewerRewardsSnapshot();
+    assert.equal(before.availableUsd, 1_000);
+    assert.equal(before.code, "VOSS-10");
+    addApplication({
+      id: "app-voss-ref",
+      status: "under_review",
+      fullName: "J. Hale",
+      email: "j.hale@example.test",
+      city: "Chicago",
+      country: "United States",
+      timezone: "America/Chicago",
+      roleTitle: "Operator",
+      company: "Example",
+      bio: "SYNTHETIC application via member referral.",
+      industries: ["software"],
+      interests: ["design"],
+      goals: ["meet operators"],
+      strengths: ["product"],
+      offers: ["critiques"],
+      needs: ["counsel"],
+      valuedPeople: ["makers"],
+      valuedOpportunities: ["small rooms"],
+      preferredConnectionTypes: ["peer"],
+      referralCode: "VOSS-10",
+      discoverySource: "referral",
+      termsAgreed: true,
+      cohortMonth: "2026-10",
+      isDemo: true,
+      createdAt: "2026-09-14T12:00:00.000Z",
+      updatedAt: "2026-09-14T12:00:00.000Z",
+    });
+    const ok = setApplicationStatus({ id: "app-voss-ref", status: "active_member" });
+    assert.equal(ok.ok, true);
+    const after = viewerRewardsSnapshot();
+    assert.equal(after.availableUsd, 2_000);
+    assert.equal(after.earnedCredits, 2);
+    setApplicationStatus({ id: "app-voss-ref", status: "active_member" });
+    assert.equal(viewerRewardsSnapshot().availableUsd, 2_000);
   });
 
   it("revoked referrals fail the same as unknown codes", () => {
