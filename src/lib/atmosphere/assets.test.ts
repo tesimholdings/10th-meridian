@@ -169,7 +169,7 @@ describe("original House atmosphere", () => {
     assert.equal(shell.includes("max-w-3xl"), false);
     const rail = readFileSync("src/components/member/desktop-rail.tsx", "utf8");
     assert.match(rail, /liquid-dark/);
-    assert.match(rail, /surface="dark"/);
+    assert.match(rail, /FormalLockup/);
     const home = readFileSync("src/app/member/home/page.tsx", "utf8");
     assert.equal(home.includes("bg-white"), false);
     const landing = readFileSync("src/components/open-house/landing.tsx", "utf8");

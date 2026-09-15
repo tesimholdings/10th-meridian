@@ -77,6 +77,15 @@ describe("product naming and community copy", () => {
     assert.match(drafts, /composeDraftId/);
     const header = readFileSync("src/components/member/member-header.tsx", "utf8");
     assert.match(header, /createPortal/);
+    assert.match(header, /Wordmark/);
+    const logo = readFileSync("src/components/brand/logo.tsx", "utf8");
+    assert.match(logo, /FORMAL_LOCKUP_KNOCKOUT_SRC/);
+    assert.match(logo, /Tenth Meridian — Private Network/);
+    assert.equal(logo.includes("MeridianMark"), false);
+    assert.equal(logo.includes(">10th Meridian<"), false);
+    const rail = readFileSync("src/components/member/desktop-rail.tsx", "utf8");
+    assert.match(rail, /FormalLockup/);
+    assert.match(rail, /knockout/);
     const notes = readFileSync("src/components/crossings/city-notes-board.tsx", "utf8");
     assert.match(notes, /\{note\.city\}/);
     assert.match(notes, /\{note\.kind\}/);
