@@ -1,5 +1,5 @@
 import type { NextConfig } from "next";
-import { withSentryConfig } from "@sentry/nextjs";
+import { withSentryConfig } from "@sentry/nextjs/config";
 import { SENTRY_ORG, SENTRY_PROJECT } from "./src/lib/sentry/config";
 
 const nextConfig: NextConfig = {

@@ -1,4 +1,5 @@
 import * as Sentry from "@sentry/nextjs";
+import type { ErrorEvent } from "@sentry/core";
 
 export function captureRouteError(
   error: unknown,
@@ -14,11 +15,10 @@ export function captureRouteError(
 }
 
 /** Drop applicant / member PII that Sentry should never persist. */
-export function scrubSentryEvent<T extends { user?: { id?: string } | null; request?: { data?: unknown; cookies?: unknown } }>(
-  event: T,
-): T {
+export function scrubSentryEvent(event: ErrorEvent): ErrorEvent {
   if (event.user) {
-    event.user = event.user.id ? { id: event.user.id } : null;
+    const id = event.user.id;
+    event.user = id === undefined ? undefined : { id: String(id) };
   }
   if (event.request) {
     event.request.data = undefined;
