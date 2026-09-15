@@ -2,21 +2,20 @@
 
 import { useEffect, useRef, useState } from "react";
 
-export function HeroMedia({
-  src,
-  mobileSrc,
+export function EditorialFilm({
+  poster,
   videoSrc,
+  className = "aspect-[16/10] w-full",
   pauseLabel = "Pause film",
   playLabel = "Play film",
 }: {
-  src: string;
-  mobileSrc: string;
+  poster: string;
   videoSrc?: string;
+  className?: string;
   pauseLabel?: string;
   playLabel?: string;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [failedPoster, setFailedPoster] = useState(false);
   const [failedVideo, setFailedVideo] = useState(false);
   const [paused, setPaused] = useState(false);
   const [reduce, setReduce] = useState(false);
@@ -48,7 +47,7 @@ export function HeroMedia({
         }
         if (!paused) void video.play();
       },
-      { threshold: 0.2 },
+      { threshold: 0.25 },
     );
     io.observe(video);
     return () => io.disconnect();
@@ -69,26 +68,15 @@ export function HeroMedia({
     }
   }
 
-  if (failedPoster && !showVideo) {
-    return <div className="water absolute inset-0" data-hero-fallback="water" aria-hidden />;
-  }
-
   return (
-    <>
-      <picture>
-        <source media="(max-width: 767px)" srcSet={mobileSrc} />
-        <img
-          src={src}
-          alt=""
-          onError={() => setFailedPoster(true)}
-          className="absolute inset-0 h-full w-full object-cover object-center"
-        />
-      </picture>
+    <div className={`relative overflow-hidden ${className}`}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={poster} alt="" className="absolute inset-0 h-full w-full object-cover" />
       {showVideo ? (
         <video
           ref={videoRef}
-          className="absolute inset-0 h-full w-full object-cover object-center"
-          poster={src}
+          className="absolute inset-0 h-full w-full object-cover"
+          poster={poster}
           src={videoSrc}
           muted
           loop
@@ -104,11 +92,11 @@ export function HeroMedia({
           type="button"
           onClick={toggle}
           aria-label={paused ? playLabel : pauseLabel}
-          className="absolute top-[5.5rem] right-4 z-20 min-h-11 min-w-11 border border-[rgba(196,162,100,0.45)] bg-[rgba(9,43,69,0.48)] px-3 text-[10px] tracking-[0.2em] uppercase text-[#faf8f2]"
+          className="absolute bottom-3 right-3 z-10 min-h-11 min-w-11 border border-[rgba(196,162,100,0.45)] bg-[rgba(9,43,69,0.48)] px-3 text-[10px] tracking-[0.2em] uppercase text-[#faf8f2]"
         >
           {paused ? "Play" : "Pause"}
         </button>
       ) : null}
-    </>
+    </div>
   );
 }

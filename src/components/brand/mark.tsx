@@ -13,49 +13,41 @@ export function MeridianMark({
       aria-label={title}
     >
       <title>{title}</title>
-      <g fill="none" stroke="#c4a264" strokeLinecap="round">
-        <circle cx="40" cy="40" r="28.5" strokeWidth="1.35" />
+      <g fill="none" stroke="#c4a264" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="40" cy="40" r="26" strokeWidth="1.45" />
+        <path d="M40 14 V66" strokeWidth="1.2" />
         <ellipse
           cx="40"
           cy="40"
-          rx="28.5"
-          ry="10.8"
+          rx="26"
+          ry="10.2"
           transform="rotate(-48 40 40)"
-          strokeWidth="1.2"
+          strokeWidth="1.25"
         />
         <ellipse
           cx="40"
           cy="40"
-          rx="28.5"
-          ry="10.8"
+          rx="26"
+          ry="10.2"
           transform="rotate(48 40 40)"
-          strokeWidth="1.2"
+          strokeWidth="1.25"
         />
         <ellipse
           cx="40"
           cy="40"
-          rx="28.5"
-          ry="7.2"
+          rx="26"
+          ry="7.4"
           strokeWidth="0.7"
-          strokeDasharray="0.9 2.4"
+          strokeDasharray="0.85 2.3"
         />
         <ellipse
           cx="40"
           cy="40"
-          rx="24.5"
-          ry="18.5"
-          strokeWidth="0.55"
-          strokeDasharray="0.7 2.2"
-          opacity="0.85"
-        />
-        <ellipse
-          cx="40"
-          cy="40"
-          rx="18"
-          ry="25.2"
+          rx="20.5"
+          ry="20"
           strokeWidth="0.45"
-          strokeDasharray="0.6 2.1"
-          opacity="0.7"
+          strokeDasharray="0.55 2"
+          opacity="0.75"
         />
       </g>
     </svg>

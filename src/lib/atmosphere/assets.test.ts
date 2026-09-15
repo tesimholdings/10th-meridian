@@ -29,6 +29,9 @@ const motionClasses = [
   "reward-sheet",
   "cursor-aura",
   "circle-person",
+  "hero-grain",
+  "hero-flecks",
+  "hero-media-shift",
 ];
 
 const stockHosts = ["unsplash.com", "pexels.com", "pixabay.com", "shutterstock.com"];

@@ -69,6 +69,9 @@ describe("Open House customer copy", () => {
       "public/brand/tenth-meridian-logo-full-lockup.svg",
       "public/brand/tenth-meridian-logo-light.svg",
       "public/brand/tenth-meridian-logo-full-lockup.png",
+      "public/brand/tenth-meridian-logo-full-lockup.webp",
+      "public/brand/tenth-meridian-logo-full-lockup-knockout.png",
+      "public/brand/tenth-meridian-logo-full-lockup-knockout.webp",
     ]) {
       assert.equal(existsSync(path), true, path);
     }
@@ -109,6 +112,14 @@ describe("Open House customer surfaces", () => {
     assert.match(nav, /Escape/);
     assert.match(nav, /trigger\?\.focus/);
     assert.match(nav, /href="\/apply"/);
+    assert.match(nav, /FormalLockup/);
+    assert.match(nav, /knockout/);
+    assert.match(nav, /Wordmark/);
+    assert.match(page, /HeroAtmosphere/);
+    assert.match(page, /hero-luxury/);
+    assert.match(page, /filmSrc\("heroLandscape"\)/);
+    assert.equal(foot.includes("FormalLockup"), false);
+    assert.match(foot, /Wordmark/);
     for (const href of ["/legal/privacy", "/legal/terms", "/legal/community", "/sign-in"]) {
       assert.equal(foot.includes(href), true, `footer missing ${href}`);
     }

@@ -96,5 +96,8 @@ export function experienceStateLabel(state: ExperienceState): "Planned" | "Conce
 }
 
 export const FORMAL_LOCKUP_SRC = "/brand/tenth-meridian-logo-full-lockup.png";
+export const FORMAL_LOCKUP_WEBP = "/brand/tenth-meridian-logo-full-lockup.webp";
+export const FORMAL_LOCKUP_KNOCKOUT_SRC = "/brand/tenth-meridian-logo-full-lockup-knockout.png";
+export const FORMAL_LOCKUP_KNOCKOUT_WEBP = "/brand/tenth-meridian-logo-full-lockup-knockout.webp";
 export const LIGHT_LOCKUP_SRC = "/brand/tenth-meridian-logo-light.svg";
 export const MARK_SRC = "/brand/tenth-meridian-mark.svg";

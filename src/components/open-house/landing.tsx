@@ -1,10 +1,12 @@
 import Link from "next/link";
+import { EditorialFilm } from "@/components/open-house/editorial-film";
+import { HeroAtmosphere } from "@/components/open-house/hero-atmosphere";
 import { HeroMedia } from "@/components/open-house/hero-media";
 import { PublicFooter } from "@/components/open-house/public-footer";
 import { PublicHeader } from "@/components/open-house/public-header";
 import { Button } from "@/components/ui/button";
 import { stillForListedExperience } from "@/lib/atmosphere/campaign";
-import { campaignSrc } from "@/lib/atmosphere/resolve-campaign";
+import { campaignSrc, filmSrc, globalSrc } from "@/lib/atmosphere/resolve-campaign";
 import type { AccessContext } from "@/lib/access/context";
 import {
   APPLY_LABEL,
@@ -43,10 +45,17 @@ export function OpenHouseLanding({ access }: { access: AccessContext }) {
 
 function Hero() {
   return (
-    <section className="relative isolate min-h-[76svh] overflow-hidden text-ivory md:min-h-[90svh]">
-      <HeroMedia src={campaignSrc("heroLandscape")} mobileSrc={campaignSrc("heroMobile")} />
+    <section className="hero-luxury relative isolate min-h-[76svh] overflow-hidden text-ivory md:min-h-[90svh]">
+      <div className="hero-media-shift">
+        <HeroMedia
+          src={campaignSrc("heroLandscape")}
+          mobileSrc={campaignSrc("heroMobile")}
+          videoSrc={filmSrc("heroLandscape")}
+        />
+      </div>
+      <HeroAtmosphere />
       <div
-        className="absolute inset-0"
+        className="pointer-events-none absolute inset-0 z-[2]"
         aria-hidden
         style={{
           background:
@@ -82,11 +91,9 @@ function HouseStory() {
       <div className="mt-8 grid gap-10 md:grid-cols-3">
         {HOUSE_BLOCKS.map((block) => (
           <article key={block.id}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={campaignSrc(block.still)}
-              alt=""
-              className="aspect-[16/10] w-full object-cover"
+            <EditorialFilm
+              poster={campaignSrc(block.still)}
+              videoSrc={block.still === "eventsDinner" ? filmSrc("eventsDinner") : undefined}
             />
             <h2 className="mt-5 font-serif text-3xl">{block.title}</h2>
             <p className="mt-2 text-[var(--navy-soft)]">{block.body}</p>
@@ -156,11 +163,10 @@ function Membership({ access }: { access: AccessContext }) {
 function Closing() {
   return (
     <section className="relative isolate overflow-hidden">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={campaignSrc("homeIndex")}
-        alt=""
-        className="absolute inset-0 h-full w-full object-cover"
+      <EditorialFilm
+        poster={globalSrc("nycRooftop")}
+        videoSrc={filmSrc("nycRooftop")}
+        className="absolute inset-0 h-full w-full"
       />
       <div className="absolute inset-0 bg-[rgba(9,43,69,0.42)]" aria-hidden />
       <div className="relative z-10 mx-auto flex min-h-[22rem] max-w-3xl flex-col items-center justify-center px-6 py-20 text-center text-[#faf8f2]">

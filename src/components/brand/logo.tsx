@@ -1,5 +1,10 @@
 import { MeridianMark } from "@/components/brand/mark";
-import { FORMAL_LOCKUP_SRC } from "@/lib/copy/open-house";
+import {
+  FORMAL_LOCKUP_KNOCKOUT_SRC,
+  FORMAL_LOCKUP_KNOCKOUT_WEBP,
+  FORMAL_LOCKUP_SRC,
+  FORMAL_LOCKUP_WEBP,
+} from "@/lib/copy/open-house";
 
 export function Wordmark({
   compact = false,
@@ -27,18 +32,27 @@ export function Wordmark({
   );
 }
 
-/** Official formal lockup — gold mark + TENTH MERIDIAN — only on dark or grain surfaces. */
+/** Official formal lockup — gold globe + TENTH MERIDIAN. Black plate only on dark surfaces. */
 export function FormalLockup({
   className = "h-14 w-auto max-w-[min(100%,22rem)]",
+  knockout = false,
 }: {
   className?: string;
+  /** Transparent crop for photography / hero. Never use the black plate on paper. */
+  knockout?: boolean;
 }) {
+  const png = knockout ? FORMAL_LOCKUP_KNOCKOUT_SRC : FORMAL_LOCKUP_SRC;
+  const webp = knockout ? FORMAL_LOCKUP_KNOCKOUT_WEBP : FORMAL_LOCKUP_WEBP;
+
   return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src={FORMAL_LOCKUP_SRC}
-      alt="Tenth Meridian — Private Network, established MMXXVI"
-      className={className}
-    />
+    <picture>
+      <source type="image/webp" srcSet={webp} />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={png}
+        alt="Tenth Meridian — Private Network, established MMXXVI"
+        className={className}
+      />
+    </picture>
   );
 }

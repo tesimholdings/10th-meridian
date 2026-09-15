@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
-import { Wordmark } from "@/components/brand/logo";
+import { FormalLockup, Wordmark } from "@/components/brand/logo";
 import { APPLY_LABEL, PUBLIC_NAV } from "@/lib/copy/open-house";
 
 const FOCUSABLE =
@@ -22,7 +22,6 @@ export function PublicHeader({
   const titleId = useId();
 
   const paper = !overlay || scrolled || menuOpen;
-  const surface = paper ? "light" : "dark";
 
   useEffect(() => {
     if (!overlay) return;
@@ -93,7 +92,14 @@ export function PublicHeader({
     >
       <div className="mx-auto flex h-[4.25rem] max-w-6xl items-center gap-3">
         <Link href="/" className="min-h-11 shrink-0" aria-label="10th Meridian home">
-          <Wordmark compact surface={surface} />
+          {paper ? (
+            <Wordmark compact surface="light" />
+          ) : (
+            <FormalLockup
+              knockout
+              className="h-8 w-auto max-w-[min(100%,14.5rem)] md:h-9 md:max-w-[18rem]"
+            />
+          )}
         </Link>
 
         <nav aria-label="Open House" className="ml-auto hidden items-center gap-1 lg:flex">
