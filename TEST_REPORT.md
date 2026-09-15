@@ -7,6 +7,14 @@ Runtime: Node 22, Next.js 16.3.5, preview mode (no live secrets)
 
 Review-only. Does not merge. Does not promote Production. Does not purchase domain or Stripe products. No invented API secrets.
 
+## Checks
+
+| Check | Result |
+| --- | --- |
+| `npm test` | 141/141 pass |
+| `npm run build` | Green — Next.js 16.3.5, TypeScript clean |
+| `npm run lint` | No new errors on live-stack files. Base branch still fails pre-existing `react-hooks/set-state-in-effect` in channel-app / apply-wizard / crossings-flight / ask-meridian / member-header |
+
 ## Automated (this wave)
 
 Added coverage for env from-address + integration flags, Resend stub helpers, Stream channel/token stubs, Stripe lifetime Checkout stub (never charges), PostHog no-op, Sentry placeholders (PR #12 not landed), hybrid matching fallback, Supabase unconfigured fallback.
