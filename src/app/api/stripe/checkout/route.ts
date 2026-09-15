@@ -1,8 +1,11 @@
 import { redirect } from "next/navigation";
 import { resolveAccessContext } from "@/lib/access/context";
-import { getStripe } from "@/lib/stripe/client";
 import { membershipProducts, type MembershipProductId } from "@/lib/config/pricing";
 import { env } from "@/lib/env";
+import {
+  checkoutStubMessage,
+  createLifetimeCheckoutSession,
+} from "@/lib/stripe/lifetime";
 
 export async function POST(request: Request) {
   const access = await resolveAccessContext();
@@ -17,28 +20,15 @@ export async function POST(request: Request) {
     return new Response("This product is by application.", { status: 400 });
   }
 
-  const stripe = getStripe();
-  if (!stripe || !item.stripePriceId) {
-    return new Response(
-      "Stripe Checkout is stubbed. Add STRIPE_SECRET_KEY and an approved price ID. No amount is invented.",
-      { status: 501 },
-    );
-  }
-
-  const session = await stripe.checkout.sessions.create({
-    mode: item.interval === "lifetime" ? "payment" : "payment",
-    line_items: [{ price: item.stripePriceId, quantity: 1 }],
-    success_url: `${env.siteUrl}/member/billing?checkout=success`,
-    cancel_url: `${env.siteUrl}/member/billing?checkout=cancel`,
-    customer_email: access.user?.email,
-    metadata: {
-      accountId: access.user?.id ?? "",
-      product,
-    },
+  const result = await createLifetimeCheckoutSession({
+    accountId: access.user?.id ?? "",
+    email: access.user?.email,
+    successUrl: `${env.siteUrl}/member/billing?checkout=success`,
+    cancelUrl: `${env.siteUrl}/member/billing?checkout=cancel`,
   });
 
-  if (!session.url) {
-    return new Response("Unable to start checkout.", { status: 500 });
+  if (!result.ok) {
+    return new Response(checkoutStubMessage(result.reason), { status: 501 });
   }
-  redirect(session.url);
+  redirect(result.url);
 }

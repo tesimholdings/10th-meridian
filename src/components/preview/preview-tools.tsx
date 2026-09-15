@@ -1,4 +1,4 @@
-import { env } from "@/lib/env";
+import { env, integrationStatus } from "@/lib/env";
 import type { AccessContext } from "@/lib/access/context";
 
 export function PreviewTools({ access }: { access: AccessContext }) {
@@ -16,6 +16,13 @@ export function PreviewTools({ access }: { access: AccessContext }) {
       </p>
       <p className="mt-2">
         Phase: {access.decision.phase} · Role: {access.user?.role ?? "guest"}
+      </p>
+      <p className="mt-2 leading-relaxed">
+        Stack (live only with env):{" "}
+        {Object.entries(integrationStatus())
+          .filter(([key]) => key !== "mode" && key !== "embeddings")
+          .map(([key, on]) => `${key}${on ? "●" : "○"}`)
+          .join(" ")}
       </p>
       <form action="/api/preview/session" method="post" className="mt-3 grid gap-2">
         <button name="role" value="guest" className="min-h-10 border border-[var(--line)] px-2">

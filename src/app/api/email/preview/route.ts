@@ -6,19 +6,17 @@ export async function GET(request: Request) {
     return new Response("Not found", { status: 404 });
   }
   const type = new URL(request.url).searchParams.get("type") ?? "doorsReminder";
+  const templates = {
+    applicationReceived: () => emailTemplates.applicationReceived(),
+    invite: () => emailTemplates.invite(),
+    approved: () => emailTemplates.approvedPaymentPending(),
+    declined: () => emailTemplates.declined(),
+    referral: () => emailTemplates.referralGranted(),
+    crossingAccepted: () => emailTemplates.crossingAccepted(),
+    crossingOverlap: () => emailTemplates.crossingOverlap("Paris", "Three"),
+    doorsReminder: () => emailTemplates.doorsReminder("the next tenth"),
+  } as const;
   const tpl =
-    type === "applicationReceived"
-      ? emailTemplates.applicationReceived()
-      : type === "approved"
-        ? emailTemplates.approvedPaymentPending()
-        : type === "declined"
-          ? emailTemplates.declined()
-          : type === "referral"
-            ? emailTemplates.referralGranted()
-          : type === "crossingAccepted"
-            ? emailTemplates.crossingAccepted()
-            : type === "crossingOverlap"
-              ? emailTemplates.crossingOverlap("Paris", "Three")
-              : emailTemplates.doorsReminder("the next tenth");
+    (templates[type as keyof typeof templates] ?? templates.doorsReminder)();
   return new Response(tpl.html, { headers: { "Content-Type": "text/html" } });
 }

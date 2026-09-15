@@ -1,3 +1,35 @@
+# TEST_REPORT — Live stack wiring
+
+Date: 2026-09-15  
+Branch: `cursor/live-stack-wiring-4a1b`  
+Base: `cursor/audit-reliability-f75b`  
+Runtime: Node 22, Next.js 16.3.5, preview mode (no live secrets)
+
+Review-only. Does not merge. Does not promote Production. Does not purchase domain or Stripe products. No invented API secrets.
+
+## Checks
+
+| Check | Result |
+| --- | --- |
+| `npm test` | 141/141 pass |
+| `npm run build` | Green — Next.js 16.3.5, TypeScript clean |
+| `npm run lint` | No new errors on live-stack files. Base branch still fails pre-existing `react-hooks/set-state-in-effect` in channel-app / apply-wizard / crossings-flight / ask-meridian / member-header |
+
+## Automated (this wave)
+
+Added coverage for env from-address + integration flags, Resend stub helpers, Stream channel/token stubs, Stripe lifetime Checkout stub (never charges), PostHog no-op, Sentry placeholders (PR #12 not landed), hybrid matching fallback, Supabase unconfigured fallback.
+
+## Demo-safe behavior
+
+| Integration | Missing env | Behavior |
+| --- | --- | --- |
+| Resend | `RESEND_API_KEY` | Apply / reminder / invite return `{ stub: true }` |
+| Stripe | `STRIPE_SECRET_KEY` or `STRIPE_PRICE_ID` | Checkout 501, webhook stub, nothing charged |
+| Stream | `STREAM_API_SECRET` | Token `{ stub: true, token: null }` |
+| Supabase | public URL/anon | Auth + matching stay on preview store |
+| PostHog | `NEXT_PUBLIC_POSTHOG_KEY` | `PostHogInit` is a no-op |
+| Sentry | DSN | Placeholders only — SDK not duplicated |
+
 # TEST_REPORT — Referral Rewards
 
 Date: 2026-09-15  
