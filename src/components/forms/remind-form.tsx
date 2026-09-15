@@ -32,12 +32,12 @@ export function RemindForm() {
         <span className="label">Email</span>
         <input name="email" type="email" required autoComplete="email" />
       </label>
-      <p className="text-sm text-ivory-muted">
+      <p className="text-sm text-[var(--navy-soft)]">
         This is a reminder, not a waitlist and not an application. Full applications
         open only during Open House.
       </p>
       <Button type="submit">Keep this date</Button>
-      {status ? <p className="text-sm text-gold">{status}</p> : null}
+      {status ? <p className="mt-4 text-sm text-[var(--gold-dim)]">{status}</p> : null}
     </form>
   );
 }

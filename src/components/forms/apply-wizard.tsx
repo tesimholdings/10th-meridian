@@ -33,6 +33,10 @@ export function ApplyWizard({ referralCode }: { referralCode?: string | null }) 
   }
 
   async function submit() {
+    if (draft.terms !== "yes") {
+      setStatus("Agree to the house standards to submit.");
+      return;
+    }
     const res = await fetch("/api/applications", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -97,7 +101,7 @@ export function ApplyWizard({ referralCode }: { referralCode?: string | null }) 
           <>
             <Field label="Referral code" name="referralCode" value={draft.referralCode} onChange={set} />
             <Field label="How did you find the house?" name="discoverySource" value={draft.discoverySource} onChange={set} />
-            <label className="flex items-start gap-3 text-sm text-ivory-muted">
+            <label className="flex items-start gap-3 text-sm text-[var(--navy-soft)]">
               <input
                 type="checkbox"
                 className="mt-1 h-5 w-5 min-h-5"
@@ -121,9 +125,15 @@ export function ApplyWizard({ referralCode }: { referralCode?: string | null }) 
             type="button"
             className="flex-1"
             onClick={() => {
-              if (step === 0 && (!(draft.city ?? "").trim() || !(draft.country ?? "").trim())) {
-                setStatus("City and country are required.");
-                return;
+              if (step === 0) {
+                if (!(draft.fullName ?? "").trim() || !(draft.email ?? "").trim()) {
+                  setStatus("Name and email are required.");
+                  return;
+                }
+                if (!(draft.city ?? "").trim() || !(draft.country ?? "").trim()) {
+                  setStatus("City and country are required.");
+                  return;
+                }
               }
               setStatus(null);
               setStep((s) => s + 1);
@@ -137,8 +147,8 @@ export function ApplyWizard({ referralCode }: { referralCode?: string | null }) 
           </Button>
         )}
       </div>
-      {status ? <p className="mt-4 text-sm text-gold">{status}</p> : null}
-      <p className="mt-6 text-[12px] text-ivory-dim">
+      {status ? <p className="mt-4 text-sm text-[var(--gold-dim)]">{status}</p> : null}
+      <p className="mt-6 text-[12px] text-[var(--ivory-dim)]">
         Progress is held in this browser until you submit. No more than ten new members
         are hand-selected each month.
       </p>

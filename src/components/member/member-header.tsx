@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Wordmark } from "@/components/brand/logo";
 import { memberSecondary } from "@/lib/config/site";
 import type { SessionUser } from "@/lib/access/session";
@@ -16,6 +16,19 @@ export function MemberHeader({
 }) {
   const router = useRouter();
   const [q, setQ] = useState("");
+  const moreRef = useRef<HTMLDetailsElement>(null);
+
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key !== "Escape") return;
+      const el = moreRef.current;
+      if (!el?.open) return;
+      el.open = false;
+      el.querySelector("summary")?.focus();
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   return (
     <header className="header-chrome safe-pad safe-top sticky top-0 z-30 py-2.5 backdrop-blur-md">
@@ -34,7 +47,7 @@ export function MemberHeader({
               <span className="unread-dot absolute right-2 top-2" />
             ) : null}
           </Link>
-          <details className="relative">
+          <details ref={moreRef} className="relative">
             <summary className="flex h-11 cursor-pointer list-none items-center px-2 text-sm text-[#efe6d4]">
               More
             </summary>

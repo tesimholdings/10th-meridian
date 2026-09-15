@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { MatchIndex } from "@/lib/matching/service";
 import type { IntroRequest, ProfileRecord } from "@/lib/data/types";
 import { shortMatchReason } from "@/lib/matching/reason";
@@ -53,6 +53,15 @@ export function IndexCard({
   const [pending, setPending] = useState(false);
   const [open, setOpen] = useState(false);
   const [note, setNote] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
 
   async function message() {
     setPending(true);

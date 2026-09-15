@@ -189,7 +189,14 @@ function Closing() {
         videoSrc={filmSrc(OPEN_HOUSE_CLOSING_MEDIA.film)}
         className="absolute inset-0 h-full w-full"
       />
-      <div className="absolute inset-0 bg-[rgba(9,43,69,0.42)]" aria-hidden />
+      <div
+        className="absolute inset-0 z-[2]"
+        aria-hidden
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(0,0,0,0.72) 0%, rgba(9,43,69,0.78) 55%, rgba(0,0,0,0.82) 100%)",
+        }}
+      />
       <div className="relative z-10 mx-auto flex min-h-[22rem] max-w-3xl flex-col items-center justify-center px-6 py-20 text-center text-[#faf8f2]">
         <h2 className="font-serif text-4xl md:text-5xl">{CLOSING_HEADLINE}</h2>
         <div className="mt-8">

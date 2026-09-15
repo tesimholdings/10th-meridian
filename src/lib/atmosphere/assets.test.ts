@@ -161,6 +161,20 @@ describe("original House atmosphere", () => {
     assert.match(landing, /liquid-dark/);
     assert.match(landing, /liquid-paper/);
     assert.equal(landing.includes("bg-[var(--paper)]"), false);
+    assert.match(landing, /rgba\(9,43,69,0\.78\)/);
+    const hero = readFileSync("src/components/open-house/hero-media.tsx", "utf8");
+    assert.match(hero, /playSafe/);
+    assert.equal(hero.includes("autoPlay"), false);
+    const film = readFileSync("src/components/open-house/editorial-film.tsx", "utf8");
+    assert.match(film, /playSafe/);
+    assert.equal(film.includes("autoPlay"), false);
+    const apply = readFileSync("src/components/forms/apply-wizard.tsx", "utf8");
+    assert.match(apply, /Name and email are required/);
+    assert.match(apply, /Agree to the house standards/);
+    const header = readFileSync("src/components/member/member-header.tsx", "utf8");
+    assert.match(header, /Escape/);
+    const play = readFileSync("src/lib/atmosphere/play-safe.ts", "utf8");
+    assert.match(play, /AbortError/);
   });
 
   it("wires editorial campaign slots on Open House, Home, events, and Crossings", () => {

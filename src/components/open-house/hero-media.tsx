@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { pauseSafe, playSafe } from "@/lib/atmosphere/play-safe";
 
 export function HeroMedia({
   src,
@@ -42,9 +43,10 @@ export function HeroMedia({
     if (!video || !showVideo) return;
 
     let alive = true;
+    let pending: Promise<void> | null = null;
     const tryPlay = () => {
       if (!alive || paused) return;
-      void video.play().catch(() => {});
+      pending = playSafe(video);
     };
     tryPlay();
     video.addEventListener("canplay", tryPlay);
@@ -53,7 +55,7 @@ export function HeroMedia({
       ([entry]) => {
         if (!alive) return;
         if (!entry.isIntersecting) {
-          video.pause();
+          pauseSafe(video, pending);
           return;
         }
         tryPlay();
@@ -75,7 +77,7 @@ export function HeroMedia({
       return;
     }
     if (el.paused) {
-      void el.play().catch(() => {});
+      void playSafe(el);
       setPaused(false);
     } else {
       el.pause();
@@ -106,7 +108,6 @@ export function HeroMedia({
           muted
           loop
           playsInline
-          autoPlay
           preload="auto"
           onError={() => setFailedVideo(true)}
           data-hero-film={videoSrc}
