@@ -3,12 +3,14 @@ import { resolveAccessContext } from "@/lib/access/context";
 import { MemberShell } from "@/components/member/member-shell";
 import { MatchBoard } from "@/components/matches/match-board";
 import { demoIndexFor } from "@/lib/matching/service";
-import { getPreviewStore, unreadHouseNotifications, unreadTotal, viewerProfile } from "@/lib/preview/store";
+import { getPreviewStore, unreadHouseNotifications, unreadTotal, viewerProfile, viewerRewardsSnapshot } from "@/lib/preview/store";
 import { completionMessage } from "@/lib/profile/completion";
 import { formatHumanDateRange, formatHumanDateTime } from "@/lib/crossings/format";
 import { HiggsfieldSlot } from "@/components/brand/higgsfield-slot";
 import { campaignSrc } from "@/lib/atmosphere/resolve-campaign";
 import { visibleJourneysFor } from "@/lib/crossings/service";
+import { RewardsTeaserCard } from "@/components/rewards/teaser-card";
+import { formatUsd } from "@/lib/rewards/math";
 
 export const metadata = { title: "Home", robots: { index: false } };
 
@@ -28,6 +30,12 @@ export default async function MemberHomePage() {
   });
   const trip = journeys.find((j) => j.profileId === viewer.id && j.status === "active");
   const event = store.events[0];
+  const rewards =
+    access.user?.role === "member" ||
+    access.user?.role === "moderator" ||
+    access.user?.role === "administrator"
+      ? viewerRewardsSnapshot()
+      : null;
 
   return (
     <MemberShell user={access.user} demo={!access.decision.isMemberAccess || viewer.isDemo} title="Home">
@@ -55,7 +63,16 @@ export default async function MemberHomePage() {
         <RailChip href="/member/messages" label="Messages" value={`${unreadTotal()} new`} />
         <RailChip href="/member/crossings" label="Next city" value={trip ? trip.destinationCity : "Add a trip"} />
         <RailChip href="/member/events" label="Tonight" value={event?.city ?? "Experiences"} />
+        {rewards ? (
+          <RailChip href="/member/rewards" label="Rewards" value={formatUsd(rewards.availableUsd)} />
+        ) : null}
       </div>
+
+      {rewards ? (
+        <div className="mt-8">
+          <RewardsTeaserCard availableUsd={rewards.availableUsd} />
+        </div>
+      ) : null}
 
       {trip ? (
         <Link href={`/member/crossings/${trip.id}`} className="mt-8 block">

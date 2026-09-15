@@ -9,6 +9,7 @@ import {
   MERIDIAN_10,
   MERIDIAN_100,
   MERIDIAN_INDEX,
+  REFERRAL_REWARDS,
   YOUR_CIRCLE,
 } from "@/lib/copy/ui";
 
@@ -22,6 +23,7 @@ const uiFiles = [
   "src/app/member/crossings/page.tsx",
   "src/components/forms/apply-wizard.tsx",
   "src/app/legal/community/page.tsx",
+  "src/app/member/rewards/page.tsx",
 ];
 
 describe("product naming and community copy", () => {
@@ -35,6 +37,7 @@ describe("product naming and community copy", () => {
     assert.equal(MERIDIAN_10, "The Meridian 10");
     assert.equal(MERIDIAN_100, "The Meridian 100");
     assert.equal(YOUR_CIRCLE, "Your Circle");
+    assert.equal(REFERRAL_REWARDS, "Referral Rewards");
   });
 
   it("keeps Matches out of member-facing UI strings", () => {
@@ -54,8 +57,11 @@ describe("product naming and community copy", () => {
     const community = readFileSync("src/app/legal/community/page.tsx", "utf8");
     const apply = readFileSync("src/components/forms/apply-wizard.tsx", "utf8");
     const onboarding = readFileSync("src/components/profile/onboarding-wizard.tsx", "utf8");
+    const rewards = readFileSync("src/lib/rewards/copy.ts", "utf8");
     assert.ok(community.includes(SOLICITING_BAN) || community.includes("Absolutely no soliciting"));
     assert.ok(apply.includes("Absolutely no soliciting"));
     assert.ok(onboarding.includes("Absolutely no soliciting"));
+    assert.ok(rewards.includes("Referrals are welcome") || rewards.includes("SOLICITING_REFERRALS"));
+    assert.ok(rewards.includes("SOLICITING_BAN"));
   });
 });

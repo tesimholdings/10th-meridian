@@ -54,6 +54,20 @@ import type {
 } from "@/lib/network/types";
 import { DEFAULT_HOUSE_NOTIFICATION_PREFS } from "@/lib/network/types";
 import { stubGalleryUpload, type GalleryUpload } from "@/lib/storage/gallery";
+import { seedRewardsState } from "@/lib/data/rewards-demo";
+import {
+  advanceRedemption,
+  advanceReferral,
+  cancelReservation,
+  creditReferrerForAdmittedApplication,
+  requestRedemption,
+  reserveReward,
+  submitReferral,
+  withdrawReferral,
+} from "@/lib/rewards/actions";
+import { memberReferralCode, memberReferralToken } from "@/lib/rewards/identity";
+import { buildRewardsSnapshot } from "@/lib/rewards/snapshot";
+import type { RewardsState } from "@/lib/rewards/types";
 
 export interface PreviewState {
   weights: MatchingWeights;
@@ -80,6 +94,7 @@ export interface PreviewState {
   houseNotifications: HouseNotification[];
   houseNotificationPrefs: HouseNotificationPrefs[];
   channelMembers: Record<string, string[]>;
+  rewards: RewardsState;
 }
 
 function seed(): PreviewState {
@@ -98,7 +113,21 @@ function seed(): PreviewState {
     profiles: structuredClone(demoProfiles),
     viewerId: viewerDemoProfile.id,
     applications: structuredClone(demoApplications),
-    referrals: structuredClone(demoReferrals),
+    referrals: [
+      ...structuredClone(demoReferrals),
+      {
+        id: "ref-member-demo-01",
+        code: memberReferralCode(viewerDemoProfile),
+        token: memberReferralToken(viewerDemoProfile.id),
+        createdByName: viewerDemoProfile.displayName,
+        label: "Member referral — A. Voss",
+        maxUses: 100,
+        useCount: 1,
+        expiresAt: null,
+        revokedAt: null,
+        isDemo: true,
+      },
+    ],
     feedback: [],
     curation: [
       {
@@ -203,6 +232,7 @@ function seed(): PreviewState {
       { profileId: viewerDemoProfile.id, ...DEFAULT_HOUSE_NOTIFICATION_PREFS },
     ],
     channelMembers: structuredClone(demoChannelMembers),
+    rewards: seedRewardsState(),
   };
 }
 
@@ -307,6 +337,9 @@ export function setApplicationStatus(input: {
 
   app.status = input.status;
   app.updatedAt = new Date().toISOString();
+  if (approving && app.referralCode) {
+    creditMemberForAdmittedReferralCode(app);
+  }
   audit(
     input.actor ?? "administrator",
     input.override ? `admissions.${input.status}.override` : `admissions.${input.status}`,
@@ -633,3 +666,118 @@ export function openDirectMessage(fromId: string, toId: string) {
   audit(from?.displayName ?? fromId, "dm.opened", "channel", channel.id);
   return channel;
 }
+
+export function viewerRewardsSnapshot() {
+  const viewer = viewerProfile();
+  const s = state();
+  return buildRewardsSnapshot({
+    member: viewer,
+    state: s.rewards,
+    siteUrl: env.siteUrl,
+    admissionsCap: s.admissionsCap,
+  });
+}
+
+export function submitMemberReferral(input: {
+  fullName: string;
+  email: string;
+  linkedin?: string;
+  city: string;
+  howYouKnowThem: string;
+  note?: string;
+}) {
+  const viewer = viewerProfile();
+  const result = submitReferral(state().rewards, { ...input, referrerId: viewer.id });
+  if (!result.ok) return result;
+  state().rewards = result.state;
+  const code = memberReferralCode(viewer);
+  const issued = state().referrals.find((r) => r.code === code);
+  if (issued) issued.useCount += 1;
+  audit(viewer.displayName, "rewards.referral_submitted", "member_referral", result.referral.id);
+  return result;
+}
+
+export function withdrawMemberReferral(referralId: string) {
+  const viewer = viewerProfile();
+  const result = withdrawReferral(state().rewards, { memberId: viewer.id, referralId });
+  if (!result.ok) return result;
+  state().rewards = result.state;
+  audit(viewer.displayName, "rewards.referral_withdrawn", "member_referral", referralId);
+  return result;
+}
+
+export function advanceMemberReferral(referralId: string, to?: "declined") {
+  const viewer = viewerProfile();
+  const result = advanceReferral(state().rewards, { memberId: viewer.id, referralId, to });
+  if (!result.ok) return result;
+  state().rewards = result.state;
+  audit(viewer.displayName, "rewards.referral_advanced", "member_referral", referralId);
+  return result;
+}
+
+export function reserveMemberReward(rewardId: string) {
+  const viewer = viewerProfile();
+  const result = reserveReward(state().rewards, { memberId: viewer.id, rewardId });
+  if (!result.ok) return result;
+  state().rewards = result.state;
+  audit(viewer.displayName, "rewards.reserved", "reward_reservation", result.reservation.id);
+  return result;
+}
+
+export function cancelMemberReservation(reservationId: string) {
+  const viewer = viewerProfile();
+  const result = cancelReservation(state().rewards, { memberId: viewer.id, reservationId });
+  if (!result.ok) return result;
+  state().rewards = result.state;
+  audit(viewer.displayName, "rewards.reserve_cancelled", "reward_reservation", reservationId);
+  return result;
+}
+
+export function requestMemberRedemption(input: {
+  rewardId: string;
+  destination?: string;
+  startDate?: string;
+  endDate?: string;
+  guestName?: string;
+  shippingName?: string;
+  shippingCity?: string;
+  shippingRegion?: string;
+  shippingCountry?: string;
+}) {
+  const viewer = viewerProfile();
+  const result = requestRedemption(state().rewards, { ...input, memberId: viewer.id });
+  if (!result.ok) return result;
+  state().rewards = result.state;
+  audit(viewer.displayName, "rewards.redeemed", "reward_redemption", result.redemption.id);
+  return result;
+}
+
+export function advanceMemberRedemption(redemptionId: string) {
+  const viewer = viewerProfile();
+  const result = advanceRedemption(state().rewards, { memberId: viewer.id, redemptionId });
+  if (!result.ok) return result;
+  state().rewards = result.state;
+  audit(viewer.displayName, "rewards.redemption_advanced", "reward_redemption", redemptionId);
+  return result;
+}
+
+function creditMemberForAdmittedReferralCode(app: ApplicationRecord) {
+  const code = (app.referralCode ?? "").trim().toUpperCase();
+  if (!code) return;
+  const issued = state().referrals.find((r) => r.code.toUpperCase() === code);
+  if (!issued) return;
+  const owner = state().profiles.find(
+    (p) => memberReferralCode(p) === code || issued.createdByName === p.displayName,
+  );
+  if (!owner) return;
+  if (issued.label.startsWith("TEST-ONLY") || issued.createdByName === "Preview steward") {
+    return;
+  }
+  state().rewards = creditReferrerForAdmittedApplication(state().rewards, {
+    referrerId: owner.id,
+    fullName: app.fullName,
+    email: app.email,
+    city: app.city,
+  });
+}
+

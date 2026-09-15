@@ -4,7 +4,8 @@ import { MemberShell } from "@/components/member/member-shell";
 import { OnboardingWizard } from "@/components/profile/onboarding-wizard";
 import { PrivacyControls } from "@/components/profile/privacy-controls";
 import { ProfileGallery } from "@/components/profile/gallery";
-import { viewerProfile } from "@/lib/preview/store";
+import { viewerProfile, viewerRewardsSnapshot } from "@/lib/preview/store";
+import { RewardsTeaserCard } from "@/components/rewards/teaser-card";
 import { completionMessage } from "@/lib/profile/completion";
 
 export const metadata = { title: "Profile", robots: { index: false } };
@@ -19,6 +20,7 @@ export default async function ProfilePage({
   const params = await searchParams;
   const edit = params.edit === "1";
   const tab = params.tab ?? "about";
+  const rewards = edit ? null : viewerRewardsSnapshot();
 
   if (!edit) {
     return (
@@ -36,6 +38,11 @@ export default async function ProfilePage({
             Edit
           </Link>
         </div>
+        {rewards ? (
+          <div className="mx-auto mt-8 max-w-md">
+            <RewardsTeaserCard availableUsd={rewards.availableUsd} compact />
+          </div>
+        ) : null}
         {p.completion < 90 ? (
           <p className="mt-6 text-center text-sm text-[var(--ivory-dim)]">{completionMessage(p.completion)}</p>
         ) : null}

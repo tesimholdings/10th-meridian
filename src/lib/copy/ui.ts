@@ -32,4 +32,9 @@ export const INDEX_TAB_ALL = "All members";
 export const MESSAGES_TAB_DMS = "Messages";
 export const MESSAGES_TAB_CHANNELS = "Channels";
 
+export const REFERRAL_REWARDS = "Referral Rewards";
+export const REWARDS_TAB_REWARDS = "Rewards";
+export const REWARDS_TAB_REFER = "Refer";
+export const REWARDS_TAB_ACTIVITY = "Activity";
+
 export const FORBIDDEN_UI_LABEL = "Matches";
