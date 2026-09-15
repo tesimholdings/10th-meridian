@@ -122,6 +122,11 @@ describe("Open House customer surfaces", () => {
     assert.equal(page.includes("max-w-6xl"), false);
     assert.match(nav, /oh-wrap/);
     assert.match(foot, /oh-wrap/);
+    const css = readFileSync("src/app/globals.css", "utf8");
+    assert.match(css, /\.oh-wrap/);
+    assert.match(css, /90rem/);
+    assert.match(css, /@media \(min-width: 768px\)/);
+    assert.match(css, /@media \(min-width: 1280px\)/);
     assert.equal(nav.includes("userAgent"), false);
     assert.equal(page.includes("userAgent"), false);
     assert.equal(foot.includes("FormalLockup"), false);

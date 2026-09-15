@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-/** Soft grain + gold flecks. Desktop pointer shifts them; touch stays ambient. */
+/** Visible grain + gold flecks + wash. Desktop pointer shifts them; touch stays ambient. */
 export function HeroAtmosphere() {
   const root = useRef<HTMLDivElement>(null);
 
@@ -28,8 +28,8 @@ export function HeroAtmosphere() {
     }
 
     function tick() {
-      px += (tx - px) * 0.08;
-      py += (ty - py) * 0.08;
+      px += (tx - px) * 0.14;
+      py += (ty - py) * 0.14;
       apply(px, py);
       frame = window.requestAnimationFrame(tick);
     }
@@ -49,6 +49,7 @@ export function HeroAtmosphere() {
 
     if (motion.matches) {
       apply(0, 0);
+      el.dataset.reduced = "true";
       return;
     }
 
@@ -71,6 +72,7 @@ export function HeroAtmosphere() {
 
   return (
     <div ref={root} className="hero-atmosphere" aria-hidden>
+      <div className="hero-wash" />
       <div className="hero-grain" />
       <div className="hero-flecks" />
     </div>

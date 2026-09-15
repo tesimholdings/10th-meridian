@@ -39,18 +39,28 @@ export function EditorialFilm({
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !showVideo) return;
+
+    const tryPlay = () => {
+      if (!paused) void video.play();
+    };
+    tryPlay();
+    video.addEventListener("canplay", tryPlay);
+
     const io = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) {
           video.pause();
           return;
         }
-        if (!paused) void video.play();
+        tryPlay();
       },
-      { threshold: 0.25 },
+      { threshold: 0.08 },
     );
     io.observe(video);
-    return () => io.disconnect();
+    return () => {
+      video.removeEventListener("canplay", tryPlay);
+      io.disconnect();
+    };
   }, [paused, showVideo]);
 
   function toggle() {
@@ -82,7 +92,7 @@ export function EditorialFilm({
           loop
           playsInline
           autoPlay
-          preload="metadata"
+          preload="auto"
           onError={() => setFailedVideo(true)}
           aria-hidden
         />

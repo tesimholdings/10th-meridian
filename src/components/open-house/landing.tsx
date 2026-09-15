@@ -64,17 +64,17 @@ function Hero() {
         aria-hidden
         style={{
           background:
-            "linear-gradient(180deg, rgba(9,43,69,0.22) 0%, rgba(9,43,69,0.08) 36%, rgba(9,43,69,0.28) 70%, rgba(250,248,242,0.96) 100%)",
+            "linear-gradient(180deg, rgba(9,43,69,0.16) 0%, rgba(9,43,69,0.04) 38%, rgba(9,43,69,0.2) 74%, rgba(16,33,45,0.42) 100%)",
         }}
       />
       <div className="oh-wrap relative z-10 flex min-h-[76svh] flex-col justify-end pb-16 pt-28 md:min-h-[90svh] md:pb-24">
         <p className="text-[0.72rem] font-medium tracking-[0.18em] text-[#faf8f2] [text-shadow:0_1px_12px_rgba(9,43,69,0.35)]">
           {OPEN_HOUSE_EYEBROW}
         </p>
-        <h1 className="oh-title mt-4 max-w-3xl font-serif text-[2.6rem] leading-[0.96] text-[#faf8f2] [text-shadow:0_2px_24px_rgba(9,43,69,0.35)] md:max-w-4xl md:text-6xl xl:text-7xl">
+        <h1 className="oh-title mt-4 max-w-3xl font-serif text-[2.6rem] leading-[0.96] text-[#faf8f2] [text-shadow:0_2px_24px_rgba(9,43,69,0.35)] md:max-w-5xl md:text-6xl xl:max-w-[68rem] xl:text-7xl">
           {OPEN_HOUSE_HEADLINE}
         </h1>
-        <p className="mt-5 max-w-md text-base text-[#faf8f2]/90 [text-shadow:0_1px_12px_rgba(9,43,69,0.35)]">
+        <p className="mt-5 max-w-md text-base text-[#faf8f2]/90 [text-shadow:0_1px_12px_rgba(9,43,69,0.35)] md:max-w-2xl md:text-lg">
           {OPEN_HOUSE_LEDE}
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
