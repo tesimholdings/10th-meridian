@@ -9,5 +9,5 @@ export async function POST(request: Request) {
   if (!result.ok) {
     redirect("/sign-in?error=1");
   }
-  redirect("/member/home");
+  redirect(result.redirect);
 }

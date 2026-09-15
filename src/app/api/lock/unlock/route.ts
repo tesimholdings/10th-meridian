@@ -1,20 +1,23 @@
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { env, hasSupabase } from "@/lib/env";
 import {
-  ACCOUNT_COOKIE,
-  cookieOptions,
-  OPEN_HOUSE_FORCE_COOKIE,
-  REFERRAL_COOKIE,
-  ROLE_COOKIE,
-  signedValue,
-} from "@/lib/access/cookies";
-import { env } from "@/lib/env";
-import { resolveLockUnlock, UNLOCK_MISS_MESSAGE } from "@/lib/lock/unlock";
+  applyUnlockHit,
+} from "@/lib/lock/session";
+import {
+  classifyLockIdentity,
+  resolveLockUnlock,
+  UNLOCK_MISS_MESSAGE,
+} from "@/lib/lock/unlock";
 import { getPreviewStore } from "@/lib/preview/store";
 import { clientKey, rateLimit } from "@/lib/security/rate-limit";
+import { signInWithPassword } from "@/lib/supabase/auth";
 
-const schema = z.object({ key: z.string().max(120) });
+const schema = z.object({
+  key: z.string().max(120),
+  password: z.string().max(200).optional(),
+  referral: z.union([z.boolean(), z.literal("1"), z.literal("true")]).optional(),
+});
 
 function wantsJson(request: Request): boolean {
   const accept = request.headers.get("accept") ?? "";
@@ -22,14 +25,35 @@ function wantsJson(request: Request): boolean {
   return accept.includes("application/json") || type.includes("application/json");
 }
 
-async function readKey(request: Request): Promise<string> {
+async function readBody(
+  request: Request,
+): Promise<{
+  key: string;
+  password?: string;
+  hasPassword: boolean;
+  referralIntent: boolean;
+}> {
   const type = request.headers.get("content-type") ?? "";
   if (type.includes("application/json")) {
-    const body = schema.safeParse(await request.json().catch(() => null));
-    return body.success ? body.data.key : "";
+    const json = await request.json().catch(() => null);
+    const parsed = schema.safeParse(json);
+    if (!parsed.success) return { key: "", hasPassword: false, referralIntent: false };
+    return {
+      key: parsed.data.key,
+      password: parsed.data.password,
+      hasPassword: Boolean(json && typeof json === "object" && "password" in json),
+      referralIntent: Boolean(parsed.data.referral),
+    };
   }
   const form = await request.formData().catch(() => null);
-  return String(form?.get("key") ?? "");
+  const passwordRaw = form?.get("password");
+  const referralRaw = String(form?.get("referral") ?? "");
+  return {
+    key: String(form?.get("key") ?? ""),
+    password: passwordRaw == null ? undefined : String(passwordRaw),
+    hasPassword: passwordRaw != null,
+    referralIntent: referralRaw === "1" || referralRaw === "true",
+  };
 }
 
 function miss(request: Request) {
@@ -39,11 +63,15 @@ function miss(request: Request) {
   redirect("/?unlock=1");
 }
 
-export async function POST(request: Request) {
-  if (!env.previewDemoAuth) {
-    return miss(request);
+function ok(request: Request, payload: { redirect?: string; next?: "password" }) {
+  if (wantsJson(request)) {
+    return Response.json({ ok: true, ...payload });
   }
+  if (payload.redirect) redirect(payload.redirect);
+  redirect("/?unlock=1");
+}
 
+export async function POST(request: Request) {
   const limited = rateLimit(clientKey(request, "lock-unlock"), env.rateLimitReferral);
   if (!limited.ok) {
     if (wantsJson(request)) {
@@ -52,51 +80,43 @@ export async function POST(request: Request) {
     redirect("/?unlock=1");
   }
 
-  const key = await readKey(request);
-  const hit = resolveLockUnlock(key, {
-    referrals: getPreviewStore().referrals,
-  });
+  const { key, password, hasPassword, referralIntent } = await readBody(request);
+  const referrals = env.previewDemoAuth
+    ? getPreviewStore().referrals
+    : getPreviewStore().referrals.filter((row) => !row.isDemo);
 
-  if (hit.kind === "miss") return miss(request);
+  if (referralIntent) {
+    const hit = resolveLockUnlock(key, { referrals });
+    if (hit.kind !== "referral") return miss(request);
+    const dest = await applyUnlockHit(hit);
+    return ok(request, { redirect: dest });
+  }
 
-  const jar = await cookies();
-
-  if (hit.kind === "member") {
-    jar.set(ROLE_COOKIE, signedValue("member"), {
-      ...cookieOptions,
-      maxAge: 60 * 60 * 12,
-    });
-    jar.set(
-      ACCOUNT_COOKIE,
-      signedValue(
-        JSON.stringify({
-          id: hit.profile.id,
-          email: hit.email,
-          name: hit.profile.displayName,
-          isDemo: true,
-        }),
-      ),
-      { ...cookieOptions, maxAge: 60 * 60 * 12 },
-    );
-    if (wantsJson(request)) {
-      return Response.json({ ok: true, redirect: "/member/home" });
+  if (!hasPassword) {
+    const classified = classifyLockIdentity(key, { referrals });
+    if (classified.kind === "empty") return miss(request);
+    if (classified.kind === "referral") {
+      const dest = await applyUnlockHit({ kind: "referral", code: classified.code });
+      return ok(request, { redirect: dest });
     }
-    redirect("/member/home");
+    return ok(request, { next: "password" });
   }
 
-  jar.set(REFERRAL_COOKIE, signedValue(hit.code), {
-    ...cookieOptions,
-    maxAge: 60 * 60 * 18,
-  });
-  if (env.previewTools) {
-    jar.set(OPEN_HOUSE_FORCE_COOKIE, signedValue("open"), {
-      ...cookieOptions,
-      maxAge: 60 * 60 * 12,
+  if (hasSupabase()) {
+    const result = await signInWithPassword({
+      email: key,
+      password: password ?? "",
     });
+    if (result.ok) return ok(request, { redirect: result.redirect });
+    return miss(request);
   }
 
-  if (wantsJson(request)) {
-    return Response.json({ ok: true, redirect: "/open-house" });
+  if (!env.previewDemoAuth) {
+    return miss(request);
   }
-  redirect("/open-house");
+
+  const hit = resolveLockUnlock(key, { referrals });
+  if (hit.kind === "miss") return miss(request);
+  const dest = await applyUnlockHit(hit);
+  return ok(request, { redirect: dest });
 }

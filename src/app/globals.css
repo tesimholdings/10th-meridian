@@ -172,6 +172,42 @@ body {
   box-shadow: 0 0 0 1px rgba(196, 162, 100, 0.18);
 }
 
+.lock-unlock input[readonly] {
+  opacity: 0.85;
+  background: transparent;
+  color: var(--ivory);
+  -webkit-text-fill-color: var(--ivory);
+}
+
+.lock-unlock input:-webkit-autofill,
+.lock-unlock input:-webkit-autofill:hover,
+.lock-unlock input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--ivory);
+  caret-color: var(--ivory);
+  box-shadow: 0 0 0 1000px #000 inset;
+  transition: background-color 9999s ease-out;
+}
+
+.lock-unlock .lock-text-link {
+  background: transparent;
+  border: 0;
+  color: rgba(239, 230, 212, 0.5);
+  font-size: 0.875rem;
+  letter-spacing: 0.01em;
+  min-height: 44px;
+  padding: 0 0.25rem;
+  width: auto;
+}
+
+.lock-unlock .lock-text-link:hover {
+  color: var(--ivory);
+}
+
+.lock-unlock .lock-enter {
+  background: #c4a264;
+  color: #000;
+}
+
 .hero-luxury {
   --hero-px: 0;
   --hero-py: 0;

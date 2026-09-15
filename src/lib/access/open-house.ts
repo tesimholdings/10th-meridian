@@ -299,6 +299,7 @@ export function isPublicPath(pathname: string): boolean {
     pathname.startsWith("/api/referrals") ||
     pathname.startsWith("/api/reminders") ||
     pathname.startsWith("/api/auth") ||
+    pathname.startsWith("/api/lock") ||
     pathname.startsWith("/api/health") ||
     pathname.startsWith("/api/stripe/webhook")
   );
