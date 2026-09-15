@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Wordmark } from "@/components/brand/logo";
 import { memberSecondary } from "@/lib/config/site";
 import type { SessionUser } from "@/lib/access/session";
@@ -18,8 +19,10 @@ export function MemberHeader({
   const [q, setQ] = useState("");
   const [sheet, setSheet] = useState(false);
   const moreRef = useRef<HTMLDetailsElement>(null);
+  const searchBtn = useRef<HTMLButtonElement>(null);
   const sheetInput = useRef<HTMLInputElement>(null);
   const sheetTitle = useId();
+  const [portalReady, setPortalReady] = useState(false);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -38,8 +41,18 @@ export function MemberHeader({
   }, [sheet]);
 
   useEffect(() => {
+    setPortalReady(true);
+  }, []);
+
+  useEffect(() => {
     if (!sheet) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     sheetInput.current?.focus();
+    return () => {
+      document.body.style.overflow = prev;
+      searchBtn.current?.focus();
+    };
   }, [sheet]);
 
   function go(query: string) {
@@ -74,6 +87,7 @@ export function MemberHeader({
         </form>
         <div className="ml-auto flex items-center gap-2 md:ml-0">
           <button
+            ref={searchBtn}
             type="button"
             className="pressable flex h-11 w-11 items-center justify-center rounded-full md:hidden"
             aria-label="Search people and cities"
@@ -120,53 +134,56 @@ export function MemberHeader({
         </div>
       </div>
 
-      {sheet ? (
-        <div className="fixed inset-0 z-50 md:hidden" role="presentation">
-          <button
-            type="button"
-            className="absolute inset-0 bg-black/55"
-            aria-label="Close search"
-            onClick={() => setSheet(false)}
-          />
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby={sheetTitle}
-            className="header-chrome absolute inset-x-0 top-0 px-4 pb-4 pt-[max(0.75rem,env(safe-area-inset-top))]"
-          >
-            <div className="flex items-center justify-between gap-3">
-              <p id={sheetTitle} className="font-serif text-xl text-[#efe6d4]">
-                Search
-              </p>
-              <button type="button" className="min-h-11 px-2 text-sm text-[#efe6d4]" onClick={() => setSheet(false)}>
-                Close
-              </button>
-            </div>
-            <form
-              className="mt-3"
-              onSubmit={(e) => {
-                e.preventDefault();
-                go(q);
-              }}
-            >
-              <label className="sr-only" htmlFor="house-search-sheet">
-                Search people and cities
-              </label>
-              <input
-                ref={sheetInput}
-                id="house-search-sheet"
-                value={q}
-                onChange={(e) => setQ(e.target.value)}
-                placeholder="Search people and cities"
-                className="min-h-12 w-full rounded-full"
+      {sheet && portalReady
+        ? createPortal(
+            <div className="fixed inset-0 z-[80] md:hidden" role="presentation">
+              <button
+                type="button"
+                className="absolute inset-0 bg-black/70"
+                aria-label="Close search"
+                onClick={() => setSheet(false)}
               />
-              <button type="submit" className="action-quiet mt-3 w-full">
-                Show results
-              </button>
-            </form>
-          </div>
-        </div>
-      ) : null}
+              <div
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby={sheetTitle}
+                className="header-chrome absolute inset-x-0 top-0 px-4 pb-5 pt-[max(0.75rem,env(safe-area-inset-top))] shadow-[0_24px_60px_rgba(0,0,0,0.45)]"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <p id={sheetTitle} className="font-serif text-xl text-[#efe6d4]">
+                    Search
+                  </p>
+                  <button type="button" className="min-h-11 px-2 text-sm text-[#efe6d4]" onClick={() => setSheet(false)}>
+                    Close
+                  </button>
+                </div>
+                <form
+                  className="mt-3"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    go(q);
+                  }}
+                >
+                  <label className="sr-only" htmlFor="house-search-sheet">
+                    Search people and cities
+                  </label>
+                  <input
+                    ref={sheetInput}
+                    id="house-search-sheet"
+                    value={q}
+                    onChange={(e) => setQ(e.target.value)}
+                    placeholder="Search people and cities"
+                    className="min-h-12 w-full rounded-full"
+                  />
+                  <button type="submit" className="action-quiet mt-3 w-full">
+                    Show results
+                  </button>
+                </form>
+              </div>
+            </div>,
+            document.body,
+          )
+        : null}
     </header>
   );
 }

@@ -132,8 +132,8 @@ export function CityNotesBoard({
               <li key={note.id} className="panel p-5">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <p className="label">
-                    {note.kind} · {note.city}
-                    {note.neighborhood ? ` · ${note.neighborhood}` : ""}
+                    {note.city}
+                    {note.neighborhood ? ` · ${note.neighborhood}` : ""} · {note.kind}
                   </p>
                   {note.isDemo ? <DemoMark /> : null}
                 </div>

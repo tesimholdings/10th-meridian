@@ -75,6 +75,12 @@ describe("product naming and community copy", () => {
     assert.match(site, /\/member\/help/);
     const drafts = readFileSync("src/components/channels/channel-app.tsx", "utf8");
     assert.match(drafts, /composeDraftId/);
+    const header = readFileSync("src/components/member/member-header.tsx", "utf8");
+    assert.match(header, /createPortal/);
+    const notes = readFileSync("src/components/crossings/city-notes-board.tsx", "utf8");
+    assert.match(notes, /\{note\.city\}/);
+    assert.match(notes, /\{note\.kind\}/);
+    assert.ok(notes.indexOf("{note.city}") < notes.indexOf("{note.kind}"));
     const home = readFileSync("src/app/member/home/page.tsx", "utf8");
     assert.ok(home.indexOf("Useful connections") < home.indexOf("<RewardsTeaserCard"));
   });
