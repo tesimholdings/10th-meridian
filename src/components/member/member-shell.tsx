@@ -12,12 +12,14 @@ export function MemberShell({
   title,
   children,
   flush = false,
+  hasHeading = false,
 }: {
   user: SessionUser | null;
   demo: boolean;
   title?: string;
   children: React.ReactNode;
   flush?: boolean;
+  hasHeading?: boolean;
 }) {
   const viewer = viewerProfile();
   const unreadNotes = unreadHouseNotifications(viewer.id);
@@ -45,7 +47,7 @@ export function MemberShell({
                 : "member-main safe-pad safe-bottom relative w-full flex-1 py-6 md:py-8"
             }
           >
-            {title && !flush ? <h1 className="sr-only">{title}</h1> : null}
+            {title && !flush && !hasHeading ? <h1 className="sr-only">{title}</h1> : null}
             {children}
           </main>
           <BottomNav unreadMessages={unreadMessages} />

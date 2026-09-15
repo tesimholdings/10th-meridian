@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { resolveAccessContext } from "@/lib/access/context";
 import { MemberShell } from "@/components/member/member-shell";
 import { IndexCard } from "@/components/matches/match-board";
@@ -13,8 +14,7 @@ import {
   YOUR_CIRCLE,
 } from "@/lib/copy/ui";
 import { circleIdsFor } from "@/lib/network/circle";
-import { shortMatchReason } from "@/lib/matching/reason";
-import Link from "next/link";
+import { AllMembersBoard } from "@/components/members/all-members";
 
 export const metadata = { title: MERIDIAN_INDEX, robots: { index: false } };
 
@@ -35,14 +35,6 @@ export default async function MyCirclePage({
   const circleProfiles = store.profiles.filter((p) => circleIds.includes(p.id));
 
   const all = store.profiles.filter((p) => p.id !== viewer.id);
-  const searched = q
-    ? all.filter((p) =>
-        [p.displayName, p.headline, p.city, p.country, p.offers.join(" "), p.needs.join(" ")]
-          .join(" ")
-          .toLowerCase()
-          .includes(q),
-      )
-    : all;
 
   return (
     <MemberShell user={access.user} demo={!access.decision.isMemberAccess || viewer.isDemo} title={MERIDIAN_INDEX}>
@@ -86,21 +78,12 @@ export default async function MyCirclePage({
         ) : null}
 
         {tab === "all" ? (
-          searched.length === 0 ? (
-            <p className="text-sm text-[var(--ivory-dim)]">No one in this frame.</p>
-          ) : (
-            <ul className="stagger-in grid gap-4">
-              {searched.map((p) => (
-                <IndexCard
-                  key={p.id}
-                  profile={p}
-                  reason={shortMatchReason(p)}
-                  intro={intros.find((i) => i.targetId === p.id)}
-                  inCircle={circleIds.includes(p.id)}
-                />
-              ))}
-            </ul>
-          )
+          <AllMembersBoard
+            profiles={all}
+            intros={intros}
+            circleIds={circleIds}
+            query={q}
+          />
         ) : null}
       </div>
     </MemberShell>

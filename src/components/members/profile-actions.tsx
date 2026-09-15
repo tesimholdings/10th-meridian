@@ -49,6 +49,19 @@ export function ProfileActions({
     setNote("That conversation is unavailable. Retry.");
   }
 
+  async function safety(action: "report" | "mute") {
+    setPending(true);
+    const res = await fetch("/api/safety", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action, targetId }),
+    });
+    const json = (await res.json()) as { ok?: boolean; message?: string };
+    setPending(false);
+    setNote(json.message ?? (json.ok ? "Noted." : "Could not complete that."));
+    router.refresh();
+  }
+
   async function circle(action: "add" | "remove" | "remove-index") {
     setPending(true);
     const res = await fetch("/api/circle", {
@@ -95,6 +108,15 @@ export function ProfileActions({
                 Remove from For you
               </button>
             )}
+            <button type="button" disabled={pending} onClick={() => void safety("mute")} className="min-h-10 text-left text-sm">
+              Mute
+            </button>
+            <button type="button" disabled={pending} onClick={() => void safety("report")} className="min-h-10 text-left text-sm">
+              Report
+            </button>
+            <a href="/member/help" className="flex min-h-10 items-center text-sm">
+              Help
+            </a>
           </div>
         </details>
       </div>

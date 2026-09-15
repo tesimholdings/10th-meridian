@@ -566,6 +566,11 @@ export function unhideFromIndex(viewerId: string, targetId: string) {
   return next;
 }
 
+export function reportMember(viewerId: string, targetId: string) {
+  audit(viewerId, "member.reported", "profile", targetId);
+  return { ok: true as const };
+}
+
 export function pushHouseNotification(
   input: Omit<HouseNotification, "id" | "createdAt" | "read" | "isDemo" | "recipientId"> & {
     recipientId: string;

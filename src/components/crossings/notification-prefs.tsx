@@ -41,6 +41,7 @@ export function NotificationPrefsForm({ prefs }: { prefs: TravelNotificationPref
           className="h-5 w-5"
           checked={draft.overlapDigest}
           onChange={(e) => setDraft({ ...draft, overlapDigest: e.target.checked })}
+          aria-label="Overlap notices — in-app digest"
         />
         Overlap notices (“Three members will be in Paris while you are.”)
       </label>
@@ -50,6 +51,7 @@ export function NotificationPrefsForm({ prefs }: { prefs: TravelNotificationPref
           className="h-5 w-5"
           checked={draft.goalRelevance}
           onChange={(e) => setDraft({ ...draft, goalRelevance: e.target.checked })}
+          aria-label="Goal relevance — in-app digest"
         />
         Goal relevance (“A member in New York may be especially relevant…”)
       </label>
@@ -59,6 +61,7 @@ export function NotificationPrefsForm({ prefs }: { prefs: TravelNotificationPref
           className="h-5 w-5"
           checked={draft.tableSuggestions}
           onChange={(e) => setDraft({ ...draft, tableSuggestions: e.target.checked })}
+          aria-label="Table suggestions — in-app digest"
         />
         Table suggestions (“Four paths cross in London. Open a table?”)
       </label>
@@ -68,6 +71,7 @@ export function NotificationPrefsForm({ prefs }: { prefs: TravelNotificationPref
           className="h-5 w-5"
           checked={draft.requestUpdates}
           onChange={(e) => setDraft({ ...draft, requestUpdates: e.target.checked })}
+          aria-label="Crossing request updates — in-app"
         />
         Crossing request updates
       </label>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { Wordmark } from "@/components/brand/logo";
 import { memberSecondary } from "@/lib/config/site";
 import type { SessionUser } from "@/lib/access/session";
@@ -16,11 +16,18 @@ export function MemberHeader({
 }) {
   const router = useRouter();
   const [q, setQ] = useState("");
+  const [sheet, setSheet] = useState(false);
   const moreRef = useRef<HTMLDetailsElement>(null);
+  const sheetInput = useRef<HTMLInputElement>(null);
+  const sheetTitle = useId();
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key !== "Escape") return;
+      if (sheet) {
+        setSheet(false);
+        return;
+      }
       const el = moreRef.current;
       if (!el?.open) return;
       el.open = false;
@@ -28,15 +35,52 @@ export function MemberHeader({
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, []);
+  }, [sheet]);
+
+  useEffect(() => {
+    if (!sheet) return;
+    sheetInput.current?.focus();
+  }, [sheet]);
+
+  function go(query: string) {
+    const needle = query.trim();
+    setSheet(false);
+    router.push(`/member/circle?tab=all&q=${encodeURIComponent(needle)}`);
+  }
 
   return (
     <header className="header-chrome safe-pad safe-top sticky top-0 z-30 py-2.5 backdrop-blur-md">
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 md:flex-nowrap">
+      <div className="flex items-center gap-x-3 gap-y-2">
         <div className="md:hidden">
           <Wordmark compact surface="dark" />
         </div>
-        <div className="ml-auto flex items-center gap-2 md:order-last md:ml-0">
+        <form
+          className="hidden min-w-0 flex-1 md:block"
+          onSubmit={(e) => {
+            e.preventDefault();
+            go(q);
+          }}
+        >
+          <label className="sr-only" htmlFor="house-search">
+            Search people and cities
+          </label>
+          <input
+            id="house-search"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Search people and cities"
+            className="min-h-11 min-w-0 w-full rounded-full"
+          />
+        </form>
+        <div className="ml-auto flex items-center gap-2 md:ml-0">
+          <button
+            type="button"
+            className="pressable flex h-11 w-11 items-center justify-center rounded-full md:hidden"
+            aria-label="Search people and cities"
+            onClick={() => setSheet(true)}
+          >
+            <SearchIcon />
+          </button>
           <Link
             href="/member/notifications"
             className="pressable relative flex h-11 w-11 items-center justify-center rounded-full"
@@ -74,26 +118,65 @@ export function MemberHeader({
             </div>
           </details>
         </div>
-        <form
-          className="min-w-0 w-full flex-1 basis-full md:basis-auto"
-          onSubmit={(e) => {
-            e.preventDefault();
-            router.push(`/member/circle?q=${encodeURIComponent(q.trim())}`);
-          }}
-        >
-          <label className="sr-only" htmlFor="house-search">
-            Search
-          </label>
-          <input
-            id="house-search"
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            placeholder="Search people and cities"
-            className="min-h-11 min-w-0 w-full rounded-full"
-          />
-        </form>
       </div>
+
+      {sheet ? (
+        <div className="fixed inset-0 z-50 md:hidden" role="presentation">
+          <button
+            type="button"
+            className="absolute inset-0 bg-black/55"
+            aria-label="Close search"
+            onClick={() => setSheet(false)}
+          />
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={sheetTitle}
+            className="header-chrome absolute inset-x-0 top-0 px-4 pb-4 pt-[max(0.75rem,env(safe-area-inset-top))]"
+          >
+            <div className="flex items-center justify-between gap-3">
+              <p id={sheetTitle} className="font-serif text-xl text-[#efe6d4]">
+                Search
+              </p>
+              <button type="button" className="min-h-11 px-2 text-sm text-[#efe6d4]" onClick={() => setSheet(false)}>
+                Close
+              </button>
+            </div>
+            <form
+              className="mt-3"
+              onSubmit={(e) => {
+                e.preventDefault();
+                go(q);
+              }}
+            >
+              <label className="sr-only" htmlFor="house-search-sheet">
+                Search people and cities
+              </label>
+              <input
+                ref={sheetInput}
+                id="house-search-sheet"
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                placeholder="Search people and cities"
+                className="min-h-12 w-full rounded-full"
+              />
+              <button type="submit" className="action-quiet mt-3 w-full">
+                Show results
+              </button>
+            </form>
+          </div>
+        </div>
+      ) : null}
     </header>
+  );
+}
+
+function SearchIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden>
+      <circle cx="8.5" cy="8.5" r="5.2" fill="none" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M12.4 12.4 L16.2 16.2" stroke="currentColor" strokeWidth="1.4" />
+    </svg>
   );
 }
 

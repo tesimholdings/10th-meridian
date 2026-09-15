@@ -5,7 +5,8 @@ import { MatchBoard } from "@/components/matches/match-board";
 import { demoIndexFor } from "@/lib/matching/service";
 import { getPreviewStore, unreadHouseNotifications, unreadTotal, viewerProfile, viewerRewardsSnapshot } from "@/lib/preview/store";
 import { completionMessage } from "@/lib/profile/completion";
-import { formatHumanDateRange, formatHumanDateTime } from "@/lib/crossings/format";
+import { formatHumanDateRange } from "@/lib/crossings/format";
+import { formatEventWhen, isEventTonight } from "@/lib/events/when";
 import { HiggsfieldSlot } from "@/components/brand/higgsfield-slot";
 import { stillForListedExperience, occasionCredit } from "@/lib/atmosphere/campaign";
 import { campaignSrc, journeyStillSrc } from "@/lib/atmosphere/resolve-campaign";
@@ -31,7 +32,10 @@ export default async function MemberHomePage() {
     sharedChannelIds: store.channels.map((c) => c.id),
   });
   const trip = journeys.find((j) => j.profileId === viewer.id && j.status === "active");
-  const event = store.events[0];
+  const upcomingEvents = [...store.events].sort((a, b) => a.startsAt.localeCompare(b.startsAt));
+  const tonight = upcomingEvents.find((e) => isEventTonight(e));
+  const event = tonight ?? upcomingEvents[0];
+  const eventChipLabel = event && isEventTonight(event) ? "Tonight" : "Next";
   const rewards =
     access.user?.role === "member" ||
     access.user?.role === "moderator" ||
@@ -40,7 +44,7 @@ export default async function MemberHomePage() {
       : null;
 
   return (
-    <MemberShell user={access.user} demo={!access.decision.isMemberAccess || viewer.isDemo} title="Home">
+    <MemberShell user={access.user} demo={!access.decision.isMemberAccess || viewer.isDemo} title="Home" hasHeading>
       <div className="flex items-end justify-between gap-3">
         <div>
           <p className="text-sm text-[var(--ivory-dim)]">Good evening</p>
@@ -64,17 +68,11 @@ export default async function MemberHomePage() {
       <div className="mt-6 flex gap-3 overflow-x-auto hide-scroll">
         <RailChip href="/member/messages" label="Messages" value={`${unreadTotal()} new`} />
         <RailChip href="/member/crossings" label="Next city" value={trip ? trip.destinationCity : "Add a trip"} crossings />
-        <RailChip href="/member/events" label="Tonight" value={event?.city ?? "Experiences"} />
+        <RailChip href="/member/events" label={eventChipLabel} value={event?.city ?? "Experiences"} />
         {rewards ? (
           <RailChip href="/member/rewards" label="Rewards" value={formatPoints(rewards.availablePoints)} />
         ) : null}
       </div>
-
-      {rewards ? (
-        <div className="mt-8">
-          <RewardsTeaserCard availablePoints={rewards.availablePoints} />
-        </div>
-      ) : null}
 
       {trip ? (
         <Link href={`/member/crossings/${trip.id}`} className="mt-8 block overflow-hidden rounded-3xl">
@@ -108,7 +106,7 @@ export default async function MemberHomePage() {
             <p className="text-sm text-[var(--ivory-dim)]">Upcoming experience</p>
             <p className="font-serif text-3xl">{event.title}</p>
             <p className="mt-1 text-sm text-[var(--navy-soft)]">
-              {formatHumanDateTime(event.startsAt)} · {event.city}
+              {formatEventWhen(event.startsAt, event.city)} · {event.city}
             </p>
           </div>
         </Link>
@@ -125,6 +123,12 @@ export default async function MemberHomePage() {
           />
         </div>
       </section>
+
+      {rewards ? (
+        <div className="mt-10">
+          <RewardsTeaserCard availablePoints={rewards.availablePoints} />
+        </div>
+      ) : null}
 
       {paymentPending ? (
         <Link href="/member/settings#billing" className="mt-10 block text-sm text-[var(--gold)]">

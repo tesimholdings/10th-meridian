@@ -18,7 +18,7 @@ export default async function SettingsPage() {
   };
   const house = housePrefsFor(viewer.id);
   return (
-    <MemberShell user={access.user} demo={!access.decision.isMemberAccess} title="Account settings">
+    <MemberShell user={access.user} demo={!access.decision.isMemberAccess} title="Account settings" hasHeading>
       <h1 className="font-serif text-3xl">Account settings</h1>
       <section id="billing" className="mt-8">
         <h2 className="font-serif text-2xl">Billing</h2>
@@ -40,13 +40,22 @@ export default async function SettingsPage() {
       </section>
       <p className="mt-8 text-sm text-[var(--navy-soft)]">{SOLICITING_BAN}</p>
       <section className="mt-10">
-        <p className="label">House notifications</p>
+        <h2 className="font-serif text-2xl">Help</h2>
+        <p className="mt-2 text-sm text-[var(--navy-soft)]">
+          Contact a steward, report soliciting, or mute someone from recommendations.
+        </p>
+        <a href="/member/help" className="mt-2 inline-flex min-h-11 items-center text-sm text-[var(--blue)]">
+          Open help
+        </a>
+      </section>
+      <section className="mt-10">
+        <h2 className="font-serif text-2xl">House notifications</h2>
         <div className="mt-4">
           <HouseNotificationPrefsForm prefs={house} />
         </div>
       </section>
       <section className="mt-10">
-        <p className="label">Crossings notifications</p>
+        <h2 className="font-serif text-2xl">Crossings notifications</h2>
         <p className="mt-2 text-sm text-ivory-muted">Elegant, low-volume. Digests do not repeat.</p>
         <div className="mt-4">
           <NotificationPrefsForm prefs={travel} />

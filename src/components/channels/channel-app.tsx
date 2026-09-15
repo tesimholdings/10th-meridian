@@ -9,6 +9,13 @@ import {
   resolveMessageDestination,
   type ResolvedDestination,
 } from "@/lib/messaging/destination";
+import {
+  composeDraftId,
+  draftFor,
+  persistDrafts,
+  readDrafts,
+  upsertDraft,
+} from "@/lib/messaging/drafts";
 import type { ChannelRecord, MessageRecord, ProfileRecord } from "@/lib/data/types";
 import { MESSAGES_TAB_CHANNELS, MESSAGES_TAB_DMS } from "@/lib/copy/ui";
 import { formatRelativeTime } from "@/lib/crossings/format";
@@ -45,7 +52,8 @@ export function ChannelApp({
   const [drawer, setDrawer] = useState(false);
   const [tab, setTab] = useState<"dms" | "channels">(requestedProfileId ? "dms" : "dms");
   const [threadOf, setThreadOf] = useState<string | null>(null);
-  const [draft, setDraft] = useState("");
+  const [drafts, setDrafts] = useState<Record<string, string>>({});
+  const [sending, setSending] = useState(false);
   const [retrying, setRetrying] = useState(false);
   const [streamNote, setStreamNote] = useState<string | null>(null);
 
@@ -76,6 +84,27 @@ export function ChannelApp({
   }, [destination, pathname, requestedProfileId]);
 
   useEffect(() => {
+    setDrafts(readDrafts());
+  }, []);
+
+  const activeId = destination.channel?.id;
+  const draftIdentity = activeId ? composeDraftId(activeId, threadOf) : null;
+  const draft = draftIdentity ? draftFor(drafts, activeId, threadOf) : "";
+
+  useEffect(() => {
+    setThreadOf(null);
+  }, [activeId]);
+
+  function writeDraft(value: string) {
+    if (!draftIdentity) return;
+    setDrafts((prev) => {
+      const next = upsertDraft(prev, draftIdentity, value);
+      persistDrafts(next);
+      return next;
+    });
+  }
+
+  useEffect(() => {
     void fetch("/api/stream/token", { method: "POST" })
       .then((r) => r.json())
       .then((json: { stub?: boolean }) => {
@@ -88,7 +117,6 @@ export function ChannelApp({
       .catch(() => setStreamNote("Private member communication. Not E2EE."));
   }, []);
 
-  const activeId = destination.channel?.id;
   const roots = useMemo(
     () => messages.filter((m) => m.channelId === activeId && !m.parentId),
     [messages, activeId],
@@ -99,20 +127,34 @@ export function ChannelApp({
   );
 
   async function send() {
-    if (!draft.trim() || !destination.canCompose || !destination.channel) return;
-    const res = await fetch("/api/channels", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        action: "send",
-        channelId: destination.channel.id,
-        body: draft,
-        parentId: threadOf ?? undefined,
-      }),
-    });
-    const json = (await res.json()) as { messages?: MessageRecord[] };
-    if (json.messages) setMessages(json.messages);
-    setDraft("");
+    const channelId = destination.channel?.id;
+    const parentId = threadOf;
+    const identity = channelId ? composeDraftId(channelId, parentId) : null;
+    const body = identity ? draftFor(drafts, channelId, parentId) : "";
+    if (!body.trim() || !destination.canCompose || !channelId || !identity) return;
+    setSending(true);
+    try {
+      const res = await fetch("/api/channels", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "send",
+          channelId,
+          body,
+          parentId: parentId ?? undefined,
+        }),
+      });
+      const json = (await res.json()) as { messages?: MessageRecord[]; ok?: boolean };
+      if (!res.ok) return;
+      if (json.messages) setMessages(json.messages);
+      setDrafts((prev) => {
+        const next = upsertDraft(prev, identity, "");
+        persistDrafts(next);
+        return next;
+      });
+    } finally {
+      setSending(false);
+    }
   }
 
   async function react(messageId: string, reaction: string) {
@@ -230,9 +272,22 @@ export function ChannelApp({
           <p className="text-xs text-[var(--ivory-dim)]">{destination.headerDetail}</p>
         </div>
         {destination.peer ? (
-          <Link href={`/member/members/${destination.peer.id}`} className="avatar h-10 w-10 text-sm" style={{ background: destination.peer.accent }}>
-            {destination.peer.initials}
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link href={`/member/members/${destination.peer.id}`} className="avatar h-10 w-10 text-sm" style={{ background: destination.peer.accent }}>
+              {destination.peer.initials}
+            </Link>
+            <details className="relative">
+              <summary className="action-quiet cursor-pointer list-none">More</summary>
+              <div className="glass-menu absolute right-0 z-10 mt-2 w-44 rounded-2xl p-2">
+                <Link href={`/member/members/${destination.peer.id}`} className="flex min-h-10 items-center px-3 text-sm">
+                  View profile
+                </Link>
+                <Link href="/member/help" className="flex min-h-10 items-center px-3 text-sm">
+                  Report or mute
+                </Link>
+              </div>
+            </details>
+          </div>
         ) : null}
       </div>
 
@@ -321,8 +376,8 @@ export function ChannelApp({
       >
         <input
           value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          disabled={!destination.canCompose}
+          onChange={(e) => writeDraft(e.target.value)}
+          disabled={!destination.canCompose || sending}
           placeholder={
             destination.canCompose
               ? threadOf
@@ -330,11 +385,11 @@ export function ChannelApp({
                 : `Message ${destination.headerName}`
               : "Sending is disabled until this conversation loads"
           }
-          aria-label="Message"
+          aria-label={`Message ${destination.headerName}`}
         />
         <button
           type="submit"
-          disabled={!destination.canCompose || !draft.trim()}
+          disabled={!destination.canCompose || !draft.trim() || sending}
           className="min-h-12 rounded-full bg-[var(--blue)] px-4 text-sm text-white"
         >
           Send

@@ -3,7 +3,7 @@
 export const EDITORIAL_CAPTION =
   "Editorial placeholder — not a photograph of members or a completed event.";
 
-export const EDITORIAL_CREDIT = "Editorial still";
+export const EDITORIAL_CREDIT = "";
 
 export const campaign = {
   heroLandscape: "/media/campaign/00-yacht-wake.png",

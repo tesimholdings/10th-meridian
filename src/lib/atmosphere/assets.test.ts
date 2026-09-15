@@ -184,10 +184,15 @@ describe("original House atmosphere", () => {
     assert.match(film, /playSafe/);
     assert.equal(film.includes("autoPlay"), false);
     const apply = readFileSync("src/components/forms/apply-wizard.tsx", "utf8");
-    assert.match(apply, /Name and email are required/);
-    assert.match(apply, /Agree to the house standards/);
+    assert.match(apply, /validatePresence/);
+    assert.match(apply, /validateApplication/);
+    const rules = readFileSync("src/lib/apply/validation.ts", "utf8");
+    assert.match(rules, /Name is required/);
+    assert.match(rules, /Agree to the house standards/);
     const header = readFileSync("src/components/member/member-header.tsx", "utf8");
     assert.match(header, /Escape/);
+    assert.match(header, /Search people and cities/);
+    assert.match(header, /house-search-sheet/);
     const play = readFileSync("src/lib/atmosphere/play-safe.ts", "utf8");
     assert.match(play, /AbortError/);
   });

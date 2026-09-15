@@ -91,9 +91,11 @@ export const DEFAULT_HOUSE_NOTIFICATION_PREFS: Omit<HouseNotificationPrefs, "pro
 
 export interface MutualConnection {
   id: string;
+  /** Person, channel, or event id used for routing — never a synthetic member-shaped slug. */
+  refId: string;
   displayName: string;
   initials: string;
-  kind: "circle" | "channel";
+  kind: "circle" | "channel" | "event";
   label: string;
 }
 

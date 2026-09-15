@@ -30,7 +30,7 @@ export function DemoDisclosure() {
       {open ? (
         <p id={id} className="px-1 pb-3 text-xs leading-relaxed text-[var(--ivory-dim)]">
           Synthetic people, events, and messages. Not real members. Private data is never shown.
-          Higgsfield art will replace stills later — current images are original House placeholders.
+          Aspirational imagery — not photographs of members or completed events.
         </p>
       ) : null}
     </div>
