@@ -2,7 +2,8 @@ import { BottomNav } from "@/components/member/bottom-nav";
 import { DesktopRail } from "@/components/member/desktop-rail";
 import { MemberHeader } from "@/components/member/member-header";
 import { DemoDisclosure } from "@/components/brand/demo-disclosure";
-import { unreadHouseNotifications, unreadTotal, viewerProfile } from "@/lib/preview/store";
+import { CrossingsFlightProvider } from "@/components/crossings/crossings-flight";
+import { unreadHouseNotifications, unreadTotal, viewerProfile, getPreviewStore } from "@/lib/preview/store";
 import type { SessionUser } from "@/lib/access/session";
 
 export function MemberShell({
@@ -18,10 +19,15 @@ export function MemberShell({
   children: React.ReactNode;
   flush?: boolean;
 }) {
-  const unreadNotes = unreadHouseNotifications(viewerProfile().id);
+  const viewer = viewerProfile();
+  const unreadNotes = unreadHouseNotifications(viewer.id);
   const unreadMessages = unreadTotal();
+  const tripCity = getPreviewStore().crossings.journeys.find(
+    (j) => j.profileId === viewer.id && j.status === "active",
+  )?.destinationCity;
 
   return (
+    <CrossingsFlightProvider city={tripCity}>
     <div className="house-light min-h-dvh w-full text-[var(--navy)]">
       <div className="member-frame mx-auto flex min-h-dvh w-full">
         <DesktopRail unreadMessages={unreadMessages} />
@@ -46,5 +52,6 @@ export function MemberShell({
         </div>
       </div>
     </div>
+    </CrossingsFlightProvider>
   );
 }

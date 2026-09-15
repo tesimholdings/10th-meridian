@@ -6,6 +6,8 @@ import {
   campaignFilms,
   EDITORIAL_CAPTION,
   globalCampaign,
+  journeyMedia,
+  occasionCredit,
   stillForListedExperience,
 } from "@/lib/atmosphere/campaign";
 import {
@@ -39,13 +41,27 @@ describe("campaign still mapping", () => {
     assert.equal(stillForListedExperience({ kind: "salon", title: "After-hours concert" }), "nightlife");
   });
 
+  it("ties destination stills to named crossings and events, not orphan mood plates", () => {
+    assert.deepEqual(journeyMedia({ destinationCity: "Paris" }), { slot: "crossings", global: "paris" });
+    assert.deepEqual(journeyMedia({ destinationCity: "London" }), { slot: "crossings", global: "london" });
+    assert.equal(journeyMedia({ destinationCity: "Tokyo" }).slot, "crossings");
+    assert.equal(occasionCredit("Open House Evening", "Chicago"), "Open House Evening · Chicago");
+    assert.equal(occasionCredit("Crossing", "Paris"), "Crossing · Paris");
+    const home = readFileSync("src/app/member/home/page.tsx", "utf8");
+    const circle = readFileSync("src/app/member/circle/page.tsx", "utf8");
+    const crossings = readFileSync("src/app/member/crossings/page.tsx", "utf8");
+    assert.equal(home.includes('campaignSrc("homeNetwork")'), false);
+    assert.equal(circle.includes("HiggsfieldSlot"), false);
+    assert.match(crossings, /journeyStillSrc/);
+  });
+
   it("never claims editorial stills are members or completed events", () => {
     assert.match(EDITORIAL_CAPTION, /not a photograph of members/i);
     const home = readFileSync("src/app/member/home/page.tsx", "utf8");
     const landing = readFileSync("src/components/open-house/landing.tsx", "utf8");
     const lock = readFileSync("src/components/lock/lock-screen.tsx", "utf8");
     const hero = readFileSync("src/components/open-house/hero-media.tsx", "utf8");
-    assert.match(home, /EDITORIAL_CAPTION|campaignSrc\("homeIndex"\)/);
+    assert.match(home, /EDITORIAL_CAPTION|stillForListedExperience|journeyStillSrc/);
     assert.match(landing, /campaignSrc/);
     assert.match(landing, /filmSrc\("heroLandscape"\)/);
     assert.match(landing, /HeroMedia/);

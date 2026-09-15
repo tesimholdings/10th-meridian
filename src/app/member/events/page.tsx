@@ -3,7 +3,7 @@ import { resolveAccessContext } from "@/lib/access/context";
 import { MemberShell } from "@/components/member/member-shell";
 import { getPreviewStore } from "@/lib/preview/store";
 import { HiggsfieldSlot } from "@/components/brand/higgsfield-slot";
-import { stillForListedExperience } from "@/lib/atmosphere/campaign";
+import { stillForListedExperience, occasionCredit } from "@/lib/atmosphere/campaign";
 import { campaignSrc } from "@/lib/atmosphere/resolve-campaign";
 import { formatHumanDateTime } from "@/lib/crossings/format";
 
@@ -19,7 +19,10 @@ export default async function EventsPage() {
         {events.map((e, i) => (
           <li key={e.id}>
             <Link href={`/member/events/${e.id}`} className="block">
-              <HiggsfieldSlot src={campaignSrc(stillForListedExperience(e, i))} />
+              <HiggsfieldSlot
+                src={campaignSrc(stillForListedExperience(e, i))}
+                credit={occasionCredit(e.title, e.city)}
+              />
               <p className="mt-3 font-serif text-3xl">{e.title}</p>
               <p className="mt-1 text-sm text-[var(--navy-soft)]">
                 {formatHumanDateTime(e.startsAt)} · {e.city}

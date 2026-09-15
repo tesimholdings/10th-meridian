@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { memberNav } from "@/lib/config/site";
 import { NavIcon } from "@/components/member/nav-icons";
 import { Wordmark } from "@/components/brand/logo";
+import { CrossingsEntryLink } from "@/components/crossings/crossings-flight";
 
 export function DesktopRail({ unreadMessages = 0 }: { unreadMessages?: number }) {
   const pathname = usePathname();
@@ -17,8 +18,9 @@ export function DesktopRail({ unreadMessages = 0 }: { unreadMessages?: number })
             item.id === "home"
               ? pathname === item.href
               : Boolean(pathname?.startsWith(item.href));
+          const ItemLink = item.id === "crossings" ? CrossingsEntryLink : Link;
           return (
-            <Link
+            <ItemLink
               key={item.id}
               href={item.href}
               className={`pressable flex min-h-11 items-center gap-3 rounded-full px-3 text-sm ${
@@ -32,7 +34,7 @@ export function DesktopRail({ unreadMessages = 0 }: { unreadMessages?: number })
                 ) : null}
               </span>
               {item.label}
-            </Link>
+            </ItemLink>
           );
         })}
       </nav>

@@ -7,10 +7,12 @@ import { getPreviewStore, unreadHouseNotifications, unreadTotal, viewerProfile, 
 import { completionMessage } from "@/lib/profile/completion";
 import { formatHumanDateRange, formatHumanDateTime } from "@/lib/crossings/format";
 import { HiggsfieldSlot } from "@/components/brand/higgsfield-slot";
-import { campaignSrc } from "@/lib/atmosphere/resolve-campaign";
+import { stillForListedExperience, occasionCredit } from "@/lib/atmosphere/campaign";
+import { campaignSrc, journeyStillSrc } from "@/lib/atmosphere/resolve-campaign";
 import { visibleJourneysFor } from "@/lib/crossings/service";
 import { RewardsTeaserCard } from "@/components/rewards/teaser-card";
 import { formatPoints } from "@/lib/rewards/math";
+import { CrossingsEntryLink } from "@/components/crossings/crossings-flight";
 
 export const metadata = { title: "Home", robots: { index: false } };
 
@@ -61,7 +63,7 @@ export default async function MemberHomePage() {
 
       <div className="mt-6 flex gap-3 overflow-x-auto hide-scroll">
         <RailChip href="/member/messages" label="Messages" value={`${unreadTotal()} new`} />
-        <RailChip href="/member/crossings" label="Next city" value={trip ? trip.destinationCity : "Add a trip"} />
+        <RailChip href="/member/crossings" label="Next city" value={trip ? trip.destinationCity : "Add a trip"} crossings />
         <RailChip href="/member/events" label="Tonight" value={event?.city ?? "Experiences"} />
         {rewards ? (
           <RailChip href="/member/rewards" label="Rewards" value={formatPoints(rewards.availablePoints)} />
@@ -75,22 +77,33 @@ export default async function MemberHomePage() {
       ) : null}
 
       {trip ? (
-        <Link href={`/member/crossings/${trip.id}`} className="surface mt-8 block rounded-3xl px-5 py-5">
-          <p className="text-sm text-[var(--ivory-dim)]">Upcoming trip</p>
-          <p className="mt-1 font-serif text-3xl">{trip.destinationCity}</p>
-          <p className="mt-1 text-sm text-[var(--navy-soft)]">
-            {formatHumanDateRange(trip.arrivalDate, trip.departureDate)}
-          </p>
+        <Link href={`/member/crossings/${trip.id}`} className="mt-8 block overflow-hidden rounded-3xl">
+          <HiggsfieldSlot
+            src={journeyStillSrc(trip)}
+            aspect="aspect-[16/8]"
+            credit={occasionCredit("Crossing", trip.destinationCity)}
+          />
+          <div className="pt-4">
+            <p className="text-sm text-[var(--ivory-dim)]">Upcoming trip</p>
+            <p className="mt-1 font-serif text-3xl">{trip.destinationCity}</p>
+            <p className="mt-1 text-sm text-[var(--navy-soft)]">
+              {formatHumanDateRange(trip.arrivalDate, trip.departureDate)}
+            </p>
+          </div>
         </Link>
       ) : (
-        <Link href="/member/crossings/new" className="surface mt-8 block rounded-3xl px-5 py-5 text-[var(--navy)]">
+        <CrossingsEntryLink href="/member/crossings/new" className="surface mt-8 block rounded-3xl px-5 py-5 text-[var(--navy)]">
           Add a trip
-        </Link>
+        </CrossingsEntryLink>
       )}
 
       {event ? (
         <Link href={`/member/events/${event.id}`} className="mt-8 block overflow-hidden rounded-3xl">
-          <HiggsfieldSlot src={campaignSrc("homeIndex")} aspect="aspect-[16/8]" />
+          <HiggsfieldSlot
+            src={campaignSrc(stillForListedExperience(event))}
+            aspect="aspect-[16/8]"
+            credit={occasionCredit(event.title, event.city)}
+          />
           <div className="pt-4">
             <p className="text-sm text-[var(--ivory-dim)]">Upcoming experience</p>
             <p className="font-serif text-3xl">{event.title}</p>
@@ -102,7 +115,6 @@ export default async function MemberHomePage() {
       ) : null}
 
       <section className="mt-10">
-        <HiggsfieldSlot src={campaignSrc("homeNetwork")} aspect="aspect-[16/8]" className="mb-4 rounded-3xl" />
         <p className="text-sm text-[var(--ivory-dim)]">Useful connections</p>
         <div className="mt-3">
           <MatchBoard
@@ -123,11 +135,22 @@ export default async function MemberHomePage() {
   );
 }
 
-function RailChip({ href, label, value }: { href: string; label: string; value: string }) {
+function RailChip({
+  href,
+  label,
+  value,
+  crossings = false,
+}: {
+  href: string;
+  label: string;
+  value: string;
+  crossings?: boolean;
+}) {
+  const ChipLink = crossings ? CrossingsEntryLink : Link;
   return (
-    <Link href={href} className="surface min-w-[8.5rem] rounded-2xl px-4 py-3">
+    <ChipLink href={href} className="surface min-w-[8.5rem] rounded-2xl px-4 py-3">
       <p className="text-xs text-[var(--ivory-dim)]">{label}</p>
       <p className="mt-1 text-sm font-medium">{value}</p>
-    </Link>
+    </ChipLink>
   );
 }

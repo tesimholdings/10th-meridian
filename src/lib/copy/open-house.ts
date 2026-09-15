@@ -23,6 +23,9 @@ export const CLOSING_HEADLINE = "Make the next crossing count.";
 export const FOOTER_PRIVATE = "Private by design.";
 export const EXPERIENCES_DISCLOSURE =
   "Editorial imagery. Event details subject to confirmation.";
+export const OPEN_HOUSE_MOMENT = "Open House moment";
+export const EXPERIENCE_MOMENT = "Experience";
+export const OPEN_HOUSE_EVENING = "Open House evening";
 
 export const PUBLIC_NAV = [
   { href: "#the-house", pageHref: "/open-house#the-house", label: "The House" },

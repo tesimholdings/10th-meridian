@@ -40,6 +40,11 @@ const motionClasses = [
   "hero-caustic",
   "hero-sheet",
   "hero-media-shift",
+  "crossings-flight",
+  "crossings-flight-arc",
+  "crossings-flight-dest",
+  "crossings-flight-city",
+  "crossings-flight-craft",
 ];
 
 const stockHosts = ["unsplash.com", "pexels.com", "pixabay.com", "shutterstock.com"];
@@ -191,17 +196,30 @@ describe("original House atmosphere", () => {
     const landing = readFileSync("src/components/open-house/landing.tsx", "utf8");
     assert.match(landing, /campaignSrc|HiggsfieldSlot/);
     assert.match(landing, /stillForListedExperience/);
+    assert.match(landing, /OPEN_HOUSE_MOMENT/);
+    assert.match(landing, /EXPERIENCE_MOMENT/);
+    assert.match(landing, /OPEN_HOUSE_EVENING/);
     const events = readFileSync("src/app/member/events/page.tsx", "utf8");
     assert.match(events, /HiggsfieldSlot/);
     assert.match(events, /stillForListedExperience/);
     const home = readFileSync("src/app/member/home/page.tsx", "utf8");
-    assert.match(home, /campaignSrc\("homeIndex"\)/);
-    assert.match(home, /campaignSrc\("homeNetwork"\)/);
+    assert.match(home, /stillForListedExperience/);
+    assert.match(home, /journeyStillSrc/);
+    assert.equal(home.includes('campaignSrc("homeIndex")'), false);
+    assert.equal(home.includes('campaignSrc("homeNetwork")'), false);
     const crossings = readFileSync("src/app/member/crossings/page.tsx", "utf8");
-    assert.match(crossings, /campaignSrc\("crossings"\)/);
+    assert.match(crossings, /journeyStillSrc/);
     const circle = readFileSync("src/app/member/circle/page.tsx", "utf8");
     assert.equal(circle.includes('scene="yacht"'), false);
-    assert.match(circle, /campaignSrc\("homeIndex"\)/);
+    assert.equal(circle.includes("campaignSrc"), false);
+    assert.equal(circle.includes("HiggsfieldSlot"), false);
+    const rail = readFileSync("src/components/member/desktop-rail.tsx", "utf8");
+    const tabs = readFileSync("src/components/member/bottom-nav.tsx", "utf8");
+    const flight = readFileSync("src/components/crossings/crossings-flight.tsx", "utf8");
+    assert.match(rail, /CrossingsEntryLink/);
+    assert.match(tabs, /CrossingsEntryLink/);
+    assert.match(flight, /prefers-reduced-motion/);
+    assert.match(flight, /2800/);
     const indexRedirect = readFileSync("src/app/member/index/page.tsx", "utf8");
     assert.match(indexRedirect, /\/member\/circle/);
   });

@@ -24,9 +24,12 @@ import {
   MEMBERSHIP_HEADLINE,
   MEMBERSHIP_NO_MONTHLY,
   MEMBERSHIP_SOLICITING,
+  OPEN_HOUSE_EVENING,
   OPEN_HOUSE_EYEBROW,
   OPEN_HOUSE_HEADLINE,
   OPEN_HOUSE_LEDE,
+  OPEN_HOUSE_MOMENT,
+  EXPERIENCE_MOMENT,
   OPEN_HOUSE_PROOF,
   experienceStateLabel,
   experiences,
@@ -57,6 +60,7 @@ function Hero() {
           mobileSrc={campaignSrc("heroMobile")}
           videoSrc={filmSrc("heroLandscape")}
         />
+        <p className="sr-only">{OPEN_HOUSE_EVENING}</p>
       </div>
       <HeroAtmosphere />
       <div
@@ -103,7 +107,8 @@ function HouseStory() {
                 videoSrc={media ? filmSrc(media.film) : undefined}
                 className="aspect-[16/10] w-full overflow-hidden rounded-2xl"
               />
-              <h2 className="mt-5 font-serif text-3xl">{block.title}</h2>
+              <p className="label mt-4">{OPEN_HOUSE_MOMENT}</p>
+              <h2 className="mt-2 font-serif text-3xl">{block.title}</h2>
               <p className="mt-2 text-[var(--navy-soft)]">{block.body}</p>
             </article>
           );
@@ -140,7 +145,8 @@ function ExperiencesRail() {
                 className="aspect-[16/10] w-full rounded-2xl object-cover"
               />
             )}
-            <p className="mt-3 font-serif text-2xl">{item.title}</p>
+            <p className="label mt-4">{EXPERIENCE_MOMENT}</p>
+            <p className="mt-2 font-serif text-2xl">{item.title}</p>
             <p className="text-sm text-[var(--navy-soft)]">
               {[item.place, experienceStateLabel(item.state)].filter(Boolean).join(" · ")}
             </p>
@@ -198,6 +204,7 @@ function Closing() {
         }}
       />
       <div className="relative z-10 mx-auto flex min-h-[22rem] max-w-3xl flex-col items-center justify-center px-6 py-20 text-center text-[#faf8f2]">
+        <p className="label mb-4 text-[#c4a264]">{OPEN_HOUSE_MOMENT}</p>
         <h2 className="font-serif text-4xl md:text-5xl">{CLOSING_HEADLINE}</h2>
         <div className="mt-8">
           <Button href="/apply">{APPLY_LABEL}</Button>

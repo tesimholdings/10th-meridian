@@ -9,7 +9,8 @@ import { CROSSINGS_COPY } from "@/lib/crossings/types";
 import { canMutateCrossings } from "@/lib/crossings/privacy";
 import { matchesForJourney, refreshNotifications, tableSuggestionsFor, visibleJourneysFor } from "@/lib/crossings/service";
 import { HiggsfieldSlot } from "@/components/brand/higgsfield-slot";
-import { campaignSrc } from "@/lib/atmosphere/resolve-campaign";
+import { occasionCredit } from "@/lib/atmosphere/campaign";
+import { journeyStillSrc } from "@/lib/atmosphere/resolve-campaign";
 import { getPreviewStore, viewerProfile } from "@/lib/preview/store";
 import { demoIndexFor } from "@/lib/matching/service";
 import { DEFAULT_NOTIFICATION_PREFS } from "@/lib/crossings/notifications";
@@ -60,7 +61,16 @@ export default async function CrossingsPage() {
         {canMutate ? <Button href="/member/crossings/new">{CROSSINGS_COPY.createAction}</Button> : null}
       </div>
 
-      <HiggsfieldSlot src={campaignSrc("crossings")} aspect="aspect-[16/8]" className="mt-6 rounded-3xl" />
+      {upcoming ? (
+        <Link href={`/member/crossings/${upcoming.id}`} className="mt-6 block overflow-hidden rounded-3xl">
+          <HiggsfieldSlot
+            src={journeyStillSrc(upcoming)}
+            aspect="aspect-[16/8]"
+            className="rounded-3xl"
+            credit={occasionCredit("Crossing", upcoming.destinationCity)}
+          />
+        </Link>
+      ) : null}
 
       <nav className="mt-6 flex gap-3 overflow-x-auto hide-scroll text-sm">
         <a href="#trips" className="pill">Trips</a>

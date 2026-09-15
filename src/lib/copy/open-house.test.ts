@@ -12,9 +12,12 @@ import {
   MEMBERSHIP_HEADLINE,
   MEMBERSHIP_NO_MONTHLY,
   MEMBERSHIP_SOLICITING,
+  OPEN_HOUSE_EVENING,
   OPEN_HOUSE_EYEBROW,
   OPEN_HOUSE_HEADLINE,
   OPEN_HOUSE_LEDE,
+  OPEN_HOUSE_MOMENT,
+  EXPERIENCE_MOMENT,
   OPEN_HOUSE_PROOF,
   PUBLIC_NAV,
   experienceStateLabel,
@@ -38,6 +41,9 @@ describe("Open House customer copy", () => {
     assert.match(MEMBERSHIP_SOLICITING, /without refund/);
     assert.equal(CLOSING_HEADLINE, "Make the next crossing count.");
     assert.equal(EXPERIENCES_DISCLOSURE, "Editorial imagery. Event details subject to confirmation.");
+    assert.equal(OPEN_HOUSE_MOMENT, "Open House moment");
+    assert.equal(EXPERIENCE_MOMENT, "Experience");
+    assert.equal(OPEN_HOUSE_EVENING, "Open House evening");
     assert.equal(EXPLORE_THE_HOUSE, "Explore the house");
     assert.equal(JOIN_WAITLIST, "Join waitlist");
   });
@@ -100,6 +106,9 @@ describe("Open House customer surfaces", () => {
       "MEMBERSHIP_HEADLINE",
       "CLOSING_HEADLINE",
       "EXPERIENCES_DISCLOSURE",
+      "OPEN_HOUSE_MOMENT",
+      "EXPERIENCE_MOMENT",
+      "OPEN_HOUSE_EVENING",
       'href="/apply"',
       'href="/remind"',
       'href="#the-house"',

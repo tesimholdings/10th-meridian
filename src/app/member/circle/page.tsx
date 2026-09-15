@@ -3,8 +3,6 @@ import { MemberShell } from "@/components/member/member-shell";
 import { IndexCard } from "@/components/matches/match-board";
 import { ForYouField } from "@/components/circle/for-you-field";
 import { AskTheMeridian } from "@/components/index/ask-meridian";
-import { HiggsfieldSlot } from "@/components/brand/higgsfield-slot";
-import { campaignSrc } from "@/lib/atmosphere/resolve-campaign";
 import { viewerProfile, getPreviewStore } from "@/lib/preview/store";
 import { demoIndexFor } from "@/lib/matching/service";
 import {
@@ -48,7 +46,6 @@ export default async function MyCirclePage({
 
   return (
     <MemberShell user={access.user} demo={!access.decision.isMemberAccess || viewer.isDemo} title={MERIDIAN_INDEX}>
-      <HiggsfieldSlot src={campaignSrc("homeIndex")} aspect="aspect-[16/7]" className="mb-6 rounded-3xl" />
       <AskTheMeridian initialQuery={q} />
 
       <nav className="mt-8 flex gap-2 border-b border-[var(--line)]" aria-label="My Circle sections">

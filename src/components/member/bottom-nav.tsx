@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { memberNav } from "@/lib/config/site";
 import { NavIcon } from "@/components/member/nav-icons";
+import { CrossingsEntryLink } from "@/components/crossings/crossings-flight";
 
 export function BottomNav({ unreadMessages = 0 }: { unreadMessages?: number }) {
   const pathname = usePathname();
@@ -20,9 +21,10 @@ export function BottomNav({ unreadMessages = 0 }: { unreadMessages?: number }) {
             item.id === "home"
               ? pathname === item.href
               : Boolean(pathname?.startsWith(item.href));
+          const ItemLink = item.id === "crossings" ? CrossingsEntryLink : Link;
           return (
             <li key={item.id}>
-              <Link
+              <ItemLink
                 href={item.href}
                 className={`pressable relative flex min-h-14 flex-col items-center justify-center gap-1 text-[11px] ${
                   active ? "text-[#faf8f2] font-medium" : "text-[#efe6d4]/55"
@@ -40,7 +42,7 @@ export function BottomNav({ unreadMessages = 0 }: { unreadMessages?: number }) {
                   ) : null}
                 </span>
                 {item.label}
-              </Link>
+              </ItemLink>
             </li>
           );
         })}

@@ -84,3 +84,23 @@ export function stillForListedExperience(
   if (index === 1 || /dinner|table/.test(text)) return "eventsDinner";
   return index % 2 ? "celebrations" : "eventsDinner";
 }
+
+/** Destination still for a named Crossing — never a generic mood plate. */
+export function journeyMedia(input: { destinationCity?: string | null }): {
+  slot: CampaignSlot;
+  global?: GlobalSlot;
+} {
+  const city = (input.destinationCity ?? "").trim().toLowerCase();
+  if (city === "paris") return { slot: "crossings", global: "paris" };
+  if (city === "london") return { slot: "crossings", global: "london" };
+  if (city.includes("cape town") || city === "cape") return { slot: "eventsDinner", global: "capeTown" };
+  if (city.includes("como")) return { slot: "homeIndex", global: "lakeComo" };
+  if (city.includes("amalfi") || city.includes("capri")) return { slot: "homeIndex", global: "amalfi" };
+  if (city.includes("nairobi") || city.includes("safari")) return { slot: "crossings", global: "safari" };
+  if (city === "new york" || city === "nyc") return { slot: "homeNetwork", global: "nycRooftop" };
+  return { slot: "crossings" };
+}
+
+export function occasionCredit(name: string, place?: string | null): string {
+  return [name, place?.trim()].filter(Boolean).join(" · ");
+}

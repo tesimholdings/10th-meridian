@@ -5,6 +5,7 @@ import {
   campaignFallbacks,
   campaignFilms,
   globalCampaign,
+  journeyMedia,
   type CampaignFilm,
   type CampaignSlot,
   type GlobalSlot,
@@ -31,6 +32,11 @@ export function globalSrc(slot: GlobalSlot, fallback: CampaignSlot = "homeIndex"
 /** Always the public CDN path. Do not existsSync-gate — Vercel functions often lack /public MP4s. */
 export function filmSrc(slot: CampaignFilm): string {
   return campaignFilms[slot];
+}
+
+export function journeyStillSrc(input: { destinationCity?: string | null }): string {
+  const media = journeyMedia(input);
+  return media.global ? globalSrc(media.global, media.slot) : campaignSrc(media.slot);
 }
 
 export function campaignPackOnDisk(): boolean {

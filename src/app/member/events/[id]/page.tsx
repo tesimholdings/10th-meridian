@@ -4,7 +4,7 @@ import { MemberShell } from "@/components/member/member-shell";
 import { RegisterButton } from "@/components/events/register-button";
 import { getPreviewStore } from "@/lib/preview/store";
 import { HiggsfieldSlot } from "@/components/brand/higgsfield-slot";
-import { stillForListedExperience } from "@/lib/atmosphere/campaign";
+import { stillForListedExperience, occasionCredit } from "@/lib/atmosphere/campaign";
 import { campaignSrc } from "@/lib/atmosphere/resolve-campaign";
 import { formatHumanDateTime } from "@/lib/crossings/format";
 
@@ -22,7 +22,10 @@ export default async function EventDetailPage({
 
   return (
     <MemberShell user={access.user} demo title="Experience">
-      <HiggsfieldSlot src={campaignSrc(stillForListedExperience(event))} />
+      <HiggsfieldSlot
+        src={campaignSrc(stillForListedExperience(event))}
+        credit={occasionCredit(event.title, event.city)}
+      />
       <p className="mt-4 text-sm text-[var(--ivory-dim)]">
         {event.listingState === "concept" ? "Concept" : "Planned"} — this has not occurred
       </p>
