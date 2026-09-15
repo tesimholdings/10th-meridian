@@ -13,6 +13,13 @@ const originals = [
   "public/media/demo/gallery-4.svg",
 ];
 
+const officialLockup = [
+  "public/brand/tenth-meridian-logo-full-lockup.png",
+  "public/brand/tenth-meridian-logo-full-lockup.webp",
+  "public/brand/tenth-meridian-logo-full-lockup-transparent.png",
+  "public/brand/tenth-meridian-logo-full-lockup-transparent.webp",
+];
+
 const motionClasses = [
   "wave-shimmer",
   "concert-pulse",
@@ -34,6 +41,18 @@ const motionClasses = [
 const stockHosts = ["unsplash.com", "pexels.com", "pixabay.com", "shutterstock.com"];
 
 describe("original House atmosphere", () => {
+  it("ships the official lockup on black plus a transparent treatment", () => {
+    for (const path of officialLockup) {
+      assert.equal(existsSync(path), true, path);
+    }
+    const lock = readFileSync("src/components/lock/lock-screen.tsx", "utf8");
+    assert.match(lock, /OfficialLockup/);
+    assert.equal(lock.includes("TENTH MERIDIAN"), false);
+    const wordmark = readFileSync("src/components/brand/logo.tsx", "utf8");
+    assert.match(wordmark, /10th Meridian/);
+    assert.equal(wordmark.includes("TENTH MERIDIAN"), false);
+  });
+
   it("ships original water / yacht / concert stills", () => {
     for (const path of originals) {
       assert.equal(existsSync(path), true, path);

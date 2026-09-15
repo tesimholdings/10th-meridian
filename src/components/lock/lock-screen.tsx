@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Wordmark } from "@/components/brand/logo";
+import { OfficialLockup } from "@/components/brand/official-lockup";
 import { Countdown } from "@/components/cinematic/countdown";
 import { Button } from "@/components/ui/button";
 import { brand } from "@/lib/config/site";
@@ -16,18 +16,22 @@ export function LockScreen({
     <div className="lock-gold relative min-h-dvh overflow-hidden text-ivory">
       <div className="lock-gold-glow" aria-hidden />
       <div className="grain lock-gold-grain" aria-hidden />
-      <div className="safe-pad safe-top relative z-10 mx-auto flex min-h-dvh max-w-3xl flex-col md:max-w-4xl">
-        <header className="flex items-center justify-between py-4 md:py-6">
-          <Wordmark compact />
+      <div className="safe-pad safe-top relative z-10 mx-auto flex min-h-dvh max-w-5xl flex-col">
+        <header className="flex items-center justify-end py-4 md:py-6">
           <Link href="/sign-in" className="min-h-11 text-sm text-ivory">
             Sign in
           </Link>
         </header>
 
-        <main className="flex flex-1 flex-col items-center justify-center px-2 py-10 text-center">
-          <h1 className="max-w-xl font-serif text-[2.7rem] leading-[0.95] text-ivory md:text-6xl">
+        <main className="flex flex-1 flex-col items-center justify-center px-2 py-8 text-center">
+          <OfficialLockup
+            priority
+            className="mx-auto w-[min(92vw,42rem)] max-w-full"
+          />
+          <h1 className="sr-only">{brand.name}</h1>
+          <p className="mt-10 max-w-lg font-serif text-2xl leading-tight text-ivory md:text-3xl">
             {brand.lockLine}
-          </h1>
+          </p>
           <div className="mt-10 w-full max-w-md">
             <Countdown
               targetIso={decision.nextOpenAt}

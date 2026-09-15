@@ -55,7 +55,7 @@ npm test         # My Circle, Open House TZ, Circle, privacy, notifications, cop
 
 ## Reviewer click-through (Stefan / Astra)
 
-1. `/` lock — grainy black-and-gold field only (no campaign/yacht photo), **centered** wordmark + headline + countdown + **Remind me** on desktop; Sign in in the header
+1. `/` lock — grainy black-and-gold field only (no campaign/yacht photo). Official gold/white lockup centered on black; headline + countdown + **Remind me**; Sign in in the header. Prose remains **10th Meridian**.
 2. Desktop (fine pointer): gold/navy cursor follower. Off for touch. Off / static when `prefers-reduced-motion`
 3. Reviewer tools → **Force Open House** → hero, three benefits, experiences, **$10,000 lifetime**, no-soliciting → **Walk the house**
 4. Home — greeting, next trip / experience, three useful connections, Rewards teaser in **points**
