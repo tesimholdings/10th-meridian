@@ -208,8 +208,10 @@ describe("original House atmosphere", () => {
     assert.match(events, /HiggsfieldSlot/);
     assert.match(events, /stillForListedExperience/);
     const home = readFileSync("src/app/member/home/page.tsx", "utf8");
-    assert.match(home, /stillForListedExperience/);
-    assert.match(home, /journeyStillSrc/);
+    assert.equal(home.includes("stillForListedExperience"), false);
+    assert.equal(home.includes("journeyStillSrc"), false);
+    assert.equal(home.includes("HiggsfieldSlot"), false);
+    assert.match(home, /Open this trip/);
     assert.equal(home.includes('campaignSrc("homeIndex")'), false);
     assert.equal(home.includes('campaignSrc("homeNetwork")'), false);
     const crossings = readFileSync("src/app/member/crossings/page.tsx", "utf8");

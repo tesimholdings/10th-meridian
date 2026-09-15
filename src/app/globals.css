@@ -1051,7 +1051,6 @@ html.has-luxury-cursor * {
   .rise,
   .rise-delay,
   .breath,
-  .meridian-pulse,
   .crossings-sheet,
   .crossings-sheet-panel,
   .oh-title,
@@ -1208,29 +1207,6 @@ a {
 
 button:disabled {
   opacity: 0.45;
-}
-
-.atlas {
-  background:
-    radial-gradient(900px 420px at 50% 80%, rgba(20, 52, 60, 0.45), transparent 62%),
-    radial-gradient(520px 280px at 18% 30%, rgba(12, 28, 40, 0.55), transparent 58%),
-    linear-gradient(180deg, rgba(12, 28, 40, 0.35), transparent 55%);
-}
-
-.atlas-grid {
-  background-image:
-    linear-gradient(rgba(239, 230, 212, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(239, 230, 212, 0.045) 1px, transparent 1px);
-  background-size: 56px 56px;
-}
-
-@keyframes meridian-pulse {
-  0%, 100% { opacity: 0.35; transform: scale(1); }
-  50% { opacity: 0.9; transform: scale(1.08); }
-}
-
-.meridian-pulse {
-  animation: meridian-pulse 4.8s ease-in-out infinite;
 }
 
 .crossings-sheet {
