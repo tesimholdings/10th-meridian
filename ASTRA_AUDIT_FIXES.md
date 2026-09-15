@@ -18,7 +18,9 @@ Nav is **Home · Index · Messages · Crossings · Profile**. Index holds For yo
 
 Warm white `#FAF8F2`, navy `#092B45`, blue `#087CB8`, aqua `#30C8D2`, gold `#C4A264`. Serif for names and major moments; sans for nav, messages, forms. Round avatars, pills, fine lines. Nightlife stills are occasional (experiences), not default chrome. Campaign stills are editorial placeholders only — never members or completed events.
 
-Copy is shortened: lock is headline + countdown + Remind me; Open House is hero, three benefits, experiences, $10,000 lifetime, no-soliciting; Home leads with connections and the next trip/experience; Index reasons are one line + city.
+Copy is shortened: lock is headline + countdown + Enter / Open House; Open House is hero, three benefits, experiences, $10,000 lifetime, no-soliciting; Home leads with connections and the next trip/experience; Index reasons are one line + city.
+
+Guest lock is grainy black + Meridian gold `#C4A264` only — no campaign `00`/`06`, yacht, or water. Those stills remain on Open House and member Home. Lock grain animation honors `prefers-reduced-motion`.
 
 ## Motion
 

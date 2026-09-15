@@ -121,6 +121,44 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
 }
 
+.lock-field {
+  background: #000;
+}
+
+.lock-field-base {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(70% 55% at 50% 38%, rgba(196, 162, 100, 0.07), transparent 68%),
+    #000;
+}
+
+.lock-field-gold {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  opacity: 0.7;
+  background-image:
+    radial-gradient(1px 1px at 14% 18%, rgba(196, 162, 100, 0.55), transparent 60%),
+    radial-gradient(1px 1px at 28% 72%, rgba(196, 162, 100, 0.32), transparent 60%),
+    radial-gradient(1.2px 1.2px at 41% 31%, rgba(196, 162, 100, 0.4), transparent 60%),
+    radial-gradient(1px 1px at 63% 22%, rgba(196, 162, 100, 0.28), transparent 60%),
+    radial-gradient(1px 1px at 71% 68%, rgba(196, 162, 100, 0.38), transparent 60%),
+    radial-gradient(1.1px 1.1px at 83% 41%, rgba(196, 162, 100, 0.3), transparent 60%),
+    radial-gradient(1px 1px at 91% 81%, rgba(196, 162, 100, 0.24), transparent 60%),
+    radial-gradient(1px 1px at 8% 54%, rgba(196, 162, 100, 0.22), transparent 60%);
+}
+
+.lock-grain {
+  pointer-events: none;
+  position: absolute;
+  inset: -18%;
+  opacity: 0.38;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.7'/%3E%3C/svg%3E");
+  animation: lock-grain 900ms steps(2) infinite;
+}
+
 .safe-bottom {
   padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
 }
@@ -240,6 +278,12 @@ body {
   0% { transform: translate3d(0, 0, 0) scale(1); }
   50% { transform: translate3d(-1.5%, 1%, 0) scale(1.04); }
   100% { transform: translate3d(0, 0, 0) scale(1); }
+}
+
+@keyframes lock-grain {
+  0% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(-1.2%, 0.8%, 0); }
+  100% { transform: translate3d(0, 0, 0); }
 }
 
 @keyframes pulse-gold {
@@ -509,7 +553,8 @@ body {
   .stagger-in,
   .pressable,
   .tab-slide,
-  .sheet-motion {
+  .sheet-motion,
+  .lock-grain {
     animation: none !important;
     transition: none !important;
   }

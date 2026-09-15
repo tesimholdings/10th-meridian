@@ -24,6 +24,7 @@ const motionClasses = [
   "pressable",
   "tab-slide",
   "sheet-motion",
+  "lock-grain",
 ];
 
 const stockHosts = ["unsplash.com", "pexels.com", "pixabay.com", "shutterstock.com"];

@@ -9,7 +9,7 @@ Runtime: Node 22, Next.js 16.3.5, preview mode (no live secrets)
 
 | Check | Result |
 | --- | --- |
-| `npm test` | 78/78 pass — prior coverage plus campaign PNGs on disk, slot mapping (nightlife not default), Ask, DM destination, journey validation |
+| `npm test` | 79/79 pass — guest lock is grain-only (no campaign 00/06), plus campaign PNGs, Ask, DM destination, journey validation |
 | `npm run lint` | Pass (0 errors) |
 | `npm run build` | Pass — Next.js 16.3.5 Turbopack, TypeScript clean |
 

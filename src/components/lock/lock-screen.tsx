@@ -1,12 +1,10 @@
 import Link from "next/link";
 import { Wordmark } from "@/components/brand/logo";
-import { HeroStage } from "@/components/cinematic/hero-stage";
+import { LockField } from "@/components/lock/lock-field";
 import { Countdown } from "@/components/cinematic/countdown";
 import { Button } from "@/components/ui/button";
 import { brand } from "@/lib/config/site";
 import type { AccessDecision } from "@/lib/access/open-house";
-import { EDITORIAL_CAPTION } from "@/lib/atmosphere/campaign";
-import { campaignSrc } from "@/lib/atmosphere/resolve-campaign";
 
 export function LockScreen({
   decision,
@@ -16,16 +14,12 @@ export function LockScreen({
   referralEarly?: boolean;
 }) {
   return (
-    <HeroStage
-      caption={EDITORIAL_CAPTION}
-      src={campaignSrc("heroLandscape")}
-      mobileSrc={campaignSrc("heroMobile")}
-    >
+    <LockField>
       <div className="safe-pad safe-top mx-auto flex min-h-dvh max-w-6xl flex-col justify-between pb-16 pt-4 md:py-16">
         <header className="flex items-center justify-between">
           <Wordmark compact />
-          <Link href="/sign-in" className="min-h-11 text-sm text-ivory">
-            Sign in
+          <Link href="/sign-in" className="min-h-11 text-sm text-[var(--gold)]">
+            Enter
           </Link>
         </header>
 
@@ -40,9 +34,10 @@ export function LockScreen({
               label={referralEarly ? "Until general doors" : "Until the next tenth"}
             />
           </div>
-          <div className="mt-8">
-            <Button href="/remind" variant="ivory" className="w-full sm:w-auto">
-              Remind me
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Button href="/sign-in">Enter</Button>
+            <Button href="/remind" variant="ghost">
+              Open House
             </Button>
           </div>
         </main>
@@ -55,6 +50,6 @@ export function LockScreen({
           </div>
         </footer>
       </div>
-    </HeroStage>
+    </LockField>
   );
 }

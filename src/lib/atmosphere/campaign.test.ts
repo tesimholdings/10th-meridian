@@ -31,10 +31,29 @@ describe("campaign still mapping", () => {
     const landing = readFileSync("src/components/open-house/landing.tsx", "utf8");
     const lock = readFileSync("src/components/lock/lock-screen.tsx", "utf8");
     assert.match(home, /EDITORIAL_CAPTION|campaignSrc\("homeIndex"\)/);
-    assert.match(landing, /campaignSrc/);
-    assert.match(lock, /campaignSrc\("heroLandscape"\)/);
+    assert.match(landing, /campaignSrc\("heroLandscape"\)/);
     assert.equal(home.includes(campaign.nightlife), false);
-    assert.equal(lock.includes(campaign.nightlife), false);
+    assert.equal(lock.includes(campaign.heroLandscape), false);
+    assert.equal(lock.includes(campaign.heroMobile), false);
+    assert.equal(lock.includes("campaignSrc"), false);
+    assert.equal(lock.includes("HeroStage"), false);
+    assert.match(lock, /LockField/);
+  });
+
+  it("keeps campaign 00/06 off the guest lock", () => {
+    const lock = readFileSync("src/components/lock/lock-screen.tsx", "utf8");
+    const field = readFileSync("src/components/lock/lock-field.tsx", "utf8");
+    const css = readFileSync("src/app/globals.css", "utf8");
+    for (const src of [lock, field]) {
+      assert.equal(src.includes("00-yacht-wake"), false);
+      assert.equal(src.includes("06-mobile-water-hero"), false);
+      assert.equal(src.includes("/media/"), false);
+      assert.equal(src.includes("<img"), false);
+    }
+    assert.match(css, /\.lock-field/);
+    assert.match(css, /\.lock-grain/);
+    assert.match(css, /#000|#000000/);
+    assert.match(css, /#c4a264|#C4A264|196, 162, 100/);
   });
 
   it("ships the eight editorial PNGs on disk", () => {
