@@ -1,106 +1,179 @@
 import Link from "next/link";
-import { Wordmark } from "@/components/brand/logo";
-import { HeroStage } from "@/components/cinematic/hero-stage";
-import { HiggsfieldSlot } from "@/components/brand/higgsfield-slot";
-import { EDITORIAL_CAPTION, stillForListedExperience } from "@/lib/atmosphere/campaign";
-import { campaignSrc } from "@/lib/atmosphere/resolve-campaign";
+import { HeroMedia } from "@/components/open-house/hero-media";
+import { PublicFooter } from "@/components/open-house/public-footer";
+import { PublicHeader } from "@/components/open-house/public-header";
 import { Button } from "@/components/ui/button";
-import { brand } from "@/lib/config/site";
+import { stillForListedExperience } from "@/lib/atmosphere/campaign";
+import { campaignSrc } from "@/lib/atmosphere/resolve-campaign";
 import type { AccessContext } from "@/lib/access/context";
-import { acceptedThisCohort, getPreviewStore } from "@/lib/preview/store";
-import { LIFETIME_PRICE_LABEL, SOLICITING_BAN } from "@/lib/copy/community";
-import { formatHumanDateTime } from "@/lib/crossings/format";
+import {
+  APPLY_LABEL,
+  CLOSING_HEADLINE,
+  EXPERIENCES_DISCLOSURE,
+  EXPLORE_THE_HOUSE,
+  HOUSE_BLOCKS,
+  JOIN_WAITLIST,
+  MEMBERSHIP_CAP,
+  MEMBERSHIP_HEADLINE,
+  MEMBERSHIP_NO_MONTHLY,
+  MEMBERSHIP_SOLICITING,
+  OPEN_HOUSE_EYEBROW,
+  OPEN_HOUSE_HEADLINE,
+  OPEN_HOUSE_LEDE,
+  OPEN_HOUSE_PROOF,
+  experienceStateLabel,
+  experiences,
+} from "@/lib/copy/open-house";
 
 export function OpenHouseLanding({ access }: { access: AccessContext }) {
-  const store = getPreviewStore();
-  const remaining = Math.max(0, store.admissionsCap - acceptedThisCohort());
-
   return (
-    <div className="bg-[var(--paper)] text-[var(--navy)]">
-      <HeroStage
-        caption={EDITORIAL_CAPTION}
-        src={campaignSrc("heroLandscape")}
-        mobileSrc={campaignSrc("heroMobile")}
-      >
-        <div className="safe-pad safe-top mx-auto flex min-h-[86dvh] max-w-6xl flex-col justify-between py-8">
-          <Wordmark />
-          <div className="rise max-w-xl pb-20 text-ivory">
-            <h1 className="oh-title font-serif text-[2.8rem] leading-[0.94] md:text-6xl">{brand.idea}</h1>
-            <p className="mt-5 max-w-md text-base text-ivory/85">
-              A private house for the next conversation that matters.
-            </p>
-            <div className="mt-8 hidden gap-3 md:flex">
-              <Button href="/apply">Apply</Button>
-              <Button href="/member/home" variant="ghost">
-                Walk the house
-              </Button>
-            </div>
-          </div>
-        </div>
-      </HeroStage>
+    <div className="house-light bg-[var(--paper)] text-[var(--navy)]">
+      <PublicHeader overlay landing />
+      <main>
+        <Hero />
+        <HouseStory />
+        <ExperiencesRail />
+        <Membership access={access} />
+        <Closing />
+      </main>
+      <PublicFooter />
+    </div>
+  );
+}
 
+function Hero() {
+  return (
+    <section className="relative isolate min-h-[76svh] overflow-hidden text-ivory md:min-h-[90svh]">
+      <HeroMedia src={campaignSrc("heroLandscape")} mobileSrc={campaignSrc("heroMobile")} />
       <div
-        className="safe-pad sticky bottom-0 z-30 border-t border-[var(--line)] bg-[rgba(250,248,242,0.94)] py-3 backdrop-blur md:hidden"
-        style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))" }}
-      >
-        <div className="grid grid-cols-2 gap-2">
-          <Button href="/apply" className="!min-h-11">Apply</Button>
-          <Button href="/member/home" variant="ghost" className="!min-h-11">Walk in</Button>
+        className="absolute inset-0"
+        aria-hidden
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(9,43,69,0.22) 0%, rgba(9,43,69,0.08) 36%, rgba(9,43,69,0.28) 70%, rgba(250,248,242,0.96) 100%)",
+        }}
+      />
+      <div className="relative z-10 mx-auto flex min-h-[76svh] max-w-6xl flex-col justify-end px-[max(1.25rem,env(safe-area-inset-left))] pb-16 pt-28 md:min-h-[90svh] md:pb-24">
+        <p className="text-[0.72rem] font-medium tracking-[0.18em] text-[#faf8f2] [text-shadow:0_1px_12px_rgba(9,43,69,0.35)]">
+          {OPEN_HOUSE_EYEBROW}
+        </p>
+        <h1 className="oh-title mt-4 max-w-3xl font-serif text-[2.6rem] leading-[0.96] text-[#faf8f2] [text-shadow:0_2px_24px_rgba(9,43,69,0.35)] md:text-6xl">
+          {OPEN_HOUSE_HEADLINE}
+        </h1>
+        <p className="mt-5 max-w-md text-base text-[#faf8f2]/90 [text-shadow:0_1px_12px_rgba(9,43,69,0.35)]">
+          {OPEN_HOUSE_LEDE}
+        </p>
+        <div className="mt-8 flex flex-wrap gap-3">
+          <Button href="/apply">{APPLY_LABEL}</Button>
+          <Button href="#the-house" variant="ghost">
+            {EXPLORE_THE_HOUSE}
+          </Button>
         </div>
+        <p className="mt-8 text-sm text-[#faf8f2]/80">{OPEN_HOUSE_PROOF}</p>
       </div>
+    </section>
+  );
+}
 
-      <section className="safe-pad mx-auto grid max-w-6xl gap-8 py-16 md:grid-cols-3 md:py-24">
-        {[
-          { t: "People first", d: "A private circle of who you should know next — never a public feed." },
-          { t: "When paths cross", d: "Crossings when you land in the same city. City-level only." },
-          { t: "A closed table", d: "Ten new members a month. Lifetime membership, once." },
-        ].map((b) => (
-          <article key={b.t}>
-            <h2 className="font-serif text-3xl">{b.t}</h2>
-            <p className="mt-2 text-[var(--navy-soft)]">{b.d}</p>
+function HouseStory() {
+  return (
+    <section id="the-house" className="safe-pad mx-auto max-w-6xl scroll-mt-24 py-16 md:py-24">
+      <p className="text-xs font-medium tracking-[0.16em] text-[var(--gold-dim)]">THE HOUSE</p>
+      <div className="mt-8 grid gap-10 md:grid-cols-3">
+        {HOUSE_BLOCKS.map((block) => (
+          <article key={block.id}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={campaignSrc(block.still)}
+              alt=""
+              className="aspect-[16/10] w-full object-cover"
+            />
+            <h2 className="mt-5 font-serif text-3xl">{block.title}</h2>
+            <p className="mt-2 text-[var(--navy-soft)]">{block.body}</p>
           </article>
         ))}
-      </section>
+      </div>
+    </section>
+  );
+}
 
-      <section className="safe-pad mx-auto max-w-6xl pb-16">
+function ExperiencesRail() {
+  return (
+    <section id="experiences" className="safe-pad mx-auto max-w-6xl scroll-mt-24 pb-16 md:pb-24">
+      <div className="flex flex-wrap items-end justify-between gap-4">
         <h2 className="font-serif text-4xl">Experiences</h2>
-        <ul className="mt-8 grid gap-6 md:grid-cols-2">
-          {store.events.map((e, i) => (
-            <li key={e.id}>
-              <HiggsfieldSlot src={campaignSrc(stillForListedExperience(e, i))} />
-              <p className="mt-3 font-serif text-2xl">{e.title}</p>
-              <p className="text-sm text-[var(--ivory-dim)]">
-                {formatHumanDateTime(e.startsAt)} · {e.city} · {e.listingState === "concept" ? "Concept" : "Planned"}
-              </p>
-            </li>
-          ))}
+        <p className="max-w-sm text-sm text-[var(--navy-soft)]">{EXPERIENCES_DISCLOSURE}</p>
+      </div>
+      <ul className="mt-8 grid gap-6 md:grid-cols-3">
+        {experiences.map((item, i) => (
+          <li key={item.id}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={campaignSrc(stillForListedExperience(item, i))}
+              alt=""
+              className="aspect-[16/10] w-full object-cover"
+            />
+            <p className="mt-3 font-serif text-2xl">{item.title}</p>
+            <p className="text-sm text-[var(--navy-soft)]">
+              {[item.place, experienceStateLabel(item.state)].filter(Boolean).join(" · ")}
+            </p>
+            <p className="mt-1 text-sm text-[var(--navy-soft)]">{item.summary}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+function Membership({ access }: { access: AccessContext }) {
+  return (
+    <section
+      id="membership"
+      className="scroll-mt-24 bg-[#092b45] py-16 text-[#faf8f2] md:py-24"
+    >
+      <div className="safe-pad mx-auto max-w-3xl text-center">
+        <p className="text-xs font-medium tracking-[0.16em] text-[#c4a264]">MEMBERSHIP</p>
+        <h2 className="mt-3 font-serif text-5xl md:text-6xl">{MEMBERSHIP_HEADLINE}</h2>
+        <ul className="mx-auto mt-8 grid max-w-lg gap-3 text-left text-base text-[#faf8f2]/90">
+          <li>{MEMBERSHIP_NO_MONTHLY}</li>
+          <li>{MEMBERSHIP_CAP}</li>
+          <li>{MEMBERSHIP_SOLICITING}</li>
+          {access.referralValid ? (
+            <li>A referral is honored at the door — not a promise.</li>
+          ) : null}
         </ul>
-      </section>
+        <div className="mt-10 flex flex-wrap justify-center gap-3">
+          <Button href="/apply">{APPLY_LABEL}</Button>
+          <Button href="/remind" variant="ghost">
+            {JOIN_WAITLIST}
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+}
 
-      <section className="safe-pad mx-auto max-w-3xl py-16 text-center">
-        <p className="text-sm text-[var(--gold)]">Membership</p>
-        <h2 className="mt-2 font-serif text-4xl">{LIFETIME_PRICE_LABEL} lifetime</h2>
-        <p className="mx-auto mt-4 max-w-md text-[var(--navy-soft)]">
-          One membership. {brand.scarcity} Monthly billing is not offered.
-          {access.referralValid ? " A referral is honored at the door — not a promise." : ""}
+function Closing() {
+  return (
+    <section className="relative isolate overflow-hidden">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={campaignSrc("homeIndex")}
+        alt=""
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+      <div className="absolute inset-0 bg-[rgba(9,43,69,0.42)]" aria-hidden />
+      <div className="relative z-10 mx-auto flex min-h-[22rem] max-w-3xl flex-col items-center justify-center px-6 py-20 text-center text-[#faf8f2]">
+        <h2 className="font-serif text-4xl md:text-5xl">{CLOSING_HEADLINE}</h2>
+        <div className="mt-8">
+          <Button href="/apply">{APPLY_LABEL}</Button>
+        </div>
+        <p className="mt-6">
+          <Link href="/remind" className="min-h-11 text-sm text-[#faf8f2]/85 underline-offset-4 hover:underline">
+            {JOIN_WAITLIST}
+          </Link>
         </p>
-        <p className="mt-4 text-sm text-[var(--navy)]">{SOLICITING_BAN}</p>
-        <p className="mt-2 text-xs text-[var(--ivory-dim)]">DEMO remaining this cohort: {remaining}.</p>
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <Button href="/apply">Apply</Button>
-          <Button href="/remind" variant="ghost">Waitlist</Button>
-        </div>
-      </section>
-
-      <footer className="safe-pad mx-auto flex max-w-6xl flex-wrap justify-between gap-4 border-t border-[var(--line)] py-10 text-sm text-[var(--ivory-dim)]">
-        <p>{brand.name}</p>
-        <div className="flex flex-wrap gap-4">
-          <Link href="/legal/privacy">Privacy</Link>
-          <Link href="/legal/terms">Terms</Link>
-          <Link href="/legal/community">Community</Link>
-          <Link href="/sign-in">Sign in</Link>
-        </div>
-      </footer>
-    </div>
+      </div>
+    </section>
   );
 }

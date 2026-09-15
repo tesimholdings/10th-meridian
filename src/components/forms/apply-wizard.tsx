@@ -112,7 +112,7 @@ export function ApplyWizard({ referralCode }: { referralCode?: string | null }) 
 
       <div className="mt-8 flex gap-3">
         {step > 0 ? (
-          <Button variant="ghost" type="button" className="flex-1" onClick={() => setStep((s) => s - 1)}>
+          <Button variant="quiet" type="button" className="flex-1" onClick={() => setStep((s) => s - 1)}>
             Back
           </Button>
         ) : null}

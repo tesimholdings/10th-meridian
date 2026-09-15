@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Wordmark } from "@/components/brand/logo";
+import { FormalLockup } from "@/components/brand/logo";
 import { Countdown } from "@/components/cinematic/countdown";
 import { Button } from "@/components/ui/button";
 import { brand } from "@/lib/config/site";
@@ -18,7 +18,7 @@ export function LockScreen({
       <div className="grain lock-gold-grain" aria-hidden />
       <div className="safe-pad safe-top relative z-10 mx-auto flex min-h-dvh max-w-3xl flex-col md:max-w-4xl">
         <header className="flex items-center justify-between py-4 md:py-6">
-          <Wordmark compact />
+          <FormalLockup className="h-12 w-auto max-w-[min(100%,18rem)]" />
           <Link href="/sign-in" className="min-h-11 text-sm text-ivory">
             Sign in
           </Link>
