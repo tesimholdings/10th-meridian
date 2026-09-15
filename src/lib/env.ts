@@ -95,7 +95,8 @@ export const env = {
     return read("STRIPE_STANDARD_PRICE_ID");
   },
   get stripeLifetimePriceId(): string {
-    return read("STRIPE_LIFETIME_PRICE_ID");
+    // Prefer STRIPE_PRICE_ID (lifetime $10,000). Keep STRIPE_LIFETIME_PRICE_ID as alias.
+    return read("STRIPE_PRICE_ID") || read("STRIPE_LIFETIME_PRICE_ID");
   },
   get lifetimePriceLabel(): string {
     return read("NEXT_PUBLIC_LIFETIME_PRICE_LABEL", "$10,000");
@@ -122,7 +123,9 @@ export const env = {
     return read("RESEND_API_KEY");
   },
   get resendFromEmail(): string {
-    return read("RESEND_FROM_EMAIL", "10th Meridian <invitations@example.com>");
+    return formatFromAddress(
+      read("EMAIL_FROM") || read("RESEND_FROM_EMAIL") || "team@tenmeridian.com",
+    );
   },
   get embeddingProvider(): "stub" | "openai" {
     return read("EMBEDDING_PROVIDER", "stub") === "openai" ? "openai" : "stub";
@@ -151,6 +154,15 @@ export const env = {
   get rateLimitApplications(): number {
     return Number(read("RATE_LIMIT_MAX_APPLICATIONS", "4")) || 4;
   },
+  get posthogKey(): string {
+    return read("NEXT_PUBLIC_POSTHOG_KEY");
+  },
+  get posthogHost(): string {
+    return read("NEXT_PUBLIC_POSTHOG_HOST", "https://us.i.posthog.com");
+  },
+  get sentryDsn(): string {
+    return read("SENTRY_DSN") || read("NEXT_PUBLIC_SENTRY_DSN");
+  },
 };
 
 export function hasSupabase(): boolean {
@@ -169,13 +181,40 @@ export function hasResend(): boolean {
   return Boolean(env.resendApiKey);
 }
 
+export function hasPosthog(): boolean {
+  return Boolean(env.posthogKey);
+}
+
+export function hasSentryDsn(): boolean {
+  return Boolean(env.sentryDsn);
+}
+
+export function hasStripePrice(): boolean {
+  return Boolean(env.stripeLifetimePriceId);
+}
+
+export function canChargeLifetime(): boolean {
+  return hasStripe() && hasStripePrice();
+}
+
+export function formatFromAddress(raw: string): string {
+  const value = raw.trim();
+  if (!value) return "10th Meridian <team@tenmeridian.com>";
+  if (value.includes("<")) return value;
+  return `10th Meridian <${value}>`;
+}
+
 export function integrationStatus() {
   return {
     mode: env.runtimeMode,
     supabase: hasSupabase(),
     stripe: hasStripe(),
+    stripePrice: hasStripePrice(),
+    canCharge: canChargeLifetime(),
     stream: hasStream(),
     resend: hasResend(),
+    posthog: hasPosthog(),
+    sentry: hasSentryDsn(),
     embeddings: env.embeddingProvider,
   };
 }

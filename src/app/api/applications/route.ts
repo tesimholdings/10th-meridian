@@ -3,8 +3,7 @@ import { clientKey, rateLimit } from "@/lib/security/rate-limit";
 import { env } from "@/lib/env";
 import { stubInsert } from "@/lib/supabase/stub";
 import { resolveAccessContext } from "@/lib/access/context";
-import { emailTemplates } from "@/lib/resend/templates";
-import { sendTransactional } from "@/lib/resend/client";
+import { sendApplyReceived } from "@/lib/resend/send";
 import { validateReferralCode } from "@/lib/referrals/validate";
 import { addApplication, getPreviewStore } from "@/lib/preview/store";
 
@@ -99,12 +98,7 @@ export async function POST(request: Request) {
     is_demo: true,
   });
 
-  const tpl = emailTemplates.applicationReceived();
-  await sendTransactional({
-    to: parsed.data.email,
-    subject: tpl.subject,
-    html: tpl.html,
-  });
+  await sendApplyReceived(parsed.data.email, `app-${parsed.data.email}`);
 
   return Response.json({
     ok: true,

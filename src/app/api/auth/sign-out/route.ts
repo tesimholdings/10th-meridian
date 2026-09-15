@@ -1,10 +1,7 @@
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { ACCOUNT_COOKIE, ROLE_COOKIE } from "@/lib/access/cookies";
+import { signOutCurrent } from "@/lib/supabase/auth";
 
 export async function POST() {
-  const jar = await cookies();
-  jar.delete(ROLE_COOKIE);
-  jar.delete(ACCOUNT_COOKIE);
+  await signOutCurrent();
   redirect("/");
 }

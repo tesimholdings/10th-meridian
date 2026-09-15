@@ -18,7 +18,7 @@ Wave 2 added interactive member/admin DEMO state (in-process store). It resets w
 ## 2. Supabase
 
 - [ ] Create a Supabase project
-- [ ] Apply `supabase/migrations/0001_init.sql` through `0007_profiles_network.sql` (SQL editor or CLI)
+- [ ] Apply `supabase/migrations/0001_init.sql` through `0008_live_stack.sql` (SQL editor or CLI)
 - [ ] Confirm `pgcrypto` is available; decide whether to enable `vector` later
 - [ ] Copy `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
 - [ ] Configure Auth: email magic link / password, site URL, redirect to `/api/auth/callback`
@@ -32,7 +32,7 @@ Wave 2 added interactive member/admin DEMO state (in-process store). It resets w
 
 - [ ] Create a Stripe account (test mode first)
 - [x] Lifetime membership **$10,000** is approved (Stefan). Monthly billing later — do not build it.
-- [ ] Create a Stripe one-time Price for lifetime; paste into `STRIPE_LIFETIME_PRICE_ID` and `site_config`
+- [ ] Create a Stripe one-time Price for lifetime **$10,000**; paste into `STRIPE_PRICE_ID` (alias `STRIPE_LIFETIME_PRICE_ID`) and `site_config`
 - [ ] Organization / Strategic Partnership remains by application — no public price
 - [ ] `STRIPE_SECRET_KEY`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
 - [ ] Webhook endpoint `/api/stripe/webhook` for `checkout.session.completed`, `invoice.paid`, `customer.subscription.updated`, `customer.subscription.deleted`
@@ -54,8 +54,8 @@ Wave 2 added interactive member/admin DEMO state (in-process store). It resets w
 
 ## 5. Resend
 
-- [ ] Authenticate a sending domain
-- [ ] `RESEND_API_KEY`, `RESEND_FROM_EMAIL`
+- [ ] Authenticate sending domain **tenmeridian.com** (prepared, not purchased)
+- [ ] `RESEND_API_KEY`, `EMAIL_FROM=team@tenmeridian.com` (`RESEND_FROM_EMAIL` is an alias)
 - [ ] Review HTML stubs in `src/lib/resend/templates.ts` with counsel/brand
 - [ ] `ADMIN_NOTIFICATION_EMAIL` for steward copies
 - [ ] Preview templates at `/api/email/preview?type=doorsReminder` only while preview tools are on
@@ -81,6 +81,8 @@ Wave 2 added interactive member/admin DEMO state (in-process store). It resets w
 
 ## 8. Matching (Meridian Index)
 
+See [docs/MATCHING.md](./docs/MATCHING.md) for the algorithm (compatibility, complementarity, diversity, weights, Meridian 10 / 100).
+
 - [ ] Confirm initial weights (30 / 25 / 15 / 10 / 5 / 5 / 10)
 - [ ] Confirm Crossings travel weights (40 / 25 / 15 / 10 / 10) in `travel_match_weights`
 - [ ] Decide embedding provider (`stub` vs `openai`) and `OPENAI_API_KEY`
@@ -105,8 +107,9 @@ Wave 2 added interactive member/admin DEMO state (in-process store). It resets w
 - [ ] Terms (`/legal/terms`)
 - [ ] Refund & cancellation (`/legal/refund`)
 - [ ] Community standards (`/legal/community`)
-- [ ] Cookie / analytics decision (none shipped)
-- [ ] Data processing addenda: Supabase, Stripe, Stream, Resend, Vercel
+- [ ] Cookie / analytics decision (PostHog ships behind `NEXT_PUBLIC_POSTHOG_KEY`; no-op without it)
+- [ ] Data processing addenda: Supabase, Stripe, Stream, Resend, PostHog, Sentry, Vercel
+- [ ] Sentry: rebase/merge PR #12 when it lands; this branch only documents DSN placeholders
 
 ## 11. Content & operations
 
@@ -138,6 +141,19 @@ Wave 2 added interactive member/admin DEMO state (in-process store). It resets w
 
 ## Environment map
 
-See `.env.example` for every variable, its purpose, and safe defaults.
+See `.env.example` and the README Vercel env checklist for every variable, its purpose, and safe defaults.
 
-Crossings adds **no new environment variables**. Calendar v1 is `.ics` download only — do not block on OAuth.
+Crossings adds **no new environment variables**. Calendar v1 is `.ics` download only — do not block on OAuth. Social OAuth is not built.
+
+## Stripe Price (lifetime $10,000)
+
+1. Stripe Dashboard (test mode) → Products → Add product
+2. Name: `10th Meridian Lifetime`
+3. Pricing: **One time**, **$10,000.00 USD** — not recurring
+4. Copy the Price id (`price_…`) into Vercel Preview: `STRIPE_PRICE_ID`
+5. Webhook: `https://<preview-host>/api/stripe/webhook` for `checkout.session.completed`
+6. Do not create a monthly Price. Do not charge from this PR.
+
+## PostHog
+
+Paste `NEXT_PUBLIC_POSTHOG_KEY` (and optional `NEXT_PUBLIC_POSTHOG_HOST`) on Preview only. Empty key = no init, no cookies, no network.
