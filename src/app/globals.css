@@ -213,6 +213,108 @@ body {
   padding-right: max(1.25rem, env(safe-area-inset-right));
 }
 
+.member-frame {
+  width: 100%;
+  max-width: none;
+}
+
+.member-main {
+  width: 100%;
+  max-width: none;
+}
+
+.member-desk-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.member-card-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.member-messages {
+  display: flex;
+  flex-direction: column;
+  min-height: 70vh;
+}
+
+.member-messages-inbox,
+.member-messages-thread {
+  min-width: 0;
+}
+
+@media (min-width: 768px) {
+  .safe-bottom {
+    padding-bottom: 2.75rem;
+  }
+
+  .safe-pad {
+    padding-left: max(2rem, env(safe-area-inset-left));
+    padding-right: max(2rem, env(safe-area-inset-right));
+  }
+
+  .member-frame {
+    max-width: min(90rem, 100%);
+  }
+
+  .member-desk-grid {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  .member-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.15rem;
+  }
+
+  .member-messages {
+    flex-direction: row;
+    min-height: calc(100dvh - 7.5rem);
+    border: 1px solid rgba(9, 43, 69, 0.07);
+    border-radius: 1.5rem;
+    background: #fffdf8;
+    overflow: hidden;
+  }
+
+  .member-messages-inbox {
+    width: min(22rem, 34%);
+    border-right: 1px solid rgba(9, 43, 69, 0.08);
+    overflow: auto;
+  }
+
+  .member-messages-thread {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .member-messages.is-inbox .member-messages-thread {
+    display: flex;
+  }
+}
+
+@media (max-width: 767px) {
+  .member-messages.is-thread .member-messages-inbox {
+    display: none;
+  }
+
+  .member-messages.is-inbox .member-messages-thread {
+    display: none;
+  }
+}
+
+@media (min-width: 1280px) {
+  .member-frame {
+    max-width: min(90rem, calc(100vw - 2.5rem));
+  }
+
+  .member-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 .safe-top {
   padding-top: max(0.75rem, env(safe-area-inset-top));
 }

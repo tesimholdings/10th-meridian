@@ -39,7 +39,7 @@ export default async function ProfilePage({
           </Link>
         </div>
         {rewards ? (
-          <div className="mx-auto mt-8 max-w-md">
+          <div className="mx-auto mt-8 w-full max-w-xl md:max-w-none">
             <RewardsTeaserCard availablePoints={rewards.availablePoints} compact />
           </div>
         ) : null}

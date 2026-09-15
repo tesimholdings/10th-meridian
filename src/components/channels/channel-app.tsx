@@ -163,10 +163,12 @@ export function ChannelApp({
   const houses = channels.filter((c) => c.kind !== "dm");
   const inbox = tab === "dms" ? dms : houses;
 
-  if (destination.status === "inbox") {
-    return (
-      <div className="relative min-h-[70vh]">
-        <div className="flex gap-2 border-b border-[var(--line)]">
+  const inboxMode = destination.status === "inbox";
+
+  return (
+    <div className={`member-messages ${inboxMode ? "is-inbox" : "is-thread"}`}>
+      <aside className="member-messages-inbox">
+        <div className="flex gap-2 border-b border-[var(--line)] px-1">
           <TabButton on={tab === "dms"} onClick={() => setTab("dms")}>
             {MESSAGES_TAB_DMS}
           </TabButton>
@@ -174,19 +176,22 @@ export function ChannelApp({
             {MESSAGES_TAB_CHANNELS}
           </TabButton>
         </div>
-        <ul className="stagger-in divide-y divide-[var(--line)]">
+        <ul className="stagger-in divide-y divide-[var(--line)] px-2">
           {inbox.map((c) => {
             const last = messages.filter((m) => m.channelId === c.id && !m.parentId).at(-1);
             const peer =
               c.kind === "dm"
                 ? profiles.find((p) => (channelMembers[c.id] ?? []).includes(p.id) && p.id !== viewerId)
                 : undefined;
+            const active = destination.channel?.id === c.id;
             return (
               <li key={c.id}>
                 <button
                   type="button"
                   onClick={() => void openChannel(c)}
-                  className="pressable flex min-h-16 w-full items-center gap-3 py-3 text-left"
+                  className={`pressable flex min-h-16 w-full items-center gap-3 py-3 text-left ${
+                    active ? "text-[var(--navy)]" : ""
+                  }`}
                 >
                   <span className="avatar h-12 w-12 text-sm" style={{ background: peer?.accent ?? "#087CB8" }}>
                     {peer?.initials ?? c.name.slice(0, 1)}
@@ -212,137 +217,144 @@ export function ChannelApp({
             );
           })}
         </ul>
-      </div>
-    );
-  }
+      </aside>
 
-  return (
-    <div className="relative flex min-h-[70vh] flex-col">
-      <div className="flex items-center gap-3 border-b border-[var(--line)] py-3">
-        <button type="button" className="min-h-11 text-sm text-[var(--blue)] md:hidden" onClick={() => setDrawer(true)}>
-          Inbox
-        </button>
-        <Link href="/member/messages" className="hidden text-sm text-[var(--blue)] md:inline">
-          Inbox
-        </Link>
-        <div className="min-w-0 flex-1">
-          <p className="font-serif text-2xl leading-tight">{destination.headerName}</p>
-          <p className="text-xs text-[var(--ivory-dim)]">{destination.headerDetail}</p>
-        </div>
-        {destination.peer ? (
-          <Link href={`/member/members/${destination.peer.id}`} className="avatar h-10 w-10 text-sm" style={{ background: destination.peer.accent }}>
-            {destination.peer.initials}
-          </Link>
-        ) : null}
-      </div>
-
-      <DialogDrawer open={drawer} title="Inbox" onClose={() => setDrawer(false)}>
-        <div className="px-2 pb-4">
-          {dms.concat(houses).map((c) => (
-            <button
-              key={c.id}
-              type="button"
-              onClick={() => void openChannel(c)}
-              className="flex min-h-12 w-full items-center justify-between px-3 text-left text-sm"
-            >
-              <span>{c.kind === "dm" ? c.name : `#${c.slug}`}</span>
-              {c.unread ? <span className="text-[var(--gold)]">{c.unread}</span> : null}
-            </button>
-          ))}
-        </div>
-      </DialogDrawer>
-
-      {destination.status === "unavailable" ? (
-        <div className="flex flex-1 flex-col justify-center py-10">
-          <p className="font-serif text-2xl">{destination.headerName}</p>
-          <p className="mt-3 text-sm leading-relaxed text-[var(--ivory-dim)]">{destination.message}</p>
-          {requestedProfileId ? (
-            <button type="button" className="action-quiet mt-5 w-fit" disabled={retrying} onClick={() => void retry()}>
-              {retrying ? "Retrying…" : "Retry conversation"}
-            </button>
-          ) : (
-            <Link href="/member/messages" className="action-quiet mt-5 inline-flex w-fit items-center">
-              Back to inbox
-            </Link>
-          )}
-        </div>
-      ) : (
-        <div className="min-h-[40vh] flex-1 space-y-4 py-5">
-          {(threadOf ? thread : roots).length === 0 ? (
-            <p className="text-sm text-[var(--ivory-dim)]">
-              {threadOf ? "No replies yet." : `Start a private note with ${destination.headerName}.`}
+      <section className="member-messages-thread relative flex min-h-[70vh] flex-col md:min-h-0">
+        {inboxMode ? (
+          <div className="hidden flex-1 flex-col justify-center px-10 py-16 md:flex">
+            <p className="section-kicker text-sm">Messages</p>
+            <p className="mt-2 font-serif text-3xl">Choose a conversation</p>
+            <p className="mt-3 max-w-md text-sm text-[var(--navy-soft)]">
+              Inbox stays on the left. Threads open here — private member notes, never a public board.
             </p>
-          ) : (
-            (threadOf ? thread : roots).map((m) => {
-              const own = m.authorName === viewerName;
-              return (
-                <article key={m.id} className={`flex ${own ? "justify-end" : "justify-start"}`}>
-                  <div className={`max-w-[84%] px-4 py-3 ${own ? "bubble-own" : "bubble-theirs"}`}>
-                    <p className="text-[11px] opacity-70">{m.authorName}</p>
-                    <p className="mt-1 text-[15px] leading-relaxed">{m.body}</p>
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      {REACTIONS.map((r) => (
-                        <button
-                          key={r.id}
-                          type="button"
-                          onClick={() => void react(m.id, r.id)}
-                          className="text-[11px] opacity-80"
-                        >
-                          {r.label}
-                          {m.reactions?.[r.id]?.length ? ` ${m.reactions[r.id].length}` : ""}
-                        </button>
-                      ))}
-                      {!threadOf ? (
-                        <button type="button" className="text-[11px]" onClick={() => setThreadOf(m.id)}>
-                          Thread {m.threadCount ? `(${m.threadCount})` : ""}
-                        </button>
-                      ) : null}
-                    </div>
-                  </div>
-                </article>
-              );
-            })
-          )}
-          {threadOf ? (
-            <button type="button" className="text-sm text-[var(--blue)]" onClick={() => setThreadOf(null)}>
-              Back to conversation
-            </button>
-          ) : null}
-        </div>
-      )}
+          </div>
+        ) : (
+          <>
+            <div className="flex items-center gap-3 border-b border-[var(--line)] px-3 py-3 md:px-5">
+              <button type="button" className="min-h-11 text-sm text-[var(--blue)] md:hidden" onClick={() => setDrawer(true)}>
+                Inbox
+              </button>
+              <div className="min-w-0 flex-1">
+                <p className="font-serif text-2xl leading-tight">{destination.headerName}</p>
+                <p className="text-xs text-[var(--ivory-dim)]">{destination.headerDetail}</p>
+              </div>
+              {destination.peer ? (
+                <Link href={`/member/members/${destination.peer.id}`} className="avatar h-10 w-10 text-sm" style={{ background: destination.peer.accent }}>
+                  {destination.peer.initials}
+                </Link>
+              ) : null}
+            </div>
 
-      <form
-        className="sticky bottom-0 grid grid-cols-[1fr_auto] gap-2 border-t border-[var(--line)] bg-[var(--paper)] py-3"
-        style={{ paddingBottom: "calc(0.5rem + env(safe-area-inset-bottom))" }}
-        onSubmit={(e) => {
-          e.preventDefault();
-          void send();
-        }}
-      >
-        <input
-          value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          disabled={!destination.canCompose}
-          placeholder={
-            destination.canCompose
-              ? threadOf
-                ? `Reply to ${destination.headerName}`
-                : `Message ${destination.headerName}`
-              : "Sending is disabled until this conversation loads"
-          }
-          aria-label="Message"
-        />
-        <button
-          type="submit"
-          disabled={!destination.canCompose || !draft.trim()}
-          className="min-h-12 rounded-full bg-[var(--blue)] px-4 text-sm text-white"
-        >
-          Send
-        </button>
-      </form>
-      <p className="pb-2 text-[11px] text-[var(--ivory-dim)]">
-        {streamNote ?? "Private member communication, not end-to-end encryption. Absolutely no soliciting."}
-      </p>
+            <DialogDrawer open={drawer} title="Inbox" onClose={() => setDrawer(false)}>
+              <div className="px-2 pb-4">
+                {dms.concat(houses).map((c) => (
+                  <button
+                    key={c.id}
+                    type="button"
+                    onClick={() => void openChannel(c)}
+                    className="flex min-h-12 w-full items-center justify-between px-3 text-left text-sm"
+                  >
+                    <span>{c.kind === "dm" ? c.name : `#${c.slug}`}</span>
+                    {c.unread ? <span className="text-[var(--gold)]">{c.unread}</span> : null}
+                  </button>
+                ))}
+              </div>
+            </DialogDrawer>
+
+            {destination.status === "unavailable" ? (
+              <div className="flex flex-1 flex-col justify-center px-5 py-10">
+                <p className="font-serif text-2xl">{destination.headerName}</p>
+                <p className="mt-3 text-sm leading-relaxed text-[var(--ivory-dim)]">{destination.message}</p>
+                {requestedProfileId ? (
+                  <button type="button" className="action-quiet mt-5 w-fit" disabled={retrying} onClick={() => void retry()}>
+                    {retrying ? "Retrying…" : "Retry conversation"}
+                  </button>
+                ) : (
+                  <Link href="/member/messages" className="action-quiet mt-5 inline-flex w-fit items-center">
+                    Back to inbox
+                  </Link>
+                )}
+              </div>
+            ) : (
+              <div className="min-h-[40vh] flex-1 space-y-4 px-3 py-5 md:px-5">
+                {(threadOf ? thread : roots).length === 0 ? (
+                  <p className="text-sm text-[var(--ivory-dim)]">
+                    {threadOf ? "No replies yet." : `Start a private note with ${destination.headerName}.`}
+                  </p>
+                ) : (
+                  (threadOf ? thread : roots).map((m) => {
+                    const own = m.authorName === viewerName;
+                    return (
+                      <article key={m.id} className={`flex ${own ? "justify-end" : "justify-start"}`}>
+                        <div className={`max-w-[84%] px-4 py-3 ${own ? "bubble-own" : "bubble-theirs"}`}>
+                          <p className="text-[11px] opacity-70">{m.authorName}</p>
+                          <p className="mt-1 text-[15px] leading-relaxed">{m.body}</p>
+                          <div className="mt-2 flex flex-wrap gap-2">
+                            {REACTIONS.map((r) => (
+                              <button
+                                key={r.id}
+                                type="button"
+                                onClick={() => void react(m.id, r.id)}
+                                className="text-[11px] opacity-80"
+                              >
+                                {r.label}
+                                {m.reactions?.[r.id]?.length ? ` ${m.reactions[r.id].length}` : ""}
+                              </button>
+                            ))}
+                            {!threadOf ? (
+                              <button type="button" className="text-[11px]" onClick={() => setThreadOf(m.id)}>
+                                Thread {m.threadCount ? `(${m.threadCount})` : ""}
+                              </button>
+                            ) : null}
+                          </div>
+                        </div>
+                      </article>
+                    );
+                  })
+                )}
+                {threadOf ? (
+                  <button type="button" className="text-sm text-[var(--blue)]" onClick={() => setThreadOf(null)}>
+                    Back to conversation
+                  </button>
+                ) : null}
+              </div>
+            )}
+
+            <form
+              className="sticky bottom-0 grid grid-cols-[1fr_auto] gap-2 border-t border-[var(--line)] bg-[var(--paper)] px-3 py-3 md:px-5"
+              style={{ paddingBottom: "calc(0.5rem + env(safe-area-inset-bottom))" }}
+              onSubmit={(e) => {
+                e.preventDefault();
+                void send();
+              }}
+            >
+              <input
+                value={draft}
+                onChange={(e) => setDraft(e.target.value)}
+                disabled={!destination.canCompose}
+                placeholder={
+                  destination.canCompose
+                    ? threadOf
+                      ? `Reply to ${destination.headerName}`
+                      : `Message ${destination.headerName}`
+                    : "Sending is disabled until this conversation loads"
+                }
+                aria-label="Message"
+              />
+              <button
+                type="submit"
+                disabled={!destination.canCompose || !draft.trim()}
+                className="min-h-12 rounded-full bg-[var(--blue)] px-4 text-sm text-white"
+              >
+                Send
+              </button>
+            </form>
+            <p className="px-3 pb-2 text-[11px] text-[var(--ivory-dim)] md:px-5">
+              {streamNote ?? "Private member communication, not end-to-end encryption. Absolutely no soliciting."}
+            </p>
+          </>
+        )}
+      </section>
     </div>
   );
 }

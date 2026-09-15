@@ -59,7 +59,7 @@ export default async function MemberHomePage() {
         <p className="mt-4 text-sm text-[var(--ivory-dim)]">{completionMessage(viewer.completion)}</p>
       ) : null}
 
-      <div className="mt-6 flex gap-3 overflow-x-auto hide-scroll">
+      <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
         <RailChip href="/member/messages" label="Messages" value={`${unreadTotal()} new`} />
         <RailChip href="/member/crossings" label="Next city" value={trip ? trip.destinationCity : "Add a trip"} />
         <RailChip href="/member/events" label="Tonight" value={event?.city ?? "Experiences"} />
@@ -74,45 +74,49 @@ export default async function MemberHomePage() {
         </div>
       ) : null}
 
-      {trip ? (
-        <Link href={`/member/crossings/${trip.id}`} className="section-band mt-8 block">
-          <p className="section-kicker text-sm">Upcoming trip</p>
-          <p className="mt-1 font-serif text-3xl">{trip.destinationCity}</p>
-          <p className="mt-1 text-sm text-[var(--navy-soft)]">
-            {formatHumanDateRange(trip.arrivalDate, trip.departureDate)}
-          </p>
-        </Link>
-      ) : (
-        <Link href="/member/crossings/new" className="mt-8 block text-[var(--blue)]">
-          Add a trip
-        </Link>
-      )}
+      <div className="member-desk-grid mt-8">
+        <div>
+          {trip ? (
+            <Link href={`/member/crossings/${trip.id}`} className="section-band block">
+              <p className="section-kicker text-sm">Upcoming trip</p>
+              <p className="mt-1 font-serif text-3xl">{trip.destinationCity}</p>
+              <p className="mt-1 text-sm text-[var(--navy-soft)]">
+                {formatHumanDateRange(trip.arrivalDate, trip.departureDate)}
+              </p>
+            </Link>
+          ) : (
+            <Link href="/member/crossings/new" className="block text-[var(--blue)]">
+              Add a trip
+            </Link>
+          )}
 
-      {event ? (
-        <Link href={`/member/events/${event.id}`} className="surface mt-8 block overflow-hidden rounded-3xl">
-          <HiggsfieldSlot src={campaignSrc("homeIndex")} aspect="aspect-[16/8]" />
-          <div className="px-4 pb-4 pt-4">
-            <p className="section-kicker text-sm">Upcoming experience</p>
-            <p className="font-serif text-3xl">{event.title}</p>
-            <p className="mt-1 text-sm text-[var(--navy-soft)]">
-              {formatHumanDateTime(event.startsAt)} · {event.city}
-            </p>
-          </div>
-        </Link>
-      ) : null}
-
-      <section className="section-band mt-10">
-        <HiggsfieldSlot src={campaignSrc("homeNetwork")} aspect="aspect-[16/8]" className="mb-4 rounded-3xl" />
-        <p className="section-kicker text-sm">Useful connections</p>
-        <div className="mt-3">
-          <MatchBoard
-            index={index}
-            intros={store.intros}
-            compact
-            circleIds={store.circle.filter((e) => e.ownerId === viewer.id).map((e) => e.memberId)}
-          />
+          {event ? (
+            <Link href={`/member/events/${event.id}`} className="surface mt-6 block overflow-hidden rounded-3xl">
+              <HiggsfieldSlot src={campaignSrc("homeIndex")} aspect="aspect-[16/8]" />
+              <div className="px-4 pb-4 pt-4">
+                <p className="section-kicker text-sm">Upcoming experience</p>
+                <p className="font-serif text-3xl">{event.title}</p>
+                <p className="mt-1 text-sm text-[var(--navy-soft)]">
+                  {formatHumanDateTime(event.startsAt)} · {event.city}
+                </p>
+              </div>
+            </Link>
+          ) : null}
         </div>
-      </section>
+
+        <section className="section-band">
+          <HiggsfieldSlot src={campaignSrc("homeNetwork")} aspect="aspect-[16/8]" className="mb-4 rounded-3xl" />
+          <p className="section-kicker text-sm">Useful connections</p>
+          <div className="mt-3">
+            <MatchBoard
+              index={index}
+              intros={store.intros}
+              compact
+              circleIds={store.circle.filter((e) => e.ownerId === viewer.id).map((e) => e.memberId)}
+            />
+          </div>
+        </section>
+      </div>
 
       {paymentPending ? (
         <Link href="/member/settings#billing" className="mt-10 block text-sm text-[var(--gold)]">
@@ -125,7 +129,7 @@ export default async function MemberHomePage() {
 
 function RailChip({ href, label, value }: { href: string; label: string; value: string }) {
   return (
-    <Link href={href} className="surface min-w-[8.5rem] rounded-2xl px-4 py-3">
+    <Link href={href} className="surface rounded-2xl px-4 py-3">
       <p className="text-xs text-[var(--ivory-dim)]">{label}</p>
       <p className="mt-1 text-sm font-medium">{value}</p>
     </Link>

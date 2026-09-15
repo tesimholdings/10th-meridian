@@ -22,17 +22,23 @@ export function MemberShell({
   const unreadMessages = unreadTotal();
 
   return (
-    <div className="house-light min-h-dvh text-[var(--navy)]">
-      <div className="mx-auto flex min-h-dvh max-w-6xl">
+    <div className="house-light min-h-dvh w-full text-[var(--navy)]">
+      <div className="member-frame mx-auto flex min-h-dvh w-full">
         <DesktopRail unreadMessages={unreadMessages} />
-        <div className="min-w-0 flex-1">
+        <div className="flex min-w-0 flex-1 flex-col">
           <MemberHeader user={user} unreadNotifications={unreadNotes} />
           {demo ? (
             <div className="safe-pad">
               <DemoDisclosure />
             </div>
           ) : null}
-          <main className={flush ? "safe-bottom" : "safe-pad safe-bottom relative mx-auto max-w-3xl py-6"}>
+          <main
+            className={
+              flush
+                ? "member-main safe-bottom relative w-full flex-1"
+                : "member-main safe-pad safe-bottom relative w-full flex-1 py-6 md:py-8"
+            }
+          >
             {title && !flush ? <h1 className="sr-only">{title}</h1> : null}
             {children}
           </main>

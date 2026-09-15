@@ -74,7 +74,7 @@ export default async function MyCirclePage({
               {YOUR_CIRCLE} is empty. Add someone from a profile.
             </p>
           ) : (
-            <ul className="stagger-in grid gap-4">
+            <ul className="member-card-grid stagger-in">
               {circleProfiles.map((p) => (
                 <IndexCard
                   key={p.id}
@@ -92,7 +92,7 @@ export default async function MyCirclePage({
           searched.length === 0 ? (
             <p className="text-sm text-[var(--ivory-dim)]">No one in this frame.</p>
           ) : (
-            <ul className="stagger-in grid gap-4">
+            <ul className="member-card-grid stagger-in">
               {searched.map((p) => (
                 <IndexCard
                   key={p.id}

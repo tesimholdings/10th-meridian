@@ -16,7 +16,7 @@ export function LockScreen({
   return (
     <div className="lock-gold relative min-h-dvh overflow-hidden text-ivory">
       <LockGrain />
-      <div className="safe-pad safe-top relative z-10 mx-auto flex min-h-dvh max-w-5xl flex-col">
+      <div className="safe-pad safe-top relative z-10 mx-auto flex min-h-dvh w-full max-w-[90rem] flex-col">
         <header className="flex items-center justify-end py-4 md:py-6">
           <Link href="/sign-in" className="min-h-11 text-sm text-ivory">
             Sign in
@@ -26,7 +26,7 @@ export function LockScreen({
         <main className="flex flex-1 flex-col items-center justify-center px-2 py-8 text-center">
           <OfficialLockup
             priority
-            className="mx-auto w-[min(92vw,42rem)] max-w-full"
+            className="mx-auto w-[min(92vw,42rem)] max-w-full md:w-[min(70vw,52rem)]"
           />
           <h1 className="sr-only">{brand.name}</h1>
           <p className="mt-10 max-w-lg font-serif text-2xl leading-tight text-ivory md:text-3xl">

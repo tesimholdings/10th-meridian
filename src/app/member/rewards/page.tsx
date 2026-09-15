@@ -77,7 +77,7 @@ export default async function RewardsPage({
 
       <div className="mt-6">
         {tab === "rewards" ? (
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {snapshot.cards.map((card) => (
               <RewardCard key={card.item.id} card={card} />
             ))}

@@ -86,6 +86,26 @@ describe("original House atmosphere", () => {
     assert.match(reduced, /cursor:\s*auto/);
   });
 
+  it("uses a full-width desktop member frame instead of a phone column", () => {
+    const shell = readFileSync("src/components/member/member-shell.tsx", "utf8");
+    assert.equal(shell.includes("max-w-3xl"), false);
+    assert.equal(shell.includes("max-w-6xl"), false);
+    assert.match(shell, /member-frame/);
+    assert.match(shell, /member-main/);
+    const css = readFileSync("src/app/globals.css", "utf8");
+    assert.match(css, /\.member-frame/);
+    assert.match(css, /@media \(min-width: 768px\)/);
+    assert.match(css, /\.member-desk-grid/);
+    assert.match(css, /\.member-messages/);
+    const rail = readFileSync("src/components/member/desktop-rail.tsx", "utf8");
+    assert.match(rail, /md:flex/);
+    const nav = readFileSync("src/components/member/bottom-nav.tsx", "utf8");
+    assert.match(nav, /md:hidden/);
+    const lock = readFileSync("src/components/lock/lock-screen.tsx", "utf8");
+    assert.match(lock, /max-w-\[90rem\]/);
+    assert.match(lock, /OfficialLockup/);
+  });
+
   it("gives member house-light paper depth instead of flat white", () => {
     const css = readFileSync("src/app/globals.css", "utf8");
     const house = css.split(".house-light {")[1] ?? "";

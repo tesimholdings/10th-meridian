@@ -22,7 +22,7 @@ export function MatchBoard({
 }) {
   const rows = compact ? index.meridian10.slice(0, 3) : index.meridian10;
   return (
-    <ul className="stagger-in grid gap-4">
+    <ul className="member-card-grid stagger-in">
       {rows.map((row) => (
         <IndexCard
           key={row.target.id}

@@ -54,7 +54,7 @@ export function ForYouField({
         </label>
       </div>
 
-      <ul className="mt-4 grid gap-3">
+      <ul className="member-card-grid mt-4">
         {shown.map((row, i) => (
           <IndexCard
             key={row.target.id}
