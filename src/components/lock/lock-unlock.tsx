@@ -106,7 +106,6 @@ export function LockUnlock({ denied = false }: { denied?: boolean }) {
         type="text"
         value={key}
         onChange={(event) => setKey(event.target.value)}
-        readOnly={mode === "password"}
         autoComplete={mode === "referral" ? "off" : "username"}
         autoCapitalize="none"
         autoCorrect="off"
