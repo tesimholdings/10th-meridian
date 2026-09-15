@@ -64,7 +64,7 @@ function Hero() {
         aria-hidden
         style={{
           background:
-            "linear-gradient(180deg, rgba(9,43,69,0.16) 0%, rgba(9,43,69,0.04) 38%, rgba(9,43,69,0.2) 74%, rgba(16,33,45,0.42) 100%)",
+            "linear-gradient(180deg, rgba(9,43,69,0.12) 0%, rgba(9,43,69,0.02) 40%, rgba(9,43,69,0.14) 76%, rgba(16,33,45,0.36) 100%)",
         }}
       />
       <div className="oh-wrap relative z-10 flex min-h-[76svh] flex-col justify-end pb-16 pt-28 md:min-h-[90svh] md:pb-24">

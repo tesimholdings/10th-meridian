@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-/** Visible grain + gold flecks + wash. Desktop pointer shifts them; touch stays ambient. */
+/** Pointer-driven grain, gold lamp, and flecks. Touch stays ambient. */
 export function HeroAtmosphere() {
   const root = useRef<HTMLDivElement>(null);
 
@@ -18,19 +18,27 @@ export function HeroAtmosphere() {
 
     let px = 0;
     let py = 0;
+    let mx = 50;
+    let my = 42;
     let tx = 0;
     let ty = 0;
+    let tmx = 50;
+    let tmy = 42;
     let frame = 0;
 
-    function apply(x: number, y: number) {
-      surface.style.setProperty("--hero-px", x.toFixed(3));
-      surface.style.setProperty("--hero-py", y.toFixed(3));
+    function apply() {
+      surface.style.setProperty("--hero-px", px.toFixed(3));
+      surface.style.setProperty("--hero-py", py.toFixed(3));
+      surface.style.setProperty("--hero-mx", `${mx.toFixed(2)}%`);
+      surface.style.setProperty("--hero-my", `${my.toFixed(2)}%`);
     }
 
     function tick() {
-      px += (tx - px) * 0.14;
-      py += (ty - py) * 0.14;
-      apply(px, py);
+      px += (tx - px) * 0.09;
+      py += (ty - py) * 0.09;
+      mx += (tmx - mx) * 0.1;
+      my += (tmy - my) * 0.1;
+      apply();
       frame = window.requestAnimationFrame(tick);
     }
 
@@ -39,37 +47,36 @@ export function HeroAtmosphere() {
       if (e.pointerType !== "mouse" && e.pointerType !== "pen") return;
       const rect = surface.getBoundingClientRect();
       if (rect.width === 0 || rect.height === 0) return;
+      if (e.clientY < rect.top - 40 || e.clientY > rect.bottom + 20) return;
       tx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
       ty = ((e.clientY - rect.top) / rect.height) * 2 - 1;
-    }
-
-    function onLeave() {
-      tx = 0;
-      ty = 0;
+      tmx = ((e.clientX - rect.left) / rect.width) * 100;
+      tmy = ((e.clientY - rect.top) / rect.height) * 100;
     }
 
     if (motion.matches) {
-      apply(0, 0);
+      apply();
       el.dataset.reduced = "true";
       return;
     }
 
-    surface.addEventListener("pointermove", onMove, { passive: true });
-    surface.addEventListener("pointerleave", onLeave);
+    window.addEventListener("pointermove", onMove, { passive: true });
     frame = window.requestAnimationFrame(tick);
     if (!fine.matches) el.dataset.ambient = "true";
 
     return () => {
-      surface.removeEventListener("pointermove", onMove);
-      surface.removeEventListener("pointerleave", onLeave);
+      window.removeEventListener("pointermove", onMove);
       window.cancelAnimationFrame(frame);
       surface.style.removeProperty("--hero-px");
       surface.style.removeProperty("--hero-py");
+      surface.style.removeProperty("--hero-mx");
+      surface.style.removeProperty("--hero-my");
     };
   }, []);
 
   return (
     <div ref={root} className="hero-atmosphere" aria-hidden>
+      <div className="hero-lamp" />
       <div className="hero-wash" />
       <div className="hero-grain" />
       <div className="hero-flecks" />

@@ -28,12 +28,13 @@ const motionClasses = [
   "reward-ring",
   "reward-sheet",
   "cursor-aura",
-  "cursor-aura-core",
+  "cursor-aura-trail",
   "lock-gold-follow",
   "circle-person",
   "hero-grain",
   "hero-flecks",
   "hero-wash",
+  "hero-lamp",
   "hero-media-shift",
 ];
 
@@ -51,15 +52,17 @@ describe("original House atmosphere", () => {
     }
   });
 
-  it("keeps a dual-layer luxury cursor visible and never hides the system pointer without it", () => {
+  it("keeps a champagne-point luxury cursor and never hides the system pointer without it", () => {
     const css = readFileSync("src/app/globals.css", "utf8");
     const cursor = readFileSync("src/components/atmosphere/cursor-aura.tsx", "utf8");
     assert.match(css, /\.cursor-aura\s*\{/);
-    assert.match(css, /#c4a264/);
-    assert.match(css, /#092b45/);
-    assert.match(css, /\.cursor-aura-core/);
-    const aura = css.split(".cursor-aura {")[1]?.split("}")[0] ?? "";
-    assert.equal(aura.includes("mix-blend-mode"), false);
+    assert.match(css, /\.cursor-aura-trail/);
+    assert.match(css, /#c4a264|#f0d78a|#fff8e4/);
+    const aura = css.split(".cursor-aura {")[1]?.split("html.has-luxury-cursor")[0] ?? "";
+    assert.equal(aura.includes("border: 2"), false);
+    assert.equal(aura.includes("0 0 0 2px"), false);
+    assert.equal(css.includes("cursor-aura-core"), false);
+    assert.equal(cursor.includes("cursor-aura-core"), false);
     assert.match(css, /html\.has-luxury-cursor/);
     assert.match(css, /html\.has-luxury-cursor[\s\S]*cursor:\s*none/);
     const beforeClass = css.split("html.has-luxury-cursor")[0] ?? "";
@@ -71,6 +74,7 @@ describe("original House atmosphere", () => {
     assert.match(cursor, /hover: hover/);
     const reduced = css.split("@media (prefers-reduced-motion: reduce)")[1] ?? "";
     assert.match(reduced, /cursor:\s*auto/);
+    assert.match(reduced, /cursor-aura-trail/);
   });
 
   it("uses a 1440px Open House rail and a full-bleed lock instead of a phone column", () => {
@@ -92,9 +96,11 @@ describe("original House atmosphere", () => {
     const hero = readFileSync("src/components/open-house/hero-media.tsx", "utf8");
     const atmosphere = readFileSync("src/components/open-house/hero-atmosphere.tsx", "utf8");
     assert.match(css, /\.hero-wash/);
-    assert.match(css, /var\(--hero-px\) \* 32px/);
-    assert.match(css, /var\(--hero-px\) \* -56px/);
-    assert.match(css, /var\(--hero-px\) \* 64px/);
+    assert.match(css, /\.hero-lamp/);
+    assert.match(css, /var\(--hero-mx\)/);
+    assert.match(css, /var\(--hero-px\) \* 54px/);
+    assert.match(css, /var\(--hero-px\) \* -96px/);
+    assert.match(css, /var\(--hero-px\) \* 118px/);
     assert.match(hero, /preload="auto"/);
     assert.match(hero, /canplay/);
     assert.match(hero, /type="video\/mp4"/);
@@ -102,6 +108,8 @@ describe("original House atmosphere", () => {
     assert.match(resolve, /Always the public CDN path/);
     assert.equal(resolve.includes("mediaOnDisk(src) ? src : undefined"), false);
     assert.match(atmosphere, /hero-wash/);
+    assert.match(atmosphere, /hero-lamp/);
+    assert.match(atmosphere, /pointermove/);
     const reduced = css.split("@media (prefers-reduced-motion: reduce)")[1] ?? "";
     assert.match(reduced, /hero-grain/);
     assert.match(reduced, /opacity: 0\.28/);

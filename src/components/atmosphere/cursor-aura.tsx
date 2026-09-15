@@ -15,7 +15,8 @@ function luxuryCursorAllowed(
 }
 
 export function CursorAura() {
-  const dot = useRef<HTMLDivElement>(null);
+  const tip = useRef<HTMLDivElement>(null);
+  const trail = useRef<HTMLDivElement>(null);
   const [on, setOn] = useState(false);
 
   useEffect(() => {
@@ -56,6 +57,8 @@ export function CursorAura() {
 
     let x = 0;
     let y = 0;
+    let gx = 0;
+    let gy = 0;
     let tx = window.innerWidth / 2;
     let ty = window.innerHeight / 2;
     let frame = 0;
@@ -66,17 +69,22 @@ export function CursorAura() {
       tx = e.clientX;
       ty = e.clientY;
       if (!seeded) {
-        x = tx;
-        y = ty;
+        x = gx = tx;
+        y = gy = ty;
         seeded = true;
       }
     }
 
     function tick() {
-      x += (tx - x) * 0.38;
-      y += (ty - y) * 0.38;
-      if (dot.current) {
-        dot.current.style.transform = `translate3d(${x - 16}px, ${y - 16}px, 0)`;
+      x += (tx - x) * 0.42;
+      y += (ty - y) * 0.42;
+      gx += (tx - gx) * 0.13;
+      gy += (ty - gy) * 0.13;
+      if (tip.current) {
+        tip.current.style.transform = `translate3d(${x - 7}px, ${y - 7}px, 0)`;
+      }
+      if (trail.current) {
+        trail.current.style.transform = `translate3d(${gx - 36}px, ${gy - 36}px, 0)`;
       }
       frame = window.requestAnimationFrame(tick);
     }
@@ -92,8 +100,9 @@ export function CursorAura() {
   if (!on) return null;
 
   return (
-    <div ref={dot} className="cursor-aura" aria-hidden>
-      <span className="cursor-aura-core" />
-    </div>
+    <>
+      <div ref={trail} className="cursor-aura-trail" aria-hidden />
+      <div ref={tip} className="cursor-aura" aria-hidden />
+    </>
   );
 }
