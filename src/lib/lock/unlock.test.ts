@@ -2,7 +2,10 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { demoProfiles, demoReferrals } from "@/lib/data/demo";
 import {
+  classifyLockIdentity,
   demoEmailFor,
+  emailCandidateFromIdentity,
+  FORGOT_PASSWORD_MESSAGE,
   resolveLockUnlock,
   UNLOCK_MISS_MESSAGE,
 } from "@/lib/lock/unlock";
@@ -52,6 +55,39 @@ describe("lock unlock resolver", () => {
     assert.equal(resolveLockUnlock("not-a-key").kind, "miss");
     assert.equal(resolveLockUnlock("").kind, "miss");
     assert.equal(UNLOCK_MISS_MESSAGE, "That cannot open the house.");
+  });
+
+  it("classifies identity without revealing unknown names", () => {
+    assert.equal(classifyLockIdentity("").kind, "empty");
+    const early = classifyLockIdentity("tenth-early");
+    assert.equal(early.kind, "referral");
+    if (early.kind === "referral") assert.equal(early.code, "TENTH-EARLY");
+    assert.equal(classifyLockIdentity("stefan").kind, "credentials");
+    assert.equal(classifyLockIdentity("not-a-key").kind, "credentials");
+    assert.equal(classifyLockIdentity("TENTH-EXPIRED").kind, "credentials");
+  });
+
+  it("resolves steward aliases for the preview path", () => {
+    const steward = resolveLockUnlock("steward");
+    assert.equal(steward.kind, "steward");
+    if (steward.kind === "steward") {
+      assert.equal(steward.role, "administrator");
+      assert.equal(steward.email, "steward@preview.10thmeridian.test");
+    }
+    assert.equal(resolveLockUnlock("admin").kind, "steward");
+    assert.equal(resolveLockUnlock("moderator").kind, "steward");
+  });
+
+  it("maps usernames to demo emails without inventing live passwords", () => {
+    assert.equal(
+      emailCandidateFromIdentity("stefan"),
+      "stefan.fulks@preview.10thmeridian.test",
+    );
+    assert.equal(
+      emailCandidateFromIdentity("founder@house.test"),
+      "founder@house.test",
+    );
+    assert.equal(FORGOT_PASSWORD_MESSAGE, "If an account exists, a reset note is sent.");
   });
 
   it("uses the supplied referral catalog", () => {

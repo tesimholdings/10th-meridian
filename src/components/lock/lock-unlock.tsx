@@ -1,33 +1,66 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
-import { UNLOCK_MISS_MESSAGE } from "@/lib/lock/unlock";
+import { FORGOT_PASSWORD_MESSAGE, UNLOCK_MISS_MESSAGE } from "@/lib/lock/unlock";
+
+type Mode = "identity" | "password" | "referral";
 
 export function LockUnlock({ denied = false }: { denied?: boolean }) {
+  const [mode, setMode] = useState<Mode>("identity");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(denied);
+  const [notice, setNotice] = useState<string | null>(null);
+  const [key, setKey] = useState("");
+  const passwordRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (mode === "password") passwordRef.current?.focus();
+  }, [mode]);
+
+  async function submitUnlock(body: {
+    key: string;
+    password?: string;
+    referral?: "1";
+  }) {
+    const res = await fetch("/api/lock/unlock", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+    return (await res.json().catch(() => null)) as
+      | { ok?: boolean; redirect?: string; next?: string; message?: string }
+      | null;
+  }
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
-    const key = String(new FormData(form).get("key") ?? "");
+    const data = new FormData(form);
+    const nextKey = String(data.get("key") ?? "");
+    const password = String(data.get("password") ?? "");
     setBusy(true);
     setError(false);
+    setNotice(null);
     try {
-      const res = await fetch("/api/lock/unlock", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ key }),
-      });
-      const data = (await res.json().catch(() => null)) as
-        | { ok?: boolean; redirect?: string }
-        | null;
-      if (data?.ok && data.redirect) {
-        window.location.assign(data.redirect);
+      const body =
+        mode === "password"
+          ? { key: nextKey, password }
+          : mode === "referral"
+            ? { key: nextKey, referral: "1" as const }
+            : { key: nextKey };
+      const json = await submitUnlock(body);
+      if (json?.ok && json.redirect) {
+        window.location.assign(json.redirect);
+        return;
+      }
+      if (json?.ok && json.next === "password") {
+        setKey(nextKey);
+        setMode("password");
+        setBusy(false);
         return;
       }
       setError(true);
@@ -36,6 +69,30 @@ export function LockUnlock({ denied = false }: { denied?: boolean }) {
     }
     setBusy(false);
   }
+
+  async function onForgot() {
+    setBusy(true);
+    setError(false);
+    try {
+      const res = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ identity: key }),
+      });
+      const data = (await res.json().catch(() => null)) as { message?: string } | null;
+      setNotice(data?.message ?? FORGOT_PASSWORD_MESSAGE);
+    } catch {
+      setNotice(FORGOT_PASSWORD_MESSAGE);
+    }
+    setBusy(false);
+  }
+
+  const submitLabel = mode === "identity" ? "Continue" : "Enter";
+  const keyLabel =
+    mode === "referral" ? "Referral code" : "Username or email";
 
   return (
     <form
@@ -47,14 +104,80 @@ export function LockUnlock({ denied = false }: { denied?: boolean }) {
       <input
         name="key"
         type="text"
-        autoComplete="username"
+        value={key}
+        onChange={(event) => setKey(event.target.value)}
+        readOnly={mode === "password"}
+        autoComplete={mode === "referral" ? "off" : "username"}
+        autoCapitalize="none"
+        autoCorrect="off"
         spellCheck={false}
-        aria-label="Referral code, email, or username"
-        placeholder="Referral code, email, or username"
+        aria-label={keyLabel}
+        placeholder={keyLabel}
       />
+      {mode === "password" ? (
+        <div className="lock-unlock-secret mt-3">
+          <input
+            ref={passwordRef}
+            name="password"
+            type="password"
+            autoComplete="current-password"
+            aria-label="Password"
+            placeholder="Password"
+          />
+          <p className="mt-3">
+            <button
+              type="button"
+              className="lock-text-link"
+              onClick={onForgot}
+              disabled={busy}
+            >
+              Forgot password
+            </button>
+          </p>
+        </div>
+      ) : null}
+      {mode === "referral" ? (
+        <input type="hidden" name="referral" value="1" />
+      ) : null}
       <Button type="submit" className="lock-enter mt-4 w-full" disabled={busy}>
-        Enter
+        {submitLabel}
       </Button>
+      {mode === "identity" ? (
+        <p className="mt-4">
+          <button
+            type="button"
+            className="lock-text-link"
+            onClick={() => {
+              setMode("referral");
+              setKey("");
+              setError(false);
+              setNotice(null);
+            }}
+          >
+            Have a referral code?
+          </button>
+        </p>
+      ) : (
+        <p className="mt-4">
+          <button
+            type="button"
+            className="lock-text-link"
+            onClick={() => {
+              setMode("identity");
+              if (mode === "referral") setKey("");
+              setError(false);
+              setNotice(null);
+            }}
+          >
+            {mode === "referral" ? "Use username" : "Use a different name"}
+          </button>
+        </p>
+      )}
+      {notice ? (
+        <p className="mt-4 text-sm text-ivory/50" role="status">
+          {notice}
+        </p>
+      ) : null}
       {error ? (
         <p className="mt-4 text-sm text-ivory/50" role="status">
           {UNLOCK_MISS_MESSAGE}

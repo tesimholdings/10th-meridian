@@ -30,12 +30,14 @@ npm run dev
 
 No live secrets are required. Preview mode uses labeled SYNTHETIC DEMO data.
 
-The lock screen is the default outside the monthly Open House window (the 10th, **visitor local timezone**, fallback `America/Chicago`). Use the discreet **Reviewer tools** (shown only when `NEXT_PUBLIC_PREVIEW_TOOLS=true`) to:
+The lock screen is the default outside the monthly Open House window (the 10th, **visitor local timezone**, fallback `America/Chicago`). The closed lock always shows an empty **username / email** field. Continue reveals **password** and **Forgot password**. **Have a referral code?** is on the same screen. Use the discreet **Reviewer tools** (shown only when `NEXT_PUBLIC_PREVIEW_TOOLS=true`) to:
 
 - Preview as member / steward / approved-unpaid
 - Force Open House open for a walkthrough
 
 Or set `OPEN_HOUSE_FORCE=open` in `.env.local`.
+
+Preview demo (no live passwords): with `PREVIEW_DEMO_AUTH=true` and no Supabase Auth, enter a demo alias (`stefan`, `voss`, `ricky`, or `steward`) → Continue → Enter. Referral sample: `TENTH-EARLY`. Production should keep `PREVIEW_DEMO_AUTH=false` (no demo sessions); the lock fields stay visible and password goes to Supabase Auth when env is set.
 
 ```bash
 npm run build    # production build
@@ -46,7 +48,7 @@ npm test         # My Circle, Open House TZ, Circle, privacy, notifications, cop
 
 No live secrets required. Missing env = labeled demo.
 
-1. `/` lock — official closed-lock lockup on the grainy black-and-gold field (no campaign photo)
+1. `/` lock — official closed-lock lockup on the grainy black-and-gold field (no campaign photo). Username/email → Continue → password + Forgot password, or **Have a referral code?**
 2. Reviewer tools (bottom-right, preview only) → **Force Open House** → `/open-house`
 3. **Remind me** on the lock → `/api/reminders` stubs Resend (`EMAIL_FROM=team@tenmeridian.com`) until `RESEND_API_KEY` is set
 4. Apply during Open House → `/api/applications` sends **application received** (stub without key)
@@ -116,7 +118,7 @@ See [docs/STRIPE.md](./docs/STRIPE.md). Social OAuth is **not** built. Apply mig
 
 ## Reviewer click-through (Stefan / Astra)
 
-1. `/` lock — grainy black-and-gold field only (no campaign/yacht photo), **centered** wordmark + headline + countdown + **Remind me** on desktop; Sign in in the header
+1. `/` lock — grainy black-and-gold field only (no campaign/yacht photo), **centered** wordmark + headline + countdown + username/email entry + **Remind me**. Sign in remains on Open House, not on the lock.
 2. Desktop (fine pointer): gold/navy cursor follower. Off for touch. Off / static when `prefers-reduced-motion`
 3. Reviewer tools → **Force Open House** → `/open-house` hero, The House, Experiences, **Founding Ten. $5,000.**, no-soliciting → **Explore the house**
 4. Home — greeting, next trip / experience, three useful connections, Rewards teaser in **points**

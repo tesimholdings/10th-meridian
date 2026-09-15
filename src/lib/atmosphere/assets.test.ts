@@ -104,11 +104,15 @@ describe("original House atmosphere", () => {
     assert.match(lock, /LockUnlock/);
     assert.equal(lock.includes("max-w-3xl"), false);
     assert.equal(lock.includes("Sign in"), false);
+    assert.equal(lock.includes("previewDemoAuth"), false);
     assert.equal(grain.includes("lock-gold-glow"), false);
     assert.equal(css.includes("lock-gold-glow"), false);
     assert.match(css, /\.lock-gold\s*\{[^}]*background:\s*#000/);
-    assert.match(unlock, /Referral code, email, or username/);
+    assert.match(unlock, /Username or email/);
+    assert.match(unlock, /Forgot password/);
+    assert.match(unlock, /Have a referral code\?/);
     assert.match(unlock, /\/api\/lock\/unlock/);
+    assert.match(unlock, /\/api\/auth\/forgot-password/);
     const landing = readFileSync("src/components/open-house/landing.tsx", "utf8");
     assert.match(landing, /oh-wrap/);
     assert.equal(landing.includes("userAgent"), false);

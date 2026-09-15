@@ -12,6 +12,7 @@ Wave 2 added interactive member/admin DEMO state (in-process store). It resets w
 - [ ] Prepared domain: **tenmeridian.com** (not purchased). Do not attach until bought and Open House / lock behavior is accepted
 - [ ] Attach the custom domain only after Open House / lock behavior is accepted
 - [ ] Keep `NEXT_PUBLIC_PREVIEW_TOOLS=false` and `PREVIEW_DEMO_AUTH=false` in Production
+- [ ] Closed lock always shows username → password (Forgot password) or a referral path. `PREVIEW_DEMO_AUTH=false` only disables demo sessions; it must not hide the entry fields. Wire Supabase Auth so real members/stewards can sign in. Preview without Auth: demo aliases (`stefan`, `voss`, `steward`) then Enter; sample referral `TENTH-EARLY`. Never invent live passwords.
 - [ ] Set `NEXT_PUBLIC_RUNTIME_MODE=live` only after integrations are real
 - [ ] Rotate `SESSION_SECRET` before any shared preview URL is circulated
 

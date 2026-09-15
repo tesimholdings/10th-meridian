@@ -4,7 +4,6 @@ import { Countdown } from "@/components/cinematic/countdown";
 import { LockGrain } from "@/components/lock/lock-grain";
 import { LockUnlock } from "@/components/lock/lock-unlock";
 import { brand } from "@/lib/config/site";
-import { env } from "@/lib/env";
 import type { AccessDecision } from "@/lib/access/open-house";
 
 export function LockScreen({
@@ -35,11 +34,9 @@ export function LockScreen({
               label={referralEarly ? "Until general doors" : "Until the next tenth"}
             />
           </div>
-          {env.previewDemoAuth ? (
-            <div className="mt-10 w-full">
-              <LockUnlock denied={unlockDenied} />
-            </div>
-          ) : null}
+          <div className="mt-10 w-full">
+            <LockUnlock denied={unlockDenied} />
+          </div>
           <p className="mt-8">
             <Link href="/remind" className="text-sm text-ivory/50 hover:text-ivory">
               Remind me
