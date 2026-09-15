@@ -5,8 +5,13 @@ import { OpenHouseLanding } from "@/components/open-house/landing";
 
 export const dynamic = "force-dynamic";
 
-export default async function HomePage() {
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ unlock?: string }>;
+}) {
   const access = await resolveAccessContext();
+  const params = await searchParams;
 
   if (!access.decision.allowed) {
     return (
@@ -15,6 +20,7 @@ export default async function HomePage() {
         <LockScreen
           decision={access.decision}
           referralEarly={access.decision.phase === "referral_early"}
+          unlockDenied={params.unlock === "1"}
         />
       </>
     );

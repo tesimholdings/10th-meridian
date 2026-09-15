@@ -33,6 +33,9 @@ export function PreviewTools({ access }: { access: AccessContext }) {
         <button name="openHouse" value="open" className="min-h-10 border border-[var(--line)] px-2">
           Force Open House cookie
         </button>
+        <button name="openHouse" value="closed" className="min-h-10 border border-[var(--line)] px-2">
+          Force closed
+        </button>
         <button name="openHouse" value="clear" className="min-h-10 border border-[var(--line)] px-2">
           Clear force cookie
         </button>

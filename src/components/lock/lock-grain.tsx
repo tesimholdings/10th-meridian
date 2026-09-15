@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-/** Luxury gold wash that follows a fine pointer. Off for touch and reduced motion. */
+/** Subtle gold grain that follows a fine pointer. Off for touch and reduced motion. */
 export function LockGrain() {
   const wash = useRef<HTMLDivElement>(null);
 
@@ -24,7 +24,6 @@ export function LockGrain() {
 
   return (
     <>
-      <div className="lock-gold-glow" aria-hidden />
       <div className="grain lock-gold-grain" aria-hidden />
       <div ref={wash} className="lock-gold-follow" aria-hidden />
     </>

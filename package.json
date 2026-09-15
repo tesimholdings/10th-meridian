@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "tsx --test src/lib/matching/score.test.ts src/lib/matching/reason.test.ts src/lib/access/open-house.test.ts src/lib/preview/store.test.ts src/lib/crossings/dates.test.ts src/lib/crossings/matching.test.ts src/lib/crossings/service.test.ts src/lib/crossings/journey-validation.test.ts src/lib/network/privacy.test.ts src/lib/network/circle.test.ts src/lib/notifications/prefs.test.ts src/lib/copy/ui.test.ts src/lib/copy/open-house.test.ts src/lib/atmosphere/assets.test.ts src/lib/atmosphere/campaign.test.ts src/lib/ask/meridian.test.ts src/lib/messaging/destination.test.ts src/lib/rewards/math.test.ts src/lib/rewards/actions.test.ts src/lib/data/demo.test.ts",
+    "test": "tsx --test src/lib/matching/score.test.ts src/lib/matching/reason.test.ts src/lib/access/open-house.test.ts src/lib/preview/store.test.ts src/lib/crossings/dates.test.ts src/lib/crossings/matching.test.ts src/lib/crossings/service.test.ts src/lib/crossings/journey-validation.test.ts src/lib/network/privacy.test.ts src/lib/network/circle.test.ts src/lib/notifications/prefs.test.ts src/lib/copy/ui.test.ts src/lib/copy/open-house.test.ts src/lib/atmosphere/assets.test.ts src/lib/atmosphere/campaign.test.ts src/lib/ask/meridian.test.ts src/lib/messaging/destination.test.ts src/lib/rewards/math.test.ts src/lib/rewards/actions.test.ts src/lib/data/demo.test.ts src/lib/lock/unlock.test.ts",
     "test:matching": "tsx --test src/lib/matching/score.test.ts src/lib/preview/store.test.ts"
   },
   "dependencies": {

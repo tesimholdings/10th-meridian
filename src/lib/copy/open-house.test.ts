@@ -81,6 +81,8 @@ describe("Open House customer copy", () => {
     assert.match(light, /10th Meridian/);
     const formal = readFileSync("public/brand/tenth-meridian-logo-full-lockup.svg", "utf8");
     assert.match(formal, /TENTH MERIDIAN/);
+    const knockout = readFileSync("public/brand/tenth-meridian-logo-full-lockup-knockout.png");
+    assert.equal(knockout[25], 6, "knockout lockup must be RGBA, not a black plate");
   });
 });
 
@@ -160,6 +162,8 @@ describe("Open House customer surfaces", () => {
     assert.match(signIn, /env\.previewTools/);
     assert.equal(signIn.includes("Supabase Auth"), false);
     assert.match(tools, /env\.previewTools/);
+    assert.match(tools, /Force closed/);
+    assert.match(tools, /Guest \/ lock/);
     assert.match(env, /VERCEL_ENV === "production"/);
     assert.match(env, /get isProduction/);
   });
