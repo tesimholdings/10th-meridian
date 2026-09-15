@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { crossingsAccess, jsonError } from "@/lib/crossings/http";
+import { crossingsAccess, jsonCaught, jsonError } from "@/lib/crossings/http";
 import { decideTableGuest, joinTable, openTable, publicTableView, tableSuggestionsFor } from "@/lib/crossings/service";
 import { MEETING_FORMATS, TABLE_JOIN_MODES } from "@/lib/crossings/types";
 import { getPreviewStore, viewerProfile } from "@/lib/preview/store";
@@ -47,7 +47,7 @@ export async function POST(request: Request) {
     if (!store.channels.some((c) => c.id === channel.id)) store.channels.unshift(channel);
     return Response.json({ ok: true, table });
   } catch (error) {
-    return jsonError(error instanceof Error ? error.message : "Could not open a table.");
+    return jsonCaught(error, "Could not open a table.");
   }
 }
 
@@ -79,6 +79,6 @@ export async function PATCH(request: Request) {
     }
     return jsonError("Unknown action.");
   } catch (error) {
-    return jsonError(error instanceof Error ? error.message : "Could not update the table.");
+    return jsonCaught(error, "Could not update the table.");
   }
 }

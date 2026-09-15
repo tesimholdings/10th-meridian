@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { crossingsAccess, jsonError } from "@/lib/crossings/http";
+import { crossingsAccess, jsonCaught, jsonError } from "@/lib/crossings/http";
 import { addCityNote, moderateCityNote, reportCityNote, saveCityNote, visibleCityNotes } from "@/lib/crossings/service";
 import { CITY_NOTE_KINDS } from "@/lib/crossings/types";
 import { viewerProfile } from "@/lib/preview/store";
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
     const note = addCityNote(ctx.state, { ...parsed.data, authorProfileId: viewer.id });
     return Response.json({ ok: true, note });
   } catch (error) {
-    return jsonError(error instanceof Error ? error.message : "Could not save.");
+    return jsonCaught(error, "Could not save.");
   }
 }
 
@@ -68,6 +68,6 @@ export async function PATCH(request: Request) {
       note: moderateCityNote(ctx.state, body.id, body.action === "hide"),
     });
   } catch (error) {
-    return jsonError(error instanceof Error ? error.message : "Could not update.");
+    return jsonCaught(error, "Could not update.");
   }
 }

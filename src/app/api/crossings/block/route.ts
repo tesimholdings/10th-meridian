@@ -1,4 +1,4 @@
-import { crossingsAccess, jsonError } from "@/lib/crossings/http";
+import { crossingsAccess, jsonCaught, jsonError } from "@/lib/crossings/http";
 import { blockMember } from "@/lib/crossings/service";
 import { viewerProfile } from "@/lib/preview/store";
 
@@ -12,6 +12,6 @@ export async function POST(request: Request) {
     blockMember(ctx.state, viewer.id, body.profileId);
     return Response.json({ ok: true });
   } catch (error) {
-    return jsonError(error instanceof Error ? error.message : "Could not block.");
+    return jsonCaught(error, "Could not block.");
   }
 }
