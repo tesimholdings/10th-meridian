@@ -60,7 +60,7 @@ export const OPEN_HOUSE_HOUSE_MEDIA = [
 
 export const OPEN_HOUSE_EXPERIENCE_MEDIA = [
   { global: "london", fallback: "celebrations" },
-  { global: "amalfi", fallback: "homeNetwork" },
+  { global: "amalfi", film: "eventsDinner", fallback: "homeNetwork" },
   { global: "safari", fallback: "crossings" },
 ] as const;
 

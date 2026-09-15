@@ -125,12 +125,19 @@ function ExperiencesRail() {
           const fallback = stillForListedExperience(item, i);
           return (
           <li key={item.id}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={media ? globalSrc(media.global, fallback) : campaignSrc(fallback)}
-              alt=""
-              className="aspect-[16/10] w-full object-cover"
-            />
+            {media && "film" in media && media.film ? (
+              <EditorialFilm
+                poster={globalSrc(media.global, fallback)}
+                videoSrc={filmSrc(media.film)}
+              />
+            ) : (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={media ? globalSrc(media.global, fallback) : campaignSrc(fallback)}
+                alt=""
+                className="aspect-[16/10] w-full object-cover"
+              />
+            )}
             <p className="mt-3 font-serif text-2xl">{item.title}</p>
             <p className="text-sm text-[var(--navy-soft)]">
               {[item.place, experienceStateLabel(item.state)].filter(Boolean).join(" · ")}

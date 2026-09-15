@@ -50,7 +50,9 @@ describe("campaign still mapping", () => {
     assert.match(landing, /filmSrc\("heroLandscape"\)/);
     assert.match(landing, /HeroMedia/);
     assert.match(landing, /OPEN_HOUSE_HOUSE_MEDIA/);
+    assert.match(landing, /OPEN_HOUSE_CLOSING_MEDIA/);
     assert.match(landing, /globalSrc/);
+    assert.equal(lock.includes("hero-nyc-rooftop"), false);
     assert.equal(lock.includes("campaignSrc"), false);
     assert.equal(lock.includes("/media/campaign"), false);
     assert.equal(lock.includes("yacht"), false);
