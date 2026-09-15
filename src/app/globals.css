@@ -184,13 +184,13 @@ body {
   position: absolute;
   inset: -8%;
   background: radial-gradient(
-    28rem 22rem at var(--hero-mx) var(--hero-my),
-    rgba(244, 228, 184, 0.38) 0%,
-    rgba(212, 175, 106, 0.28) 28%,
-    rgba(196, 162, 100, 0.08) 52%,
-    transparent 72%
+    24rem 20rem at var(--hero-mx) var(--hero-my),
+    rgba(255, 236, 186, 0.58) 0%,
+    rgba(212, 175, 106, 0.36) 26%,
+    rgba(196, 162, 100, 0.1) 48%,
+    transparent 70%
   );
-  mix-blend-mode: screen;
+  mix-blend-mode: soft-light;
   will-change: background;
 }
 
@@ -199,16 +199,16 @@ body {
   inset: 0;
   background:
     radial-gradient(
-      36rem 28rem at var(--hero-mx) var(--hero-my),
-      rgba(196, 162, 100, 0.22),
-      transparent 64%
+      20rem 16rem at var(--hero-mx) var(--hero-my),
+      rgba(244, 228, 184, 0.34),
+      transparent 58%
     ),
     radial-gradient(
-      80% 70% at calc(100% - var(--hero-mx)) calc(100% - var(--hero-my)),
-      rgba(9, 43, 69, 0.28),
-      transparent 62%
+      85% 75% at calc(100% - var(--hero-mx)) calc(90% - var(--hero-my)),
+      rgba(9, 43, 69, 0.42),
+      transparent 58%
     );
-  mix-blend-mode: soft-light;
+  mix-blend-mode: overlay;
 }
 
 .hero-grain {

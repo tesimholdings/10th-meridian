@@ -34,20 +34,19 @@ export function HeroAtmosphere() {
     }
 
     function tick() {
-      px += (tx - px) * 0.09;
-      py += (ty - py) * 0.09;
-      mx += (tmx - mx) * 0.1;
-      my += (tmy - my) * 0.1;
+      px += (tx - px) * 0.16;
+      py += (ty - py) * 0.16;
+      mx += (tmx - mx) * 0.18;
+      my += (tmy - my) * 0.18;
       apply();
       frame = window.requestAnimationFrame(tick);
     }
 
     function onMove(e: PointerEvent) {
       if (e.pointerType === "touch" || motion.matches) return;
-      if (e.pointerType !== "mouse" && e.pointerType !== "pen") return;
       const rect = surface.getBoundingClientRect();
       if (rect.width === 0 || rect.height === 0) return;
-      if (e.clientY < rect.top - 40 || e.clientY > rect.bottom + 20) return;
+      if (e.clientY < rect.top - 80 || e.clientY > rect.bottom + 40) return;
       tx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
       ty = ((e.clientY - rect.top) / rect.height) * 2 - 1;
       tmx = ((e.clientX - rect.left) / rect.width) * 100;
