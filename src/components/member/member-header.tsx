@@ -18,64 +18,68 @@ export function MemberHeader({
   const [q, setQ] = useState("");
 
   return (
-    <header className="header-chrome safe-pad safe-top sticky top-0 z-30 flex items-center gap-3 py-2.5 backdrop-blur-md">
-      <div className="md:hidden">
-        <Wordmark compact surface="dark" />
-      </div>
-      <form
-        className="min-w-0 flex-1"
-        onSubmit={(e) => {
-          e.preventDefault();
-          router.push(`/member/circle?q=${encodeURIComponent(q.trim())}`);
-        }}
-      >
-        <label className="sr-only" htmlFor="house-search">
-          Search
-        </label>
-        <input
-          id="house-search"
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          placeholder="Search people and cities"
-          className="min-h-11 min-w-0 w-full rounded-full"
-        />
-      </form>
-      <Link
-        href="/member/notifications"
-        className="pressable relative flex h-11 w-11 items-center justify-center rounded-full"
-        aria-label={unreadNotifications ? `Notifications, ${unreadNotifications} unread` : "Notifications"}
-      >
-        <BellIcon />
-        {unreadNotifications > 0 ? (
-          <span className="unread-dot absolute right-2 top-2" />
-        ) : null}
-      </Link>
-      <details className="relative">
-        <summary className="flex h-11 cursor-pointer list-none items-center px-2 text-sm text-[#efe6d4]">
-          More
-        </summary>
-        <div className="glass-menu absolute right-0 mt-2 w-56 rounded-2xl p-2">
-          {memberSecondary.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="flex min-h-11 items-center px-3 text-sm text-[var(--navy)]"
-            >
-              {item.label}
-            </Link>
-          ))}
-          {user?.role === "administrator" || user?.role === "moderator" ? (
-            <Link href="/admin" className="flex min-h-11 items-center px-3 text-sm text-[var(--gold)]">
-              Steward desk
-            </Link>
-          ) : null}
-          <form action="/api/auth/sign-out" method="post">
-            <button className="flex min-h-11 w-full items-center px-3 text-left text-sm text-[var(--ivory-dim)]">
-              Sign out
-            </button>
-          </form>
+    <header className="header-chrome safe-pad safe-top sticky top-0 z-30 py-2.5 backdrop-blur-md">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 md:flex-nowrap">
+        <div className="md:hidden">
+          <Wordmark compact surface="dark" />
         </div>
-      </details>
+        <div className="ml-auto flex items-center gap-2 md:order-last md:ml-0">
+          <Link
+            href="/member/notifications"
+            className="pressable relative flex h-11 w-11 items-center justify-center rounded-full"
+            aria-label={unreadNotifications ? `Notifications, ${unreadNotifications} unread` : "Notifications"}
+          >
+            <BellIcon />
+            {unreadNotifications > 0 ? (
+              <span className="unread-dot absolute right-2 top-2" />
+            ) : null}
+          </Link>
+          <details className="relative">
+            <summary className="flex h-11 cursor-pointer list-none items-center px-2 text-sm text-[#efe6d4]">
+              More
+            </summary>
+            <div className="glass-menu absolute right-0 mt-2 w-56 rounded-2xl p-2">
+              {memberSecondary.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="flex min-h-11 items-center px-3 text-sm text-[var(--navy)]"
+                >
+                  {item.label}
+                </Link>
+              ))}
+              {user?.role === "administrator" || user?.role === "moderator" ? (
+                <Link href="/admin" className="flex min-h-11 items-center px-3 text-sm text-[var(--gold)]">
+                  Steward desk
+                </Link>
+              ) : null}
+              <form action="/api/auth/sign-out" method="post">
+                <button className="flex min-h-11 w-full items-center px-3 text-left text-sm text-[var(--ivory-dim)]">
+                  Sign out
+                </button>
+              </form>
+            </div>
+          </details>
+        </div>
+        <form
+          className="min-w-0 w-full flex-1 basis-full md:basis-auto"
+          onSubmit={(e) => {
+            e.preventDefault();
+            router.push(`/member/circle?q=${encodeURIComponent(q.trim())}`);
+          }}
+        >
+          <label className="sr-only" htmlFor="house-search">
+            Search
+          </label>
+          <input
+            id="house-search"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Search people and cities"
+            className="min-h-11 min-w-0 w-full rounded-full"
+          />
+        </form>
+      </div>
     </header>
   );
 }

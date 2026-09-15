@@ -1248,8 +1248,8 @@ button:disabled {
   min-height: 32px;
   padding: 0 0.75rem;
   border-radius: 999px;
-  background: rgba(8, 124, 184, 0.08);
-  color: var(--blue);
+  background: rgba(196, 162, 100, 0.16);
+  color: var(--gold-dim);
   font-size: 0.75rem;
 }
 
@@ -1296,7 +1296,7 @@ button:disabled {
   width: 8px;
   height: 8px;
   border-radius: 999px;
-  background: var(--blue);
+  background: var(--gold);
 }
 
 .media-slot {

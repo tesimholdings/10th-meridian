@@ -17,7 +17,7 @@ export function RewardsTeaserCard({
       <p className="text-sm text-[var(--ivory-dim)]">{REWARDS_HEADLINE}</p>
       <p className={`mt-1 font-serif ${compact ? "text-3xl" : "text-4xl"}`}>{formatPoints(availablePoints)}</p>
       <p className="mt-1 text-sm text-[var(--navy-soft)]">{REWARDS_PARITY}</p>
-      <p className="mt-3 text-sm text-[var(--blue)]">Open Rewards</p>
+      <p className="mt-3 text-sm text-[var(--gold-dim)]">Open Rewards</p>
     </Link>
   );
 }
