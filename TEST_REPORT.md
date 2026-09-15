@@ -17,7 +17,7 @@ Runtime: Node 22, Next.js 16.3.5, preview mode (no live secrets)
 
 | Check | Result |
 | --- | --- |
-| `npm test` | 78/78 pass — prior coverage plus campaign PNGs on disk, slot mapping (nightlife not default), Ask, DM destination, journey validation |
+| `npm test` | 98/98 pass — points math, named demo members, My Circle copy, prior matching / Open House / Crossings coverage |
 | `npm run lint` | Pass (0 errors) |
 | `npm run build` | Pass — Next.js 16.3.5 Turbopack, TypeScript clean |
 
