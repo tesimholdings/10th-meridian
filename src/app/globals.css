@@ -129,34 +129,34 @@ body {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(70% 55% at 50% 38%, rgba(196, 162, 100, 0.07), transparent 68%),
-    #000;
+    radial-gradient(65% 50% at 50% 36%, rgba(196, 162, 100, 0.1), transparent 70%),
+    #050505;
 }
 
 .lock-field-gold {
   pointer-events: none;
   position: absolute;
   inset: 0;
-  opacity: 0.7;
   background-image:
-    radial-gradient(1px 1px at 14% 18%, rgba(196, 162, 100, 0.55), transparent 60%),
-    radial-gradient(1px 1px at 28% 72%, rgba(196, 162, 100, 0.32), transparent 60%),
-    radial-gradient(1.2px 1.2px at 41% 31%, rgba(196, 162, 100, 0.4), transparent 60%),
-    radial-gradient(1px 1px at 63% 22%, rgba(196, 162, 100, 0.28), transparent 60%),
-    radial-gradient(1px 1px at 71% 68%, rgba(196, 162, 100, 0.38), transparent 60%),
-    radial-gradient(1.1px 1.1px at 83% 41%, rgba(196, 162, 100, 0.3), transparent 60%),
-    radial-gradient(1px 1px at 91% 81%, rgba(196, 162, 100, 0.24), transparent 60%),
-    radial-gradient(1px 1px at 8% 54%, rgba(196, 162, 100, 0.22), transparent 60%);
+    radial-gradient(1.4px 1.4px at 12% 16%, rgba(196, 162, 100, 0.7), transparent 70%),
+    radial-gradient(1.2px 1.2px at 22% 61%, rgba(196, 162, 100, 0.45), transparent 70%),
+    radial-gradient(1.5px 1.5px at 34% 28%, rgba(196, 162, 100, 0.55), transparent 70%),
+    radial-gradient(1.2px 1.2px at 47% 78%, rgba(196, 162, 100, 0.4), transparent 70%),
+    radial-gradient(1.3px 1.3px at 58% 19%, rgba(196, 162, 100, 0.5), transparent 70%),
+    radial-gradient(1.2px 1.2px at 69% 52%, rgba(196, 162, 100, 0.42), transparent 70%),
+    radial-gradient(1.4px 1.4px at 81% 33%, rgba(196, 162, 100, 0.48), transparent 70%),
+    radial-gradient(1.2px 1.2px at 88% 74%, rgba(196, 162, 100, 0.36), transparent 70%),
+    radial-gradient(1.3px 1.3px at 7% 86%, rgba(196, 162, 100, 0.32), transparent 70%),
+    radial-gradient(1.1px 1.1px at 93% 11%, rgba(196, 162, 100, 0.34), transparent 70%);
 }
 
 .lock-grain {
   pointer-events: none;
   position: absolute;
-  inset: -18%;
-  opacity: 0.38;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.7'/%3E%3C/svg%3E");
-  animation: lock-grain 900ms steps(2) infinite;
+  inset: -20%;
+  opacity: 0.2;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  animation: lock-grain 800ms steps(2) infinite;
 }
 
 .safe-bottom {
