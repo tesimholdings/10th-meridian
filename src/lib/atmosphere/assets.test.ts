@@ -61,13 +61,13 @@ describe("original House atmosphere", () => {
     const aura = css.split(".cursor-aura {")[1]?.split("}")[0] ?? "";
     assert.equal(aura.includes("mix-blend-mode"), false);
     assert.match(css, /html\.has-luxury-cursor/);
-    const hideBlock = css.split("@media (hover: hover) and (pointer: fine)")[1] ?? "";
-    assert.match(hideBlock, /cursor:\s*none/);
-    assert.match(hideBlock, /has-luxury-cursor/);
-    const unscopedHide = hideBlock.split("html.has-luxury-cursor")[0] ?? "";
-    assert.equal(/body\s*\{[^}]*cursor:\s*none/.test(unscopedHide), false);
+    assert.match(css, /html\.has-luxury-cursor[\s\S]*cursor:\s*none/);
+    const beforeClass = css.split("html.has-luxury-cursor")[0] ?? "";
+    assert.equal(/body\s*\{[^}]*cursor:\s*none/.test(beforeClass), false);
     assert.match(cursor, /has-luxury-cursor/);
     assert.match(cursor, /prefers-reduced-motion/);
+    assert.match(cursor, /pointerType/);
+    assert.match(cursor, /"mouse"/);
     const reduced = css.split("@media (prefers-reduced-motion: reduce)")[1] ?? "";
     assert.match(reduced, /cursor:\s*auto/);
   });

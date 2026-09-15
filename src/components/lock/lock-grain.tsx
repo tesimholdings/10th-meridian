@@ -7,13 +7,12 @@ export function LockGrain() {
   const wash = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const fine = window.matchMedia("(hover: hover) and (pointer: fine)");
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const touch = navigator.maxTouchPoints > 0 && !fine.matches;
-    if (!fine.matches || motion.matches || touch) return;
+    if (motion.matches) return;
 
     function move(e: PointerEvent) {
       if (e.pointerType === "touch" || !wash.current) return;
+      if (e.pointerType !== "mouse" && e.pointerType !== "pen") return;
       const x = (e.clientX / window.innerWidth) * 100;
       const y = (e.clientY / window.innerHeight) * 100;
       wash.current.style.setProperty("--lock-mx", `${x}%`);

@@ -35,7 +35,8 @@ export function HeroAtmosphere() {
     }
 
     function onMove(e: PointerEvent) {
-      if (e.pointerType === "touch" || motion.matches || !fine.matches) return;
+      if (e.pointerType === "touch" || motion.matches) return;
+      if (e.pointerType !== "mouse" && e.pointerType !== "pen") return;
       const rect = surface.getBoundingClientRect();
       if (rect.width === 0 || rect.height === 0) return;
       tx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
@@ -53,13 +54,10 @@ export function HeroAtmosphere() {
       return;
     }
 
-    if (fine.matches) {
-      surface.addEventListener("pointermove", onMove, { passive: true });
-      surface.addEventListener("pointerleave", onLeave);
-      frame = window.requestAnimationFrame(tick);
-    } else {
-      el.dataset.ambient = "true";
-    }
+    surface.addEventListener("pointermove", onMove, { passive: true });
+    surface.addEventListener("pointerleave", onLeave);
+    frame = window.requestAnimationFrame(tick);
+    if (!fine.matches) el.dataset.ambient = "true";
 
     return () => {
       surface.removeEventListener("pointermove", onMove);

@@ -2,9 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 
-function luxuryCursorAllowed(fine: MediaQueryList, motion: MediaQueryList) {
-  const touch = navigator.maxTouchPoints > 0 && !fine.matches;
-  return fine.matches && !motion.matches && !touch;
+function luxuryCursorAllowed(motion: MediaQueryList, pointerType?: string) {
+  if (motion.matches) return false;
+  if (pointerType === "touch") return false;
+  return pointerType === "mouse" || pointerType === "pen";
 }
 
 export function CursorAura() {
@@ -12,21 +13,34 @@ export function CursorAura() {
   const [on, setOn] = useState(false);
 
   useEffect(() => {
-    const fine = window.matchMedia("(hover: hover) and (pointer: fine)");
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-    function sync() {
-      const next = luxuryCursorAllowed(fine, motion);
-      setOn(next);
-      document.documentElement.classList.toggle("has-luxury-cursor", next);
-    }
-    sync();
-    fine.addEventListener("change", sync);
-    motion.addEventListener("change", sync);
-    return () => {
+    function disable() {
+      setOn(false);
       document.documentElement.classList.remove("has-luxury-cursor");
-      fine.removeEventListener("change", sync);
-      motion.removeEventListener("change", sync);
+    }
+
+    function onMove(e: PointerEvent) {
+      if (!luxuryCursorAllowed(motion, e.pointerType)) {
+        if (motion.matches || e.pointerType === "touch") disable();
+        return;
+      }
+      setOn((prev) => {
+        if (!prev) document.documentElement.classList.add("has-luxury-cursor");
+        return true;
+      });
+    }
+
+    function onMotion() {
+      if (motion.matches) disable();
+    }
+
+    window.addEventListener("pointermove", onMove, { passive: true });
+    motion.addEventListener("change", onMotion);
+    return () => {
+      window.removeEventListener("pointermove", onMove);
+      motion.removeEventListener("change", onMotion);
+      document.documentElement.classList.remove("has-luxury-cursor");
     };
   }, []);
 
