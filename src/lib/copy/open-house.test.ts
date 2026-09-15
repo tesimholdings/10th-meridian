@@ -5,6 +5,7 @@ import {
   CLOSING_HEADLINE,
   EXPERIENCES_DISCLOSURE,
   EXPLORE_THE_HOUSE,
+  FOOTER_PRIVATE,
   HOUSE_BLOCKS,
   JOIN_WAITLIST,
   MEMBERSHIP_CAP,
@@ -86,30 +87,33 @@ describe("Open House customer surfaces", () => {
     const nav = readFileSync(header, "utf8");
     const foot = readFileSync(footer, "utf8");
     for (const needle of [
-      OPEN_HOUSE_EYEBROW,
-      OPEN_HOUSE_HEADLINE,
-      OPEN_HOUSE_LEDE,
-      OPEN_HOUSE_PROOF,
-      EXPLORE_THE_HOUSE,
-      MEMBERSHIP_HEADLINE,
-      CLOSING_HEADLINE,
-      EXPERIENCES_DISCLOSURE,
+      "OPEN_HOUSE_EYEBROW",
+      "OPEN_HOUSE_HEADLINE",
+      "OPEN_HOUSE_LEDE",
+      "OPEN_HOUSE_PROOF",
+      "EXPLORE_THE_HOUSE",
+      "MEMBERSHIP_HEADLINE",
+      "CLOSING_HEADLINE",
+      "EXPERIENCES_DISCLOSURE",
       'href="/apply"',
       'href="/remind"',
       'href="#the-house"',
     ]) {
       assert.equal(page.includes(needle), true, `landing missing ${needle}`);
     }
-    for (const label of PUBLIC_NAV.map((i) => i.label)) {
-      assert.equal(nav.includes(label), true, `header missing ${label}`);
-    }
+    assert.match(nav, /PUBLIC_NAV/);
+    assert.deepEqual(
+      PUBLIC_NAV.map((i) => i.label),
+      ["The House", "Experiences", "Membership", "Sign in"],
+    );
     assert.match(nav, /Escape/);
-    assert.match(nav, /menuButtonRef\.current\?\.focus/);
+    assert.match(nav, /trigger\?\.focus/);
     assert.match(nav, /href="\/apply"/);
     for (const href of ["/legal/privacy", "/legal/terms", "/legal/community", "/sign-in"]) {
       assert.equal(foot.includes(href), true, `footer missing ${href}`);
     }
-    assert.match(foot, /Private by design/);
+    assert.match(foot, /FOOTER_PRIVATE/);
+    assert.equal(FOOTER_PRIVATE, "Private by design.");
   });
 
   it("keeps reviewer, remaining-counter, and stack notes off the landing", () => {
@@ -133,7 +137,8 @@ describe("Open House customer surfaces", () => {
     const env = readFileSync("src/lib/env.ts", "utf8");
     assert.match(signIn, /env\.previewTools/);
     assert.equal(signIn.includes("Supabase Auth"), false);
-    assert.match(tools, /VERCEL_ENV === "production"/);
+    assert.match(tools, /env\.previewTools/);
+    assert.match(env, /VERCEL_ENV === "production"/);
     assert.match(env, /get isProduction/);
   });
 });

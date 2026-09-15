@@ -27,7 +27,6 @@ export function HeroMedia({
   return (
     <picture>
       <source media="(max-width: 767px)" srcSet={mobileSrc} />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={src}
         alt=""

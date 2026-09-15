@@ -65,11 +65,12 @@ export function PublicHeader({
 
     document.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
+    const trigger = menuButtonRef.current;
     document.body.style.overflow = "hidden";
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
-      menuButtonRef.current?.focus();
+      trigger?.focus();
     };
   }, [menuOpen]);
 
