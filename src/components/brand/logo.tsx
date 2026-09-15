@@ -1,21 +1,44 @@
 import { MeridianMark } from "@/components/brand/mark";
+import { FORMAL_LOCKUP_SRC } from "@/lib/copy/open-house";
 
 export function Wordmark({
   compact = false,
-  light = true,
+  surface = "dark",
 }: {
   compact?: boolean;
-  light?: boolean;
+  /** dark = ivory/white type for grain and hero; light = navy type for paper. Never a black raster on white. */
+  surface?: "dark" | "light";
+}) {
+  const onDark = surface === "dark";
+
+  return (
+    <div
+      className={`flex items-center gap-2.5 ${onDark ? "text-[#faf8f2]" : "text-[#092b45]"}`}
+    >
+      <MeridianMark className={compact ? "h-9 w-9" : "h-11 w-11"} />
+      <p
+        className={`font-serif leading-none tracking-tight ${
+          compact ? "text-[1.35rem]" : "text-[1.55rem] md:text-3xl"
+        }`}
+      >
+        10th Meridian
+      </p>
+    </div>
+  );
+}
+
+/** Official formal lockup — gold mark + TENTH MERIDIAN — only on dark or grain surfaces. */
+export function FormalLockup({
+  className = "h-14 w-auto max-w-[min(100%,22rem)]",
+}: {
+  className?: string;
 }) {
   return (
-    <div className={`flex items-center gap-3 ${light ? "text-ivory" : "text-void"}`}>
-      <MeridianMark className={compact ? "h-9 w-9" : "h-12 w-12"} />
-      <div className="leading-none">
-        <p className="label !text-[0.58rem]">{compact ? "Private network" : "Longitude 10"}</p>
-        <p className="font-serif text-[1.55rem] tracking-tight md:text-3xl">
-          10th Meridian
-        </p>
-      </div>
-    </div>
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={FORMAL_LOCKUP_SRC}
+      alt="Tenth Meridian — Private Network, established MMXXVI"
+      className={className}
+    />
   );
 }

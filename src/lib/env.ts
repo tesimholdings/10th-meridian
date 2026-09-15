@@ -17,6 +17,9 @@ function readBool(name: string, fallback: boolean): boolean {
 }
 
 export const env = {
+  get isProduction(): boolean {
+    return process.env.VERCEL_ENV === "production";
+  },
   get runtimeMode(): RuntimeMode {
     return read("NEXT_PUBLIC_RUNTIME_MODE", "preview") === "live"
       ? "live"

@@ -10,7 +10,7 @@ export function DesktopRail({ unreadMessages = 0 }: { unreadMessages?: number })
   const pathname = usePathname();
   return (
     <aside className="sticky top-0 hidden h-dvh w-56 shrink-0 flex-col border-r border-[var(--line)] px-4 py-5 md:flex">
-      <Wordmark compact />
+      <Wordmark compact surface="light" />
       <nav className="mt-8 grid gap-1" aria-label="Primary">
         {memberNav.map((item) => {
           const active =

@@ -7,23 +7,57 @@ export function MeridianMark({
 }) {
   return (
     <svg
-      viewBox="0 0 96 96"
+      viewBox="0 0 80 80"
       className={className}
       role="img"
       aria-label={title}
     >
       <title>{title}</title>
-      <circle cx="48" cy="48" r="46" fill="none" stroke="#b08d4a" strokeWidth="0.6" opacity="0.7" />
-      <circle cx="48" cy="48" r="34" fill="none" stroke="#efe6d4" strokeWidth="0.4" opacity="0.28" />
-      <circle cx="48" cy="48" r="18" fill="none" stroke="#b08d4a" strokeWidth="0.5" opacity="0.55" />
-      <ellipse cx="48" cy="48" rx="46" ry="16" fill="none" stroke="#efe6d4" strokeWidth="0.35" opacity="0.25" />
-      <ellipse cx="48" cy="48" rx="16" ry="46" fill="none" stroke="#efe6d4" strokeWidth="0.35" opacity="0.25" />
-      <path d="M48 4 V92" stroke="#b08d4a" strokeWidth="1.1" />
-      <path d="M4 48 H92" stroke="#efe6d4" strokeWidth="0.4" opacity="0.35" />
-      <path d="M48 14 L51.2 26.5 H48 L44.8 26.5 Z" fill="#b08d4a" />
-      <circle cx="48" cy="48" r="2.2" fill="#efe6d4" />
-      <path d="M62 18 L64 22" stroke="#efe6d4" strokeWidth="0.5" opacity="0.45" />
-      <path d="M30 70 L28 75" stroke="#efe6d4" strokeWidth="0.5" opacity="0.35" />
+      <g fill="none" stroke="#c4a264" strokeLinecap="round">
+        <circle cx="40" cy="40" r="28.5" strokeWidth="1.35" />
+        <ellipse
+          cx="40"
+          cy="40"
+          rx="28.5"
+          ry="10.8"
+          transform="rotate(-48 40 40)"
+          strokeWidth="1.2"
+        />
+        <ellipse
+          cx="40"
+          cy="40"
+          rx="28.5"
+          ry="10.8"
+          transform="rotate(48 40 40)"
+          strokeWidth="1.2"
+        />
+        <ellipse
+          cx="40"
+          cy="40"
+          rx="28.5"
+          ry="7.2"
+          strokeWidth="0.7"
+          strokeDasharray="0.9 2.4"
+        />
+        <ellipse
+          cx="40"
+          cy="40"
+          rx="24.5"
+          ry="18.5"
+          strokeWidth="0.55"
+          strokeDasharray="0.7 2.2"
+          opacity="0.85"
+        />
+        <ellipse
+          cx="40"
+          cy="40"
+          rx="18"
+          ry="25.2"
+          strokeWidth="0.45"
+          strokeDasharray="0.6 2.1"
+          opacity="0.7"
+        />
+      </g>
     </svg>
   );
 }

@@ -20,7 +20,7 @@ export function MemberHeader({
   return (
     <header className="header-chrome safe-pad safe-top sticky top-0 z-30 flex items-center gap-3 py-2.5 backdrop-blur-md">
       <div className="md:hidden">
-        <Wordmark compact />
+        <Wordmark compact surface="light" />
       </div>
       <form
         className="min-w-0 flex-1"

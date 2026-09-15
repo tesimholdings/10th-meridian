@@ -11,7 +11,7 @@
   --gold-dim: #8a6d38;
   --gold-soft: rgba(196, 162, 100, 0.22);
   --void: #070809;
-  --ink: #0b0d0f;
+  --ink: #10212d;
   --charcoal: #121518;
   --ocean: #0c1c28;
   --teal: #14343c;
@@ -72,7 +72,12 @@ body {
 }
 
 :focus-visible {
-  outline: 1px solid var(--gold-dim);
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+.house-light :focus-visible {
+  outline: 2px solid var(--blue);
   outline-offset: 3px;
 }
 
@@ -582,6 +587,10 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  header {
+    transition: none !important;
+  }
+
   .slow-drift,
   .pulse-gold,
   .rise,

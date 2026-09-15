@@ -1,15 +1,15 @@
 import { LegalFrame } from "@/components/legal/frame";
+import { env } from "@/lib/env";
 
 export const metadata = { title: "Privacy" };
 
 export default function PrivacyPage() {
   return (
-    <LegalFrame title="Privacy (placeholder)">
+    <LegalFrame title={env.isProduction ? "Privacy" : "Privacy (placeholder)"}>
       <p>
         10th Meridian treats member profiles, messages, applications, and payment
         references as private. Authenticated surfaces are marked noindex. Member
-        profiles are never public and never indexed. Open House shows SYNTHETIC
-        DEMO people only.
+        profiles are never public and never indexed.
       </p>
       <p>
         We intend to collect account data, application materials, structured
@@ -21,6 +21,12 @@ export default function PrivacyPage() {
         Location is city-level only. Optional profile fields (website, LinkedIn,
         gallery, offers, needs, strengths, events) have member privacy controls.
       </p>
+      {env.isProduction ? null : (
+        <p>
+          Open House listings on this preview are editorial. Counsel has not signed
+          this page.
+        </p>
+      )}
     </LegalFrame>
   );
 }

@@ -57,7 +57,7 @@ npm test         # My Circle, Open House TZ, Circle, privacy, notifications, cop
 
 1. `/` lock — grainy black-and-gold field only (no campaign/yacht photo), **centered** wordmark + headline + countdown + **Remind me** on desktop; Sign in in the header
 2. Desktop (fine pointer): gold/navy cursor follower. Off for touch. Off / static when `prefers-reduced-motion`
-3. Reviewer tools → **Force Open House** → hero, three benefits, experiences, **$10,000 lifetime**, no-soliciting → **Walk the house**
+3. Reviewer tools → **Force Open House** → `/open-house` hero, The House, Experiences, **$10,000. Once.**, no-soliciting → **Explore the house**
 4. Home — greeting, next trip / experience, three useful connections, Rewards teaser in **points**
 5. **My Circle** (`/member/circle`; `/member/index` redirects) — search / Ask; tabs **For you · Your Circle · All members**. For you: Meridian size **10 → 100** (default 10). Your Circle is hand-picked. All members is the directory. Never “Matches”
 6. For you — slide from Meridian 10 (immediate ten) toward 100; people enter/leave with motion
