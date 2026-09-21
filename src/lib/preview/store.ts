@@ -303,6 +303,14 @@ export function viewerProfile(): ProfileRecord {
   return s.profiles.find((p) => p.id === s.viewerId) ?? s.profiles[0];
 }
 
+export function recordStewardNote(input: { actor: string; message: string }) {
+  const message = input.message.trim().slice(0, 2000);
+  if (!message) throw new Error("Write a note.");
+  audit(input.actor.slice(0, 120) || "member", "help.contact", "steward_note");
+  state().audit[0].entity = `steward_note:${message}`;
+  return { ok: true as const };
+}
+
 export function setWeights(next: MatchingWeights, actor = "administrator") {
   state().weights = { ...next };
   audit(actor, "matching.weights_updated", "matching_weights");

@@ -1,5 +1,5 @@
 import { env } from "@/lib/env";
-import { resolvePublicOrigin } from "@/lib/config/public-origin";
+import { canonicalMemberOrigin } from "@/lib/config/public-origin";
 
 /** Demo-stable personal referral identity. Same member always gets the same code. */
 export function memberReferralCode(input: {
@@ -19,10 +19,10 @@ export function memberReferralToken(memberId: string): string {
 }
 
 export function memberReferralLink(code: string, siteUrl?: string): string {
-  const origin = resolvePublicOrigin({
+  const origin = canonicalMemberOrigin({
     appUrl: siteUrl,
     siteUrl: siteUrl ?? env.siteUrl,
-    vercelUrl: process.env.VERCEL_URL,
+    vercelUrl: siteUrl ? null : process.env.VERCEL_URL,
   });
   return `${origin.replace(/\/$/, "")}/referral/${encodeURIComponent(code)}`;
 }

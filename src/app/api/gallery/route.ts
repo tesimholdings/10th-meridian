@@ -16,12 +16,12 @@ export async function POST(request: Request) {
   if (!parsed.success) return Response.json({ ok: false }, { status: 400 });
   const viewer = viewerProfile();
   const photo = addGalleryPhoto(viewer.id, {
-    caption: parsed.data.caption ?? "Untitled work — DEMO",
+    caption: parsed.data.caption ?? "Untitled work",
     kind: parsed.data.kind,
   });
   return Response.json({
     ok: true,
     photo,
-    note: "Storage stub. Live uploads write to the portfolio bucket. SYNTHETIC DEMO.",
+    note: "Added to your gallery.",
   });
 }

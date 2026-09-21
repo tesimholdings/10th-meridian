@@ -10,6 +10,8 @@ import { completionMessage } from "@/lib/profile/completion";
 import { intentLabel } from "@/lib/profile/onboarding";
 import { loadMemberIntro } from "@/lib/profile/onboarding-server";
 import type { ProfileRecord } from "@/lib/data/types";
+import { memberSurfaceCopy } from "@/lib/member/surface-copy";
+import { isSyntheticSession } from "@/lib/member/identity";
 
 export const metadata = { title: "Profile", robots: { index: false } };
 
@@ -24,20 +26,21 @@ export default async function ProfilePage({
   const params = await searchParams;
   const edit = params.edit === "1";
   const tab = params.tab ?? "about";
-  const rewards = edit ? null : viewerRewardsSnapshot();
+  const rewards = edit || !isSyntheticSession(access.user) ? null : viewerRewardsSnapshot();
 
   if (!edit) {
     return (
-      <MemberShell user={access.user} demo title="Profile">
-        <div className="surface mx-auto flex max-w-xl flex-col items-center rounded-[1.75rem] px-6 py-8 text-center">
+      <MemberShell user={access.user} demo title="Profile" hasHeading>
+        <div className="member-card mx-auto flex max-w-xl flex-col items-center px-6 py-8 text-center">
           <div className="avatar h-24 w-24 text-3xl" style={{ background: p.accent }}>
             {p.initials}
           </div>
-          <h1 className="mt-4 font-serif text-4xl">{p.displayName}</h1>
-          <p className="mt-2 max-w-md text-[var(--navy-soft)]">{p.headline}</p>
-          <p className="mt-1 text-sm text-[var(--ivory-dim)]">
-            {p.city}, {p.country}
-          </p>
+          <p className="member-kicker mt-5">Profile</p>
+          <h1 className="member-title mt-2">{p.displayName}</h1>
+          {p.headline ? <p className="mt-2 max-w-md text-[var(--navy-soft)]">{p.headline}</p> : null}
+          {p.city || p.country ? (
+            <p className="mt-1 text-sm text-[var(--ivory-dim)]">{[p.city, p.country].filter(Boolean).join(", ")}</p>
+          ) : null}
           <Link href="/onboarding" className="action-quiet mt-5">
             {intro.status === "completed" ? "Edit your introduction" : "Finish your profile"}
           </Link>
@@ -69,8 +72,10 @@ export default async function ProfilePage({
         <div className="mt-6">
           {tab === "gallery" ? (
             <ProfileGallery photos={p.gallery ?? []} canEdit />
+          ) : memberSurfaceCopy(p.bio) ? (
+            <p className="member-card p-5 leading-relaxed text-[var(--navy-soft)]">{memberSurfaceCopy(p.bio)}</p>
           ) : (
-            <p className="surface rounded-3xl p-5 leading-relaxed text-[var(--navy-soft)]">{p.bio}</p>
+            <p className="text-sm text-[var(--ivory-dim)]">Nothing here yet. Finish your profile when you are ready.</p>
           )}
           {tab !== "gallery" && (p.intents?.length || p.socialLinks?.length || p.instagram || p.facebook || p.x || p.aboutNow) ? (
             <div className="mt-4 grid gap-3">
@@ -99,7 +104,7 @@ export default async function ProfilePage({
       <Link href="/member/profile" className="text-sm text-[var(--blue)]">
         Back to profile
       </Link>
-      <h1 className="mt-4 font-serif text-3xl">Settings</h1>
+      <h1 className="member-title mt-4">Edit profile</h1>
       {p.completion < 90 ? (
         <p className="mt-2 text-sm text-[var(--ivory-dim)]">{completionMessage(p.completion)}</p>
       ) : null}

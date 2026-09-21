@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { isPublicHttpOrigin, resolvePublicOrigin } from "@/lib/config/public-origin";
+import {
+  canonicalMemberOrigin,
+  isPublicHttpOrigin,
+  resolvePublicOrigin,
+} from "@/lib/config/public-origin";
 
 describe("public origin", () => {
   it("rejects localhost and loopback", () => {
@@ -35,12 +39,30 @@ describe("public origin", () => {
     assert.equal(resolvePublicOrigin({}), "http://localhost:3000");
   });
 
-  it("does not invent a production domain", () => {
+  it("does not invent a production domain for generic origin resolution", () => {
     const origin = resolvePublicOrigin({
       siteUrl: "http://localhost:3000",
       vercelUrl: "10th-meridian-abc.vercel.app",
     });
     assert.equal(origin.includes("tenmeridian.com"), false);
     assert.equal(origin.includes("localhost"), false);
+  });
+
+  it("keeps member referral links on tenmeridian.com instead of vercel.app", () => {
+    assert.equal(
+      canonicalMemberOrigin({
+        siteUrl: "http://localhost:3000",
+        vercelUrl: "10th-meridian-dxkrresz1-tesim-holdings.vercel.app",
+      }),
+      "https://tenmeridian.com",
+    );
+    assert.equal(
+      canonicalMemberOrigin({ appUrl: "https://tenmeridian.com" }),
+      "https://tenmeridian.com",
+    );
+    assert.equal(
+      canonicalMemberOrigin({ appUrl: "http://localhost:3000" }),
+      "http://localhost:3000",
+    );
   });
 });

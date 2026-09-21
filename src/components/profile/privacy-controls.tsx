@@ -35,7 +35,7 @@ export function PrivacyControls({ privacy }: { privacy: ProfilePrivacy }) {
       <p className="label">Privacy</p>
       <p className="mt-2 text-sm text-ivory-muted">
         Name, role, organization, and city remain visible to members. Optional fields can be held back.
-        Profiles are never public and never indexed. Open House shows SYNTHETIC DEMO only.
+        Profiles are never public and never indexed.
       </p>
       <ul className="mt-4 grid gap-2">
         {fields.map((field) => (

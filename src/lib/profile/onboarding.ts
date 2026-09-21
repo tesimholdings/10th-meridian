@@ -413,12 +413,16 @@ export function profileFromOnboarding(input: {
   name: string;
   draft: OnboardingDraft | null;
 }): ProfileRecord {
-  if (!input.draft) return input.viewer;
-  const base =
-    input.accountId === FRESH_PREVIEW_ACCOUNT_ID
-      ? blankMemberProfile(input.name, input.accountId)
-      : input.viewer;
+  const ownsSeed = input.accountId === input.viewer.id;
+  if (!input.draft) {
+    if (!ownsSeed) {
+      return { ...blankMemberProfile(input.name, input.accountId), isDemo: false };
+    }
+    return input.viewer;
+  }
+  const base = ownsSeed ? input.viewer : blankMemberProfile(input.name, input.accountId);
   const next: ProfileRecord = { ...base, ...projectOnboarding(base, input.draft) };
+  if (!ownsSeed && input.accountId !== FRESH_PREVIEW_ACCOUNT_ID) next.isDemo = false;
   next.completion = profileCompletion(next);
   return next;
 }

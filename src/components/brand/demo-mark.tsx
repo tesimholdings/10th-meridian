@@ -1,5 +1,5 @@
 export function DemoMark({
-  children = "SYNTHETIC DEMO",
+  children = "Sample",
   className = "",
 }: {
   children?: React.ReactNode;

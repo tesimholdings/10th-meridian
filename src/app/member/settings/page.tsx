@@ -44,8 +44,8 @@ export default async function SettingsPage() {
         <p className="mt-2 text-sm text-[var(--navy-soft)]">
           Contact a steward, report soliciting, or mute someone from recommendations.
         </p>
-        <a href="/member/help" className="mt-2 inline-flex min-h-11 items-center text-sm text-[var(--blue)]">
-          Open help
+        <a href="/member/help#contact" className="mt-2 inline-flex min-h-11 items-center text-sm text-[var(--blue)]">
+          Contact a steward
         </a>
       </section>
       <section className="mt-10">

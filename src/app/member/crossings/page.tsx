@@ -7,20 +7,25 @@ import { RequestInbox } from "@/components/crossings/request-inbox";
 import { EmptyState } from "@/components/crossings/states";
 import { CROSSINGS_COPY } from "@/lib/crossings/types";
 import { canMutateCrossings } from "@/lib/crossings/privacy";
-import { matchesForJourney, refreshNotifications, tableSuggestionsFor, visibleJourneysFor } from "@/lib/crossings/service";
+import { matchesForJourney, tableSuggestionsFor, visibleJourneysFor } from "@/lib/crossings/service";
 import { HiggsfieldSlot } from "@/components/brand/higgsfield-slot";
 import { occasionCredit } from "@/lib/atmosphere/campaign";
 import { journeyStillSrc } from "@/lib/atmosphere/resolve-campaign";
 import { getPreviewStore, viewerProfile } from "@/lib/preview/store";
 import { demoIndexFor } from "@/lib/matching/service";
-import { DEFAULT_NOTIFICATION_PREFS } from "@/lib/crossings/notifications";
+import { summarizeCityPresence } from "@/lib/crossings/presence";
+import { cityCountLines } from "@/lib/member/city-counts";
+import { isSyntheticSession, sessionSubjectId } from "@/lib/member/identity";
 
 export const metadata = { title: "Crossings", robots: { index: false } };
 
 export default async function CrossingsPage() {
   const access = await resolveAccessContext();
   const store = getPreviewStore();
-  const viewer = viewerProfile();
+  const seed = viewerProfile();
+  const viewer = isSyntheticSession(access.user)
+    ? seed
+    : { ...seed, id: sessionSubjectId(access.user, seed.id), displayName: access.user?.name ?? seed.displayName };
   const canMutate = canMutateCrossings(access.user?.role);
   const index = await demoIndexFor(viewer);
   const journeys = visibleJourneysFor({
@@ -45,18 +50,23 @@ export default async function CrossingsPage() {
     (r) => r.fromProfileId === viewer.id || r.toProfileId === viewer.id,
   );
   const tables = tableSuggestionsFor(store.crossings, store.profiles, viewer.id);
-  const notifications = refreshNotifications(store.crossings, viewer, store.profiles);
-  const prefs = store.crossings.prefs.find((p) => p.profileId === viewer.id) ?? {
-    profileId: viewer.id,
-    ...DEFAULT_NOTIFICATION_PREFS,
-  };
+  const presence = upcoming ? summarizeCityPresence(matches) : null;
+  const cityLines = upcoming
+    ? cityCountLines({
+        city: upcoming.destinationCity,
+        travelers: presence?.fellow_traveler ?? 0,
+        locals: presence?.local ?? 0,
+        hosts: presence?.city_host ?? 0,
+      })
+    : [];
 
   return (
     <MemberShell user={access.user} demo title="Crossings" hasHeading>
       <div className="flex items-end justify-between gap-3">
         <div>
-          <h1 className="font-serif text-4xl">Crossings</h1>
-          <p className="mt-2 text-sm text-[var(--navy-soft)]">{CROSSINGS_COPY.support}</p>
+          <p className="member-kicker">Travel</p>
+          <h1 className="member-title">Crossings</h1>
+          <p className="member-support">{CROSSINGS_COPY.support}</p>
         </div>
         {canMutate ? <Button href="/member/crossings/new">{CROSSINGS_COPY.createAction}</Button> : null}
       </div>
@@ -118,11 +128,17 @@ export default async function CrossingsPage() {
         </Link>
       </section>
 
-      {matches.length ? (
-        <p className="mt-8 text-sm text-[var(--ivory-dim)]">
-          {matches.length} overlapping members in {upcoming?.destinationCity} (people on trips that may cross yours).
-          Digest: {prefs.digest}.
-        </p>
+      {cityLines.length ? (
+        <div className="member-card mt-8 px-5 py-5">
+          {cityLines.map((line) => (
+            <p key={line} className="text-sm text-[var(--navy)]">
+              {line}
+            </p>
+          ))}
+          <p className="mt-2 text-sm text-[var(--ivory-dim)]">
+            Recommendations from My Circle are not counted as people in the city.
+          </p>
+        </div>
       ) : null}
 
       {tables.length ? (
@@ -147,10 +163,6 @@ export default async function CrossingsPage() {
             </article>
           ))}
         </section>
-      ) : null}
-
-      {notifications.length ? (
-        <p className="mt-8 text-sm text-[var(--ivory-dim)]">{notifications[0].title}</p>
       ) : null}
 
       {mine.length > 1 ? (

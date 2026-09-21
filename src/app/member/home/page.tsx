@@ -11,7 +11,7 @@ import { visibleJourneysFor } from "@/lib/crossings/service";
 import { RewardsTeaserCard } from "@/components/rewards/teaser-card";
 import { formatPoints } from "@/lib/rewards/math";
 import { CrossingsEntryLink } from "@/components/crossings/crossings-flight";
-import { FRESH_PREVIEW_ACCOUNT_ID } from "@/lib/profile/onboarding";
+import { greetingName, isSyntheticSession, sessionSubjectId } from "@/lib/member/identity";
 
 export const metadata = { title: "Home", robots: { index: false } };
 
@@ -19,12 +19,11 @@ export default async function MemberHomePage() {
   const access = await resolveAccessContext();
   const store = getPreviewStore();
   const viewer = viewerProfile();
+  const synthetic = isSyntheticSession(access.user);
+  const subjectId = sessionSubjectId(access.user, viewer.id);
   const index = await demoIndexFor(viewer);
   const paymentPending = access.user?.role === "approved_unpaid";
-  const first =
-    access.user?.id === FRESH_PREVIEW_ACCOUNT_ID
-      ? (access.user.name.split(" ")[0] ?? access.user.name)
-      : (viewer.displayName.split(" ")[0] ?? viewer.displayName);
+  const first = greetingName(access.user, viewer.displayName);
   const journeys = visibleJourneysFor({
     state: store.crossings,
     viewerId: viewer.id,
@@ -32,24 +31,25 @@ export default async function MemberHomePage() {
     meridianMatchIds: index.meridian100.map((m) => m.target.id),
     sharedChannelIds: store.channels.map((c) => c.id),
   });
-  const trip = journeys.find((j) => j.profileId === viewer.id && j.status === "active");
+  const trip = journeys.find((j) => j.profileId === subjectId && j.status === "active");
   const upcomingEvents = [...store.events].sort((a, b) => a.startsAt.localeCompare(b.startsAt));
   const tonight = upcomingEvents.find((e) => isEventTonight(e));
   const event = tonight ?? upcomingEvents[0];
   const eventChipLabel = event && isEventTonight(event) ? "Tonight" : "Next";
   const rewards =
-    access.user?.role === "member" ||
-    access.user?.role === "moderator" ||
-    access.user?.role === "administrator"
+    synthetic &&
+    (access.user?.role === "member" ||
+      access.user?.role === "moderator" ||
+      access.user?.role === "administrator")
       ? viewerRewardsSnapshot()
       : null;
 
   return (
-    <MemberShell user={access.user} demo={!access.decision.isMemberAccess || viewer.isDemo} title="Home" hasHeading>
+    <MemberShell user={access.user} demo title="Home" hasHeading>
       <div className="flex items-end justify-between gap-3">
         <div>
-          <p className="text-sm text-[var(--ivory-dim)]">Good evening</p>
-          <h1 className="font-serif text-4xl">{first}</h1>
+          <p className="member-kicker">This evening</p>
+          <h1 className="member-title">{first}</h1>
         </div>
         <div className="flex gap-2">
           <Link href="/member/notifications" className="surface pressable flex h-11 w-11 items-center justify-center rounded-full">
@@ -62,7 +62,7 @@ export default async function MemberHomePage() {
         </div>
       </div>
 
-      {viewer.completion < 90 ? (
+      {synthetic && viewer.completion < 90 ? (
         <p className="mt-4 text-sm text-[var(--ivory-dim)]">{completionMessage(viewer.completion)}</p>
       ) : null}
 
@@ -78,7 +78,7 @@ export default async function MemberHomePage() {
       {trip ? (
         <CrossingsEntryLink
           href={`/member/crossings/${trip.id}`}
-          className="surface pressable mt-8 block rounded-3xl px-5 py-6 md:px-7 md:py-7"
+          className="member-card pressable mt-8 block px-5 py-6 md:px-7 md:py-7"
         >
           <p className="text-xs tracking-[0.18em] uppercase text-[var(--ivory-dim)]">Your Crossing</p>
           <p className="mt-3 font-serif text-4xl">{trip.destinationCity}</p>
@@ -88,13 +88,13 @@ export default async function MemberHomePage() {
           <p className="mt-5 text-sm text-[var(--gold)]">Open this trip</p>
         </CrossingsEntryLink>
       ) : (
-        <CrossingsEntryLink href="/member/crossings/new" className="surface pressable mt-8 block rounded-3xl px-5 py-6 text-[var(--navy)]">
+        <CrossingsEntryLink href="/member/crossings/new" className="member-card pressable mt-8 block px-5 py-6 text-[var(--navy)]">
           Add a trip
         </CrossingsEntryLink>
       )}
 
       {event ? (
-        <Link href={`/member/events/${event.id}`} className="surface pressable mt-8 block rounded-3xl px-5 py-6 md:px-7 md:py-7">
+        <Link href={`/member/events/${event.id}`} className="member-card pressable mt-8 block px-5 py-6 md:px-7 md:py-7">
           <p className="text-xs tracking-[0.18em] uppercase text-[var(--ivory-dim)]">Upcoming experience</p>
           <p className="mt-3 font-serif text-4xl">{event.title}</p>
           <p className="mt-2 text-sm text-[var(--navy-soft)]">

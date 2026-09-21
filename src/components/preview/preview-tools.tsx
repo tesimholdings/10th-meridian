@@ -10,9 +10,7 @@ export function PreviewTools({ access }: { access: AccessContext }) {
         Reviewer tools
       </summary>
       <p className="mt-2 leading-relaxed">
-        Preview only. Hidden when <code>VERCEL_ENV=production</code>.
-        Implementation: visitor-local Open House 10–22; Stream stub unless keys exist;
-        matching is hybrid Index + Ask explanations; Higgsfield art is slotted, not live.
+        Reviewer only. Hidden in production.
       </p>
       <p className="mt-2">
         Phase: {access.decision.phase} · Role: {access.user?.role ?? "guest"}

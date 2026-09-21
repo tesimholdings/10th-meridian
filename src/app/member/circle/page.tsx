@@ -14,6 +14,7 @@ import {
   YOUR_CIRCLE,
 } from "@/lib/copy/ui";
 import { circleIdsFor } from "@/lib/network/circle";
+import { sessionSubjectId } from "@/lib/member/identity";
 import { AllMembersBoard } from "@/components/members/all-members";
 
 export const metadata = { title: MERIDIAN_INDEX, robots: { index: false } };
@@ -25,20 +26,25 @@ export default async function MyCirclePage({
 }) {
   const access = await resolveAccessContext();
   const viewer = viewerProfile();
+  const subjectId = sessionSubjectId(access.user, viewer.id);
   const store = getPreviewStore();
   const params = await searchParams;
   const tab = params.tab === "circle" || params.tab === "all" ? params.tab : "for-you";
   const q = (params.q ?? "").trim().toLowerCase();
   const index = await demoIndexFor(viewer);
   const intros = store.intros;
-  const circleIds = circleIdsFor(viewer.id, store.circle);
+  const circleIds = circleIdsFor(subjectId, store.circle);
   const circleProfiles = store.profiles.filter((p) => circleIds.includes(p.id));
 
   const all = store.profiles.filter((p) => p.id !== viewer.id);
 
   return (
-    <MemberShell user={access.user} demo={!access.decision.isMemberAccess || viewer.isDemo} title={MERIDIAN_INDEX}>
+    <MemberShell user={access.user} demo title={MERIDIAN_INDEX} hasHeading>
+      <p className="member-kicker">People</p>
+      <h1 className="member-title">My Circle</h1>
+      <div className="mt-6">
       <AskTheMeridian initialQuery={q} />
+      </div>
 
       <nav className="mt-8 flex gap-2 border-b border-[var(--line)]" aria-label="My Circle sections">
         <Tab href="/member/circle" on={tab === "for-you"}>

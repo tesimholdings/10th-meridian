@@ -50,7 +50,7 @@ export default async function EventDetailPage({
           <div>
             <dt className="label">Payment</dt>
             <dd className="mt-1 text-ivory-muted">
-              Optional Stripe event payment when a Price ID exists. None is invented here.
+              Payment is collected with the house when this experience requires it.
             </dd>
           </div>
         ) : null}

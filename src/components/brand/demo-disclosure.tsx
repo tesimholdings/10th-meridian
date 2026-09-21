@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useState } from "react";
 
-export function DemoDisclosure() {
+export function DemoDisclosure({ mode = "demo" }: { mode?: "demo" | "sample" }) {
   const id = useId();
   const [open, setOpen] = useState(false);
 
@@ -24,13 +24,14 @@ export function DemoDisclosure() {
         aria-controls={id}
         onClick={() => setOpen((v) => !v)}
       >
-        <span>Demo preview</span>
+        <span>{mode === "sample" ? "Sample network" : "Demo preview"}</span>
         <span>{open ? "Hide" : "Details"}</span>
       </button>
       {open ? (
         <p id={id} className="px-1 pb-3 text-xs leading-relaxed text-[var(--ivory-dim)]">
-          Synthetic people, events, and messages. Not real members. Private data is never shown.
-          Aspirational imagery — not photographs of members or completed events.
+          {mode === "sample"
+            ? "Names and trips on these screens are samples. They are not real members, and they are not your private record."
+            : "Synthetic people, events, and messages. Not real members. Private data is never shown. Imagery is a placeholder, not a photograph of members or a completed event."}
         </p>
       ) : null}
     </div>
