@@ -9,6 +9,10 @@ import type {
 } from "@/lib/matching/types";
 import { DEFAULT_WEIGHTS } from "@/lib/matching/types";
 
+function intentSignals(profile: ProfileRecord): string[] {
+  return [...(profile.intents ?? []), profile.intentNote?.trim() ?? ""].filter(Boolean);
+}
+
 function norm(items: string[]): string[] {
   return items.map((s) => s.trim().toLowerCase()).filter(Boolean);
 }
@@ -70,8 +74,8 @@ export function scorePair(
 ): PairBreakdown {
   const comp = complementaryScore(a, b);
   const goals = softOverlap(
-    [...a.goals, ...a.ambitions, ...a.projects],
-    [...b.goals, ...b.ambitions, ...b.projects],
+    [...a.goals, ...a.ambitions, ...a.projects, ...intentSignals(a)],
+    [...b.goals, ...b.ambitions, ...b.projects, ...intentSignals(b)],
   );
   const interests = softOverlap(
     [...a.interests, ...a.values, ...a.causes],

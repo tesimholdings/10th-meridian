@@ -1,9 +1,13 @@
 import { resolveAccessContext } from "@/lib/access/context";
+import { redirect } from "next/navigation";
 import { MemberShell } from "@/components/member/member-shell";
 import { membershipProducts } from "@/lib/config/pricing";
 import { Button } from "@/components/ui/button";
 import { canChargeMembership, hasStripe } from "@/lib/env";
 import { membershipFor } from "@/lib/preview/store";
+import { readOnboardingCookie } from "@/lib/profile/onboarding-cookie";
+import { readOnboardingDb } from "@/lib/profile/onboarding-db";
+import { shouldOfferOnboardingAfterPayment } from "@/lib/profile/onboarding";
 import {
   FOUNDING_ENTRY_LABEL,
   MONTHLY_DUES_LABEL,
@@ -30,6 +34,19 @@ export default async function BillingPage({
   const demoGuest = !access.decision.isMemberAccess;
   const paid = membershipFor(access.user?.id, access.user?.email);
   const active = paid?.status === "active";
+  if (params.checkout === "success" && active && access.user) {
+    const cookie = await readOnboardingCookie();
+    const db = access.user.isDemo ? "unknown" : (await readOnboardingDb(access.user.id)).state;
+    if (
+      shouldOfferOnboardingAfterPayment({
+        accountId: access.user.id,
+        cookie,
+        db,
+      })
+    ) {
+      redirect("/onboarding?from=checkout");
+    }
+  }
   const offer = await resolveMembershipOffer({
     accountId: access.user?.id,
     email: access.user?.email,

@@ -40,6 +40,7 @@ import { env } from "@/lib/env";
 import type { MatchCuration, MatchFeedback, MatchingWeights } from "@/lib/matching/types";
 import { DEFAULT_WEIGHTS } from "@/lib/matching/types";
 import { profileCompletion } from "@/lib/profile/completion";
+import type { OnboardingDraft, OnboardingStatus } from "@/lib/profile/onboarding";
 import {
   addToCircle,
   removeFromCircle,
@@ -117,7 +118,14 @@ export interface PreviewState {
   houseNotificationPrefs: HouseNotificationPrefs[];
   channelMembers: Record<string, string[]>;
   rewards: RewardsState;
+  onboardingByAccount: Record<string, StoredOnboarding>;
 }
+
+export type StoredOnboarding = {
+  draft: OnboardingDraft;
+  status: OnboardingStatus;
+  updatedAt: string;
+};
 
 function seed(): PreviewState {
   return {
@@ -256,6 +264,7 @@ function seed(): PreviewState {
     ],
     channelMembers: structuredClone(demoChannelMembers),
     rewards: seedRewardsState(),
+    onboardingByAccount: {},
   };
 }
 
@@ -486,6 +495,32 @@ export function updateViewerProfile(patch: Partial<ProfileRecord>) {
   profile.isDemo = true;
   audit("member", "profile.updated", "profile", profile.id);
   return profile;
+}
+
+function onboardingBag(): Record<string, StoredOnboarding> {
+  const s = state();
+  if (!s.onboardingByAccount) s.onboardingByAccount = {};
+  return s.onboardingByAccount;
+}
+
+export function readOnboardingPreview(accountId: string): StoredOnboarding | null {
+  return onboardingBag()[accountId] ?? null;
+}
+
+export function writeOnboardingPreview(
+  accountId: string,
+  draft: OnboardingDraft,
+  status: OnboardingStatus,
+) {
+  onboardingBag()[accountId] = {
+    draft,
+    status,
+    updatedAt: new Date().toISOString(),
+  };
+}
+
+export function clearOnboardingPreview(accountId: string) {
+  delete onboardingBag()[accountId];
 }
 
 export function postMessage(input: {

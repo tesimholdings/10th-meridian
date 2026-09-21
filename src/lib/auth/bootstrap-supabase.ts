@@ -114,7 +114,18 @@ async function upsertProfile(
     return { id: existing.id };
   }
 
-  const { data, error } = await admin.from("profiles").insert(row).select("id").single();
+  const inserted = await admin
+    .from("profiles")
+    .insert({ ...row, onboarding_completed_at: new Date().toISOString() })
+    .select("id")
+    .single();
+  if (!inserted.error && inserted.data?.id) return { id: inserted.data.id };
+
+  const missingOnboarding =
+    inserted.error && /onboarding_completed_at/i.test(inserted.error.message);
+  const { data, error } = missingOnboarding
+    ? await admin.from("profiles").insert(row).select("id").single()
+    : inserted;
   if (error || !data?.id) {
     if (error && columnMissing(error.message)) {
       throw new Error(

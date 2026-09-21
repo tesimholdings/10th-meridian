@@ -8,6 +8,9 @@ import {
   type IdentityLookup,
 } from "@/lib/auth/members";
 import { env, hasSupabase } from "@/lib/env";
+import { pathAfterMemberEnter } from "@/lib/profile/onboarding";
+import { clearOnboardingCookie, writeOnboardingCookie } from "@/lib/profile/onboarding-cookie";
+import { readOnboardingDb } from "@/lib/profile/onboarding-db";
 import { applyMemberSession, applyUnlockHit } from "@/lib/lock/session";
 import { emailCandidateFromIdentity, resolveLockUnlock } from "@/lib/lock/unlock";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
@@ -235,6 +238,15 @@ async function stampSessionFromAuthUser(user: User): Promise<string> {
     role,
     isDemo: false,
   });
+
+  if (role === "member") {
+    const db = await readOnboardingDb(id);
+    if (db.state === "pending" || db.state === "skipped" || db.state === "completed") {
+      await writeOnboardingCookie(id, db.state);
+    }
+    return pathAfterMemberEnter(role, db.state === "pending");
+  }
+
   return pathAfterPasswordLogin(role);
 }
 
@@ -322,6 +334,7 @@ export async function signOutCurrent(): Promise<{ mode: AuthMode }> {
   const jar = await cookies();
   jar.delete(ROLE_COOKIE);
   jar.delete(ACCOUNT_COOKIE);
+  await clearOnboardingCookie();
   return { mode };
 }
 

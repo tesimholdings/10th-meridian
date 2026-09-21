@@ -1677,3 +1677,20 @@ button:disabled {
     radial-gradient(80% 50% at 12% 0%, rgba(196, 162, 100, 0.22), transparent 58%),
     linear-gradient(180deg, #070809 0%, #0c1c28 100%);
 }
+
+.profile-builder input,
+.profile-builder textarea {
+  background: transparent;
+  border: 1px solid rgba(196, 162, 100, 0.35);
+  border-radius: 16px;
+  color: #fff;
+}
+
+.profile-builder input::placeholder,
+.profile-builder textarea::placeholder {
+  color: rgba(239, 230, 212, 0.38);
+}
+
+.profile-builder textarea {
+  min-height: 7.5rem;
+}

@@ -53,6 +53,15 @@ export interface ProfileRecord {
   bio: string;
   website?: string;
   linkedin?: string;
+  instagram?: string;
+  facebook?: string;
+  x?: string;
+  socialLinks?: { label: string; url: string }[];
+  intents?: string[];
+  intentNote?: string;
+  aboutNow?: string;
+  onboardingCompletedAt?: string | null;
+  onboardingSkippedAt?: string | null;
   gallery: ProfilePhoto[];
   privacy: ProfilePrivacy;
   attendingEventIds: string[];

@@ -9,6 +9,9 @@ import {
 } from "@/lib/access/cookies";
 import { env } from "@/lib/env";
 import type { AppRole } from "@/lib/data/types";
+import { writeOnboardingCookie } from "@/lib/profile/onboarding-cookie";
+import { FRESH_PREVIEW_ACCOUNT_ID, emptyOnboardingDraft } from "@/lib/profile/onboarding";
+import { writeOnboardingPreview } from "@/lib/preview/store";
 
 export async function POST(request: Request) {
   if (!env.previewDemoAuth || !env.previewTools) {
@@ -29,6 +32,25 @@ export async function POST(request: Request) {
   if (openHouse === "clear") {
     jar.delete(OPEN_HOUSE_FORCE_COOKIE);
     redirect("/");
+  }
+
+  if (form.get("fresh") === "1") {
+    jar.set(ROLE_COOKIE, signedValue("member"), { ...cookieOptions, maxAge: 60 * 60 * 12 });
+    jar.set(
+      ACCOUNT_COOKIE,
+      signedValue(
+        JSON.stringify({
+          id: FRESH_PREVIEW_ACCOUNT_ID,
+          email: "new.member@preview.10thmeridian.test",
+          name: "Alex Hale",
+          isDemo: true,
+        }),
+      ),
+      { ...cookieOptions, maxAge: 60 * 60 * 12 },
+    );
+    writeOnboardingPreview(FRESH_PREVIEW_ACCOUNT_ID, emptyOnboardingDraft(), "pending");
+    await writeOnboardingCookie(FRESH_PREVIEW_ACCOUNT_ID, "pending");
+    redirect("/onboarding");
   }
 
   const allowed: AppRole[] = [

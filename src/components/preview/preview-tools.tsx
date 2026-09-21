@@ -31,6 +31,9 @@ export function PreviewTools({ access }: { access: AccessContext }) {
         <button name="role" value="member" className="min-h-10 border border-[var(--line)] px-2">
           Preview as member
         </button>
+        <button name="fresh" value="1" className="min-h-10 border border-[var(--line)] px-2">
+          Enter as new member
+        </button>
         <button name="role" value="approved_unpaid" className="min-h-10 border border-[var(--line)] px-2">
           Approved — payment pending
         </button>
