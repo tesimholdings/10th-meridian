@@ -110,6 +110,11 @@ describe("original House atmosphere", () => {
     assert.match(css, /\.lock-gold\s*\{[^}]*background:\s*#000/);
     assert.match(unlock, /Username or email/);
     assert.match(unlock, /Forgot password/);
+    assert.match(unlock, /Show password/);
+    assert.match(unlock, /Hide password/);
+    assert.match(unlock, /lock-forgot/);
+    assert.match(css, /\.lock-forgot/);
+    assert.match(css, /\.lock-reveal/);
     assert.match(unlock, /Have a referral code\?/);
     assert.match(unlock, /\/api\/lock\/unlock/);
     assert.match(unlock, /\/api\/auth\/forgot-password/);
@@ -196,7 +201,16 @@ describe("original House atmosphere", () => {
     const header = readFileSync("src/components/member/member-header.tsx", "utf8");
     assert.match(header, /Escape/);
     assert.match(header, /Search people and cities/);
+    assert.match(header, /house-search/);
     assert.match(header, /house-search-sheet/);
+    assert.match(css, /\.house-light \.header-chrome input\.house-search/);
+    const field = readFileSync("src/components/circle/for-you-field.tsx", "utf8");
+    assert.match(field, /meridian-range/);
+    assert.match(field, /meridian-dial-value/);
+    assert.match(field, /10 — immediate/);
+    assert.match(field, /100 — wider field/);
+    assert.match(css, /input\[type="range"\]\.meridian-range::-webkit-slider-thumb/);
+    assert.match(css, /#c4a264/);
     const play = readFileSync("src/lib/atmosphere/play-safe.ts", "utf8");
     assert.match(play, /AbortError/);
   });

@@ -12,6 +12,7 @@ export function LockUnlock({ denied = false }: { denied?: boolean }) {
   const [error, setError] = useState(denied);
   const [notice, setNotice] = useState<string | null>(null);
   const [key, setKey] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const passwordRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -59,6 +60,7 @@ export function LockUnlock({ denied = false }: { denied?: boolean }) {
       }
       if (json?.ok && json.next === "password") {
         setKey(nextKey);
+        setShowPassword(false);
         setMode("password");
         setBusy(false);
         return;
@@ -115,18 +117,29 @@ export function LockUnlock({ denied = false }: { denied?: boolean }) {
       />
       {mode === "password" ? (
         <div className="lock-unlock-secret mt-3">
-          <input
-            ref={passwordRef}
-            name="password"
-            type="password"
-            autoComplete="current-password"
-            aria-label="Password"
-            placeholder="Password"
-          />
+          <div className="lock-password">
+            <input
+              ref={passwordRef}
+              name="password"
+              type={showPassword ? "text" : "password"}
+              autoComplete="current-password"
+              aria-label="Password"
+              placeholder="Password"
+            />
+            <button
+              type="button"
+              className="lock-reveal"
+              aria-pressed={showPassword}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              onClick={() => setShowPassword((open) => !open)}
+            >
+              {showPassword ? "Hide" : "Show"}
+            </button>
+          </div>
           <p className="mt-3">
             <button
               type="button"
-              className="lock-text-link"
+              className="lock-forgot"
               onClick={onForgot}
               disabled={busy}
             >
@@ -163,6 +176,7 @@ export function LockUnlock({ denied = false }: { denied?: boolean }) {
             className="lock-text-link"
             onClick={() => {
               setMode("identity");
+              setShowPassword(false);
               if (mode === "referral") setKey("");
               setError(false);
               setNotice(null);
