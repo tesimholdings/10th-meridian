@@ -1521,6 +1521,10 @@ button:disabled {
   border-radius: 14px;
 }
 
+.house-light .sign-in-secret input {
+  padding-right: 3.35rem;
+}
+
 .house-light .nav-chrome,
 .house-light .header-chrome {
   background:

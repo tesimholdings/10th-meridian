@@ -25,6 +25,7 @@ export async function POST(request: Request) {
     identity = String(form?.get("identity") ?? form?.get("email") ?? "");
   }
 
+  // Same rule as sign-in: an @ is the email; otherwise accounts.username resolves it.
   await requestPasswordReset(identity);
   return Response.json({ ok: true, message: FORGOT_PASSWORD_MESSAGE });
 }
