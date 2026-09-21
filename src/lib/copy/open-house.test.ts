@@ -236,6 +236,28 @@ describe("Open House customer surfaces", () => {
     }
   });
 
+  it("accepts a username or an email on member sign-in", () => {
+    const page = readFileSync("src/app/sign-in/page.tsx", "utf8");
+    const form = readFileSync("src/components/auth/sign-in-form.tsx", "utf8");
+    const route = readFileSync("src/app/api/auth/sign-in/route.ts", "utf8");
+    const forgot = readFileSync("src/app/api/auth/forgot-password/route.ts", "utf8");
+    assert.match(page, /username or the email/i);
+    assert.match(form, /Username or email/);
+    assert.match(form, /name="identity"/);
+    assert.match(form, /type="text"/);
+    assert.match(form, /placeholder="Username or email"/);
+    assert.equal(form.includes('type="email"'), false);
+    assert.match(form, /Show password/);
+    assert.match(form, /Hide password/);
+    assert.match(form, /PasswordEye/);
+    assert.match(route, /resolveSignInEmail/);
+    assert.match(route, /form\.get\("identity"\)/);
+    assert.match(forgot, /requestPasswordReset/);
+    assert.match(forgot, /identity/);
+    assert.equal(route.includes("password"), true);
+    assert.equal(/BOOTSTRAP_MEMBER_PASSWORD|password\s*[:=]\s*["']/.test(route), false);
+  });
+
   it("gates sign-in stack notes and preview tools on production", () => {
     const signIn = readFileSync("src/app/sign-in/page.tsx", "utf8");
     const tools = readFileSync("src/components/preview/preview-tools.tsx", "utf8");

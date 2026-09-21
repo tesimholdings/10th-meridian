@@ -6,7 +6,7 @@ import { FORGOT_PASSWORD_MESSAGE, UNLOCK_MISS_MESSAGE } from "@/lib/lock/unlock"
 
 type Mode = "identity" | "password" | "referral";
 
-function PasswordEye({ off }: { off: boolean }) {
+export function PasswordEye({ off }: { off: boolean }) {
   return (
     <svg
       className="lock-eye"
