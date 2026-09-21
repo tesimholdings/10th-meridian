@@ -51,11 +51,53 @@ See [docs/STRIPE.md](./docs/STRIPE.md).
 - [ ] Create a Stream app
 - [ ] `NEXT_PUBLIC_STREAM_API_KEY`, `STREAM_API_SECRET`
 - [ ] Seed channels: announcements, introductions, ask-and-offer, opportunities, events, travel, ideas
+  - With keys set, sign in as steward and use **Seed house channels** on the steward desk, or `POST /api/stream/seed`
+  - Safe to run again. Ids are `messaging:channel-<slug>` via `houseChannelId` / `streamChannelCid`
+  - Upserts curated demo and founding members, including P. Adler, plus Preview-as-member
 - [ ] Crossing DMs and table channels: Stream path when keys exist; DEMO compose otherwise
 - [ ] Server-side permissions for every message and attachment
 - [ ] Moderation / block / report hooks
-- [ ] Push / email notification settings
+- [ ] Push / email notification settings (steps below)
 - [ ] Do not describe the product as E2EE
+
+### Push — what Stefan clicks in the Stream Dashboard
+
+A website cannot obtain an Apple APNs device token. iPhone alerts for this home-screen app use **Web Push** (iOS 16.4 or later, opened from the Home Screen icon). Stream’s own push providers cover a future native app and, optionally, Firebase for Chrome.
+
+1. **Chat → your app → Push notifications**
+   - [ ] Enable push on the `messaging` channel type (house channels and DMs both use `messaging`)
+2. **Firebase (Chrome / Android, optional)**
+   - [ ] Create a Firebase project and a Web app
+   - [ ] Project settings → Cloud Messaging → Web Push certificates → copy the key pair’s **public** key only if you want Stream to deliver Chrome pushes
+   - [ ] Add a Firebase provider in the Stream Dashboard and upload the Firebase **service account JSON**
+   - [ ] Set `STREAM_FIREBASE_PUSH=true` and `STREAM_PUSH_PROVIDER_NAME` to the provider name you saved in Stream (default `firebase`)
+   - [ ] Use that Firebase web certificate as `NEXT_PUBLIC_WEB_PUSH_PUBLIC_KEY` only when Stream and the browser share the same Firebase project. Otherwise leave Firebase off and use the VAPID pair below
+3. **APNs (native iOS app only — skip for the website)**
+   - [ ] Apple Developer → Keys → Apple Push Notifications service (`.p8`)
+   - [ ] Stream Dashboard → APN provider → Key ID, Team ID, Bundle ID, and the `.p8` file
+   - [ ] There is no bundle id for the Home Screen icon. Do not block iPhone alerts on this step
+4. **Web Push for the member app (required for iPhone)**
+   - [ ] On a trusted machine: `npx web-push generate-vapid-keys`
+   - [ ] Preview env: `NEXT_PUBLIC_WEB_PUSH_PUBLIC_KEY`, `WEB_PUSH_PRIVATE_KEY`, `WEB_PUSH_SUBJECT=mailto:team@tenmeridian.com`
+   - [ ] Do not commit the private key
+5. **Webhook (so a message sent outside this app still reaches Web Push)**
+   - [ ] Stream Dashboard → Chat → Webhooks
+   - [ ] URL: `https://<preview-host>/api/stream/webhook`
+   - [ ] Event: `message.new`
+   - [ ] Stream signs the body with `STREAM_API_SECRET`. The route rejects anything else
+6. **Do not** turn this on in Production from this PR
+
+Messages sent from the member inbox are still the labeled DEMO thread. When Stream keys exist, that send is also copied into the matching Stream channel so alerts can fire. DM open and the send response are unchanged.
+
+### How to test on iPhone
+
+1. Deploy Preview with Stream keys and the VAPID pair. Do not promote Production.
+2. Safari → Share → **Add to Home Screen**. Open **10th Meridian** from the icon (Safari tabs cannot receive iOS web push).
+3. Reviewer tools → Preview as member. Tap **Enable alerts** → Allow.
+4. On another session, sign in as P. Adler (or another member) and send a DM or a house-channel message.
+5. Leave the iPhone app or lock the phone. The alert should show the sender and a short excerpt.
+6. With the app open, the same message appears as an in-app note instead of a second system alert.
+7. Sign out removes this phone’s registration. If VAPID or Stream keys are missing, the member UI says alerts are not armed and does not pretend a device was registered.
 
 ## 5. Resend
 

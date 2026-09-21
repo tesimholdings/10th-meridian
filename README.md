@@ -56,7 +56,7 @@ No live secrets required. Missing env = labeled demo.
    - Without keys: HTTP 501, nothing charged
    - With TEST keys: Founding Ten uses `mode=payment` ($5,000). After that / rejoin: `mode=subscription` ($10,000 entry + $195/month)
 6. `/member/circle` — Meridian **10 → 100** (never “Matches”). Hybrid TS scoring; Postgres persist when service role exists
-7. `/member/messages` — DMs + Channels. Stream token at `POST /api/stream/token` (stub without keys)
+7. `/member/messages` — DMs + Channels. Stream token at `POST /api/stream/token` (stub without keys). Phone alerts register only when those keys are live (`/api/stream/push`). Steward seed: `POST /api/stream/seed`
 8. `/api/health` — integration flags (supabase / stripe / stream / resend / posthog / sentry)
 9. `/api/email/preview?type=invite` — invite HTML (preview tools only)
 10. Legal → Community: **Absolutely no soliciting. Ban with no refund.**
@@ -77,6 +77,11 @@ Never commit real secrets. Leave blank to keep demo mode.
 | `SUPABASE_SERVICE_ROLE_KEY` | Matching persist / admin | Service role — server only |
 | `NEXT_PUBLIC_STREAM_API_KEY` | Chat | Stream public key |
 | `STREAM_API_SECRET` | Chat | Stream server secret |
+| `NEXT_PUBLIC_WEB_PUSH_PUBLIC_KEY` | Phone alerts | VAPID public key. Empty = no Web Push |
+| `WEB_PUSH_PRIVATE_KEY` | Phone alerts | VAPID private key. Server only. Never commit |
+| `WEB_PUSH_SUBJECT` | No | Default `mailto:team@tenmeridian.com` |
+| `STREAM_FIREBASE_PUSH` | No | `true` only after Stream Dashboard Firebase matches this web certificate |
+| `STREAM_PUSH_PROVIDER_NAME` | No | Stream multi-bundle provider name. Default `firebase` |
 | `STRIPE_SECRET_KEY` | Billing | Stripe TEST secret — never charge without this |
 | `STRIPE_WEBHOOK_SECRET` | Billing webhooks | Signature verification |
 | `STRIPE_PRICE_FOUNDING_ENTRY` | Billing | Founding Ten **$5,000** one-time (`price_1UG1eB3QQyESIKbfGysIcPYf`) |

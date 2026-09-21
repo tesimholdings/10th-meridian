@@ -8,6 +8,7 @@ import {
   unreadTotal,
 } from "@/lib/preview/store";
 import { hasStream } from "@/lib/env";
+import { relayDemoMessage } from "@/lib/stream/relay";
 
 export async function GET() {
   const store = getPreviewStore();
@@ -55,6 +56,12 @@ export async function POST(request: Request) {
       parentId: parsed.data.parentId,
       authorName: access.user?.name ?? "A. Voss",
       authorInitials: (access.user?.name ?? "AV").slice(0, 2).toUpperCase(),
+    });
+    await relayDemoMessage({
+      demoChannelId: parsed.data.channelId,
+      body: parsed.data.body.trim(),
+      authorId: access.user?.id ?? "",
+      authorName: access.user?.name ?? "A. Voss",
     });
     return Response.json({ ok: true, message, messages: getPreviewStore().messages });
   }

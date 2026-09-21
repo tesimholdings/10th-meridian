@@ -132,6 +132,22 @@ export const env = {
   get streamApiSecret(): string {
     return read("STREAM_API_SECRET");
   },
+  get webPushPublicKey(): string {
+    return read("NEXT_PUBLIC_WEB_PUSH_PUBLIC_KEY") || read("WEB_PUSH_PUBLIC_KEY");
+  },
+  get webPushPrivateKey(): string {
+    return read("WEB_PUSH_PRIVATE_KEY");
+  },
+  get webPushSubject(): string {
+    return read("WEB_PUSH_SUBJECT", "mailto:team@tenmeridian.com");
+  },
+  /** When true, FCM tokens from the web subscription are also registered with Stream. */
+  get streamFirebasePush(): boolean {
+    return readBool("STREAM_FIREBASE_PUSH", false);
+  },
+  get streamPushProviderName(): string {
+    return read("STREAM_PUSH_PROVIDER_NAME", "firebase");
+  },
   get resendApiKey(): string {
     return read("RESEND_API_KEY");
   },
@@ -198,6 +214,10 @@ export function hasStream(): boolean {
   return Boolean(env.streamApiKey && env.streamApiSecret);
 }
 
+export function hasWebPush(): boolean {
+  return Boolean(env.webPushPublicKey && env.webPushPrivateKey);
+}
+
 export function hasResend(): boolean {
   return Boolean(env.resendApiKey);
 }
@@ -259,6 +279,7 @@ export function integrationStatus() {
     stripePublishable: hasStripePublishableKey(),
     canCharge: canChargeMembership(),
     stream: hasStream(),
+    webPush: hasWebPush(),
     resend: hasResend(),
     posthog: hasPosthog(),
     sentry: hasSentryDsn(),

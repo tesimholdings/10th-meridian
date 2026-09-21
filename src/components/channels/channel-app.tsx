@@ -111,7 +111,7 @@ export function ChannelApp({
         setStreamNote(
           json.stub
             ? "Private member communication. DEMO until Stream keys are present. Not E2EE."
-            : "Stream token issued. This shell still uses labeled DEMO messages until channels are mapped live.",
+            : "Stream is connected for alerts. This inbox still shows labeled DEMO messages. Not E2EE.",
         );
       })
       .catch(() => setStreamNote("Private member communication. Not E2EE."));
