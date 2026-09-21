@@ -1,13 +1,14 @@
-import Link from "next/link";
 import { resolveAccessContext } from "@/lib/access/context";
 import { MemberShell } from "@/components/member/member-shell";
 import { publicTableView } from "@/lib/crossings/service";
 import { getPreviewStore, viewerProfile } from "@/lib/preview/store";
 import { CROSSINGS_COPY } from "@/lib/crossings/types";
 import { Button } from "@/components/ui/button";
-import { DemoMark } from "@/components/brand/demo-mark";
 import { EmptyState } from "@/components/crossings/states";
 import { canMutateCrossings } from "@/lib/crossings/privacy";
+import { OccasionFrame } from "@/components/events/occasion-frame";
+import { journeyStillSrc } from "@/lib/atmosphere/resolve-campaign";
+import { faceFromProfile } from "@/lib/events/attendance";
 
 export const metadata = { title: "Tables", robots: { index: false } };
 
@@ -39,34 +40,40 @@ export default async function TablesPage() {
           />
         </div>
       ) : (
-      <ul className="mt-8 grid gap-4">
-        {tables.map((t) => (
-          <li key={t.id}>
-            <Link href={`/member/crossings/tables/${t.id}`} className="panel block p-5">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="label">
-                  {t.city} · {t.neighborhood} · {t.mealType}
-                </p>
-                {t.isDemo ? <DemoMark /> : null}
-              </div>
-              <p className="mt-2 font-serif text-2xl">{t.theme ?? "A shared table"}</p>
-              <p className="mt-2 text-sm text-ivory-muted">
-                {new Date(t.dateTime).toLocaleString("en-GB", {
-                  timeZone: t.timezone,
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}{" "}
-                · {t.guests.filter((g) => g.status === "confirmed").length}/{t.maxGuests} confirmed
-              </p>
-              <p className="mt-2 text-sm text-ivory-dim">
-                {t.venuePrivate ? "Venue visible to you." : "Exact venue withheld until you are confirmed."}
-              </p>
-            </Link>
-          </li>
-        ))}
+      <ul className="occasion-grid mt-8">
+        {tables.map((t) => {
+          const confirmed = t.guests.filter((g) => g.status === "confirmed");
+          const going = confirmed.flatMap((guest) => {
+            const profile = store.profiles.find((person) => person.id === guest.profileId);
+            return profile ? [faceFromProfile(profile)] : [];
+          });
+          const when = new Date(t.dateTime).toLocaleString("en-GB", {
+            timeZone: t.timezone,
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+          return (
+            <li key={t.id}>
+              <OccasionFrame
+                href={`/member/crossings/tables/${t.id}`}
+                src={journeyStillSrc({ destinationCity: t.city })}
+                kicker={`${t.neighborhood} · ${t.mealType}`}
+                title={t.theme ?? "A shared table"}
+                place={t.city}
+                when={when}
+                detail={
+                  t.venuePrivate
+                    ? "Venue visible to you."
+                    : "Exact venue withheld until you are confirmed."
+                }
+                people={going}
+              />
+            </li>
+          );
+        })}
       </ul>
       )}
     </MemberShell>

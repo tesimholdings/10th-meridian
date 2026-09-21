@@ -30,8 +30,6 @@ export const brand = {
     "A wider field of relevance — ranked, never invented.",
   askLine: "Ask the Meridian. Who can help — and who you should know next.",
   circleLine: "Your Circle is chosen by you. For you is suggested. Introductions are human.",
-  meridianSize:
-    "Meridian 10 is your immediate circle of ten. Slide toward 100 to widen the recommended set.",
   solicitingLine: "Absolutely no soliciting. Ban with no refund.",
   preparedDomain: PREPARED_DOMAIN,
 } as const;

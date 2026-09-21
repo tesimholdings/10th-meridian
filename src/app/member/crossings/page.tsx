@@ -8,9 +8,8 @@ import { EmptyState } from "@/components/crossings/states";
 import { CROSSINGS_COPY } from "@/lib/crossings/types";
 import { canMutateCrossings } from "@/lib/crossings/privacy";
 import { matchesForJourney, tableSuggestionsFor, visibleJourneysFor } from "@/lib/crossings/service";
-import { HiggsfieldSlot } from "@/components/brand/higgsfield-slot";
-import { occasionCredit } from "@/lib/atmosphere/campaign";
 import { journeyStillSrc } from "@/lib/atmosphere/resolve-campaign";
+import { journeyCompanions } from "@/lib/events/attendance";
 import { getPreviewStore, viewerProfile } from "@/lib/preview/store";
 import { demoIndexFor } from "@/lib/matching/service";
 import { summarizeCityPresence } from "@/lib/crossings/presence";
@@ -71,17 +70,6 @@ export default async function CrossingsPage() {
         {canMutate ? <Button href="/member/crossings/new">{CROSSINGS_COPY.createAction}</Button> : null}
       </div>
 
-      {upcoming ? (
-        <Link href={`/member/crossings/${upcoming.id}`} className="mt-6 block overflow-hidden rounded-3xl">
-          <HiggsfieldSlot
-            src={journeyStillSrc(upcoming)}
-            aspect="aspect-[16/8]"
-            className="rounded-3xl"
-            credit={occasionCredit("Crossing", upcoming.destinationCity)}
-          />
-        </Link>
-      ) : null}
-
       <nav className="mt-6 flex gap-3 overflow-x-auto hide-scroll text-sm">
         <a href="#trips" className="pill">Trips</a>
         <a href="#requests" className="pill">Requests</a>
@@ -90,7 +78,12 @@ export default async function CrossingsPage() {
 
       <section id="trips" className="mt-8">
         {upcoming ? (
-          <JourneyCard journey={upcoming} href={`/member/crossings/${upcoming.id}`} />
+          <JourneyCard
+            journey={upcoming}
+            href={`/member/crossings/${upcoming.id}`}
+            src={journeyStillSrc(upcoming)}
+            people={journeyCompanions(upcoming.destinationCity, store.crossings.journeys, store.profiles)}
+          />
         ) : (
           <EmptyState
             title="No trip yet."
@@ -170,7 +163,13 @@ export default async function CrossingsPage() {
           <h2 className="font-serif text-2xl">Your trips</h2>
           <div className="mt-4 grid gap-3">
             {mine.map((j) => (
-              <JourneyCard key={j.id} journey={j} href={`/member/crossings/${j.id}`} />
+              <JourneyCard
+                key={j.id}
+                journey={j}
+                href={`/member/crossings/${j.id}`}
+                src={journeyStillSrc(j)}
+                people={journeyCompanions(j.destinationCity, store.crossings.journeys, store.profiles)}
+              />
             ))}
           </div>
         </section>

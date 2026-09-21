@@ -7,6 +7,10 @@ import { getPreviewStore, unreadHouseNotifications, unreadTotal, viewerProfile, 
 import { completionMessage } from "@/lib/profile/completion";
 import { formatHumanDateRange } from "@/lib/crossings/format";
 import { formatEventWhen, isEventTonight } from "@/lib/events/when";
+import { journeyCompanions, rosterForEvent } from "@/lib/events/attendance";
+import { OccasionFrame } from "@/components/events/occasion-frame";
+import { stillForListedExperience } from "@/lib/atmosphere/campaign";
+import { campaignSrc, journeyStillSrc } from "@/lib/atmosphere/resolve-campaign";
 import { visibleJourneysFor } from "@/lib/crossings/service";
 import { RewardsTeaserCard } from "@/components/rewards/teaser-card";
 import { formatPoints } from "@/lib/rewards/math";
@@ -76,32 +80,43 @@ export default async function MemberHomePage() {
       </div>
 
       {trip ? (
-        <CrossingsEntryLink
-          href={`/member/crossings/${trip.id}`}
-          className="member-card pressable mt-8 block px-5 py-6 md:px-7 md:py-7"
-        >
-          <p className="text-xs tracking-[0.18em] uppercase text-[var(--ivory-dim)]">Your Crossing</p>
-          <p className="mt-3 font-serif text-4xl">{trip.destinationCity}</p>
-          <p className="mt-2 text-sm text-[var(--navy-soft)]">
-            {formatHumanDateRange(trip.arrivalDate, trip.departureDate)}
-          </p>
-          <p className="mt-5 text-sm text-[var(--gold)]">Open this trip</p>
+        <CrossingsEntryLink href={`/member/crossings/${trip.id}`} className="occasion-link lift-card mt-8 block">
+          <OccasionFrame
+            src={journeyStillSrc(trip)}
+            kicker="Your Crossing"
+            title={trip.destinationCity}
+            place={trip.destinationCountry || trip.destinationCity}
+            when={formatHumanDateRange(trip.arrivalDate, trip.departureDate)}
+            detail="Open this trip"
+            people={journeyCompanions(trip.destinationCity, store.crossings.journeys, store.profiles)}
+          />
         </CrossingsEntryLink>
       ) : (
-        <CrossingsEntryLink href="/member/crossings/new" className="member-card pressable mt-8 block px-5 py-6 text-[var(--navy)]">
+        <CrossingsEntryLink href="/member/crossings/new" className="pressable mt-8 block text-[var(--navy)]">
           Add a trip
         </CrossingsEntryLink>
       )}
 
       {event ? (
-        <Link href={`/member/events/${event.id}`} className="member-card pressable mt-8 block px-5 py-6 md:px-7 md:py-7">
-          <p className="text-xs tracking-[0.18em] uppercase text-[var(--ivory-dim)]">Upcoming experience</p>
-          <p className="mt-3 font-serif text-4xl">{event.title}</p>
-          <p className="mt-2 text-sm text-[var(--navy-soft)]">
-            {formatEventWhen(event.startsAt, event.city)} · {event.city}
-          </p>
-          <p className="mt-5 text-sm text-[var(--gold)]">Open this experience</p>
-        </Link>
+        <div className="mt-8">
+          <OccasionFrame
+            href={`/member/events/${event.id}`}
+            src={campaignSrc(stillForListedExperience(event))}
+            kicker={eventChipLabel}
+            title={event.title}
+            place={event.city}
+            when={formatEventWhen(event.startsAt, event.city)}
+            detail="Open this experience"
+            people={
+              rosterForEvent(
+                event.id,
+                store.profiles,
+                store.eventRegs,
+                new Map(store.profiles.map((profile) => [profile.id, profile.attendingEventIds])),
+              ).going
+            }
+          />
+        </div>
       ) : null}
 
       <section className="mt-10">

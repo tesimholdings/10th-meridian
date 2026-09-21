@@ -10,7 +10,7 @@ import { CrossingsEntryLink } from "@/components/crossings/crossings-flight";
 export function DesktopRail({ unreadMessages = 0 }: { unreadMessages?: number }) {
   const pathname = usePathname();
   return (
-    <aside className="liquid-dark sticky top-0 hidden h-dvh w-56 shrink-0 flex-col border-r border-[rgba(196,162,100,0.28)] px-4 py-5 md:flex">
+    <aside className="liquid-dark sticky top-0 hidden h-dvh w-56 shrink-0 flex-col px-4 py-5 md:flex">
       <FormalLockup knockout className="h-auto w-full max-w-full" />
       <nav className="mt-8 grid gap-1" aria-label="Primary">
         {memberNav.map((item) => {

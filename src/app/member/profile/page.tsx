@@ -27,14 +27,20 @@ export default async function ProfilePage({
   const edit = params.edit === "1";
   const tab = params.tab ?? "about";
   const rewards = edit || !isSyntheticSession(access.user) ? null : viewerRewardsSnapshot();
+  const portrait = p.gallery?.find((photo) => photo.id === "onboarding-portrait");
 
   if (!edit) {
     return (
       <MemberShell user={access.user} demo title="Profile" hasHeading>
         <div className="member-card mx-auto flex max-w-xl flex-col items-center px-6 py-8 text-center">
-          <div className="avatar h-24 w-24 text-3xl" style={{ background: p.accent }}>
-            {p.initials}
-          </div>
+          {portrait ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={portrait.url} alt={portrait.caption} className="h-24 w-24 rounded-full object-cover" />
+          ) : (
+            <div className="avatar h-24 w-24 text-3xl" style={{ background: p.accent }}>
+              {p.initials}
+            </div>
+          )}
           <p className="member-kicker mt-5">Profile</p>
           <h1 className="member-title mt-2">{p.displayName}</h1>
           {p.headline ? <p className="mt-2 max-w-md text-[var(--navy-soft)]">{p.headline}</p> : null}

@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormalLockup } from "@/components/brand/logo";
 import { LockGrain } from "@/components/lock/lock-grain";
 import { Button } from "@/components/ui/button";
 import { SOLICITING_BAN } from "@/lib/copy/community";
 import {
   MEMBER_INTENTS,
+  SAMPLE_PORTRAIT_LABEL,
+  SAMPLE_PORTRAIT_URL,
   SOCIAL_NETWORKS,
   normalizeSocialInput,
   type OnboardingDraft,
@@ -14,6 +16,7 @@ import {
 } from "@/lib/profile/onboarding";
 
 const STEPS = [
+  { kicker: "Portrait", title: "Your portrait" },
   { kicker: "Socials", title: "Connect your socials" },
   { kicker: "About you", title: "A few things worth knowing" },
   { kicker: "Looking for", title: "What you're looking for" },
@@ -30,7 +33,17 @@ export function ProfileBuilder({
   const [draft, setDraft] = useState<OnboardingDraft>(initial);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [celebrating, setCelebrating] = useState(false);
+  const [reduced, setReduced] = useState(false);
   const progress = ((step + 1) / STEPS.length) * 100;
+
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const apply = () => setReduced(media.matches);
+    apply();
+    media.addEventListener("change", apply);
+    return () => media.removeEventListener("change", apply);
+  }, []);
 
   async function persist(action: "save" | "skip" | "complete") {
     setSaving(true);
@@ -52,6 +65,11 @@ export function ProfileBuilder({
         return false;
       }
       if (json.redirect) {
+        if (action === "complete" && !reduced) {
+          setCelebrating(true);
+          window.setTimeout(() => window.location.assign(json.redirect!), 720);
+          return true;
+        }
         window.location.assign(json.redirect);
         return true;
       }
@@ -96,28 +114,25 @@ export function ProfileBuilder({
         <p className="mt-10 text-[11px] tracking-[0.22em] text-[#c4a264] uppercase">
           {STEPS[step].kicker} · {step + 1} / {STEPS.length}
         </p>
-        <div className="mt-3 h-px bg-white/15" aria-hidden>
-          <div className="h-px bg-[#c4a264]" style={{ width: `${progress}%` }} />
+        <div className="signup-progress mt-3" aria-hidden>
+          <span style={{ width: `${progress}%` }} />
         </div>
+        <div key={step} className="signup-step">
         <h1 className="mt-6 font-serif text-4xl leading-tight text-white">{STEPS[step].title}</h1>
         {fromCheckout && step === 0 ? (
           <p className="mt-3 text-sm leading-relaxed text-[#c9bfa8]">
-            Payment is confirmed. A short introduction helps the house know who belongs in the room.
+            Payment is confirmed. A portrait, then a short introduction, so the house knows who belongs in the room.
           </p>
         ) : (
           <p className="mt-3 text-sm leading-relaxed text-[#c9bfa8]">{stepIntro(step)}</p>
         )}
 
         <div className="mt-8 grid gap-4">
-          {step === 0 ? (
-            <SocialStep draft={draft} onChange={setDraft} />
-          ) : null}
-          {step === 1 ? (
-            <AboutStep draft={draft} onChange={setDraft} />
-          ) : null}
-          {step === 2 ? (
-            <IntentStep draft={draft} onChange={setDraft} />
-          ) : null}
+          {step === 0 ? <PortraitStep draft={draft} onChange={setDraft} /> : null}
+          {step === 1 ? <SocialStep draft={draft} onChange={setDraft} /> : null}
+          {step === 2 ? <AboutStep draft={draft} onChange={setDraft} /> : null}
+          {step === 3 ? <IntentStep draft={draft} onChange={setDraft} /> : null}
+        </div>
         </div>
 
         {error ? (
@@ -153,18 +168,131 @@ export function ProfileBuilder({
           Skip for now
         </button>
       </div>
+      {celebrating ? (
+        <div className="signup-celebrate" role="status">
+          <div className="text-center">
+            <p className="text-[11px] tracking-[0.22em] text-[#c4a264] uppercase">Welcome</p>
+            <p className="mt-3 font-serif text-5xl text-white">The house is open.</p>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
 
 function stepIntro(step: number): string {
   if (step === 0) {
-    return "Paste a link or a handle. These networks do not sign you in.";
+    return "A square crop, then you are in. Take a photo, choose one, or use the labeled sample.";
   }
   if (step === 1) {
+    return "Paste a link or a handle. These networks do not sign you in.";
+  }
+  if (step === 2) {
     return "Answer in your own words. Each question has an example. Leave any of them blank.";
   }
   return "Choose any that fit. Tags stay structured so matching can use them later, along with the sentence you write.";
+}
+
+function PortraitStep({
+  draft,
+  onChange,
+}: {
+  draft: OnboardingDraft;
+  onChange: (next: OnboardingDraft) => void;
+}) {
+  const [busy, setBusy] = useState(false);
+  const [note, setNote] = useState<string | null>(null);
+  const portrait = draft.portraitUrl ?? "";
+
+  async function applyFile(file: File | undefined) {
+    if (!file) return;
+    setBusy(true);
+    setNote(null);
+    try {
+      const url = await cropSquare(file);
+      onChange({ ...draft, portraitUrl: url, portraitLabel: "Portrait" });
+    } catch {
+      setNote("That photo could not be cropped. Try another, or use the sample.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="portrait-stage">
+      <div className={`portrait-frame ${portrait ? "is-set portrait-seal" : ""}`}>
+        {portrait ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={portrait} alt={draft.portraitLabel || "Your portrait"} />
+        ) : (
+          <span className="grid h-full place-items-center px-6 text-center font-serif text-2xl text-[#efe6d4]">
+            Your face, here
+          </span>
+        )}
+      </div>
+      <div className="portrait-actions">
+        <label className="action-quiet cursor-pointer">
+          {busy ? "Cropping" : "Choose a photo"}
+          <input
+            className="sr-only"
+            type="file"
+            accept="image/*"
+            onChange={(event) => {
+              const file = event.target.files?.[0];
+              event.target.value = "";
+              void applyFile(file);
+            }}
+          />
+        </label>
+        <label className="action-quiet cursor-pointer">
+          Take a photo
+          <input
+            className="sr-only"
+            type="file"
+            accept="image/*"
+            capture="user"
+            onChange={(event) => {
+              const file = event.target.files?.[0];
+              event.target.value = "";
+              void applyFile(file);
+            }}
+          />
+        </label>
+        <button
+          type="button"
+          className="action-quiet"
+          onClick={() =>
+            onChange({
+              ...draft,
+              portraitUrl: SAMPLE_PORTRAIT_URL,
+              portraitLabel: SAMPLE_PORTRAIT_LABEL,
+            })
+          }
+        >
+          Use sample portrait
+        </button>
+      </div>
+      <p className="max-w-sm text-center text-xs leading-relaxed text-white/50">
+        {portrait === SAMPLE_PORTRAIT_URL
+          ? SAMPLE_PORTRAIT_LABEL
+          : "Cropped square. The sample is labeled and is not a member photograph."}
+      </p>
+      {note ? <p className="text-sm text-[#d4af6a]">{note}</p> : null}
+    </div>
+  );
+}
+
+async function cropSquare(file: File): Promise<string> {
+  const bitmap = await createImageBitmap(file);
+  const side = Math.min(bitmap.width, bitmap.height);
+  const canvas = document.createElement("canvas");
+  canvas.width = 480;
+  canvas.height = 480;
+  const context = canvas.getContext("2d");
+  if (!context) throw new Error("canvas");
+  context.drawImage(bitmap, (bitmap.width - side) / 2, (bitmap.height - side) / 2, side, side, 0, 0, 480, 480);
+  bitmap.close?.();
+  return canvas.toDataURL("image/jpeg", 0.82);
 }
 
 function SocialStep({
@@ -366,9 +494,7 @@ function IntentStep({
               type="button"
               aria-pressed={on}
               onClick={() => toggle(intent.id)}
-              className={`min-h-11 rounded-2xl border px-4 py-3 text-left ${
-                on ? "border-[#c4a264] bg-[#c4a264] text-black" : "border-white/20 text-white"
-              }`}
+              className="intent-chip"
             >
               <span className="block text-sm">{intent.label}</span>
               <span className={`mt-1 block text-xs ${on ? "text-black/70" : "text-white/45"}`}>

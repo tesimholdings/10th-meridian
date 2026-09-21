@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480" role="img" aria-label="Sample portrait, labeled preview">
+  <rect width="480" height="480" fill="#092b45"/>
+  <circle cx="240" cy="188" r="72" fill="#c4a264"/>
+  <path d="M96 420c28-92 88-132 144-132s116 40 144 132" fill="#1a4663"/>
+  <text x="240" y="452" text-anchor="middle" fill="#efe6d4" font-family="Georgia, serif" font-size="18" letter-spacing="3">SAMPLE PORTRAIT</text>
+</svg>

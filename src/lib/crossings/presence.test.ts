@@ -47,11 +47,13 @@ describe("city presence", () => {
     assert.match(atlas, /summarizeCityPresence/);
   });
 
-  it("keeps Home free of decorative Crossing stills", () => {
+  it("puts the real trip over its still, not a decorative plate", () => {
     const home = readFileSync("src/app/member/home/page.tsx", "utf8");
     assert.equal(home.includes("HiggsfieldSlot"), false);
-    assert.equal(home.includes("journeyStillSrc"), false);
-    assert.equal(home.includes("occasionCredit"), false);
+    assert.equal(home.includes('campaignSrc("homeIndex")'), false);
+    assert.equal(home.includes('campaignSrc("homeNetwork")'), false);
+    assert.match(home, /journeyStillSrc/);
+    assert.match(home, /OccasionFrame/);
     assert.match(home, /Open this trip/);
     assert.match(home, /grid-cols-2/);
     assert.match(home, /md:grid-cols-4/);

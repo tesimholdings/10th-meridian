@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { OverflowMenu } from "@/components/members/overflow-menu";
 
 export function ProfileActions({
   targetId,
@@ -84,43 +85,46 @@ export function ProfileActions({
   }
 
   return (
-    <div className={compact ? "" : "mt-5"}>
-      <div className="flex flex-wrap gap-2">
+    <div className={compact ? "profile-actions-wrap" : "profile-actions-wrap mt-5"}>
+      <div className="profile-actions">
         <button type="button" disabled={pending} onClick={() => void message()} className="action-quiet">
           Message
         </button>
         <button
           type="button"
           disabled={pending}
+          data-state={inCircle ? "on" : "off"}
           onClick={() => void circle(inCircle ? "remove" : "add")}
           className="action-quiet"
         >
           {inCircle ? "In Circle" : "Circle"}
         </button>
-        <details>
-          <summary className="action-quiet cursor-pointer list-none">More</summary>
-          <div className="mt-2 grid gap-1">
-            <button type="button" disabled={pending} onClick={() => void introduce()} className="min-h-10 text-left text-sm">
-              {introStatus ? `Intro ${introStatus}` : "Request introduction"}
-            </button>
-            {removedFromIndex ? null : (
-              <button type="button" disabled={pending} onClick={() => void circle("remove-index")} className="min-h-10 text-left text-sm">
-                Remove from For you
-              </button>
-            )}
-            <button type="button" disabled={pending} onClick={() => void safety("mute")} className="min-h-10 text-left text-sm">
-              Mute
-            </button>
-            <button type="button" disabled={pending} onClick={() => void safety("report")} className="min-h-10 text-left text-sm">
-              Report
-            </button>
-            <a href="/member/help" className="flex min-h-10 items-center text-sm">
-              Help
-            </a>
-          </div>
-        </details>
+        <OverflowMenu
+          disabled={pending}
+          items={[
+            {
+              id: "intro",
+              label: introStatus ? `Intro ${introStatus}` : "Request introduction",
+              onSelect: () => void introduce(),
+              disabled: pending,
+            },
+            ...(removedFromIndex
+              ? []
+              : [
+                  {
+                    id: "remove-index",
+                    label: "Remove from For you",
+                    onSelect: () => void circle("remove-index"),
+                    disabled: pending,
+                  },
+                ]),
+            { id: "mute", label: "Mute", onSelect: () => void safety("mute"), disabled: pending },
+            { id: "report", label: "Report", onSelect: () => void safety("report"), disabled: pending },
+            { id: "help", label: "Help", href: "/member/help" },
+          ]}
+        />
       </div>
-      {note ? <p className="mt-2 text-sm text-[var(--gold)]">{note}</p> : null}
+      {note ? <p className="action-ack mt-3 text-center text-sm text-[var(--gold-dim)]">{note}</p> : null}
     </div>
   );
 }

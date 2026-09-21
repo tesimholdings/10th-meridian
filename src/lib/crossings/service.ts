@@ -339,17 +339,18 @@ export function joinTable(
 
 export function decideTableGuest(
   state: CrossingsState,
-  input: { tableId: string; actorId: string; profileId: string; accept: boolean },
+  input: { tableId: string; actorId: string; profileId: string; accept: boolean; steward?: boolean; force?: boolean },
   now = new Date(),
 ): GroupTableRecord {
   const table = state.tables.find((t) => t.id === input.tableId);
   if (!table) throw new Error("Table not found.");
-  if (table.openedByProfileId !== input.actorId) throw new Error("Only the host may decide.");
+  const steward = input.steward === true;
+  if (table.openedByProfileId !== input.actorId && !steward) throw new Error("Only the host may decide.");
   const guest = table.guests.find((g) => g.profileId === input.profileId);
   if (!guest) throw new Error("Guest not found.");
   if (input.accept) {
     const confirmed = table.guests.filter((g) => g.status === "confirmed").length;
-    if (confirmed >= table.maxGuests) throw new Error("This table is full.");
+    if (confirmed >= table.maxGuests && !input.force) throw new Error("This table is full.");
     guest.status = "confirmed";
     const convo = state.conversations.find((c) => c.tableId === table.id);
     if (convo && !convo.participantIds.includes(input.profileId)) {

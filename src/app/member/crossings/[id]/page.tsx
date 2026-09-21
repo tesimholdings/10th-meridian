@@ -12,6 +12,8 @@ import { matchesForJourney } from "@/lib/crossings/service";
 import { demoIndexFor } from "@/lib/matching/service";
 import { getPreviewStore, viewerProfile } from "@/lib/preview/store";
 import { CROSSINGS_COPY } from "@/lib/crossings/types";
+import { journeyCompanions } from "@/lib/events/attendance";
+import { journeyStillSrc } from "@/lib/atmosphere/resolve-campaign";
 
 export const metadata = { title: "Journey", robots: { index: false } };
 
@@ -35,7 +37,11 @@ export default async function JourneyPage({ params }: { params: Promise<{ id: st
 
   return (
     <MemberShell user={access.user} demo title={CROSSINGS_COPY.name}>
-      <JourneyCard journey={journey} />
+      <JourneyCard
+        journey={journey}
+        src={journeyStillSrc(journey)}
+        people={journeyCompanions(journey.destinationCity, store.crossings.journeys, store.profiles)}
+      />
       <div className="mt-4">
         <PrivacyNotice />
       </div>

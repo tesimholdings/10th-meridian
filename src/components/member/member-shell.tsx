@@ -1,6 +1,8 @@
+import { Suspense } from "react";
 import { BottomNav } from "@/components/member/bottom-nav";
 import { DesktopRail } from "@/components/member/desktop-rail";
 import { MemberHeader } from "@/components/member/member-header";
+import { PageEnter } from "@/components/member/member-motion";
 import { DemoDisclosure } from "@/components/brand/demo-disclosure";
 import { CrossingsFlightProvider } from "@/components/crossings/crossings-flight";
 import { unreadHouseNotifications, unreadTotal, viewerProfile, getPreviewStore } from "@/lib/preview/store";
@@ -32,9 +34,9 @@ export function MemberShell({
   return (
     <CrossingsFlightProvider city={tripCity}>
     <div className="house-light min-h-dvh w-full text-[var(--navy)]">
-      <div className="member-frame mx-auto flex min-h-dvh w-full">
+      <div className="member-frame flex min-h-dvh w-full">
         <DesktopRail unreadMessages={unreadMessages} />
-        <div className="flex min-w-0 flex-1 flex-col">
+        <div className="relative flex min-w-0 flex-1 flex-col">
           <MemberHeader user={user} unreadNotifications={unreadNotes} />
           {demo || isSyntheticSession(user) ? (
             <div className="safe-pad">
@@ -49,7 +51,9 @@ export function MemberShell({
             }
           >
             {title && !flush && !hasHeading ? <h1 className="sr-only">{title}</h1> : null}
-            {children}
+            <Suspense fallback={children}>
+              <PageEnter>{children}</PageEnter>
+            </Suspense>
           </main>
           <BottomNav unreadMessages={unreadMessages} />
         </div>

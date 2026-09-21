@@ -364,6 +364,7 @@ export const demoGroupTables: GroupTableRecord[] = [
       { profileId: "demo-01", status: "confirmed" },
       { profileId: "demo-03", status: "confirmed" },
       { profileId: "demo-04", status: "requested" },
+      { profileId: "demo-10", status: "requested" },
     ],
     channelId: "ch-table-london",
     isDemo: true,

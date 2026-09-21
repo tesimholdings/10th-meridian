@@ -190,6 +190,9 @@ describe("profile onboarding", () => {
     const profile = readFileSync("src/app/member/profile/page.tsx", "utf8");
     const model = readFileSync("src/lib/profile/onboarding.ts", "utf8");
     assert.match(builder, /Skip for now/);
+    assert.match(builder, /Your portrait/);
+    assert.match(builder, /Use sample portrait/);
+    assert.match(builder, /Choose a photo/);
     assert.match(builder, /Connect your socials/);
     assert.match(model, /LinkedIn/);
     assert.match(model, /Travel more/);
