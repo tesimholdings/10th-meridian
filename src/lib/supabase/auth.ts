@@ -1,9 +1,14 @@
 import { cookies } from "next/headers";
-import type { User } from "@supabase/supabase-js";
+import type { SupabaseClient, User } from "@supabase/supabase-js";
 import { ACCOUNT_COOKIE, ROLE_COOKIE } from "@/lib/access/cookies";
+import {
+  chooseSignInEmail,
+  pathAfterPasswordLogin,
+  resolveSessionRole,
+  type IdentityLookup,
+} from "@/lib/auth/members";
 import { env, hasSupabase } from "@/lib/env";
-import { APP_ROLES, type AppRole } from "@/lib/data/types";
-import { applyMemberSession, applyUnlockHit, pathForRole } from "@/lib/lock/session";
+import { applyMemberSession, applyUnlockHit } from "@/lib/lock/session";
 import { emailCandidateFromIdentity, resolveLockUnlock } from "@/lib/lock/unlock";
 import { getSupabaseAdmin } from "@/lib/supabase/server";
 import { getSupabaseServerWithCookies } from "@/lib/supabase/cookies";
@@ -23,91 +28,205 @@ export type AuthAttempt =
   | { ok: true; mode: AuthMode; redirect: string }
   | { ok: false; mode: AuthMode; reason: "invalid" | "demo-disabled" | "oauth-not-wired" };
 
-function isAppRole(value: string | null | undefined): value is AppRole {
-  return Boolean(value && (APP_ROLES as readonly string[]).includes(value));
-}
-
 function escapeIlike(value: string): string {
   return value.replace(/\\/g, "\\\\").replace(/%/g, "\\%").replace(/_/g, "\\_");
 }
 
-async function lookupAccountEmail(identity: string): Promise<string | null> {
-  const admin = getSupabaseAdmin();
-  if (!admin) return null;
-  const trimmed = identity.trim();
-  if (trimmed.length < 2) return null;
-  const safe = escapeIlike(trimmed);
+function metaString(meta: User["user_metadata"], key: string): string | null {
+  const value = meta?.[key];
+  return typeof value === "string" && value.trim() ? value.trim() : null;
+}
 
-  try {
-    if (trimmed.includes("@")) {
-      const { data } = await admin
-        .from("accounts")
-        .select("email")
-        .ilike("email", safe)
-        .limit(2);
-      if (data?.length === 1 && typeof data[0]?.email === "string") return data[0].email;
-      return null;
-    }
+type AccountRow = {
+  id: string;
+  user_id: string | null;
+  email: string;
+  full_name: string | null;
+  role: string | null;
+  username: string | null;
+};
 
-    const { data: byEmail } = await admin
-      .from("accounts")
-      .select("email")
-      .ilike("email", `${safe}@%`)
-      .limit(2);
-    if (byEmail?.length === 1 && typeof byEmail[0]?.email === "string") {
-      return byEmail[0].email;
-    }
+function asAccountRow(value: unknown, username: string | null): AccountRow | null {
+  if (!value || typeof value !== "object") return null;
+  const row = value as Record<string, unknown>;
+  if (typeof row.id !== "string" || typeof row.email !== "string") return null;
+  return {
+    id: row.id,
+    user_id: typeof row.user_id === "string" ? row.user_id : null,
+    email: row.email,
+    full_name: typeof row.full_name === "string" ? row.full_name : null,
+    role: typeof row.role === "string" ? row.role : null,
+    username:
+      username ?? (typeof row.username === "string" ? row.username : null),
+  };
+}
 
-    const { data: byName } = await admin
-      .from("accounts")
-      .select("email")
-      .ilike("full_name", `%${safe}%`)
-      .limit(2);
-    if (byName?.length === 1 && typeof byName[0]?.email === "string") {
-      return byName[0].email;
-    }
-  } catch {
-    return null;
+async function readAccount(
+  admin: SupabaseClient,
+  match: { userId?: string; email?: string },
+): Promise<AccountRow | null> {
+  const withUsername = "id, user_id, email, full_name, role, username";
+  const base = "id, user_id, email, full_name, role";
+  const run = (columns: string) => {
+    const query = admin.from("accounts").select(columns);
+    if (match.userId) return query.eq("user_id", match.userId).maybeSingle();
+    return query.ilike("email", escapeIlike(match.email ?? "")).maybeSingle();
+  };
+
+  const first = await run(withUsername);
+  if (!first.error) return asAccountRow(first.data, null);
+  if (/username/i.test(first.error.message)) {
+    const second = await run(base);
+    if (!second.error) return asAccountRow(second.data, null);
   }
   return null;
 }
 
+async function readProfile(
+  admin: SupabaseClient,
+  accountId: string,
+): Promise<{ display_name: string | null; role: string | null; username: string | null } | null> {
+  const full = await admin
+    .from("profiles")
+    .select("display_name, role, username")
+    .eq("account_id", accountId)
+    .maybeSingle();
+  if (!full.error && full.data && typeof full.data === "object") {
+    const row = full.data as Record<string, unknown>;
+    return {
+      display_name: typeof row.display_name === "string" ? row.display_name : null,
+      role: typeof row.role === "string" ? row.role : null,
+      username: typeof row.username === "string" ? row.username : null,
+    };
+  }
+  if (full.error && /role|username/i.test(full.error.message)) {
+    const base = await admin
+      .from("profiles")
+      .select("display_name")
+      .eq("account_id", accountId)
+      .maybeSingle();
+    if (!base.error && base.data && typeof base.data === "object") {
+      const row = base.data as Record<string, unknown>;
+      return {
+        display_name: typeof row.display_name === "string" ? row.display_name : null,
+        role: null,
+        username: null,
+      };
+    }
+  }
+  return null;
+}
+
+async function emailFromUsername(
+  admin: SupabaseClient,
+  username: string,
+): Promise<string | null> {
+  const safe = escapeIlike(username);
+  const accounts = await admin.from("accounts").select("email").ilike("username", safe).limit(2);
+  if (!accounts.error && accounts.data?.length === 1) {
+    const email = accounts.data[0]?.email;
+    if (typeof email === "string" && email.includes("@")) return email;
+  }
+
+  const profiles = await admin
+    .from("profiles")
+    .select("account_id")
+    .ilike("username", safe)
+    .limit(2);
+  if (profiles.error || profiles.data?.length !== 1) return null;
+  const accountId = profiles.data[0]?.account_id;
+  if (typeof accountId !== "string") return null;
+  const account = await admin.from("accounts").select("email").eq("id", accountId).maybeSingle();
+  const email = account.data?.email;
+  return typeof email === "string" && email.includes("@") ? email : null;
+}
+
+async function emailFromAuthMetadata(
+  admin: SupabaseClient,
+  username: string,
+): Promise<string | null> {
+  for (let page = 1; page <= 5; page += 1) {
+    const { data, error } = await admin.auth.admin.listUsers({ page, perPage: 200 });
+    if (error || !data?.users?.length) return null;
+    const hit = data.users.find((user) => {
+      const handle = metaString(user.user_metadata, "username")?.toLowerCase();
+      return handle === username && Boolean(user.email?.includes("@"));
+    });
+    if (hit?.email) return hit.email;
+    if (data.users.length < 200) return null;
+  }
+  return null;
+}
+
+async function lookupMemberEmail(identity: string): Promise<IdentityLookup> {
+  const empty: IdentityLookup = { accountEmail: null, metadataEmail: null };
+  const admin = getSupabaseAdmin();
+  if (!admin) return empty;
+  const trimmed = identity.trim();
+  if (trimmed.length < 2) return empty;
+
+  if (trimmed.includes("@")) {
+    return { accountEmail: trimmed, metadataEmail: null };
+  }
+
+  try {
+    const username = trimmed.toLowerCase();
+    const accountEmail = await emailFromUsername(admin, username);
+    if (accountEmail) return { accountEmail, metadataEmail: null };
+    const metadataEmail = await emailFromAuthMetadata(admin, username);
+    return { accountEmail: null, metadataEmail };
+  } catch {
+    return empty;
+  }
+}
+
 async function stampSessionFromAuthUser(user: User): Promise<string> {
   const admin = getSupabaseAdmin();
-  let role: AppRole = "member";
-  let name = user.user_metadata?.full_name || user.email || "Member";
+  let accountRole: string | null = null;
+  let profileRole: string | null = null;
+  let username = metaString(user.user_metadata, "username");
+  let name =
+    metaString(user.user_metadata, "name") ||
+    metaString(user.user_metadata, "full_name") ||
+    user.email ||
+    "Member";
   let id = user.id;
   let email = user.email ?? "";
 
   if (admin) {
     try {
-      const { data } =
-        (await admin
-          .from("accounts")
-          .select("id, email, full_name, role")
-          .eq("user_id", user.id)
-          .maybeSingle()) ?? {};
       const row =
-        data ??
-        (email
-          ? (
-              await admin
-                .from("accounts")
-                .select("id, email, full_name, role")
-                .ilike("email", email)
-                .maybeSingle()
-            ).data
-          : null);
+        (await readAccount(admin, { userId: user.id })) ??
+        (email ? await readAccount(admin, { email }) : null);
       if (row) {
-        id = typeof row.id === "string" ? row.id : id;
-        email = typeof row.email === "string" ? row.email : email;
-        name = typeof row.full_name === "string" ? row.full_name : name;
-        if (isAppRole(row.role)) role = row.role;
+        id = row.id || id;
+        email = row.email || email;
+        name = row.full_name || name;
+        accountRole = row.role;
+        username = row.username || username;
+        const profile = await readProfile(admin, row.id);
+        if (profile) {
+          profileRole = profile.role;
+          username = profile.username || username;
+          name = profile.display_name || name;
+        }
+        if (!row.user_id) {
+          await admin.from("accounts").update({ user_id: user.id }).eq("id", row.id);
+        }
       }
     } catch {
       // Cookie stamp still uses Auth user defaults.
     }
   }
+
+  const role = resolveSessionRole({
+    profileRole,
+    accountRole,
+    metadataRole:
+      metaString(user.user_metadata, "role") || metaString(user.app_metadata, "role"),
+    email,
+    username,
+  });
 
   await applyMemberSession({
     id,
@@ -116,12 +235,16 @@ async function stampSessionFromAuthUser(user: User): Promise<string> {
     role,
     isDemo: false,
   });
-  return pathForRole(role);
+  return pathAfterPasswordLogin(role);
 }
 
 export async function resolveSignInEmail(identity: string): Promise<string> {
-  const lookedUp = await lookupAccountEmail(identity);
-  if (lookedUp) return lookedUp;
+  const lookup = await lookupMemberEmail(identity);
+  const chosen = chooseSignInEmail(identity, lookup, {
+    supabaseConfigured: hasSupabase(),
+  });
+  if (chosen) return chosen;
+  if (hasSupabase()) return "";
   return emailCandidateFromIdentity(identity);
 }
 
@@ -135,7 +258,7 @@ export async function signInWithPassword(
   const email = await resolveSignInEmail(input.email);
 
   if (hasSupabase()) {
-    if (!input.password) {
+    if (!input.password || !email.includes("@")) {
       return { ok: false, mode: "supabase", reason: "invalid" };
     }
     const supabase = await getSupabaseServerWithCookies();

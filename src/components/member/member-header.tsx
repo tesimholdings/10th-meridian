@@ -82,7 +82,7 @@ export function MemberHeader({
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Search people and cities"
-            className="min-h-11 min-w-0 w-full rounded-full"
+            className="house-search min-h-11 min-w-0 w-full rounded-full"
           />
         </form>
         <div className="ml-auto flex items-center gap-2 md:ml-0">
@@ -173,7 +173,7 @@ export function MemberHeader({
                     value={q}
                     onChange={(e) => setQ(e.target.value)}
                     placeholder="Search people and cities"
-                    className="min-h-12 w-full rounded-full"
+                    className="house-search min-h-12 w-full rounded-full"
                   />
                   <button type="submit" className="action-quiet mt-3 w-full">
                     Show results
