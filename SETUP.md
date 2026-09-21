@@ -12,14 +12,16 @@ Wave 2 added interactive member/admin DEMO state (in-process store). It resets w
 - [ ] Prepared domain: **tenmeridian.com** (not purchased). Do not attach until bought and Open House / lock behavior is accepted
 - [ ] Attach the custom domain only after Open House / lock behavior is accepted
 - [ ] Keep `NEXT_PUBLIC_PREVIEW_TOOLS=false` and `PREVIEW_DEMO_AUTH=false` in Production
-- [ ] Closed lock always shows username → password (Forgot password) or a referral path. `PREVIEW_DEMO_AUTH=false` only disables demo sessions; it must not hide the entry fields. Wire Supabase Auth so real members/stewards can sign in. Preview without Auth: demo aliases (`stefan`, `voss`, `steward`) then Enter; sample referral `TENTH-EARLY`. Never invent live passwords.
+- [x] Closed lock always shows username → password (Forgot password) or a referral path. `PREVIEW_DEMO_AUTH=false` only disables demo sessions; it must not hide the entry fields. Password submit calls Supabase Auth `signInWithPassword` when env is set. Preview without Auth: demo aliases (`stefan`, `voss`, `steward`) then Enter; sample referral `TENTH-EARLY`. Never invent live passwords.
+- [ ] Create the two real members (no password in git). Set `BOOTSTRAP_MEMBER_PASSWORD` out of band, apply migration `0010`, then either `npm run bootstrap:members` or POST `/api/auth/bootstrap-members` with `BOOTSTRAP_MEMBERS_ENABLED=true` and `Authorization: Bearer $BOOTSTRAP_MEMBER_TOKEN`. That creates `stefanfulks@tenmeridian.com` (steward / `administrator`) and `rickydelvalle@tenmeridian.com` (`member`), confirms email, writes `user_metadata.username` + `name`, and upserts account, profile, and Stream users. Turn `BOOTSTRAP_MEMBERS_ENABLED` off afterward. Re-runs do not reset the password unless `BOOTSTRAP_RESET_PASSWORD=true`.
 - [ ] Set `NEXT_PUBLIC_RUNTIME_MODE=live` only after integrations are real
 - [ ] Rotate `SESSION_SECRET` before any shared preview URL is circulated
 
 ## 2. Supabase
 
 - [ ] Create a Supabase project
-- [ ] Apply `supabase/migrations/0001_init.sql` through `0009_stripe_membership.sql` (SQL editor or CLI)
+- [ ] Apply `supabase/migrations/0001_init.sql` through `0010_member_usernames.sql` (SQL editor or CLI)
+- [ ] `0010_member_usernames.sql` adds `accounts.username`, `profiles.username`, and `profiles.role`. Required before username sign-in can read the column. Auth metadata still resolves `stefanfulks` / `rickydelvalle` if the migration is not applied yet.
 - [ ] Confirm `pgcrypto` is available; decide whether to enable `vector` later
 - [ ] Copy `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
 - [ ] Configure Auth: email magic link / password, site URL, redirect to `/api/auth/callback`

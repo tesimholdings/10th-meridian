@@ -37,7 +37,7 @@ The lock screen is the default outside the monthly Open House window (the 10th, 
 
 Or set `OPEN_HOUSE_FORCE=open` in `.env.local`.
 
-Preview demo (no live passwords): with `PREVIEW_DEMO_AUTH=true` and no Supabase Auth, enter a demo alias (`stefan`, `voss`, `ricky`, or `steward`) → Continue → Enter. Referral sample: `TENTH-EARLY`. Production should keep `PREVIEW_DEMO_AUTH=false` (no demo sessions); the lock fields stay visible and password goes to Supabase Auth when env is set.
+Preview demo (no live passwords): with `PREVIEW_DEMO_AUTH=true` and no Supabase Auth, enter a demo alias (`stefan`, `voss`, `ricky`, or `steward`) → Continue → Enter. Referral sample: `TENTH-EARLY`. Production should keep `PREVIEW_DEMO_AUTH=false` (no demo sessions); the lock fields stay visible and password goes to Supabase Auth when env is set. Real members sign in as `stefanfulks` or `rickydelvalle` (or their `@tenmeridian.com` email). Those usernames do not depend on demo aliases.
 
 ```bash
 npm run build    # production build
@@ -75,6 +75,10 @@ Never commit real secrets. Leave blank to keep demo mode.
 | `NEXT_PUBLIC_SUPABASE_URL` | Auth/DB | Supabase project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Auth/DB | Anon key |
 | `SUPABASE_SERVICE_ROLE_KEY` | Matching persist / admin | Service role — server only |
+| `BOOTSTRAP_MEMBER_PASSWORD` | First real members | Admin-create password. Never commit. |
+| `BOOTSTRAP_MEMBERS_ENABLED` | No | `true` only while running the one-shot bootstrap route |
+| `BOOTSTRAP_MEMBER_TOKEN` | No | Bearer token (16+ chars) for `POST /api/auth/bootstrap-members` |
+| `BOOTSTRAP_RESET_PASSWORD` | No | `true` to replace an existing bootstrap password |
 | `NEXT_PUBLIC_STREAM_API_KEY` | Chat | Stream public key |
 | `STREAM_API_SECRET` | Chat | Stream server secret |
 | `STRIPE_SECRET_KEY` | Billing | Stripe TEST secret — never charge without this |
@@ -101,7 +105,15 @@ Never commit real secrets. Leave blank to keep demo mode.
 
 Create Stripe Prices in TEST only (Dashboard). Do not invent amounts in code. Do not use the archived lifetime Price. No promotion codes.
 
-See [docs/STRIPE.md](./docs/STRIPE.md). Social OAuth is **not** built. Apply migrations `0001`–`0009`. Matching algorithm: [docs/MATCHING.md](./docs/MATCHING.md).
+See [docs/STRIPE.md](./docs/STRIPE.md). Social OAuth is **not** built. Apply migrations `0001`–`0010`. Matching algorithm: [docs/MATCHING.md](./docs/MATCHING.md).
+
+Real member bootstrap (service role, password from `BOOTSTRAP_MEMBER_PASSWORD` only):
+
+```bash
+npm run bootstrap:members
+```
+
+Creates `stefanfulks` (`stefanfulks@tenmeridian.com`, steward / administrator) and `rickydelvalle` (`rickydelvalle@tenmeridian.com`, member). Apply `supabase/migrations/0010_member_usernames.sql` first. The HTTP one-shot is `POST /api/auth/bootstrap-members` and stays 404 until `BOOTSTRAP_MEMBERS_ENABLED=true` plus a bearer `BOOTSTRAP_MEMBER_TOKEN`.
 
 ## What this PR includes
 
