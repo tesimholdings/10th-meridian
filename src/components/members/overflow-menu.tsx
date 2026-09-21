@@ -24,13 +24,14 @@ export function OverflowMenu({ items, disabled = false }: { items: OverflowItem[
     function place() {
       const rect = buttonRef.current?.getBoundingClientRect();
       if (!rect) return;
-      const width = 232;
+      const width = 248;
+      const height = 280;
       const left = Math.min(
         Math.max(rect.left + rect.width / 2, width / 2 + 12),
         window.innerWidth - width / 2 - 12,
       );
       const below = rect.bottom + 8;
-      const top = below + 280 > window.innerHeight ? Math.max(12, rect.top - 8) : below;
+      const top = below + height > window.innerHeight - 12 ? Math.max(12, rect.top - height - 8) : below;
       setBox({ top, left });
     }
     place();

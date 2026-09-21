@@ -720,6 +720,7 @@ html.has-luxury-cursor * {
   letter-spacing: 0;
   text-transform: none;
   text-indent: 0;
+  list-style: none;
   color: var(--ivory-muted);
   background: transparent;
   appearance: none;
@@ -1200,6 +1201,7 @@ html.has-luxury-cursor * {
   .scene-chip-dot,
   .light-sweep::after,
   .stagger-in,
+  .stagger-in > *,
   .pressable,
   .tab-slide,
   .sheet-motion,
@@ -1558,7 +1560,9 @@ button:disabled {
 }
 
 .pressable {
-  transition: transform var(--motion-press) ease, opacity var(--motion-press) ease;
+  transition:
+    transform var(--motion-press) cubic-bezier(0.22, 1, 0.36, 1),
+    opacity var(--motion-press) cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .pressable:active {
@@ -1575,9 +1579,17 @@ button:disabled {
 .stagger-in > *:nth-child(4) { animation-delay: calc(var(--motion-stagger) * 3); }
 .stagger-in > *:nth-child(5) { animation-delay: calc(var(--motion-stagger) * 4); }
 .stagger-in > *:nth-child(6) { animation-delay: calc(var(--motion-stagger) * 5); }
+.stagger-in > *:nth-child(7) { animation-delay: calc(var(--motion-stagger) * 6); }
+.stagger-in > *:nth-child(8) { animation-delay: calc(var(--motion-stagger) * 7); }
+.stagger-in > *:nth-child(9) { animation-delay: calc(var(--motion-stagger) * 8); }
+.stagger-in > *:nth-child(10) { animation-delay: calc(var(--motion-stagger) * 9); }
+.stagger-in > *:nth-child(11) { animation-delay: calc(var(--motion-stagger) * 10); }
+.stagger-in > *:nth-child(12) { animation-delay: calc(var(--motion-stagger) * 11); }
 
 .tab-slide {
-  transition: color var(--motion-tab) ease, border-color var(--motion-tab) ease;
+  transition:
+    color var(--motion-tab) cubic-bezier(0.22, 1, 0.36, 1),
+    border-color var(--motion-tab) cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .sheet-motion {
