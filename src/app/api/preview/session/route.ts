@@ -42,7 +42,7 @@ export async function POST(request: Request) {
         JSON.stringify({
           id: FRESH_PREVIEW_ACCOUNT_ID,
           email: "new.member@preview.10thmeridian.test",
-          name: "New Member",
+          name: "Alex Hale",
           isDemo: true,
         }),
       ),
