@@ -11,6 +11,7 @@ import { visibleJourneysFor } from "@/lib/crossings/service";
 import { RewardsTeaserCard } from "@/components/rewards/teaser-card";
 import { formatPoints } from "@/lib/rewards/math";
 import { CrossingsEntryLink } from "@/components/crossings/crossings-flight";
+import { FRESH_PREVIEW_ACCOUNT_ID } from "@/lib/profile/onboarding";
 
 export const metadata = { title: "Home", robots: { index: false } };
 
@@ -20,7 +21,10 @@ export default async function MemberHomePage() {
   const viewer = viewerProfile();
   const index = await demoIndexFor(viewer);
   const paymentPending = access.user?.role === "approved_unpaid";
-  const first = viewer.displayName.split(" ")[0] ?? viewer.displayName;
+  const first =
+    access.user?.id === FRESH_PREVIEW_ACCOUNT_ID
+      ? (access.user.name.split(" ")[0] ?? access.user.name)
+      : (viewer.displayName.split(" ")[0] ?? viewer.displayName);
   const journeys = visibleJourneysFor({
     state: store.crossings,
     viewerId: viewer.id,

@@ -20,8 +20,9 @@ Wave 2 added interactive member/admin DEMO state (in-process store). It resets w
 ## 2. Supabase
 
 - [ ] Create a Supabase project
-- [ ] Apply `supabase/migrations/0001_init.sql` through `0010_member_usernames.sql` (SQL editor or CLI)
+- [ ] Apply `supabase/migrations/0001_init.sql` through `0011_profile_onboarding.sql` (SQL editor or CLI)
 - [ ] `0010_member_usernames.sql` adds `accounts.username`, `profiles.username`, and `profiles.role`, then inserts account and profile rows for `stefanfulks`, `rickydelvalle`, `tenthmeridian`, and `patrickromero` when those rows are missing. Auth metadata still resolves those usernames if the migration is not applied yet.
+- [ ] `0011_profile_onboarding.sql` adds social URLs, intent tags, and onboarding timestamps. Rows that already exist are marked finished so current members are not sent through the profile builder.
 - [ ] Confirm `pgcrypto` is available; decide whether to enable `vector` later
 - [ ] Copy `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
 - [ ] Configure Auth: email magic link / password, site URL, redirect to `/api/auth/callback`

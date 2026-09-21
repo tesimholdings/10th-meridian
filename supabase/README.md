@@ -12,6 +12,7 @@ Apply migrations in order against a new project:
 8. `0008_live_stack.sql` — matching views, membership_events audit
 9. `0009_stripe_membership.sql` — Checkout/invoice/subscription columns, `stripe_events`, Founding Ten usage view
 10. `0010_member_usernames.sql` — `accounts.username`, `profiles.username`, `profiles.role` for real sign-in
+11. `0011_profile_onboarding.sql` — social links, intent tags, and onboarding timestamps. Existing profiles are marked finished so current members are not prompted.
 
 The Next.js app does not require a live project to boot. See `src/lib/supabase/stub.ts`.
 City Notes and journeys are never readable by `anon`. Exact table venues are withheld by view/`group_tables_public` unless the viewer is a confirmed guest or steward.
