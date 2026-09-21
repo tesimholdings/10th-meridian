@@ -90,7 +90,7 @@ export function Directory({ profiles }: { profiles: ProfileRecord[] }) {
       </div>
       ) : null}
       <p className="mt-4 text-[11px] tracking-[0.16em] uppercase text-ivory-dim">
-        {filtered.length} SYNTHETIC DEMO · never invented
+        {filtered.length} sample profiles · not real members
       </p>
       {filtered.length === 0 ? (
         <div className="mt-6">
@@ -115,7 +115,7 @@ export function Directory({ profiles }: { profiles: ProfileRecord[] }) {
                 {p.headline} · {p.city}
               </p>
               <p className="mt-2 text-[11px] tracking-[0.16em] uppercase text-gold">
-                SYNTHETIC DEMO
+                Sample
               </p>
               <div className="mt-4 flex flex-wrap gap-2">
                 <Link

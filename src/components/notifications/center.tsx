@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { HouseNotification } from "@/lib/network/types";
 import { formatRelativeTime } from "@/lib/crossings/format";
+import { memberSurfaceCopy } from "@/lib/member/surface-copy";
 
 function circleCopy(n: HouseNotification): string {
   if (n.kind === "circle_add") {
@@ -44,7 +45,7 @@ export function NotificationCenter({ notifications }: { notifications: HouseNoti
               </span>
               <span className="min-w-0 flex-1">
                 <span className="block font-medium">{circleCopy(n)}</span>
-                <span className="block text-sm text-[var(--ivory-dim)]">{n.body}</span>
+                <span className="block text-sm text-[var(--ivory-dim)]">{memberSurfaceCopy(n.body)}</span>
               </span>
               <span className="flex flex-col items-end gap-2">
                 <span className="text-xs text-[var(--ivory-dim)]">{formatRelativeTime(n.createdAt)}</span>

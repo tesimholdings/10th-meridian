@@ -18,7 +18,7 @@ export function HiggsfieldSlot({
   credit?: string;
 }) {
   return (
-    <figure className={`media-slot overflow-hidden ${className}`} data-higgsfield="editorial">
+    <figure className={`media-slot overflow-hidden ${className}`} data-editorial="placeholder">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={src} alt={alt} className={`${aspect} w-full object-cover`} />
       <figcaption className="sr-only">{caption}</figcaption>

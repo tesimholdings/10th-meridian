@@ -18,6 +18,7 @@ import {
 } from "@/lib/messaging/drafts";
 import type { ChannelRecord, MessageRecord, ProfileRecord } from "@/lib/data/types";
 import { MESSAGES_TAB_CHANNELS, MESSAGES_TAB_DMS } from "@/lib/copy/ui";
+import { memberSurfaceCopy } from "@/lib/member/surface-copy";
 import { formatRelativeTime } from "@/lib/crossings/format";
 
 const REACTIONS = [
@@ -105,16 +106,7 @@ export function ChannelApp({
   }
 
   useEffect(() => {
-    void fetch("/api/stream/token", { method: "POST" })
-      .then((r) => r.json())
-      .then((json: { stub?: boolean }) => {
-        setStreamNote(
-          json.stub
-            ? "Private member communication. DEMO until Stream keys are present. Not E2EE."
-            : "Stream token issued. This shell still uses labeled DEMO messages until channels are mapped live.",
-        );
-      })
-      .catch(() => setStreamNote("Private member communication. Not E2EE."));
+    setStreamNote("Messages stay in the house. Absolutely no soliciting.");
   }, []);
 
   const roots = useMemo(
@@ -241,7 +233,7 @@ export function ChannelApp({
                       </span>
                     </span>
                     <span className="block truncate text-sm text-[var(--ivory-dim)]">
-                      {last?.body ?? c.topic}
+                      {last ? memberSurfaceCopy(last.body) : c.topic}
                     </span>
                   </span>
                   {c.unread ? (
@@ -334,7 +326,7 @@ export function ChannelApp({
                 <article key={m.id} className={`flex ${own ? "justify-end" : "justify-start"}`}>
                   <div className={`max-w-[84%] px-4 py-3 ${own ? "bubble-own" : "bubble-theirs"}`}>
                     <p className="text-[11px] opacity-70">{m.authorName}</p>
-                    <p className="mt-1 text-[15px] leading-relaxed">{m.body}</p>
+                    <p className="mt-1 text-[15px] leading-relaxed">{memberSurfaceCopy(m.body)}</p>
                     <div className="mt-2 flex flex-wrap gap-2">
                       {REACTIONS.map((r) => (
                         <button

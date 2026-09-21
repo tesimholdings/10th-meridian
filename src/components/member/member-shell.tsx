@@ -5,6 +5,7 @@ import { DemoDisclosure } from "@/components/brand/demo-disclosure";
 import { CrossingsFlightProvider } from "@/components/crossings/crossings-flight";
 import { unreadHouseNotifications, unreadTotal, viewerProfile, getPreviewStore } from "@/lib/preview/store";
 import type { SessionUser } from "@/lib/access/session";
+import { isSyntheticSession } from "@/lib/member/identity";
 
 export function MemberShell({
   user,
@@ -35,9 +36,9 @@ export function MemberShell({
         <DesktopRail unreadMessages={unreadMessages} />
         <div className="flex min-w-0 flex-1 flex-col">
           <MemberHeader user={user} unreadNotifications={unreadNotes} />
-          {demo ? (
+          {demo || isSyntheticSession(user) ? (
             <div className="safe-pad">
-              <DemoDisclosure />
+              <DemoDisclosure mode={isSyntheticSession(user) ? "demo" : "sample"} />
             </div>
           ) : null}
           <main

@@ -10,6 +10,7 @@ import { isInCircle, isRemovedFromIndex } from "@/lib/network/circle";
 import { mutualConnections, mutualHref } from "@/lib/network/mutual";
 import { formatEventWhen } from "@/lib/events/when";
 import { FoundingBadge } from "@/components/members/founding-badge";
+import { memberSurfaceCopy } from "@/lib/member/surface-copy";
 
 export const metadata = { title: "Member", robots: { index: false, follow: false } };
 
@@ -136,7 +137,7 @@ export default async function MemberProfilePage({
         {tab === "about" || !["gallery", "events"].includes(tab) ? (
           <dl className="grid gap-4 text-left">
             <Item label="Role" value={`${profile.roleTitle} · ${profile.company}`} />
-            <Item label="About" value={profile.bio} />
+            <Item label="About" value={memberSurfaceCopy(profile.bio)} />
             {profile.offers.length ? <Item label="Offers" value={profile.offers.join(" · ")} /> : null}
             {profile.needs.length ? <Item label="Needs" value={profile.needs.join(" · ")} /> : null}
             {profile.website ? <Item label="Website" value={profile.website} /> : null}

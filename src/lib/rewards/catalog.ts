@@ -15,7 +15,7 @@ export const REWARD_CATALOG: readonly RewardCatalogItem[] = [
     title: "Trip credit",
     short: "10 pts · Crossing stipend",
     description:
-      "Toward a Meridian Crossing or Open House travel stipend. Submit a destination and dates. Ops marks requested → approved → paid. Not a booked itinerary.",
+      "Toward a Meridian Crossing or Open House travel stipend. Submit a destination and dates. Not a booked itinerary.",
     costPoints: POINTS_PER_SUCCESSFUL_REFERRAL,
     unlockCreditsRequired: 1,
     reservable: false,
@@ -28,7 +28,7 @@ export const REWARD_CATALOG: readonly RewardCatalogItem[] = [
     title: "Gold bar",
     short: "10 pts toward",
     description:
-      "Reserve even before the balance is full. Reserved points lock here until funded or you cancel. Shipping is a stub — ops fulfills offline. Imagery is editorial, not delivered gold.",
+      "Reserve even before the balance is full. Reserved points lock here until funded or you cancel. The picture is a placeholder, not gold in hand.",
     costPoints: POINTS_PER_SUCCESSFUL_REFERRAL,
     unlockCreditsRequired: 1,
     reservable: true,
@@ -54,7 +54,7 @@ export const REWARD_CATALOG: readonly RewardCatalogItem[] = [
     title: "Yacht day",
     short: "10 pts · Water day",
     description:
-      "Toward a Meridian water experience. Ops fulfills. Editorial imagery — not a completed day on the water.",
+      "Toward a Meridian water experience. The picture is a placeholder, not a completed day on the water.",
     costPoints: POINTS_PER_SUCCESSFUL_REFERRAL,
     unlockCreditsRequired: 1,
     reservable: false,
@@ -80,7 +80,7 @@ export const REWARD_CATALOG: readonly RewardCatalogItem[] = [
     title: "Founders Circle",
     short: "30 pts · Hosted evening",
     description:
-      "Exclusive hosted evening. Locked until three successful referrals (30 pts / $3,000). Ops fulfills offline.",
+      "Exclusive hosted evening. Locked until three successful referrals (30 pts / $3,000).",
     costPoints: POINTS_PER_SUCCESSFUL_REFERRAL * 3,
     unlockCreditsRequired: 3,
     reservable: false,

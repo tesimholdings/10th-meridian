@@ -7,6 +7,7 @@ import { brand } from "@/lib/config/site";
 import type { IntroRequest } from "@/lib/data/types";
 import type { ScoredMatch } from "@/lib/matching/types";
 import { shortMatchReason } from "@/lib/matching/reason";
+import { recommendationsToRender } from "@/lib/member/recommendations";
 
 export function ForYouField({
   rows,
@@ -19,8 +20,8 @@ export function ForYouField({
 }) {
   const [size, setSize] = useState(10);
   const max = Math.min(100, Math.max(10, rows.length));
-  const shown = useMemo(() => rows.slice(0, 100), [rows]);
-  const count = Math.min(size, max, shown.length);
+  const shown = useMemo(() => recommendationsToRender(rows, size), [rows, size]);
+  const count = shown.length;
   const span = Math.max(1, max - 10);
   const fill = ((Math.min(size, max) - 10) / span) * 100;
 
@@ -36,12 +37,12 @@ export function ForYouField({
             <p className="meridian-dial-value">{count}</p>
             <p className="label mt-2">{size <= 10 ? MERIDIAN_10 : `${count} people`}</p>
           </div>
-          <p className="meridian-dial-of">of {shown.length}</p>
+            <p className="meridian-dial-of">{count} shown</p>
         </div>
         <p className="mt-3 max-w-xl text-sm text-[var(--navy-soft)]">{brand.meridianSize}</p>
         <label className="mt-5 grid gap-3">
           <span className="sr-only">
-            Circle size, {count} of {shown.length}. {MERIDIAN_10} to {MERIDIAN_100}
+            Circle size, {count} shown. {MERIDIAN_10} to {MERIDIAN_100}
           </span>
           <input
             className="meridian-range"
@@ -54,7 +55,7 @@ export function ForYouField({
             aria-valuemin={10}
             aria-valuemax={max}
             aria-valuenow={Math.min(size, max)}
-            aria-valuetext={`${count} of ${shown.length}`}
+            aria-valuetext={`${count} shown`}
             style={{ "--range-fill": `${fill}%` } as CSSProperties}
           />
           <span className="meridian-dial-ends">
@@ -65,10 +66,10 @@ export function ForYouField({
       </div>
 
       <ul className="mt-4 grid gap-1">
-        {shown.map((row, i) => (
+        {shown.map((row) => (
           <IndexCard
             key={row.target.id}
-            className={`circle-person ${i < size ? "" : "is-out"}`}
+            className="circle-person"
             profile={row.target}
             reason={shortMatchReason(row.target, row.explanations)}
             intro={intros.find((x) => x.targetId === row.target.id)}

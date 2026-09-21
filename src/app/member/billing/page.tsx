@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { MemberShell } from "@/components/member/member-shell";
 import { membershipProducts } from "@/lib/config/pricing";
 import { Button } from "@/components/ui/button";
-import { canChargeMembership, hasStripe } from "@/lib/env";
+import { canChargeMembership } from "@/lib/env";
 import { membershipFor } from "@/lib/preview/store";
 import { readOnboardingCookie } from "@/lib/profile/onboarding-cookie";
 import { readOnboardingDb } from "@/lib/profile/onboarding-db";
@@ -15,11 +15,6 @@ import {
 } from "@/lib/copy/community";
 import { MEMBERSHIP_NO_DISCOUNT, MEMBERSHIP_STANDARD } from "@/lib/copy/open-house";
 import { resolveMembershipOffer } from "@/lib/stripe/seats";
-import {
-  STRIPE_TEST_FOUNDING_PRICE_ID,
-  STRIPE_TEST_MONTHLY_PRICE_ID,
-  STRIPE_TEST_STANDARD_ENTRY_PRICE_ID,
-} from "@/lib/stripe/catalog";
 
 export const metadata = { title: "Billing", robots: { index: false } };
 
@@ -108,10 +103,7 @@ export default async function BillingPage({
 
         {!chargeReady && !active ? (
           <p className="mt-4 text-xs leading-relaxed text-[#8f8774]">
-            Preview demo: Checkout is stubbed until TEST keys and Price IDs are set (
-            {STRIPE_TEST_FOUNDING_PRICE_ID}, {STRIPE_TEST_STANDARD_ENTRY_PRICE_ID},{" "}
-            {STRIPE_TEST_MONTHLY_PRICE_ID}). The route returns 501 and charges nothing.
-            {!hasStripe() ? " STRIPE_SECRET_KEY is missing." : null}
+            Checkout is not open yet. Nothing is charged.
           </p>
         ) : null}
       </article>

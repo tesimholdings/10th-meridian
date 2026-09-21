@@ -8,6 +8,7 @@ import type { ProfileRecord } from "@/lib/data/types";
 import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
 import { DemoMark } from "@/components/brand/demo-mark";
+import { memberSurfaceCopy } from "@/lib/member/surface-copy";
 import { EmptyState, PrivacyNotice } from "@/components/crossings/states";
 
 export function CityNotesBoard({
@@ -138,7 +139,7 @@ export function CityNotesBoard({
                   {note.isDemo ? <DemoMark /> : null}
                 </div>
                 <h2 className="mt-3 font-serif text-2xl">{note.title}</h2>
-                <p className="mt-2 text-sm leading-relaxed text-ivory-muted">{note.body}</p>
+                <p className="mt-2 text-sm leading-relaxed text-ivory-muted">{memberSurfaceCopy(note.body)}</p>
                 <p className="mt-3 text-[11px] tracking-[0.14em] uppercase text-ivory-dim">
                   {author?.displayName ?? "Member"}
                 </p>
@@ -219,7 +220,7 @@ export function CityNotesBoard({
         </section>
       ) : (
         <p className="text-sm text-ivory-dim">
-          Open House may only see labeled SYNTHETIC DEMO notes. Real City Notes stay inside the house.
+          Open House shows sample notes only. Member notes stay inside the house.
         </p>
       )}
     </div>

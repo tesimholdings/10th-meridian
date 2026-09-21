@@ -51,7 +51,7 @@ export function PrivacyNotice() {
   return (
     <p className="text-[11px] leading-relaxed tracking-[0.04em] text-ivory-dim">
       City-level presence only. Crossings is not real-time location sharing. Flight numbers, hotel
-      stays, room numbers, and detailed itineraries are never collected. SYNTHETIC DEMO.
+      stays, room numbers, and detailed itineraries are never collected.
     </p>
   );
 }

@@ -28,6 +28,6 @@ export async function POST(request: Request) {
   reportMember(viewer.id, parsed.data.targetId);
   return Response.json({
     ok: true,
-    message: "Reported to a steward. Preview records this locally until live operations exist.",
+    message: "Reported to a steward.",
   });
 }
