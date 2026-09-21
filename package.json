@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "eslint",
     "icons": "node scripts/build-brand-icons.mjs",
-    "test": "tsx --test src/lib/matching/score.test.ts src/lib/matching/reason.test.ts src/lib/matching/postgres.test.ts src/lib/access/open-house.test.ts src/lib/preview/store.test.ts src/lib/crossings/dates.test.ts src/lib/crossings/matching.test.ts src/lib/crossings/service.test.ts src/lib/crossings/journey-validation.test.ts src/lib/crossings/presence.test.ts src/lib/network/privacy.test.ts src/lib/network/circle.test.ts src/lib/network/mutual.test.ts src/lib/notifications/prefs.test.ts src/lib/copy/ui.test.ts src/lib/copy/open-house.test.ts src/lib/atmosphere/assets.test.ts src/lib/atmosphere/campaign.test.ts src/lib/ask/meridian.test.ts src/lib/messaging/destination.test.ts src/lib/messaging/drafts.test.ts src/lib/rewards/math.test.ts src/lib/rewards/actions.test.ts src/lib/data/demo.test.ts src/lib/lock/unlock.test.ts src/lib/lock/session.test.ts src/lib/config/public-origin.test.ts src/lib/apply/validation.test.ts src/lib/events/when.test.ts src/lib/env.test.ts src/lib/resend/send.test.ts src/lib/stream/channels.test.ts src/lib/stripe/catalog.test.ts src/lib/stripe/checkout.test.ts src/lib/stripe/seats.test.ts src/lib/stripe/invoice.test.ts src/lib/stripe/webhook.test.ts src/lib/posthog/config.test.ts src/lib/sentry/placeholders.test.ts src/lib/supabase/auth.test.ts",
+    "test": "tsx --test src/lib/matching/score.test.ts src/lib/matching/reason.test.ts src/lib/matching/postgres.test.ts src/lib/access/open-house.test.ts src/lib/preview/store.test.ts src/lib/crossings/dates.test.ts src/lib/crossings/matching.test.ts src/lib/crossings/service.test.ts src/lib/crossings/journey-validation.test.ts src/lib/crossings/presence.test.ts src/lib/network/privacy.test.ts src/lib/network/circle.test.ts src/lib/network/mutual.test.ts src/lib/notifications/prefs.test.ts src/lib/copy/ui.test.ts src/lib/copy/open-house.test.ts src/lib/atmosphere/assets.test.ts src/lib/atmosphere/campaign.test.ts src/lib/ask/meridian.test.ts src/lib/messaging/destination.test.ts src/lib/messaging/drafts.test.ts src/lib/rewards/math.test.ts src/lib/rewards/actions.test.ts src/lib/data/demo.test.ts src/lib/lock/unlock.test.ts src/lib/lock/session.test.ts src/lib/config/public-origin.test.ts src/lib/apply/validation.test.ts src/lib/events/when.test.ts src/lib/env.test.ts src/lib/resend/send.test.ts src/lib/stream/channels.test.ts src/lib/stream/push.test.ts src/lib/stripe/catalog.test.ts src/lib/stripe/checkout.test.ts src/lib/stripe/seats.test.ts src/lib/stripe/invoice.test.ts src/lib/stripe/webhook.test.ts src/lib/posthog/config.test.ts src/lib/sentry/placeholders.test.ts src/lib/supabase/auth.test.ts",
     "test:matching": "tsx --test src/lib/matching/score.test.ts src/lib/preview/store.test.ts"
   },
   "dependencies": {
@@ -23,6 +23,7 @@
     "resend": "^6.9.1",
     "stream-chat": "^9.35.1",
     "stripe": "^20.4.0",
+    "web-push": "^3.6.7",
     "zod": "^4.3.5"
   },
   "devDependencies": {
@@ -31,6 +32,7 @@
     "@types/qrcode": "^1.5.6",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/web-push": "^3.6.4",
     "eslint": "^9",
     "eslint-config-next": "16.3.5",
     "sharp": "^0.35.4",

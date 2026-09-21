@@ -1,4 +1,5 @@
 import { AdminShell } from "@/components/admin/admin-shell";
+import { StreamSeedButton } from "@/components/admin/stream-seed-button";
 import { acceptedThisCohort, getPreviewStore } from "@/lib/preview/store";
 import { integrationStatus } from "@/lib/env";
 
@@ -20,7 +21,9 @@ export default function AdminHomePage() {
         <Card label="Applications (DEMO)" value={String(store.applications.length)} />
         <Card label="Supabase" value={integrations.supabase ? "connected" : "stub"} />
         <Card label="Stripe" value={integrations.stripe ? "keys present" : "stub"} />
+        <Card label="Stream" value={integrations.stream ? "keys present" : "stub"} />
       </section>
+      <StreamSeedButton streamLive={integrations.stream} webPush={integrations.webPush} />
       <section className="mt-10">
         <p className="label">Activity</p>
         <ul className="mt-3 text-sm text-ivory-muted">
