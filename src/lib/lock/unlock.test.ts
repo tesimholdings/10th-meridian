@@ -63,6 +63,7 @@ describe("lock unlock resolver", () => {
     assert.equal(early.kind, "referral");
     if (early.kind === "referral") assert.equal(early.code, "TENTH-EARLY");
     assert.equal(classifyLockIdentity("stefan").kind, "credentials");
+    assert.equal(classifyLockIdentity("stefanfulks").kind, "credentials");
     assert.equal(classifyLockIdentity("not-a-key").kind, "credentials");
     assert.equal(classifyLockIdentity("TENTH-EXPIRED").kind, "credentials");
   });

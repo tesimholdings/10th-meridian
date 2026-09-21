@@ -112,9 +112,17 @@ describe("original House atmosphere", () => {
     assert.match(unlock, /Forgot password/);
     assert.match(unlock, /Show password/);
     assert.match(unlock, /Hide password/);
+    assert.match(unlock, /<svg/);
+    assert.match(unlock, /className="lock-eye"/);
+    assert.equal(unlock.includes(">Show<"), false);
+    assert.equal(unlock.includes(">Hide<"), false);
     assert.match(unlock, /lock-forgot/);
     assert.match(css, /\.lock-forgot/);
-    assert.match(css, /\.lock-reveal/);
+    assert.match(css, /\.lock-reveal[\s\S]*min-width:\s*44px/);
+    assert.match(css, /\.lock-reveal[\s\S]*min-height:\s*44px/);
+    assert.match(css, /\.lock-reveal[\s\S]*background:\s*#000/);
+    assert.match(css, /\.lock-reveal[\s\S]*color:\s*#c4a264/);
+    assert.match(css, /\.lock-reveal:hover[\s\S]*#efe6d4/);
     assert.match(unlock, /Have a referral code\?/);
     assert.match(unlock, /\/api\/lock\/unlock/);
     assert.match(unlock, /\/api\/auth\/forgot-password/);

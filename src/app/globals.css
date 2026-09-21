@@ -208,30 +208,41 @@ body {
 }
 
 .lock-password input {
-  padding-right: 5.5rem;
+  padding-inline: 3.35rem;
 }
 
 .lock-reveal {
   position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
+  top: 50%;
+  right: 4px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 4.75rem;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
   min-height: 44px;
-  padding: 0 0.9rem;
-  border: 0;
-  background: transparent;
+  padding: 0;
+  border: 1px solid rgba(196, 162, 100, 0.85);
+  border-radius: 999px;
+  background: #000;
   color: #c4a264;
-  font-size: 0.72rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  transform: translateY(-50%);
 }
 
-.lock-reveal:hover {
-  color: var(--ivory);
+.lock-reveal:hover,
+.lock-reveal:focus-visible,
+.lock-reveal[aria-pressed="true"] {
+  color: #efe6d4;
+  border-color: #efe6d4;
+  background: #000;
+}
+
+.lock-eye {
+  display: block;
+  width: 24px;
+  height: 24px;
+  flex: none;
 }
 
 .lock-forgot {

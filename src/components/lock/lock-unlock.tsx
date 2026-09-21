@@ -6,6 +6,72 @@ import { FORGOT_PASSWORD_MESSAGE, UNLOCK_MISS_MESSAGE } from "@/lib/lock/unlock"
 
 type Mode = "identity" | "password" | "referral";
 
+function PasswordEye({ off }: { off: boolean }) {
+  return (
+    <svg
+      className="lock-eye"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+    >
+      {off ? (
+        <>
+          <path
+            d="M3.2 4.4 20.2 20"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+          />
+          <path
+            d="M9.4 6.2A11 11 0 0 1 12 5.6c6.2 0 9.6 6.4 9.6 6.4a17 17 0 0 1-3.5 4.1"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M6.5 7.7C4.2 9.2 2.4 12 2.4 12S5.8 18.4 12 18.4c1.4 0 2.7-.3 3.8-.8"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M9.9 10.2a2.5 2.5 0 0 0 3.5 3.6"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+          />
+        </>
+      ) : (
+        <>
+          <path
+            d="M2.2 12S5.7 5.4 12 5.4 21.8 12 21.8 12 18.3 18.6 12 18.6 2.2 12 2.2 12Z"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinejoin="round"
+          />
+          <circle
+            cx="12"
+            cy="12"
+            r="2.7"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+          />
+        </>
+      )}
+    </svg>
+  );
+}
+
 export function LockUnlock({ denied = false }: { denied?: boolean }) {
   const [mode, setMode] = useState<Mode>("identity");
   const [busy, setBusy] = useState(false);
@@ -133,7 +199,7 @@ export function LockUnlock({ denied = false }: { denied?: boolean }) {
               aria-label={showPassword ? "Hide password" : "Show password"}
               onClick={() => setShowPassword((open) => !open)}
             >
-              {showPassword ? "Hide" : "Show"}
+              <PasswordEye off={showPassword} />
             </button>
           </div>
           <p className="mt-3">
