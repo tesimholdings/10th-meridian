@@ -59,6 +59,7 @@ export async function PATCH(request: Request) {
     action?: "join" | "decide";
     profileId?: string;
     accept?: boolean;
+    force?: boolean;
   } | null;
   if (!body?.tableId) return jsonError("Missing table.");
   const viewer = viewerProfile();
@@ -74,6 +75,8 @@ export async function PATCH(request: Request) {
           actorId: viewer.id,
           profileId: body.profileId,
           accept: Boolean(body.accept),
+          force: Boolean(body.force),
+          steward: ctx.role === "administrator" || ctx.role === "moderator",
         }),
       });
     }

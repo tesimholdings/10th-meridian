@@ -837,6 +837,7 @@ export const demoEvents: EventRecord[] = [
     isDemo: true,
     paymentRequired: false,
     listingState: "planned",
+    hostProfileId: "demo-01",
     longDescription:
       "A threshold evening on the tenth. DEMO listing only — not a completed gathering.",
   },
@@ -856,6 +857,7 @@ export const demoEvents: EventRecord[] = [
     isDemo: true,
     paymentRequired: true,
     listingState: "planned",
+    hostProfileId: "demo-01",
     longDescription:
       "A future salon for ten. Capacity is the point. This has not taken place.",
   },
@@ -873,6 +875,7 @@ export const demoEvents: EventRecord[] = [
     isDemo: true,
     paymentRequired: false,
     listingState: "concept",
+    hostProfileId: "demo-01",
     longDescription:
       "A concept walk along the lake. Illustrative dates. Not a past event.",
   },

@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { MatchIndex } from "@/lib/matching/service";
 import type { IntroRequest, ProfileRecord } from "@/lib/data/types";
 import { shortMatchReason } from "@/lib/matching/reason";
 import { YOUR_CIRCLE } from "@/lib/copy/ui";
 import { FoundingBadge } from "@/components/members/founding-badge";
+import { OverflowMenu } from "@/components/members/overflow-menu";
 
 export function MatchBoard({
   index,
@@ -51,17 +52,7 @@ export function IndexCard({
 }) {
   const router = useRouter();
   const [pending, setPending] = useState(false);
-  const [open, setOpen] = useState(false);
   const [note, setNote] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!open) return;
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") setOpen(false);
-    }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open]);
 
   async function message() {
     setPending(true);
@@ -91,7 +82,7 @@ export function IndexCard({
     router.refresh();
   }
 
-  async function overflow(action: "intro" | "hide" | "remove-index") {
+  async function overflow(action: "intro" | "hide" | "remove-index" | "mute" | "report") {
     setPending(true);
     if (action === "intro") {
       await fetch("/api/introductions", {
@@ -107,6 +98,14 @@ export function IndexCard({
         body: JSON.stringify({ targetId: profile.id, signal: "hidden" }),
       });
       setNote("Hidden from this ranking.");
+    } else if (action === "mute" || action === "report") {
+      const res = await fetch("/api/safety", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action, targetId: profile.id }),
+      });
+      const json = (await res.json()) as { message?: string };
+      setNote(json.message ?? (action === "mute" ? "Muted." : "Reported."));
     } else {
       await fetch("/api/circle", {
         method: "POST",
@@ -116,12 +115,11 @@ export function IndexCard({
       setNote("Removed from For you recommendations.");
     }
     setPending(false);
-    setOpen(false);
     router.refresh();
   }
 
   return (
-    <li className={`flex gap-3 py-3 ${className ?? ""}`.trim()}>
+    <li className={`lift-card flex gap-3 py-3 ${className ?? ""}`.trim()}>
       <Link
         href={`/member/members/${profile.id}`}
         className="avatar h-14 w-14 text-lg"
@@ -142,29 +140,36 @@ export function IndexCard({
           </div>
         ) : null}
         <p className="mt-1 text-sm leading-relaxed text-[var(--navy-soft)]">{reason}</p>
-        <div className="mt-3 flex flex-wrap items-center gap-2">
+        <div className="profile-actions mt-3 justify-start">
           <button type="button" disabled={pending} onClick={() => void message()} className="action-quiet">
             Message
           </button>
-          <button type="button" disabled={pending} onClick={() => void circle()} className="action-quiet">
+          <button
+            type="button"
+            disabled={pending}
+            data-state={inCircle ? "on" : "off"}
+            onClick={() => void circle()}
+            className="action-quiet"
+          >
             {inCircle ? `In ${YOUR_CIRCLE}` : "Circle"}
           </button>
-          <details className="relative" open={open} onToggle={(e) => setOpen((e.target as HTMLDetailsElement).open)}>
-            <summary className="action-quiet cursor-pointer list-none">More</summary>
-            <div className="glass-menu absolute left-0 z-10 mt-1 grid min-w-44 rounded-2xl p-2">
-              <button type="button" className="min-h-10 px-2 text-left text-sm" onClick={() => void overflow("intro")}>
-                {intro ? "Introduction requested" : "Request introduction"}
-              </button>
-              <button type="button" className="min-h-10 px-2 text-left text-sm" onClick={() => void overflow("hide")}>
-                Hide
-              </button>
-              <button type="button" className="min-h-10 px-2 text-left text-sm" onClick={() => void overflow("remove-index")}>
-                Remove from For you
-              </button>
-            </div>
-          </details>
+          <OverflowMenu
+            disabled={pending}
+            items={[
+              {
+                id: "intro",
+                label: intro ? "Introduction requested" : "Request introduction",
+                onSelect: () => void overflow("intro"),
+              },
+              { id: "remove", label: "Remove from For you", onSelect: () => void overflow("remove-index") },
+              { id: "hide", label: "Hide", onSelect: () => void overflow("hide") },
+              { id: "mute", label: "Mute", onSelect: () => void overflow("mute") },
+              { id: "report", label: "Report", onSelect: () => void overflow("report") },
+              { id: "help", label: "Help", href: "/member/help" },
+            ]}
+          />
         </div>
-        {note ? <p className="mt-2 text-xs text-[var(--gold)]">{note}</p> : null}
+        {note ? <p className="action-ack mt-2 text-xs text-[var(--gold-dim)]">{note}</p> : null}
       </div>
     </li>
   );

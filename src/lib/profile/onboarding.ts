@@ -82,6 +82,9 @@ export type SocialNetworkId = (typeof SOCIAL_NETWORKS)[number]["id"];
 
 export type SocialLink = { label: string; url: string };
 
+export const SAMPLE_PORTRAIT_URL = "/media/demo/sample-portrait.svg";
+export const SAMPLE_PORTRAIT_LABEL = "Sample portrait — labeled preview, not a member photograph.";
+
 export type OnboardingDraft = {
   linkedin: string;
   instagram: string;
@@ -95,6 +98,8 @@ export type OnboardingDraft = {
   interests: string;
   intents: string[];
   intentNote: string;
+  portraitUrl?: string;
+  portraitLabel?: string;
 };
 
 export type OnboardingStatus = "pending" | "skipped" | "completed";
@@ -119,6 +124,8 @@ export const EMPTY_ONBOARDING_DRAFT: OnboardingDraft = {
   interests: "",
   intents: [],
   intentNote: "",
+  portraitUrl: "",
+  portraitLabel: "",
 };
 
 const INTENT_CONNECTIONS: Partial<Record<MemberIntentId, ConnectionPreference>> = {
@@ -148,6 +155,21 @@ export function emptyOnboardingDraft(): OnboardingDraft {
     others: [],
     intents: [],
   };
+}
+
+export function portraitUrlAllowed(value: string): boolean {
+  if (!value) return true;
+  if (value.length > 180_000) return false;
+  if (value.startsWith("/media/")) return true;
+  if (/^https:\/\//i.test(value)) return true;
+  return /^data:image\/(?:jpeg|png|webp);base64,[a-z0-9+/=\s]+$/i.test(value);
+}
+
+export function portraitForColumn(value: string | undefined): string | null {
+  const url = value?.trim() ?? "";
+  if (!url || url.startsWith("data:") || url.length > 500) return null;
+  if (!portraitUrlAllowed(url)) return null;
+  return url;
 }
 
 export function parseOnboardingCookie(raw: string | null | undefined): OnboardingCookie | null {
@@ -296,6 +318,10 @@ export function normalizeOnboardingDraft(input: OnboardingDraft): {
     others.push({ label, url: url.url });
   }
 
+  const portraitUrl = (input.portraitUrl ?? "").trim();
+  const portraitLabel = (input.portraitLabel ?? "").trim().slice(0, 160);
+  if (!portraitUrlAllowed(portraitUrl)) errors.push("Use a photo from this device.");
+
   return {
     draft: {
       linkedin: socials.linkedin.ok ? socials.linkedin.url : input.linkedin.trim(),
@@ -310,6 +336,8 @@ export function normalizeOnboardingDraft(input: OnboardingDraft): {
       interests: input.interests.trim().slice(0, 400),
       intents: [...new Set(input.intents.filter(isMemberIntent))],
       intentNote: input.intentNote.trim().slice(0, 600),
+      portraitUrl: portraitUrlAllowed(portraitUrl) ? portraitUrl : "",
+      portraitLabel,
     },
     errors,
   };
@@ -338,7 +366,24 @@ export function projectOnboarding(
     .map((id) => INTENT_CONNECTIONS[id])
     .filter((value): value is ConnectionPreference => Boolean(value));
 
+  const portraitUrl = draft.portraitUrl?.trim() ?? "";
+  const portrait =
+    portraitUrl && portraitUrlAllowed(portraitUrl)
+      ? {
+          id: "onboarding-portrait",
+          url: portraitUrl,
+          caption: draft.portraitLabel?.trim() || "Portrait",
+          kind: "portfolio" as const,
+          isDemo: portraitUrl.startsWith("/media/demo"),
+        }
+      : null;
+
   return {
+    ...(portrait
+      ? {
+          gallery: [portrait, ...(existing?.gallery ?? []).filter((photo) => photo.id !== portrait.id)],
+        }
+      : {}),
     headline: draft.knownFor.trim() || existing?.headline || "",
     bio: draft.bio.trim() || existing?.bio || "",
     city: draft.basedIn.trim() || existing?.city || "",
@@ -441,6 +486,7 @@ export function draftHasAnswers(draft: OnboardingDraft | null): boolean {
       draft.bio ||
       draft.interests ||
       draft.intents.length ||
-      draft.intentNote,
+      draft.intentNote ||
+      draft.portraitUrl,
   );
 }

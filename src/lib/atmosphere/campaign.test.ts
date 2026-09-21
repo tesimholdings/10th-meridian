@@ -52,7 +52,8 @@ describe("campaign still mapping", () => {
     const circle = readFileSync("src/app/member/circle/page.tsx", "utf8");
     const crossings = readFileSync("src/app/member/crossings/page.tsx", "utf8");
     assert.equal(home.includes('campaignSrc("homeNetwork")'), false);
-    assert.equal(home.includes("journeyStillSrc"), false);
+    assert.match(home, /journeyStillSrc/);
+    assert.match(home, /OccasionFrame/);
     assert.equal(home.includes("HiggsfieldSlot"), false);
     assert.equal(circle.includes("HiggsfieldSlot"), false);
     assert.match(crossings, /journeyStillSrc/);
@@ -66,8 +67,10 @@ describe("campaign still mapping", () => {
     const lock = readFileSync("src/components/lock/lock-screen.tsx", "utf8");
     const hero = readFileSync("src/components/open-house/hero-media.tsx", "utf8");
     assert.equal(home.includes("HiggsfieldSlot"), false);
-    assert.equal(home.includes("journeyStillSrc"), false);
+    assert.match(home, /journeyStillSrc/);
     assert.match(home, /Open this trip/);
+    const occasion = readFileSync("src/components/events/occasion-frame.tsx", "utf8");
+    assert.match(occasion, /EDITORIAL_CAPTION/);
     assert.match(landing, /campaignSrc/);
     assert.match(landing, /filmSrc\("heroLandscape"\)/);
     assert.match(landing, /HeroMedia/);

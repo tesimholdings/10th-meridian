@@ -26,6 +26,8 @@ const schema = z.object({
   interests: z.string().optional(),
   intents: z.array(z.string()).max(12).optional(),
   intentNote: z.string().optional(),
+  portraitUrl: z.string().max(180_000).optional(),
+  portraitLabel: z.string().max(160).optional(),
 });
 
 function draftFromBody(data: z.infer<typeof schema>): OnboardingDraft {
@@ -43,6 +45,8 @@ function draftFromBody(data: z.infer<typeof schema>): OnboardingDraft {
     interests: data.interests ?? "",
     intents: data.intents ?? [],
     intentNote: data.intentNote ?? "",
+    portraitUrl: data.portraitUrl ?? "",
+    portraitLabel: data.portraitLabel ?? "",
   };
 }
 

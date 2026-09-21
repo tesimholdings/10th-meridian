@@ -40,6 +40,12 @@ import { env } from "@/lib/env";
 import type { MatchCuration, MatchFeedback, MatchingWeights } from "@/lib/matching/types";
 import { DEFAULT_WEIGHTS } from "@/lib/matching/types";
 import { profileCompletion } from "@/lib/profile/completion";
+import {
+  applyPromotion,
+  seedAttendance,
+  syncRegistrationCounts,
+  type EventRegistration,
+} from "@/lib/events/attendance";
 import type { OnboardingDraft, OnboardingStatus } from "@/lib/profile/onboarding";
 import {
   addToCircle,
@@ -105,7 +111,7 @@ export interface PreviewState {
   curation: MatchCuration[];
   intros: IntroRequest[];
   events: EventRecord[];
-  eventRegs: { eventId: string; accountId: string; status: "registered" | "waitlist" }[];
+  eventRegs: EventRegistration[];
   channels: ChannelRecord[];
   messages: MessageRecord[];
   readChannels: string[];
@@ -128,6 +134,13 @@ export type StoredOnboarding = {
 };
 
 function seed(): PreviewState {
+  const profiles = structuredClone(demoProfiles);
+  const events = structuredClone(demoEvents);
+  const eventRegs = seedAttendance(
+    profiles,
+    events,
+    new Map(profiles.map((profile) => [profile.id, profile.attendingEventIds])),
+  );
   return {
     weights: { ...DEFAULT_WEIGHTS },
     openHouse: {
@@ -140,7 +153,7 @@ function seed(): PreviewState {
     },
     admissionsCap: env.admissionsCap,
     cohortMonth: "2026-10",
-    profiles: structuredClone(demoProfiles),
+    profiles,
     viewerId: viewerDemoProfile.id,
     applications: structuredClone(demoApplications),
     paidMemberships: [],
@@ -169,8 +182,8 @@ function seed(): PreviewState {
       },
     ],
     intros: structuredClone(demoIntros),
-    events: structuredClone(demoEvents),
-    eventRegs: [],
+    events,
+    eventRegs,
     channels: [
       ...structuredClone(demoChannels),
       {
@@ -483,15 +496,40 @@ export function registerForEvent(eventId: string, accountId: string) {
     return { ok: true as const, message: "Already listed.", event };
   }
   if (event.registered >= event.capacity) {
-    event.waitlist += 1;
     state().eventRegs.push({ eventId, accountId, status: "waitlist" });
+    const counts = syncRegistrationCounts(eventId, state().eventRegs);
+    event.registered = counts.registered;
+    event.waitlist = counts.waitlist;
     audit(accountId, "event.waitlist", "event", eventId);
     return { ok: true as const, message: "Added to the waitlist. This listing has not occurred.", event };
   }
-  event.registered += 1;
   state().eventRegs.push({ eventId, accountId, status: "registered" });
+  const counts = syncRegistrationCounts(eventId, state().eventRegs);
+  event.registered = counts.registered;
+  event.waitlist = counts.waitlist;
+  const profile = state().profiles.find((row) => row.accountId === accountId || row.id === accountId);
+  if (profile && !profile.attendingEventIds.includes(eventId)) {
+    profile.attendingEventIds = [...profile.attendingEventIds, eventId];
+  }
   audit(accountId, "event.registered", "event", eventId);
   return { ok: true as const, message: "Listed for a planned gathering. It has not occurred.", event };
+}
+
+export function promoteFromWaitlist(eventId: string, accountId: string, actor: string) {
+  const event = state().events.find((row) => row.id === eventId);
+  if (!event) return { ok: false as const, message: "Event not found." };
+  const promoted = applyPromotion(state().eventRegs, eventId, accountId);
+  if (!promoted.ok) return promoted;
+  state().eventRegs = promoted.regs;
+  const counts = syncRegistrationCounts(eventId, state().eventRegs);
+  event.registered = counts.registered;
+  event.waitlist = counts.waitlist;
+  const profile = state().profiles.find((row) => row.accountId === accountId || row.id === accountId);
+  if (profile && !profile.attendingEventIds.includes(eventId)) {
+    profile.attendingEventIds = [...profile.attendingEventIds, eventId];
+  }
+  audit(actor, "event.promoted", "event", eventId);
+  return { ok: true as const, message: "Promoted from the waitlist.", event };
 }
 
 export function updateViewerProfile(patch: Partial<ProfileRecord>) {

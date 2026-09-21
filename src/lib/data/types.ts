@@ -151,6 +151,8 @@ export interface EventRecord {
   isDemo: boolean;
   paymentRequired: boolean;
   listingState: "planned" | "concept";
+  /** Member who hosts the listing. They may promote the waitlist. */
+  hostProfileId?: string;
 }
 
 export interface ChannelRecord {

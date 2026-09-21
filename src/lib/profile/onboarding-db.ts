@@ -3,6 +3,7 @@ import { hasSupabase } from "@/lib/env";
 import {
   emptyOnboardingDraft,
   isMemberIntent,
+  portraitForColumn,
   type OnboardingDbState,
   type OnboardingDraft,
   type OnboardingStatus,
@@ -136,6 +137,7 @@ export async function writeOnboardingDb(input: {
     intents: input.draft.intents,
     intent_note: input.draft.intentNote || null,
     about_now: input.draft.aboutNow || null,
+    portrait_url: portraitForColumn(input.draft.portraitUrl),
     interests: input.profilePatch.interests,
     goals: input.profilePatch.goals,
     preferred_connection_types: input.profilePatch.preferredConnectionTypes,

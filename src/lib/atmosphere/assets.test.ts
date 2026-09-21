@@ -32,6 +32,14 @@ const motionClasses = [
   "cursor-aura-filament",
   "lock-gold-follow",
   "circle-person",
+  "page-enter",
+  "nav-progress",
+  "occasion-photo",
+  "overflow-panel",
+  "signup-step",
+  "portrait-seal",
+  "lift-card",
+  "action-ack",
   "hero-grain",
   "hero-flecks",
   "hero-wash",
@@ -213,11 +221,9 @@ describe("original House atmosphere", () => {
     assert.match(header, /house-search-sheet/);
     assert.match(css, /\.house-light \.header-chrome input\.house-search/);
     const field = readFileSync("src/components/circle/for-you-field.tsx", "utf8");
-    assert.match(field, /meridian-range/);
-    assert.match(field, /meridian-dial-value/);
-    assert.match(field, /10 — immediate/);
-    assert.match(field, /100 — wider field/);
-    assert.match(css, /input\[type="range"\]\.meridian-range::-webkit-slider-thumb/);
+    assert.equal(field.includes("meridian-range"), false);
+    assert.equal(field.includes('type="range"'), false);
+    assert.equal(css.includes("meridian-range"), false);
     assert.match(css, /#c4a264/);
     const play = readFileSync("src/lib/atmosphere/play-safe.ts", "utf8");
     assert.match(play, /AbortError/);
@@ -231,11 +237,12 @@ describe("original House atmosphere", () => {
     assert.match(landing, /EXPERIENCE_MOMENT/);
     assert.match(landing, /OPEN_HOUSE_EVENING/);
     const events = readFileSync("src/app/member/events/page.tsx", "utf8");
-    assert.match(events, /HiggsfieldSlot/);
+    assert.match(events, /OccasionFrame/);
     assert.match(events, /stillForListedExperience/);
     const home = readFileSync("src/app/member/home/page.tsx", "utf8");
-    assert.equal(home.includes("stillForListedExperience"), false);
-    assert.equal(home.includes("journeyStillSrc"), false);
+    assert.match(home, /OccasionFrame/);
+    assert.match(home, /stillForListedExperience/);
+    assert.match(home, /journeyStillSrc/);
     assert.equal(home.includes("HiggsfieldSlot"), false);
     assert.match(home, /Open this trip/);
     assert.equal(home.includes('campaignSrc("homeIndex")'), false);
