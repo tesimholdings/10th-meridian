@@ -32,6 +32,22 @@ describe("real member identity", () => {
       { supabaseConfigured: true },
     );
     assert.equal(ricky, "rickydelvalle@tenmeridian.com");
+    assert.equal(
+      chooseSignInEmail(
+        "tenthmeridian",
+        { accountEmail: null, metadataEmail: null },
+        { supabaseConfigured: true },
+      ),
+      "tenthmeridian@tenmeridian.com",
+    );
+    assert.equal(
+      chooseSignInEmail(
+        "patrickromero",
+        { accountEmail: null, metadataEmail: null },
+        { supabaseConfigured: true },
+      ),
+      "patrickromero@tenmeridian.com",
+    );
   });
 
   it("prefers a username column or auth metadata over the directory", () => {
@@ -75,6 +91,18 @@ describe("real member identity", () => {
   it("gives Stefan the steward role and Ricky member", () => {
     assert.equal(foundingMemberForHandle("stefanfulks")?.role, "administrator");
     assert.equal(foundingMemberForHandle("rickydelvalle")?.role, "member");
+    assert.equal(foundingMemberForHandle("tenthmeridian")?.role, "administrator");
+    assert.equal(
+      foundingMemberForHandle("tenthmeridian")?.authUserId,
+      "1f8b496d-38f4-4346-9cc2-080d335a3fbf",
+    );
+    assert.equal(foundingMemberForHandle("patrickromero")?.role, "member");
+    assert.equal(
+      foundingMemberForHandle("patrickromero@tenmeridian.com")?.authUserId,
+      "9b67ed84-74ff-433a-8cab-d992f3992986",
+    );
+    assert.equal(resolveSessionRole({ username: "tenthmeridian" }), "administrator");
+    assert.equal(resolveSessionRole({ email: "patrickromero@tenmeridian.com" }), "member");
     assert.equal(
       resolveSessionRole({
         profileRole: "administrator",
@@ -121,6 +149,10 @@ describe("real member identity", () => {
       role: "administrator",
     });
     assert.equal(foundingAuthMetadata(ricky).name, "Ricky Del Valle");
+    assert.equal(foundingAuthMetadata(FOUNDING_MEMBERS[2]!).name, "Tenth Meridian");
+    assert.equal(foundingAuthMetadata(FOUNDING_MEMBERS[3]!).name, "Patrick Romero");
+    assert.equal(FOUNDING_MEMBERS.map((member) => member.username).join(","), 
+      "stefanfulks,rickydelvalle,tenthmeridian,patrickromero");
     assert.equal(JSON.stringify(FOUNDING_MEMBERS).includes("password"), false);
   });
 });

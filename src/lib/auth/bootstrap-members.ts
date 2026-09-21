@@ -114,6 +114,15 @@ async function ensureAuthUser(
   resetPassword: boolean,
 ): Promise<{ id: string; auth: BootstrapAuthState }> {
   const metadata = foundingAuthMetadata(member);
+  if (member.authUserId) {
+    await ports.updateUser(member.authUserId, {
+      email_confirm: true,
+      user_metadata: metadata,
+      ...(resetPassword ? { password } : {}),
+    });
+    return { id: member.authUserId, auth: "updated" };
+  }
+
   const existing = await ports.findByEmail(member.email);
   if (!existing) {
     try {

@@ -33,12 +33,19 @@ async function findAuthUserId(admin: SupabaseClient, email: string): Promise<str
 }
 
 async function upsertAccount(admin: SupabaseClient, input: AccountWrite): Promise<{ id: string }> {
-  const { data: existing, error: readError } = await admin
+  const byUser = await admin
     .from("accounts")
     .select("id")
-    .ilike("email", input.email)
+    .eq("user_id", input.userId)
     .maybeSingle();
-  if (readError) throw new Error(readError.message);
+  if (byUser.error) throw new Error(byUser.error.message);
+
+  const byEmail = byUser.data
+    ? null
+    : await admin.from("accounts").select("id").ilike("email", input.email).maybeSingle();
+  if (byEmail?.error) throw new Error(byEmail.error.message);
+
+  const existing = byUser.data ?? byEmail?.data ?? null;
 
   const row = {
     user_id: input.userId,

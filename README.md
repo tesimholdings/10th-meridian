@@ -37,7 +37,7 @@ The lock screen is the default outside the monthly Open House window (the 10th, 
 
 Or set `OPEN_HOUSE_FORCE=open` in `.env.local`.
 
-Preview demo (no live passwords): with `PREVIEW_DEMO_AUTH=true` and no Supabase Auth, enter a demo alias (`stefan`, `voss`, `ricky`, or `steward`) → Continue → Enter. Referral sample: `TENTH-EARLY`. Production should keep `PREVIEW_DEMO_AUTH=false` (no demo sessions); the lock fields stay visible and password goes to Supabase Auth when env is set. Real members sign in as `stefanfulks` or `rickydelvalle` (or their `@tenmeridian.com` email). Those usernames do not depend on demo aliases.
+Preview demo (no live passwords): with `PREVIEW_DEMO_AUTH=true` and no Supabase Auth, enter a demo alias (`stefan`, `voss`, `ricky`, or `steward`) → Continue → Enter. Referral sample: `TENTH-EARLY`. Production should keep `PREVIEW_DEMO_AUTH=false` (no demo sessions); the lock fields stay visible and password goes to Supabase Auth when env is set. Real members sign in as `stefanfulks`, `rickydelvalle`, `tenthmeridian`, or `patrickromero` (or their `@tenmeridian.com` email). Those usernames do not depend on demo aliases.
 
 ```bash
 npm run build    # production build
@@ -113,7 +113,7 @@ Real member bootstrap (service role, password from `BOOTSTRAP_MEMBER_PASSWORD` o
 npm run bootstrap:members
 ```
 
-Creates `stefanfulks` (`stefanfulks@tenmeridian.com`, steward / administrator) and `rickydelvalle` (`rickydelvalle@tenmeridian.com`, member). Apply `supabase/migrations/0010_member_usernames.sql` first. The HTTP one-shot is `POST /api/auth/bootstrap-members` and stays 404 until `BOOTSTRAP_MEMBERS_ENABLED=true` plus a bearer `BOOTSTRAP_MEMBER_TOKEN`.
+Upserts `stefanfulks` and `tenthmeridian` (administrator) plus `rickydelvalle` and `patrickromero` (member), all `@tenmeridian.com`. Existing Auth users keep their password. Apply `supabase/migrations/0010_member_usernames.sql` first — it also inserts any missing account and profile rows. The HTTP one-shot is `POST /api/auth/bootstrap-members` and stays 404 until `BOOTSTRAP_MEMBERS_ENABLED=true` plus a bearer `BOOTSTRAP_MEMBER_TOKEN`.
 
 ## What this PR includes
 

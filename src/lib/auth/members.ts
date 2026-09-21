@@ -11,6 +11,8 @@ export type FoundingMember = {
   name: string;
   /** Steward is the administrator role. Members stay on member. */
   role: AppRole;
+  /** Existing Auth user. Bootstrap updates this id and does not reset its password. */
+  authUserId?: string;
 };
 
 export const FOUNDING_MEMBERS: readonly FoundingMember[] = [
@@ -25,6 +27,20 @@ export const FOUNDING_MEMBERS: readonly FoundingMember[] = [
     email: "rickydelvalle@tenmeridian.com",
     name: "Ricky Del Valle",
     role: "member",
+  },
+  {
+    username: "tenthmeridian",
+    email: "tenthmeridian@tenmeridian.com",
+    name: "Tenth Meridian",
+    role: "administrator",
+    authUserId: "1f8b496d-38f4-4346-9cc2-080d335a3fbf",
+  },
+  {
+    username: "patrickromero",
+    email: "patrickromero@tenmeridian.com",
+    name: "Patrick Romero",
+    role: "member",
+    authUserId: "9b67ed84-74ff-433a-8cab-d992f3992986",
   },
 ];
 

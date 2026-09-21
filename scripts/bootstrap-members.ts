@@ -1,5 +1,5 @@
 /**
- * Create stefanfulks and rickydelvalle with the Supabase Admin API.
+ * Upsert stefanfulks, rickydelvalle, tenthmeridian, and patrickromero.
  *
  * Required env (never commit the values):
  *   NEXT_PUBLIC_SUPABASE_URL

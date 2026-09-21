@@ -43,30 +43,52 @@ function ports(options?: {
 }
 
 describe("founding member bootstrap", () => {
-  it("creates both users from the password argument and confirms email", async () => {
+  it("creates missing users and updates the two existing Auth ids without a password reset", async () => {
     const harness = ports();
+    const updates: { id: string; password?: string }[] = [];
+    harness.ports.updateUser = async (id, input) => {
+      updates.push({ id, password: input.password });
+    };
     const result = await bootstrapFoundingMembers(harness.ports, FIXTURE_PASSWORD);
 
     assert.equal(result.ok, true);
     assert.deepEqual(
       result.members.map((member) => member.username),
-      ["stefanfulks", "rickydelvalle"],
+      ["stefanfulks", "rickydelvalle", "tenthmeridian", "patrickromero"],
     );
     assert.equal(result.members[0]?.role, "administrator");
     assert.equal(result.members[1]?.role, "member");
+    assert.equal(result.members[2]?.role, "administrator");
+    assert.equal(result.members[2]?.auth, "updated");
+    assert.equal(result.members[3]?.role, "member");
+    assert.equal(result.members[3]?.auth, "updated");
     assert.equal(result.members[0]?.auth, "created");
-    assert.equal(harness.created.length, 2);
+    assert.deepEqual(
+      harness.created.map((user) => user.user_metadata.username),
+      ["stefanfulks", "rickydelvalle"],
+    );
     assert.equal(harness.created[0]?.email_confirm, true);
-    assert.equal(harness.created[0]?.user_metadata.username, "stefanfulks");
     assert.equal(harness.created[0]?.user_metadata.name, "Stefan Fulks");
     assert.equal(harness.created[1]?.user_metadata.name, "Ricky Del Valle");
     assert.equal(harness.created[0]?.password, FIXTURE_PASSWORD);
+    assert.deepEqual(
+      updates.map((update) => update.id),
+      [
+        "1f8b496d-38f4-4346-9cc2-080d335a3fbf",
+        "9b67ed84-74ff-433a-8cab-d992f3992986",
+      ],
+    );
+    assert.equal(updates.every((update) => update.password === undefined), true);
     assert.equal(JSON.stringify(result).includes(FIXTURE_PASSWORD), false);
     assert.deepEqual(harness.streamIds, [
       "acc-stefanfulks",
       "pro-stefanfulks",
       "acc-rickydelvalle",
       "pro-rickydelvalle",
+      "acc-tenthmeridian",
+      "pro-tenthmeridian",
+      "acc-patrickromero",
+      "pro-patrickromero",
     ]);
   });
 
@@ -80,7 +102,11 @@ describe("founding member bootstrap", () => {
       resetPassword: false,
     });
     assert.equal(result.members[0]?.auth, "updated");
-    assert.deepEqual(updates, ["existing-stefanfulks@tenmeridian.com"]);
+    assert.deepEqual(updates, [
+      "existing-stefanfulks@tenmeridian.com",
+      "1f8b496d-38f4-4346-9cc2-080d335a3fbf",
+      "9b67ed84-74ff-433a-8cab-d992f3992986",
+    ]);
     assert.equal(harness.created.length, 1);
     assert.equal(harness.created[0]?.user_metadata.username, "rickydelvalle");
     assert.equal(JSON.stringify(result).includes(FIXTURE_PASSWORD), false);
