@@ -33,6 +33,7 @@ describe("journey Where validation", () => {
     assert.equal(chicago.ok, true);
     assert.equal(chicago.timezone, "America/Chicago");
     assert.equal(inferTimezone("Chicago", "United States"), "America/Chicago");
+    assert.equal(inferTimezone("Seseh", "Indonesia"), "Asia/Makassar");
     assert.equal(inferTimezone("Unknownville", "Atlantis"), null);
     assert.equal(isValidTimeZone("Europe/Paris"), true);
     assert.equal(isValidTimeZone(""), false);

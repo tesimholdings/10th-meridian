@@ -16,6 +16,7 @@ import { RewardsTeaserCard } from "@/components/rewards/teaser-card";
 import { formatPoints } from "@/lib/rewards/math";
 import { CrossingsEntryLink } from "@/components/crossings/crossings-flight";
 import { greetingName, isSyntheticSession, sessionSubjectId } from "@/lib/member/identity";
+import { SESEH_PLACE_CAPTION, SESEH_TRIP, tripForEvent } from "@/lib/trips/seseh";
 
 export const metadata = { title: "Home", robots: { index: false } };
 
@@ -36,6 +37,7 @@ export default async function MemberHomePage() {
     sharedChannelIds: store.channels.map((c) => c.id),
   });
   const trip = journeys.find((j) => j.profileId === subjectId && j.status === "active");
+  const attending = new Map(store.profiles.map((profile) => [profile.id, profile.attendingEventIds]));
   const upcomingEvents = [...store.events].sort((a, b) => a.startsAt.localeCompare(b.startsAt));
   const tonight = upcomingEvents.find((e) => isEventTonight(e));
   const event = tonight ?? upcomingEvents[0];
@@ -101,20 +103,33 @@ export default async function MemberHomePage() {
         <div className="mt-8">
           <OccasionFrame
             href={`/member/events/${event.id}`}
-            src={campaignSrc(stillForListedExperience(event))}
-            kicker={eventChipLabel}
+            src={tripForEvent(event.id)?.card ?? campaignSrc(stillForListedExperience(event))}
+            kicker={tripForEvent(event.id) ? "Crossing" : eventChipLabel}
             title={event.title}
-            place={event.city}
-            when={formatEventWhen(event.startsAt, event.city)}
+            place={tripForEvent(event.id)?.place ?? event.city}
+            when={tripForEvent(event.id)?.whenLabel ?? formatEventWhen(event.startsAt, event.city)}
             detail="Open this experience"
-            people={
-              rosterForEvent(
-                event.id,
-                store.profiles,
-                store.eventRegs,
-                new Map(store.profiles.map((profile) => [profile.id, profile.attendingEventIds])),
-              ).going
-            }
+            people={rosterForEvent(event.id, store.profiles, store.eventRegs, attending).going}
+            caption={tripForEvent(event.id) ? SESEH_PLACE_CAPTION : undefined}
+          />
+        </div>
+      ) : null}
+
+      {event?.id !== SESEH_TRIP.eventId ? (
+        <div className="mt-8">
+          <OccasionFrame
+            href={`/member/events/${SESEH_TRIP.eventId}`}
+            src={SESEH_TRIP.card}
+            kicker="Crossing"
+            title={SESEH_TRIP.title}
+            place={SESEH_TRIP.place}
+            when={SESEH_TRIP.whenLabel}
+            detail={`${SESEH_TRIP.priceLine} · ${
+              rosterForEvent(SESEH_TRIP.eventId, store.profiles, store.eventRegs, attending).going.length
+            } going · ${SESEH_TRIP.capacity} spots`}
+            people={rosterForEvent(SESEH_TRIP.eventId, store.profiles, store.eventRegs, attending).going}
+            peopleEmpty="0 going · 8 spots"
+            caption={SESEH_PLACE_CAPTION}
           />
         </div>
       ) : null}

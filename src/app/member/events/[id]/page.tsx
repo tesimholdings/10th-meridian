@@ -9,6 +9,8 @@ import { stillForListedExperience, occasionCredit } from "@/lib/atmosphere/campa
 import { campaignSrc } from "@/lib/atmosphere/resolve-campaign";
 import { formatEventWhen } from "@/lib/events/when";
 import { canPromoteAttendance, rosterForEvent } from "@/lib/events/attendance";
+import { TripStory } from "@/components/trips/trip-story";
+import { SESEH_PLACE_CAPTION, tripForEvent } from "@/lib/trips/seseh";
 
 export const metadata = { title: "Experience", robots: { index: false } };
 
@@ -34,44 +36,61 @@ export default async function EventDetailPage({
     viewerId: viewer.id,
     hostProfileId: event.hostProfileId,
   });
+  const trip = tripForEvent(event.id);
 
   return (
     <MemberShell user={access.user} demo title="Experience" hasHeading>
       <OccasionFrame
-        src={campaignSrc(stillForListedExperience(event))}
-        kicker={event.listingState === "concept" ? "Concept — this has not occurred" : "Planned — this has not occurred"}
+        src={trip?.hero ?? campaignSrc(stillForListedExperience(event))}
+        kicker={
+          trip
+            ? "Crossing · hosted by Brian"
+            : event.listingState === "concept"
+              ? "Concept — this has not occurred"
+              : "Planned — this has not occurred"
+        }
         title={event.title}
-        place={event.city}
-        when={formatEventWhen(event.startsAt, event.city)}
-        detail={occasionCredit(event.title, event.city)}
+        place={trip?.place ?? event.city}
+        when={trip?.whenLabel ?? formatEventWhen(event.startsAt, event.city)}
+        detail={trip ? trip.priceLine : occasionCredit(event.title, event.city)}
         people={roster.going}
+        peopleEmpty={trip ? "0 going · 8 spots" : "No one yet"}
         heading="h1"
+        caption={trip ? SESEH_PLACE_CAPTION : undefined}
       />
-      <p className="reading mt-8 text-[var(--navy-soft)]">{event.longDescription ?? event.summary}</p>
-      <dl className="reading mt-8 grid gap-4">
-        <div>
-          <dt className="text-sm text-[var(--ivory-dim)]">When</dt>
-          <dd className="mt-1">{formatEventWhen(event.startsAt, event.city)}</dd>
+      {trip ? (
+        <div className="mt-10">
+          <TripStory going={roster.going.length} waitlist={roster.waitlist.length} />
         </div>
-        <div>
-          <dt className="text-sm text-[var(--ivory-dim)]">Place</dt>
-          <dd className="mt-1">{event.city}</dd>
-        </div>
-        <div>
-          <dt className="label">Capacity</dt>
-          <dd className="mt-1">
-            {event.capacity} · {roster.going.length} going · {roster.waitlist.length} waitlist
-          </dd>
-        </div>
-        {event.paymentRequired ? (
-          <div>
-            <dt className="label">Payment</dt>
-            <dd className="mt-1 text-ivory-muted">
-              Payment is collected with the house when this experience requires it.
-            </dd>
-          </div>
-        ) : null}
-      </dl>
+      ) : (
+        <>
+          <p className="reading mt-8 text-[var(--navy-soft)]">{event.longDescription ?? event.summary}</p>
+          <dl className="reading mt-8 grid gap-4">
+            <div>
+              <dt className="text-sm text-[var(--ivory-dim)]">When</dt>
+              <dd className="mt-1">{formatEventWhen(event.startsAt, event.city)}</dd>
+            </div>
+            <div>
+              <dt className="text-sm text-[var(--ivory-dim)]">Place</dt>
+              <dd className="mt-1">{event.city}</dd>
+            </div>
+            <div>
+              <dt className="label">Capacity</dt>
+              <dd className="mt-1">
+                {event.capacity} · {roster.going.length} going · {roster.waitlist.length} waitlist
+              </dd>
+            </div>
+            {event.paymentRequired ? (
+              <div>
+                <dt className="label">Payment</dt>
+                <dd className="mt-1 text-ivory-muted">
+                  Payment is collected with the house when this experience requires it.
+                </dd>
+              </div>
+            ) : null}
+          </dl>
+        </>
+      )}
       <div className="reading mt-10">
         <AttendanceRoster
           going={roster.going}

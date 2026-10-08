@@ -13,6 +13,7 @@ import {
   demoReferrals,
   viewerDemoProfile,
 } from "@/lib/data/demo";
+import { houseEvents } from "@/lib/trips/seseh";
 import {
   demoCityHosts,
   demoCityNotes,
@@ -135,7 +136,7 @@ export type StoredOnboarding = {
 
 function seed(): PreviewState {
   const profiles = structuredClone(demoProfiles);
-  const events = structuredClone(demoEvents);
+  const events = [...structuredClone(houseEvents), ...structuredClone(demoEvents)];
   const eventRegs = seedAttendance(
     profiles,
     events,
@@ -501,7 +502,13 @@ export function registerForEvent(eventId: string, accountId: string) {
     event.registered = counts.registered;
     event.waitlist = counts.waitlist;
     audit(accountId, "event.waitlist", "event", eventId);
-    return { ok: true as const, message: "Added to the waitlist. This listing has not occurred.", event };
+    return {
+      ok: true as const,
+      message: event.isDemo
+        ? "Added to the waitlist. This listing has not occurred."
+        : "The spots are filled. You're on the waitlist.",
+      event,
+    };
   }
   state().eventRegs.push({ eventId, accountId, status: "registered" });
   const counts = syncRegistrationCounts(eventId, state().eventRegs);
@@ -512,7 +519,13 @@ export function registerForEvent(eventId: string, accountId: string) {
     profile.attendingEventIds = [...profile.attendingEventIds, eventId];
   }
   audit(accountId, "event.registered", "event", eventId);
-  return { ok: true as const, message: "Listed for a planned gathering. It has not occurred.", event };
+  return {
+    ok: true as const,
+    message: event.isDemo
+      ? "Listed for a planned gathering. It has not occurred."
+      : "You're registered for this Crossing.",
+    event,
+  };
 }
 
 export function promoteFromWaitlist(eventId: string, accountId: string, actor: string) {
