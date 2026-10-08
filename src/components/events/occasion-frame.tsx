@@ -14,6 +14,7 @@ export function OccasionFrame({
   people,
   peopleEmpty = "No one yet",
   heading = "h2",
+  caption = EDITORIAL_CAPTION,
 }: {
   src: string;
   href?: string;
@@ -25,6 +26,7 @@ export function OccasionFrame({
   people?: Face[];
   peopleEmpty?: string;
   heading?: "h1" | "h2";
+  caption?: string;
 }) {
   const Title = heading;
   const body = (
@@ -42,7 +44,7 @@ export function OccasionFrame({
         {detail ? <p className="occasion-detail">{detail}</p> : null}
         {people ? <FacePile people={people} empty={peopleEmpty} tone="ivory" /> : null}
       </div>
-      <p className="sr-only">{EDITORIAL_CAPTION}</p>
+      <p className="sr-only">{caption}</p>
     </article>
   );
 

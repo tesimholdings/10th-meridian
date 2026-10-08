@@ -8,5 +8,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${env.siteUrl}/legal/terms`, lastModified: new Date() },
     { url: `${env.siteUrl}/legal/community`, lastModified: new Date() },
     { url: `${env.siteUrl}/legal/refund`, lastModified: new Date() },
+    { url: `${env.siteUrl}/experiences/seseh-bali`, lastModified: new Date() },
   ];
 }

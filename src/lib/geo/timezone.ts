@@ -25,6 +25,7 @@ export const KNOWN_PLACES: PlaceTimezone[] = [
   { city: "Kyoto", country: "Japan", timezone: "Asia/Tokyo", aliases: ["japan"] },
   { city: "Tokyo", country: "Japan", timezone: "Asia/Tokyo", aliases: ["japan"] },
   { city: "Lisbon", country: "Portugal", timezone: "Europe/Lisbon", aliases: ["portugal"] },
+  { city: "Seseh", country: "Indonesia", timezone: "Asia/Makassar", aliases: ["bali", "seseh, bali"] },
 ];
 
 function norm(value: string): string {

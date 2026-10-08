@@ -4,6 +4,7 @@ import { HeroAtmosphere } from "@/components/open-house/hero-atmosphere";
 import { HeroMedia } from "@/components/open-house/hero-media";
 import { PublicFooter } from "@/components/open-house/public-footer";
 import { PublicHeader } from "@/components/open-house/public-header";
+import { OccasionFrame } from "@/components/events/occasion-frame";
 import { Button } from "@/components/ui/button";
 import {
   OPEN_HOUSE_CLOSING_MEDIA,
@@ -36,6 +37,7 @@ import {
   experienceStateLabel,
   experiences,
 } from "@/lib/copy/open-house";
+import { SESEH_PLACE_CAPTION, SESEH_TRIP } from "@/lib/trips/seseh";
 
 export function OpenHouseLanding({ access }: { access: AccessContext }) {
   return (
@@ -126,6 +128,23 @@ function ExperiencesRail() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <h2 className="font-serif text-4xl">Experiences</h2>
         <p className="max-w-sm text-sm text-[var(--navy-soft)]">{EXPERIENCES_DISCLOSURE}</p>
+      </div>
+      <div className="mt-8">
+        <OccasionFrame
+          href={SESEH_TRIP.path}
+          src={SESEH_TRIP.card}
+          kicker="Crossing"
+          title={SESEH_TRIP.title}
+          place={SESEH_TRIP.place}
+          when={SESEH_TRIP.whenLabel}
+          detail={`${SESEH_TRIP.priceLine} · ${SESEH_TRIP.capacity} spots`}
+          people={[]}
+          peopleEmpty="0 going · 8 spots"
+          caption={SESEH_PLACE_CAPTION}
+        />
+        <p className="mt-3 text-sm text-[var(--navy-soft)]">
+          {SESEH_TRIP.hostLine}. {SESEH_TRIP.scheduleNote}
+        </p>
       </div>
       <ul className="mt-8 grid gap-6 md:grid-cols-3">
         {experiences.map((item, i) => {

@@ -13,6 +13,8 @@ Apply migrations in order against a new project:
 9. `0009_stripe_membership.sql` — Checkout/invoice/subscription columns, `stripe_events`, Founding Ten usage view
 10. `0010_member_usernames.sql` — `accounts.username`, `profiles.username`, `profiles.role` for real sign-in
 11. `0011_profile_onboarding.sql` — social links, intent tags, and onboarding timestamps. Existing profiles are marked finished so current members are not prompted.
+12. `0012_attendance_and_portrait.sql` — waitlist position, promotion audit, `events.host_account_id`, profile portraits
+13. `0013_first_trip_seseh.sql` — display-price columns, then the Seseh villa week. Idempotent. No registrations. `host_account_id` is null. No Stripe price.
 
 The Next.js app does not require a live project to boot. See `src/lib/supabase/stub.ts`.
 City Notes and journeys are never readable by `anon`. Exact table venues are withheld by view/`group_tables_public` unless the viewer is a confirmed guest or steward.

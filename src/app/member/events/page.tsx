@@ -6,6 +6,7 @@ import { stillForListedExperience } from "@/lib/atmosphere/campaign";
 import { campaignSrc } from "@/lib/atmosphere/resolve-campaign";
 import { formatEventWhen } from "@/lib/events/when";
 import { rosterForEvent } from "@/lib/events/attendance";
+import { SESEH_PLACE_CAPTION, tripForEvent } from "@/lib/trips/seseh";
 
 export const metadata = { title: "Events", robots: { index: false } };
 
@@ -17,19 +18,30 @@ export default async function EventsPage() {
     <MemberShell user={access.user} demo title="Experiences" hasHeading>
       <h1 className="font-serif text-4xl">Experiences</h1>
       <ul className="occasion-grid mt-8">
-        {store.events.map((event, index) => {
+        {[...store.events]
+          .sort((a, b) => Date.parse(a.startsAt) - Date.parse(b.startsAt))
+          .map((event, index) => {
           const roster = rosterForEvent(event.id, store.profiles, store.eventRegs, attending);
+          const trip = tripForEvent(event.id);
           return (
             <li key={event.id}>
               <OccasionFrame
                 href={`/member/events/${event.id}`}
-                src={campaignSrc(stillForListedExperience(event, index))}
-                kicker={event.listingState === "concept" ? "Concept" : "Planned"}
+                src={trip?.card ?? campaignSrc(stillForListedExperience(event, index))}
+                kicker={trip ? "Crossing" : event.listingState === "concept" ? "Concept" : "Planned"}
                 title={event.title}
-                place={event.city}
-                when={formatEventWhen(event.startsAt, event.city)}
-                detail={event.kind === "trip" ? "A trip" : "Has not occurred"}
+                place={trip?.place ?? event.city}
+                when={trip?.whenLabel ?? formatEventWhen(event.startsAt, event.city)}
+                detail={
+                  trip
+                    ? `${roster.going.length} going · ${event.capacity} spots`
+                    : event.kind === "trip"
+                      ? "A trip"
+                      : "Has not occurred"
+                }
                 people={roster.going}
+                peopleEmpty={trip ? "0 going · 8 spots" : "No one yet"}
+                caption={trip ? SESEH_PLACE_CAPTION : undefined}
               />
             </li>
           );

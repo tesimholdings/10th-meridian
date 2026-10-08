@@ -9,12 +9,14 @@ import { CROSSINGS_COPY } from "@/lib/crossings/types";
 import { canMutateCrossings } from "@/lib/crossings/privacy";
 import { matchesForJourney, tableSuggestionsFor, visibleJourneysFor } from "@/lib/crossings/service";
 import { journeyStillSrc } from "@/lib/atmosphere/resolve-campaign";
-import { journeyCompanions } from "@/lib/events/attendance";
+import { journeyCompanions, rosterForEvent } from "@/lib/events/attendance";
 import { getPreviewStore, viewerProfile } from "@/lib/preview/store";
 import { demoIndexFor } from "@/lib/matching/service";
 import { summarizeCityPresence } from "@/lib/crossings/presence";
 import { cityCountLines } from "@/lib/member/city-counts";
 import { isSyntheticSession, sessionSubjectId } from "@/lib/member/identity";
+import { OccasionFrame } from "@/components/events/occasion-frame";
+import { SESEH_PLACE_CAPTION, SESEH_TRIP } from "@/lib/trips/seseh";
 
 export const metadata = { title: "Crossings", robots: { index: false } };
 
@@ -75,6 +77,28 @@ export default async function CrossingsPage() {
         <a href="#requests" className="pill">Requests</a>
         <a href="#guide" className="pill">City guide</a>
       </nav>
+
+      <section className="mt-8" aria-label="House Crossing">
+        <OccasionFrame
+          href={`/member/events/${SESEH_TRIP.eventId}`}
+          src={SESEH_TRIP.card}
+          kicker="House Crossing"
+          title={SESEH_TRIP.title}
+          place={SESEH_TRIP.place}
+          when={SESEH_TRIP.whenLabel}
+          detail={`${SESEH_TRIP.priceLine} · ${SESEH_TRIP.hostLine}`}
+          people={
+            rosterForEvent(
+              SESEH_TRIP.eventId,
+              store.profiles,
+              store.eventRegs,
+              new Map(store.profiles.map((profile) => [profile.id, profile.attendingEventIds])),
+            ).going
+          }
+          peopleEmpty="0 going · 8 spots"
+          caption={SESEH_PLACE_CAPTION}
+        />
+      </section>
 
       <section id="trips" className="mt-8">
         {upcoming ? (
